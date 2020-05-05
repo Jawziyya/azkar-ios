@@ -1,0 +1,12 @@
+/* 
+  Localizable.strings
+  Azkar
+
+  Created by Abdurahim Jauzee on 01.05.2020.
+  Copyright © 2020 Al Jawziyya. All rights reserved.
+*/
+
+"category.morning" = "Утренние";
+"category.evening" = "Вечерние";
+"category.after-salah" = "Дуа после молитвы";
+"category.other" = "Важные дуа";

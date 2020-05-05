@@ -1,0 +1,108 @@
+//
+//  PlayerViewModel.swift
+//  Azkar
+//
+//  Created by Abdurahim Jauzee on 04.05.2020.
+//  Copyright © 2020 Al Jawziyya. All rights reserved.
+//
+
+import SwiftUI
+import Combine
+import AVFoundation
+
+final class PlayerViewModel: ObservableObject {
+
+    @Published var isPlaying: Bool
+    @Published var progress: Double = 0
+    @Published var timeElapsed = ""
+    @Published var timeRemaining = ""
+    @Published var speed: Player.Speed = .normal
+
+    let audioURL: URL
+    private let player: Player
+    private var cancellabels = Set<AnyCancellable>()
+
+    init(audioURL: URL, player: Player) {
+        self.audioURL = audioURL
+        self.player = player
+        isPlaying = player.isPlaying
+        speed = player.speed
+
+        player.$speed
+            .assign(to: \.speed, on: self)
+            .store(in: &cancellabels)
+
+        player.$isPlaying
+            .map { $0 && player.isPlayingItemAtURL(audioURL) }
+            .removeDuplicates()
+            .assign(to: \.isPlaying, on: self)
+            .store(in: &cancellabels)
+
+        player.$progress
+            .map { progress in
+                guard player.isPlayingItemAtURL(audioURL) else {
+                    return 0
+                }
+                return progress
+            }
+            .removeDuplicates()
+            .assign(to: \.progress, on: self)
+            .store(in: &cancellabels)
+
+        let zeroTime = "00:00"
+        let formatter = DateComponentsFormatter()
+        formatter.formattingContext = .standalone
+        formatter.allowedUnits = [.minute, .second]
+        formatter.zeroFormattingBehavior = .pad
+        formatter.unitsStyle = .positional
+
+        let asset = AVURLAsset(url: audioURL)
+        let duration = Double(CMTimeGetSeconds(asset.duration))
+
+        player.$timeElapsed
+            .prepend(0)
+            .map {
+                player.isPlayingItemAtURL(audioURL) ? $0 : 0
+            }
+            .removeDuplicates()
+            .map { formatter.string(from: $0) ?? zeroTime }
+            .assign(to: \.timeElapsed, on: self)
+            .store(in: &cancellabels)
+
+        player.$timeRemaining
+            .map { time in player.isPlayingItemAtURL(audioURL) ? time : duration }
+            .removeDuplicates()
+            .prepend(duration)
+            .map { formatter.string(from: $0) ?? zeroTime }
+            .assign(to: \.timeRemaining, on: self)
+            .store(in: &cancellabels)
+    }
+
+    func play() {
+        player.playAudio(audioURL)
+    }
+
+    private func resume() {
+        player.resume()
+    }
+
+    func pause() {
+        player.pause()
+    }
+
+    func togglePlayPause() {
+        isPlaying ? pause() : (player.isPlayingItemAtURL(audioURL) ? resume() : play())
+    }
+
+    func toggleSpeed() {
+        switch speed {
+        case .slow:
+            player.setPlayingSpeed(.normal)
+        case .normal:
+            player.setPlayingSpeed(.fast)
+        case .fast:
+            player.setPlayingSpeed(.slow)
+        }
+    }
+
+}
