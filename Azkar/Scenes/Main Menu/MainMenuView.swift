@@ -32,8 +32,7 @@ struct MainMenuView: View {
                 .navigationBarTitle(Text("Азкары"), displayMode: .inline)
             UIDevice.current.isIpad ? self.ipadDetailView : nil
         }
-        .navigationViewStyle(DoubleColumnNavigationViewStyle())
-        .padding(.leading, UIDevice.current.isIpad ? 1 : 0) // Hack for proper allVisible split view mode.
+        .padding(.leading, UIDevice.current.isIpad ? 0.5 : 0) // Hack for proper allVisible split view mode.
         .background(Color.background.edgesIgnoringSafeArea(.all))
     }
 
