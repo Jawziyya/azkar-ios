@@ -28,15 +28,18 @@ struct Zikr: Identifiable, Hashable, Equatable, Codable {
     let notes: String?
     let category: ZikrCategory
 
-    var audioURL: URL {
-        return Bundle.main.url(forResource: "\(category.rawValue)\(rowInCategory)", withExtension: "mp3")!
+    var audioURL: URL? {
+        return Bundle.main.url(forResource: "\(category.rawValue)\(rowInCategory)", withExtension: "mp3")
     }
     
     let repeats: Int
     let source: String
 
-    var audioDuration: Double {
-        let asset = AVURLAsset(url: audioURL)
+    var audioDuration: Double? {
+        guard let url = audioURL else {
+            return nil
+        }
+        let asset = AVURLAsset(url: url)
         return Double(CMTimeGetSeconds(asset.duration))
     }
     

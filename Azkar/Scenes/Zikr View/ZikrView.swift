@@ -88,7 +88,9 @@ struct ZikrView: View {
             .equatable()
             .padding()
 
-            self.playerView
+            viewModel.zikr.audioURL.flatMap { url in
+                self.playerView(audioURL: url)
+            }
         }
     }
 
@@ -161,9 +163,9 @@ struct ZikrView: View {
         .padding()
     }
 
-    private var playerView: some View {
+    private func playerView(audioURL: URL) -> some View {
         PlayerView(
-            viewModel: PlayerViewModel(title: viewModel.title, subtitle: viewModel.zikr.category.title, audioURL: viewModel.zikr.audioURL, player: player),
+            viewModel: PlayerViewModel(title: viewModel.title, subtitle: viewModel.zikr.category.title, audioURL: audioURL, player: player),
             tintColor: tintColor,
             progressBarColor: dividerColor,
             progressBarHeight: dividerHeight
