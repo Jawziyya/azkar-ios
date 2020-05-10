@@ -62,7 +62,7 @@ struct MainMenuViewModel {
 
         infoModels = [
 //            AzkarMenuOtherItem(groupType: .fadail, icon: "info.circle.fill", title: "Достоинства поминания Аллаха", color: Color(.systemGreen)),
-            AzkarMenuOtherItem(groupType: .legal, icon: "checkmark.seal.fill", title: "О приложении", color: Color(.systemPurple)),
+            AzkarMenuOtherItem(groupType: .legal, icon: "checkmark.seal.fill", title: "О приложении", color: Color(.systemGreen)),
             AzkarMenuOtherItem(groupType: .settings, icon: "gear", title: "Настройки", color: Color.init(.systemGray)),
         ]
 

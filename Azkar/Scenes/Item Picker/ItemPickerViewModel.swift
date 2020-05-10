@@ -26,7 +26,7 @@ extension PickableItem {
     }
 
     var subtitleFont: Font {
-        Font.caption
+        Font.footnote
     }
 
 }

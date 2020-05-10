@@ -86,7 +86,7 @@ struct ZikrView: View {
                 textHeight: $textHeight
             )
             .equatable()
-            .padding()
+            .padding([.leading, .trailing, .bottom])
 
             viewModel.zikr.audioURL.flatMap { url in
                 self.playerView(audioURL: url)

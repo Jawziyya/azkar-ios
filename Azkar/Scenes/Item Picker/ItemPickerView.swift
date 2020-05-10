@@ -33,7 +33,7 @@ struct ItemPickerView<SelectionValue>: View where SelectionValue: Hashable & Pic
                 item.subtitle.flatMap { text in
                     Text(text)
                         .font(item.subtitleFont)
-                        .foregroundColor(Color.secondaryText)
+                        .foregroundColor(Color.secondary)
                 }
                 CheckboxView(isCheked:  .constant(self.selection.hashValue == item.hashValue))
                     .frame(width: 20, height: 20)
