@@ -29,22 +29,21 @@ struct MainMenuViewModel {
     let infoModels: [AzkarMenuOtherItem]
     var notificationAccessModel: AzkarMenuOtherItem?
 
-    let audioPlayer: AudioPlayer 
-
+    let player: Player
     let settingsViewModel: SettingsViewModel
 
     let preferences: Preferences
 
     private var cancellabels = Set<AnyCancellable>()
 
-    init(audioPlayer: AudioPlayer, preferences: Preferences) {
-        self.audioPlayer = audioPlayer
+    init(preferences: Preferences, player: Player) {
         let all = Zikr.data
         morningAzkar = all.filter { $0.category == .morning }
         eveningAzkar = all.filter { $0.category == .evening }
         afterSalahAzkar = all.filter { $0.category == .afterSalah }
         otherAzkar = all.filter { $0.category == .other }
         self.preferences = preferences
+        self.player = player
 
         settingsViewModel = SettingsViewModel(preferences: preferences)
 
@@ -57,8 +56,8 @@ struct MainMenuViewModel {
         ]
 
         otherAzkarModels = [
-            AzkarMenuItem(category: .afterSalah, imageName: "mosque", title: "Дуа после молитвы", color: Color.init(.systemBlue), count: afterSalahAzkar.count, iconType: .bundled),
-            AzkarMenuItem(category: .other, imageName: "square.stack.3d.down.right.fill", title: "Важные дуа", color: Color.init(.systemTeal), count: otherAzkar.count),
+            AzkarMenuItem(category: .afterSalah, imageName: "mosque", title: "Азкары после молитвы", color: Color.init(.systemBlue), count: afterSalahAzkar.count, iconType: .bundled),
+            AzkarMenuItem(category: .other, imageName: "square.stack.3d.down.right.fill", title: "Важные азкары", color: Color.init(.systemTeal), count: otherAzkar.count),
         ]
 
         infoModels = [

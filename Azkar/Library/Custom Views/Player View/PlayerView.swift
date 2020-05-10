@@ -8,9 +8,14 @@
 
 import SwiftUI
 
-struct PlayerView: View {
+struct PlayerView: View, Equatable {
+
+    static func == (lhs: PlayerView, rhs: PlayerView) -> Bool {
+        return lhs.viewModel == rhs.viewModel
+    }
 
     @ObservedObject var viewModel: PlayerViewModel
+    
     var tintColor: Color = .accent
     var progressBarColor: Color = Color.accent.opacity(0.3)
     var progressBarHeight: CGFloat = 1
@@ -73,7 +78,7 @@ struct PlayerView: View {
 
 struct PlayerView_Previews: PreviewProvider {
     static var previews: some View {
-        PlayerView(viewModel: PlayerViewModel(audioURL: Zikr.data[39].audioURL, player: .test))
+        PlayerView(viewModel: PlayerViewModel(title: "", subtitle: "", audioURL: Zikr.data[39].audioURL, player: .test))
             .previewLayout(.fixed(width: 300, height: 100))
     }
 }

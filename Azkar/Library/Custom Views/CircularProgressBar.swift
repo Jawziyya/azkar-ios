@@ -12,7 +12,7 @@ struct CircularProgressBar: View {
 
     @Binding var value: Double
 
-    var backgroundColor: Color = .init(white: 0.8)
+    var backgroundColor: Color = Color(white: 0.8)
     var tintColor: Color = .accentColor
     var lineWidth: CGFloat = 2
 

@@ -42,7 +42,7 @@ struct GroupLarge_Previews: PreviewProvider {
 	static var previews: some View {
 		ZStack {
 			Color(.secondarySystemBackground)
-            MainMenuLargeGroup(item: .init(category: .evening, imageName: "sun.max", title: "Test", color: Color.accent, count: Int.random(in: 5...20)))
+            MainMenuLargeGroup(item: AzkarMenuItem(category: .evening, imageName: "sun.max", title: "Test", color: Color.accent, count: Int.random(in: 5...20)))
 		}
 	}
 }

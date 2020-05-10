@@ -12,6 +12,8 @@ import BonMot
 struct ZikrView: View {
 
     var viewModel: ZikrViewModel
+    var player: Player
+    
     @EnvironmentObject var preferences: Preferences
 
     @State private var textHeight: CGFloat = 0
@@ -20,7 +22,7 @@ struct ZikrView: View {
     @Environment(\.sizeCategory) var size
 
     private let tintColor = Color.accent
-    private let dividerColor = Color.secondaryBackground.opacity(0.5)
+    private let dividerColor = Color.secondaryBackground
     private let dividerHeight: CGFloat = 1
 
     var body: some View {
@@ -28,74 +30,26 @@ struct ZikrView: View {
         return ScrollView {
             self.getContent()
         }
-        .background(Color.background.edgesIgnoringSafeArea(.all))
+//        .background(Color.background.edgesIgnoringSafeArea(.all))
+        .navigationBarTitle(UIDevice.current.isIpad ? viewModel.title : "")
     }
 
     private func getContent() -> some View {
         VStack(alignment: .leading, spacing: 0) {
-
-            // MARK: - Title
-            HStack {
-                Spacer()
-                Text(viewModel.title)
-                    .font(Font.headline)
-                    .foregroundColor(Color.secondaryText)
-                    .multilineTextAlignment(.center)
-                    .padding()
-                Spacer()
+            if !UIDevice.current.isIpad {
+                titleView
             }
+            textView
+            translationView
 
-            // MARK: - Text
-            VStack(spacing: 10) {
-                CollapsableSection(
-                    text: viewModel.zikr.text.styled(with: TextStyles.arabicTextStyle(fontName: self.preferences.arabicFont.fontName, textStyle: .largeTitle, alignment: .center)),
-                    isExpanded: .constant(true),
-                    textHeight: $textHeight
-                )
-                .equatable()
-                .padding()
-
-                self.playerView
-            }
-
-            // MARK: - Translation
-            CollapsableSection(title: "перевод", text: viewModel.zikr.translation.styled(with: TextStyles.bodyStyle()), isExpanded: self.$preferences.expandTranslation, textHeight: $translationHeight, tintColor: tintColor) {
-                withAnimation(Animation.easeInOut(duration: 0.2)) {
-                    self.preferences.expandTranslation.toggle()
-                }
-            }
-            .equatable()
-            .padding()
-
-            // MARK: -
             getDivider()
 
-            // MARK: - Transliteration
-            CollapsableSection(title: "транскрипция", text: viewModel.zikr.transliteration.styled(with: TextStyles.bodyStyle()), isExpanded: self.$preferences.expandTransliteration, textHeight: $transliterationHeight, tintColor: tintColor) {
-                withAnimation(Animation.easeInOut(duration: 0.2)) {
-                    self.preferences.expandTransliteration.toggle()
-                }
-            }
-            .equatable()
-            .padding()
+            transliterationView
 
-            // MARK: -
             getDivider()
 
-            // MARK: - Info
-            HStack(alignment: .center, spacing: 20) {
-                if viewModel.zikr.repeats > 0 {
-                    getInfoStack(label: "повторения", text: String.localizedStringWithFormat(NSLocalizedString("repeats", comment: ""), viewModel.zikr.repeats))
-                }
-
-                viewModel.zikr.source.textOrNil.flatMap { text in
-                    getInfoStack(label: "источник", text: text)
-                }
-            }
-            .font(.caption)
-            .foregroundColor(.text)
-            .padding()
-
+            infoView
+            
             // MARK: - Note
             viewModel.zikr.notes.flatMap { _ in
                 self.getDivider()
@@ -107,6 +61,73 @@ struct ZikrView: View {
 
             Spacer(minLength: 20)
         }
+    }
+
+    // MARK: - Title
+    private var titleView: some View {
+        HStack {
+            Spacer()
+            Text(viewModel.title)
+                .equatable()
+                .font(Font.headline)
+                .foregroundColor(Color.secondaryText)
+                .multilineTextAlignment(.center)
+                .padding()
+            Spacer()
+        }
+    }
+
+    // MARK: - Text
+    private var textView: some View {
+        VStack(spacing: 10) {
+            CollapsableSection(
+                text: viewModel.zikr.text.styled(with: TextStyles.arabicTextStyle(fontName: self.preferences.arabicFont.fontName, textStyle: .title1, alignment: .center)),
+                isExpanded: .constant(true),
+                textHeight: $textHeight
+            )
+            .equatable()
+            .padding()
+
+            self.playerView
+        }
+    }
+
+    // MARK: - Translation
+    private var translationView: some View {
+        CollapsableSection(title: "перевод", text: viewModel.zikr.translation.styled(with: TextStyles.bodyStyle()), isExpanded: self.$preferences.expandTranslation, textHeight: $translationHeight, tintColor: tintColor) {
+            withAnimation(Animation.easeInOut(duration: 0.2)) {
+                self.preferences.expandTranslation.toggle()
+            }
+        }
+        .equatable()
+        .padding()
+    }
+
+    // MARK: - Transliteration
+    private var transliterationView: some View {
+        CollapsableSection(title: "транскрипция", text: viewModel.zikr.transliteration.styled(with: TextStyles.bodyStyle()), isExpanded: self.$preferences.expandTransliteration, textHeight: $transliterationHeight, tintColor: tintColor) {
+            withAnimation(Animation.easeInOut(duration: 0.2)) {
+                self.preferences.expandTransliteration.toggle()
+            }
+        }
+        .equatable()
+        .padding()
+    }
+
+    // MARK: - Info
+    private var infoView: some View {
+        HStack(alignment: .center, spacing: 20) {
+            if viewModel.zikr.repeats > 0 {
+                getInfoStack(label: "повторения", text: String.localizedStringWithFormat(NSLocalizedString("repeats", comment: ""), viewModel.zikr.repeats))
+            }
+
+            viewModel.zikr.source.textOrNil.flatMap { text in
+                getInfoStack(label: "источник", text: text)
+            }
+        }
+        .font(.caption)
+        .foregroundColor(.text)
+        .padding()
     }
 
     private func getInfoStack(label: String, text: String) -> some View {
@@ -142,18 +163,19 @@ struct ZikrView: View {
 
     private var playerView: some View {
         PlayerView(
-            viewModel: viewModel.playerViewModel,
+            viewModel: PlayerViewModel(title: viewModel.title, subtitle: viewModel.zikr.category.title, audioURL: viewModel.zikr.audioURL, player: player),
             tintColor: tintColor,
             progressBarColor: dividerColor,
             progressBarHeight: dividerHeight
         )
+        .equatable()
     }
 
 }
 
 struct ZikrView_Previews: PreviewProvider {
     static var previews: some View {
-        ZikrView(viewModel: ZikrViewModel(zikr: Zikr.data[39], player: .test))
+        ZikrView(viewModel: ZikrViewModel(zikr: Zikr.data[39]), player: .test)
         .environmentObject(Preferences())
         .previewLayout(.fixed(width: 300, height: 500))
     }

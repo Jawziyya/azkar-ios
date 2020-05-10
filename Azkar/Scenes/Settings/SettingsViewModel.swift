@@ -18,15 +18,15 @@ enum ArabicFont: String, CaseIterable, Identifiable, Codable, Hashable, Pickable
         case .standard:
             return "iOS"
         case .adobe:
-            return ArabicFonts.adobe
+            return "AdobeArabic-Regular"
         case .amiri:
-            return "Amiri"
+            return "Amiri-Regular"
         case .KFGQP:
-            return ArabicFonts.KFGQP
+            return "KFGQPCUthmanicScriptHAFS"
         case .noto:
-            return ArabicFonts.noto
+            return "NotoNaskhArabicUI"
         case .scheherazade:
-            return ArabicFonts.scheherazade
+            return "Scheherazade"
         }
     }
 
@@ -36,7 +36,7 @@ enum ArabicFont: String, CaseIterable, Identifiable, Codable, Hashable, Pickable
 
     var title: String {
         switch self {
-        case .adobe:
+        case .adobe, .amiri:
             return rawValue.capitalized
         case .KFGQP:
             return rawValue
@@ -153,16 +153,12 @@ final class SettingsViewModel: ObservableObject {
     var preferences: Preferences
 
     var canChangeIcon: Bool {
-        #if os(iOS)
-        return true
-        #else
-        return false
-        #endif
+        return !UIDevice.current.isIpad
     }
 
     @Published var arabicFont: ArabicFont
     @Published var theme: Theme
-    @Published var appIcon: AppIcon = .ink
+    @Published var appIcon: AppIcon = .light
 
     private var cancellabels = Set<AnyCancellable>()
 
