@@ -10,6 +10,13 @@ import SwiftUI
 import ASCollectionView
 import AudioPlayer
 
+private func leadingPadding(_ geometry: GeometryProxy) -> CGFloat {
+    if UIDevice.current.userInterfaceIdiom == .pad {
+        return 0.5
+    }
+    return 0
+}
+
 struct MainMenuView: View {
 
     typealias Section = MainMenuViewModel.Section
@@ -20,10 +27,26 @@ struct MainMenuView: View {
     let groupBackgroundElementID = UUID().uuidString
 
     var body: some View {
-        remindersStyleMenu
-            .navigationBarTitle(Text("Азкары"), displayMode: .inline)
-            .background(Color.background.edgesIgnoringSafeArea(.all))
-            .embedInNavigation()
+        NavigationView {
+            self.remindersStyleMenu
+                .navigationBarTitle(Text("Азкары"), displayMode: .inline)
+            UIDevice.current.isIpad ? self.ipadDetailView : nil
+        }
+        .navigationViewStyle(DoubleColumnNavigationViewStyle())
+        .padding(.leading, UIDevice.current.isIpad ? 1 : 0) // Hack for proper allVisible split view mode.
+        .background(Color.background.edgesIgnoringSafeArea(.all))
+    }
+
+    private var ipadDetailView: some View {
+        Color.secondaryBackground
+        .overlay(
+            Text("Выберите раздел")
+                .font(Font.title.smallCaps())
+                .foregroundColor(Color.secondary)
+            ,
+            alignment: .center
+        )
+        .edgesIgnoringSafeArea(.all)
     }
 
     private var remindersStyleMenu: some View {
@@ -41,15 +64,16 @@ struct MainMenuView: View {
         var sections = [
         ASCollectionViewSection<Section>(id: .dayNight, data: viewModel.dayNightSectionModels) { item, _ in
 
-            NavigationLink(destination: self.zikrPages(item)) {
+            NavigationLink(destination: self.azkarsDestination(for: item)) {
                 MainMenuLargeGroup(item: item)
             }
+            .isDetailLink(false)
             .buttonStyle(PlainButtonStyle())
         },
 
         ASCollectionViewSection<Section>(id: .afterSalah, data: viewModel.otherAzkarModels) { item, ctx in
             VStack(spacing: 0) {
-                NavigationLink(destination: self.zikrPages(item)) {
+                NavigationLink(destination: self.zikrList(item)) {
                     HStack {
                         MainMenuSmallGroup(item: item)
                         Image(systemName: "chevron.right")
@@ -57,6 +81,7 @@ struct MainMenuView: View {
                             .padding(.trailing)
                     }
                 }
+                .isDetailLink(false)
                 if !ctx.isLastInSection {
                     Divider()
                 }
@@ -105,18 +130,52 @@ struct MainMenuView: View {
         return sections
     }
 
-    private func zikrPages(_ model: AzkarMenuItem) -> some View {
-        LazyView(
-            ZikrPagesView(viewModel: ZikrPagesViewModel(type: model.category, azkar: self.viewModel.azkarForCategory(model.category), player: Player(player: self.viewModel.audioPlayer), preferences: self.viewModel.preferences))
-                .equatable()
-                .environmentObject(self.viewModel.preferences)
-        )
+    private func zikrList(_ model: AzkarMenuItem) -> some View {
+        let viewModel = self.getZikrPagesViewModel(for: model.category)
+
+        return ZStack {
+            if UIDevice.current.isIpad {
+                LazyView(
+                    AzkarListView(viewModel: viewModel)
+                )
+            } else {
+                LazyView(
+                    ZStack {
+                        if model.category == .afterSalah {
+                            ZikrPagesView(viewModel: viewModel)
+                        } else {
+                            AzkarListView(viewModel: viewModel)
+                        }
+                    }
+                )
+            }
+        }
+        .environmentObject(viewModel.preferences)
+    }
+
+    private func getZikrPagesViewModel(for category: ZikrCategory) -> ZikrPagesViewModel {
+        ZikrPagesViewModel(type: category, azkar: viewModel.azkarForCategory(category), preferences: viewModel.preferences, player: viewModel.player)
+    }
+
+    private func azkarsDestination(for model: AzkarMenuItem) -> some View {
+        let viewModel = self.getZikrPagesViewModel(for: model.category)
+        return ZStack {
+            if UIDevice.current.isIpad {
+                zikrList(model)
+            } else {
+                LazyView(
+                    ZikrPagesView(viewModel: viewModel)
+                )
+            }
+        }
+        .environmentObject(viewModel.preferences)
+        .navigationBarTitle(viewModel.title)
     }
 
     private func destination(for item: AzkarMenuOtherItem) -> AnyView {
         switch item.groupType {
         case .legal:
-            return AppInfoView(viewModel: .init()).eraseToAny()
+            return AppInfoView(viewModel: AppInfoViewModel()).eraseToAny()
         case .settings:
             return SettingsView(viewModel: self.viewModel.settingsViewModel).eraseToAny()
         default:
@@ -183,6 +242,6 @@ struct GroupBackground: View, Decoration {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        MainMenuView(viewModel: .init(audioPlayer: AudioPlayer(), preferences: .init()))
+        MainMenuView(viewModel: MainMenuViewModel(preferences: Preferences(), player: .test))
     }
 }

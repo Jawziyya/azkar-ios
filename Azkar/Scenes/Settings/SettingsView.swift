@@ -8,6 +8,12 @@
 
 import SwiftUI
 
+extension URL: Identifiable {
+    public var id: String {
+        absoluteString
+    }
+}
+
 struct SettingsView: View {
 
     @ObservedObject var viewModel: SettingsViewModel
@@ -24,7 +30,7 @@ struct SettingsView: View {
     }
 
     var appearanceSection: some View {
-        Section(header: Text("Отображение")) {
+        Section {
             NavigationLink(destination: arabicFontPicker) {
                 HStack(spacing: 8) {
                     Text("Шрифт арабского языка")
@@ -92,7 +98,7 @@ struct SettingsView: View {
 
 struct SettingsView_Previews: PreviewProvider {
     static var previews: some View {
-        SettingsView(viewModel: .init(preferences: .init()))
+        SettingsView(viewModel: SettingsViewModel(preferences: Preferences()))
             .embedInNavigation()
     }
 }

@@ -10,7 +10,14 @@ import SwiftUI
 import Combine
 import AVFoundation
 
-final class PlayerViewModel: ObservableObject {
+final class PlayerViewModel: ObservableObject, Equatable {
+
+    static func == (lhs: PlayerViewModel, rhs: PlayerViewModel) -> Bool {
+        return lhs.timeRemaining == rhs.timeRemaining
+            && lhs.timeElapsed == rhs.timeElapsed
+            && lhs.progress == rhs.progress
+            && lhs.isPlaying == rhs.isPlaying
+    }
 
     @Published var isPlaying: Bool
     @Published var progress: Double = 0
@@ -19,16 +26,22 @@ final class PlayerViewModel: ObservableObject {
     @Published var speed: Player.Speed = .normal
 
     let audioURL: URL
+    let title: String
+    let subtitle: String
+
     private let player: Player
     private var cancellabels = Set<AnyCancellable>()
 
-    init(audioURL: URL, player: Player) {
+    init(title: String, subtitle: String, audioURL: URL, player: Player) {
         self.audioURL = audioURL
+        self.title = title
+        self.subtitle = subtitle
         self.player = player
         isPlaying = player.isPlaying
         speed = player.speed
 
         player.$speed
+            .removeDuplicates()
             .assign(to: \.speed, on: self)
             .store(in: &cancellabels)
 
@@ -79,7 +92,7 @@ final class PlayerViewModel: ObservableObject {
     }
 
     func play() {
-        player.playAudio(audioURL)
+        player.playAudio(audioURL, title: title, subtitle: subtitle)
     }
 
     private func resume() {

@@ -7,7 +7,6 @@
 //
 
 import SwiftUI
-import ASCollectionView
 
 struct AppInfoView: View {
 
@@ -16,10 +15,10 @@ struct AppInfoView: View {
     let viewModel: AppInfoViewModel
     let groupBackgroundElementID = UUID().uuidString
 
+    @State private var url: URL?
+
     var body: some View {
-
         Form {
-
             self.iconAndVersion.background(
                 Color(.systemGroupedBackground)
                     .padding(-20)
@@ -37,13 +36,21 @@ struct AppInfoView: View {
                 }
             }
 
+            Section(header: Text(viewModel.supportHeader)) {
+                ForEach(viewModel.supportModels, id: \.title) { item in
+                    self.viewForItem(item)
+                }
+            }
         }
         .listStyle(GroupedListStyle())
         .environment(\.horizontalSizeClass, .regular)
         .environment(\.verticalSizeClass, .regular)
         .navigationBarTitle(Text("О приложении"), displayMode: .inline)
-        .background(Color.background.edgesIgnoringSafeArea(.all))
+//        .background(Color.background.edgesIgnoringSafeArea(.all))
         .supportedOrientations(.portrait)
+        .sheet(item: $url) { url in
+            SafariView(url: url, entersReaderIfAvailable: false)
+        }
     }
 
     private var iconAndVersion: some View {
@@ -75,64 +82,13 @@ struct AppInfoView: View {
         }
     }
 
-    private var remindersStyleMenu: some View {
-        ASCollectionView {
-            sections
-        }
-        .layout(menuLayout)
-        .contentInsets(.init(top: 20, left: 0, bottom: 20, right: 0))
-        .alwaysBounceVertical()
-        .background(Color(.systemGroupedBackground))
-        .edgesIgnoringSafeArea(.all)
-    }
-
-    private var sections: [ASCollectionViewSection<ItemSection>] {
-        return [
-            
-        ASCollectionViewSection<ItemSection>(id: .versionAndName) {
-            self.iconAndVersion
-        },
-
-        ASCollectionViewSection<ItemSection>(id: .azkarLegal, data: viewModel.azkarLegalInfoModels) { item, ctx in
-            VStack {
-                Spacer()
-                self.viewForItem(item)
-                if !ctx.isLastInSection {
-                    Divider()
-                }
-                Spacer()
-            }
-        }
-        .sectionHeader {
-            Text(viewModel.legalInfoHeader)
-                .font(Font.body)
-                .padding()
-                .frame(maxWidth: .infinity, alignment: .leading)
-        },
-
-        ASCollectionViewSection<ItemSection>(id: .imagesLegal, data: viewModel.imagesLegalInfoModels) { item, ctx in
-            VStack {
-                Spacer()
-                self.viewForItem(item)
-                if !ctx.isLastInSection {
-                    Divider()
-                }
-                Spacer()
-            }
-        }
-        .sectionHeader {
-            Text(viewModel.imagesInfoHeader)
-                .font(Font.body)
-                .padding()
-                .frame(maxWidth: .infinity, alignment: .leading)
-        },
-
-        ]
-    }
-
     private func viewForItem(_ item: SourceInfo) -> some View {
         Button(action: {
-            UIApplication.shared.open(item.url)
+            if item.openUrlInApp {
+                self.url = item.url
+            } else {
+                UIApplication.shared.open(item.url)
+            }
         }, label: {
             HStack {
                 item.imageName.flatMap { name in
@@ -145,69 +101,22 @@ struct AppInfoView: View {
                         .shadow(radius: 1)
                 }
                 Text(item.title)
-                    .foregroundColor(Color.init(.link))
+                    .foregroundColor(Color.text)
                 Spacer()
                 Image(systemName: "chevron.right")
                     .foregroundColor(Color.tertiaryText)
             }
+            .background(Color(.secondarySystemGroupedBackground))
         })
+        .buttonStyle(PlainButtonStyle())
         .padding(.vertical, 8)
-    }
-
-    private var menuLayout: ASCollectionLayout<ItemSection> {
-        ASCollectionLayout<ItemSection>(interSectionSpacing: 20) { sectionID in
-            switch sectionID {
-
-            case .versionAndName:
-                return .grid(
-                    layoutMode: .fixedNumberOfColumns(1),
-                    itemSpacing: 0,
-                    lineSpacing: 0,
-                    itemSize: .estimated(100)
-                )
-
-            case .azkarLegal, .imagesLegal:
-                return ASCollectionLayoutSection {
-                    let itemSize = NSCollectionLayoutSize(
-                        widthDimension: .fractionalWidth(1.0),
-                        heightDimension: .estimated(40))
-                    let item = NSCollectionLayoutItem(layoutSize: itemSize)
-
-                    let groupSize = NSCollectionLayoutSize(
-                        widthDimension: .fractionalWidth(1.0),
-                        heightDimension: .estimated(40))
-                    let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
-
-                    let section = NSCollectionLayoutSection(group: group)
-                    section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
-
-                    let supplementarySize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(20))
-                    let headerSupplementary = NSCollectionLayoutBoundarySupplementaryItem(
-                        layoutSize: supplementarySize,
-                        elementKind: UICollectionView.elementKindSectionHeader,
-                        alignment: .top)
-                    let footerSupplementary = NSCollectionLayoutBoundarySupplementaryItem(
-                        layoutSize: supplementarySize,
-                        elementKind: UICollectionView.elementKindSectionFooter,
-                        alignment: .bottom)
-                    section.boundarySupplementaryItems = [headerSupplementary, footerSupplementary]
-
-                    let sectionBackgroundDecoration = NSCollectionLayoutDecorationItem.background(elementKind: self.groupBackgroundElementID)
-                    sectionBackgroundDecoration.contentInsets = section.contentInsets
-                    section.decorationItems = [sectionBackgroundDecoration]
-
-                    return section
-                }
-            }
-        }
-        .decorationView(GroupBackground.self, forDecorationViewOfKind: groupBackgroundElementID)
     }
 
 }
 
 struct LegalInfoView_Previews: PreviewProvider {
     static var previews: some View {
-        AppInfoView(viewModel: .init())
+        AppInfoView(viewModel: AppInfoViewModel())
             .colorScheme(.dark)
     }
 }

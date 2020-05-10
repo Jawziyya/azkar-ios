@@ -21,16 +21,17 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
 
-        let player = AppDelegate.shared.player
+        let audioPlayer = AppDelegate.shared.player
 
         let preferences = Preferences()
 
-        let contentView = MainMenuView(viewModel: MainMenuViewModel(audioPlayer: player, preferences: preferences))
+        let mainViewModel = MainMenuViewModel(preferences: preferences, player: Player(player: audioPlayer))
+        let mainView = MainMenuView(viewModel: mainViewModel)
 
         // Use a UIHostingController as window root view controller.
         if let windowScene = scene as? UIWindowScene {
             let window = UIWindow(windowScene: windowScene)
-            window.rootViewController = OrientationLockedController(rootView: contentView)
+            window.rootViewController = OrientationLockedController(rootView: mainView)
             self.window = window
             window.makeKeyAndVisible()
 

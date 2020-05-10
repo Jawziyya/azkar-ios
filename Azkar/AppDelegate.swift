@@ -22,6 +22,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
 
         application.beginReceivingRemoteControlEvents()
+        registerUserDefaults()
 
         UITableViewCell.appearance().selectionStyle = .none
         UITableView.appearance().allowsSelection = false
@@ -56,6 +57,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         default:
             return
         }
+    }
+
+    private func registerUserDefaults() {
+        let defaults: [String: Any] = [
+            Keys.arabicFont: ArabicFont.KFGQP.fontName,
+            Keys.expandTranslation: true,
+            Keys.expandTransliteration: true,
+        ]
+
+        UserDefaults.standard.register(defaults: defaults)
     }
 
 }

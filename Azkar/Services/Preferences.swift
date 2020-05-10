@@ -11,26 +11,17 @@ import Combine
 
 final class Preferences: ObservableObject {
 
-    @Preference("kExpandTranslation", defaultValue: false)
+    @Preference(Keys.expandTranslation, defaultValue: true)
     var expandTranslation: Bool
 
-    @Preference("kExpandTransliteration", defaultValue: false)
+    @Preference(Keys.expandTransliteration, defaultValue: true)
     var expandTransliteration: Bool
 
-    @Preference("kArabicFont", defaultValue: .amiri)
+    @Preference(Keys.arabicFont, defaultValue: .KFGQP)
     var arabicFont: ArabicFont
 
-    @Preference("kTheme", defaultValue: .automatic)
+    @Preference(Keys.theme, defaultValue: .automatic)
     var theme: Theme
-
-    @Preference("kEnableNotifications", defaultValue: false)
-    var enableNotifications
-
-    @Preference("kMorningNotificationsTime", defaultValue: Date())
-    var morningNotificationsTime
-
-    @Preference("kEveningNotificationsTime", defaultValue: Date())
-    var eveningNotificationsTime
 
     private var notificationSubscription: AnyCancellable?
 

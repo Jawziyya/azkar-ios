@@ -8,6 +8,7 @@
 
 import Foundation
 import AudioPlayer
+import UIKit.UIImage
 
 extension AudioPlayerState {
     var isPlaying: Bool {
@@ -73,11 +74,14 @@ final class Player: NSObject, ObservableObject {
         super.init()
         audioPlayer.delegate = self
         speed = Speed.fromRate(audioPlayer.rate)
+        isPlaying = audioPlayer.state == .playing
     }
 
-    func playAudio(_ url: URL) {
+    func playAudio(_ url: URL, title: String, subtitle: String) {
         let item = AudioItem(highQualitySoundURL: url)!
-        audioPlayer.play(item: item)
+        item.title = title
+        item.artist = subtitle
+        playItem(item)
     }
 
     func playItem(_ item: AudioItem) {

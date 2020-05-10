@@ -31,30 +31,17 @@ func textSize(forTextStyle textStyle: UIFont.TextStyle) -> CGFloat {
    return UIFont.preferredFont(forTextStyle: textStyle).pointSize
 }
 
-enum ArabicFonts {
-    static let KFGQP = "KFGQPCUthmanicScriptHAFS"
-    static let noto = "NotoNaskhArabicUI"
-    static let scheherazade = "Scheherazade"
-    static let amiri = "Amiri-Regular"
-    static let damascus = "DamascusLight"
-    static let adobe = "AdobeArabic-Regular"
-}
-
 extension Font {
-    
-    private static var name: String {
-        ArabicFonts.damascus
-    }
- 
-    static func arabic(_ style: UIFont.TextStyle = .body) -> Font {
-        let size = textSize(forTextStyle: style)
-        return Font.custom(name, size: size)
-    }
-    
-    static func arabicBold(_ style: UIFont.TextStyle = .body) -> Font {
-        let size = textSize(forTextStyle: style)
-        return Font.custom(name + "-Bold", size: size)
-    }
+
+//    static func arabic(_ style: UIFont.TextStyle = .body) -> Font {
+//        let size = textSize(forTextStyle: style)
+//        return Font.custom(name, size: size)
+//    }
+//
+//    static func arabicBold(_ style: UIFont.TextStyle = .body) -> Font {
+//        let size = textSize(forTextStyle: style)
+//        return Font.custom(name + "-Bold", size: size)
+//    }
 
     static func textFont(_ style: UIFont.TextStyle = .body) -> Font {
         let size = textSize(forTextStyle: style)
