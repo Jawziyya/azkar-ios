@@ -1226,7 +1226,7 @@
 				DEVELOPMENT_TEAM = 486STKKP6Y;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = Azkar/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.3;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1251,7 +1251,7 @@
 				DEVELOPMENT_TEAM = 486STKKP6Y;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = Azkar/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.3;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
