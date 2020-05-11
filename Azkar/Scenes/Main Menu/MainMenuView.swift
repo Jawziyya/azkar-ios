@@ -104,13 +104,6 @@ struct MainMenuView: View {
                 }
             }
         }
-//        .sectionHeader {
-//            Text("Информация")
-//                .font(Font.headline.weight(.regular))
-//                .foregroundColor(Color.secondaryText)
-//                .frame(maxWidth: .infinity, alignment: .leading)
-//                .padding()
-//        }
 
         ]
 
