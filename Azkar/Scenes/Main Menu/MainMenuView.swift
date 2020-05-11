@@ -23,6 +23,7 @@ struct MainMenuView: View {
 
     var viewModel: MainMenuViewModel
     @Environment(\.colorScheme) var colorScheme
+    @Environment(\.horizontalSizeClass) var hSizeClass
 
     let groupBackgroundElementID = UUID().uuidString
 
@@ -34,6 +35,7 @@ struct MainMenuView: View {
         }
         .padding(.leading, UIDevice.current.isIpad ? 0.5 : 0) // Hack for proper allVisible split view mode.
         .background(Color.background.edgesIgnoringSafeArea(.all))
+        .environment(\.horizontalSizeClass, UIDevice.current.isIpad ? .regular : .compact)
     }
 
     private var ipadDetailView: some View {
