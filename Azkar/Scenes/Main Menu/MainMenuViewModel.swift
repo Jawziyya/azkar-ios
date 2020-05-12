@@ -10,7 +10,7 @@ import SwiftUI
 import AudioPlayer
 import Combine
 
-struct MainMenuViewModel {
+final class MainMenuViewModel: ObservableObject {
 
     enum Section: CaseIterable {
         case dayNight
@@ -27,7 +27,7 @@ struct MainMenuViewModel {
     let dayNightSectionModels: [AzkarMenuItem]
     let otherAzkarModels: [AzkarMenuItem]
     let infoModels: [AzkarMenuOtherItem]
-    var notificationAccessModel: AzkarMenuOtherItem?
+    @Published var notificationAccessModel: AzkarMenuOtherItem?
 
     let player: Player
     let settingsViewModel: SettingsViewModel
@@ -62,11 +62,21 @@ struct MainMenuViewModel {
 
         infoModels = [
 //            AzkarMenuOtherItem(groupType: .fadail, icon: "info.circle.fill", title: "Достоинства поминания Аллаха", color: Color(.systemGreen)),
-            AzkarMenuOtherItem(groupType: .legal, icon: "checkmark.seal.fill", title: "О приложении", color: Color(.systemGreen)),
+            AzkarMenuOtherItem(groupType: .legal, icon: "checkmark.seal.fill", title: "О приложении", color: Color.accent),
             AzkarMenuOtherItem(groupType: .settings, icon: "gear", title: "Настройки", color: Color.init(.systemGray)),
         ]
 
-//        notificationAccessModel = .init(groupType: .notificationsAccess, icon: nil, title: "Включите уведомления, чтобы приложение напоминало о времени утренних и вечерних азкаров", color: Color.init(.link))
+        UNUserNotificationCenter.current().getNotificationSettings { settings
+            in
+            DispatchQueue.main.async {
+                switch settings.authorizationStatus {
+                case .notDetermined:
+                    self.notificationAccessModel = .init(groupType: .notificationsAccess, icon: nil, title: "Включите уведомления, чтобы приложение напоминало о времени утренних и вечерних азкаров", color: Color.init(.link))
+                default:
+                    break
+                }
+            }
+        }
     }
 
     func azkarForCategory(_ category: ZikrCategory) -> [Zikr] {
@@ -75,6 +85,12 @@ struct MainMenuViewModel {
         case .evening: return eveningAzkar
         case .afterSalah: return afterSalahAzkar
         case .other: return otherAzkar
+        }
+    }
+
+    func hideNotificationsAccessMessage() {
+        DispatchQueue.main.async {
+            self.notificationAccessModel = nil
         }
     }
 

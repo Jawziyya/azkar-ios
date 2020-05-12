@@ -18,57 +18,26 @@ struct SettingsView: View {
 
     @ObservedObject var viewModel: SettingsViewModel
 
-    @State private var presentPicker = false
-
     var body: some View {
         Form {
             self.appearanceSection
+            self.notificationsSection
         }
         .listStyle(GroupedListStyle())
-        .navigationBarTitle(Text("Настройки"), displayMode: .inline)
         .environment(\.horizontalSizeClass, .regular)
+        .navigationBarTitle(Text("Настройки"), displayMode: .inline)
     }
 
+    // MARK: - Appearance
     var appearanceSection: some View {
-        Section {
-            NavigationLink(destination: arabicFontPicker) {
-                HStack(spacing: 8) {
-                    Text("Шрифт арабского языка")
-                    Spacer()
-                    Text(viewModel.arabicFont.title)
-                        .font(Font.caption)
-                        .foregroundColor(Color.tertiaryText)
-                }
-                .padding(.vertical, 10)
-            }
-            .buttonStyle(PlainButtonStyle())
+        Section(header: Text("Настройки отображения")) {
+            picker(with: "Шрифт арабского языка", subtitle: viewModel.arabicFont.title, destination: arabicFontPicker)
 
-            NavigationLink(destination: themePicker) {
-                HStack(spacing: 8) {
-                    Text("Тема")
-                    Spacer()
-                    Text(viewModel.theme.title)
-                        .font(Font.caption)
-                        .foregroundColor(Color.tertiaryText)
-                }
-                .padding(.vertical, 10)
-            }
-            .buttonStyle(PlainButtonStyle())
+            picker(with: "Тема", subtitle: viewModel.theme.title, destination: themePicker)
 
             if viewModel.canChangeIcon {
-                NavigationLink(destination: iconPicker) {
-                    HStack(spacing: 8) {
-                        Text("Значок приложения")
-                        Spacer()
-                        Text(viewModel.appIcon.title)
-                            .font(Font.caption)
-                            .foregroundColor(Color.tertiaryText)
-                    }
-                    .padding(.vertical, 10)
-                }
-                .buttonStyle(PlainButtonStyle())
+                picker(with: "Значок приложения", subtitle: viewModel.appIcon.title, destination: iconPicker)
             }
-
         }
     }
 
@@ -92,6 +61,52 @@ struct SettingsView: View {
             selection: $viewModel.appIcon,
             items: AppIcon.availableIcons
         )
+    }
+
+    // MARK: - Notifications
+    var notificationsSection: some View {
+        Section(header: Text("Уведомления")) {
+            Toggle(isOn: $viewModel.preferences.enableNotifications, label: {
+                Text("Напоминать об утренних и вечерних азкарах")
+            })
+
+            if viewModel.preferences.enableNotifications {
+                picker(with: "Напоминание об утренних азкарах", subtitle: viewModel.morningTime, destination: morningTimePicker)
+
+                picker(with: "Напоминание о вечерних азкарах", subtitle: viewModel.eveningTime, destination: eveningTimePicker)
+            }
+        }
+    }
+
+    var morningTimePicker: some View {
+        ItemPickerView(
+            selection: $viewModel.morningTime,
+            items: viewModel.morningDateItems,
+            dismissOnSelect: true
+        )
+    }
+
+    var eveningTimePicker: some View {
+        ItemPickerView(
+            selection: $viewModel.eveningTime,
+            items: viewModel.eveningDateItems,
+            dismissOnSelect: true
+        )
+    }
+
+    // MARK: - Common
+    func picker<T: View>(with label: String, subtitle: String, navigationTitle: String? = nil, destination: T) -> some View {
+        NavigationLink(destination: destination.navigationBarTitle(navigationTitle ?? label)) {
+            HStack(spacing: 8) {
+                Text(label)
+                Spacer()
+                Text(subtitle)
+                    .font(Font.caption)
+                    .foregroundColor(Color.secondary)
+            }
+            .padding(.vertical, 10)
+            .buttonStyle(PlainButtonStyle())
+        }
     }
 
 }

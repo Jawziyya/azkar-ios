@@ -53,8 +53,8 @@ struct AzkarMenuOtherItem: Identifiable, AzkarMenuType {
         case fadail, legal, settings, notificationsAccess
     }
 
-    let groupType: GroupType
-	let icon: String?
+    var groupType: GroupType?
+	var icon: String?
 	let title: String
 	let color: Color
     var iconType = IconType.system

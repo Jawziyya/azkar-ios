@@ -38,7 +38,6 @@ struct ItemPickerView<SelectionValue>: View where SelectionValue: Hashable & Pic
                 CheckboxView(isCheked:  .constant(self.selection.hashValue == item.hashValue))
                     .frame(width: 20, height: 20)
             }
-            .buttonStyle(DefaultButtonStyle())
             .padding(.vertical, 10)
             .background(Color(.secondarySystemGroupedBackground))
             .onTapGesture {

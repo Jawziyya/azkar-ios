@@ -9,6 +9,7 @@
 import SwiftUI
 import ASCollectionView
 import AudioPlayer
+import UserNotifications
 
 private func leadingPadding(_ geometry: GeometryProxy) -> CGFloat {
     if UIDevice.current.userInterfaceIdiom == .pad {
@@ -21,7 +22,7 @@ struct MainMenuView: View {
 
     typealias Section = MainMenuViewModel.Section
 
-    var viewModel: MainMenuViewModel
+    @ObservedObject var viewModel: MainMenuViewModel
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.horizontalSizeClass) var hSizeClass
 
@@ -81,6 +82,7 @@ struct MainMenuView: View {
                             .foregroundColor(Color.tertiaryText)
                             .padding(.trailing)
                     }
+                    .padding(10)
                 }
                 .isDetailLink(false)
                 if !ctx.isLastInSection {
@@ -98,6 +100,7 @@ struct MainMenuView: View {
                             .foregroundColor(Color.tertiaryText)
                             .padding()
                     }
+                    .padding(10)
                 }
                 if !ctx.isLastInSection {
                     Divider()
@@ -110,12 +113,17 @@ struct MainMenuView: View {
         if let vm = viewModel.notificationAccessModel {
             let section = ASCollectionViewSection<Section>.init(id: .notificationsAccess) {
                 Button(action: {
-                    print("OK")
+                    UNUserNotificationCenter.current()
+                        .requestAuthorization(options: [.alert, .sound, ]) { (granted, error) in
+                            self.viewModel.hideNotificationsAccessMessage()
+                            guard granted else {
+                                return
+                            }
+                            self.viewModel.preferences.enableNotifications = true
+                    }
                 }, label: {
-                    Text(vm.title)
-                        .foregroundColor(Color.white)
-                        .padding()
-                        .lineLimit(nil)
+                    MainMenuSmallGroup(item: AzkarMenuOtherItem(icon: "app.badge", title: vm.title, color: Color.orange), flip: true)
+                    .padding(10)
                 })
             }
             sections.append(section)
@@ -191,12 +199,12 @@ struct MainMenuView: View {
                 return ASCollectionLayoutSection {
                     let itemSize = NSCollectionLayoutSize(
                         widthDimension: .fractionalWidth(1.0),
-                        heightDimension: .estimated(80))
+                        heightDimension: .estimated(100))
                     let item = NSCollectionLayoutItem(layoutSize: itemSize)
 
                     let groupSize = NSCollectionLayoutSize(
                         widthDimension: .fractionalWidth(1.0),
-                        heightDimension: .estimated(80))
+                        heightDimension: .estimated(100))
                     let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
 
                     let section = NSCollectionLayoutSection(group: group)

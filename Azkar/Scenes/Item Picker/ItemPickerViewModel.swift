@@ -15,6 +15,12 @@ protocol PickableItem {
     var subtitleFont: Font { get }
 }
 
+extension String: PickableItem {
+    var title: String {
+        self
+    }
+}
+
 extension PickableItem {
 
     var image: Image? {

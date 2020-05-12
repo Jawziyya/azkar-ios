@@ -8,6 +8,7 @@
 
 import UIKit
 import AudioPlayer
+import UserNotifications
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -27,6 +28,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UITableViewCell.appearance().selectionStyle = .none
         UITableView.appearance().allowsSelection = false
         UITableView.appearance().separatorColor = .clear
+        UISwitch.appearance().onTintColor = UIColor(named: "accent")
 
         return true
     }
@@ -61,9 +63,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     private func registerUserDefaults() {
         let defaults: [String: Any] = [
-            Keys.arabicFont: ArabicFont.KFGQP.fontName,
+            Keys.arabicFont: ArabicFont.noto.fontName,
             Keys.expandTranslation: true,
             Keys.expandTransliteration: true,
+            Keys.morningNotificationsTime: defaultMorningNotificationTime,
+            Keys.eveningNotificationsTime: defaultEveningNotificationTime
         ]
 
         UserDefaults.standard.register(defaults: defaults)

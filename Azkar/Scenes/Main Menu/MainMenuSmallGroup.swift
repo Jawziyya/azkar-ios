@@ -5,9 +5,10 @@ import SwiftUI
 struct MainMenuSmallGroup: View {
 
 	var item: AzkarMenuType
+    var flip = false
 
 	var body: some View {
-		HStack(alignment: .center) {
+		HStack {
             item.image.flatMap { image in
                 image
                     .resizable()
@@ -17,19 +18,22 @@ struct MainMenuSmallGroup: View {
                     .foregroundColor(item.color)
             }
 
-			Text(item.title)
-				.multilineTextAlignment(.leading)
-				.foregroundColor(Color(.label))
-
-			Spacer()
-
-            item.count.flatMap {
-                Text("\($0)")
-                    .font(Font.subheadline)
-                    .foregroundColor(Color.secondaryText)
+            HStack {
+                Text(item.title)
+                    .multilineTextAlignment(.leading)
+                    .foregroundColor(Color(.label))
+                    .environment(\.layoutDirection, .leftToRight)
+                
+                Spacer()
+                
+                item.count.flatMap {
+                    Text("\($0)")
+                        .font(Font.subheadline)
+                        .foregroundColor(Color.secondaryText)
+                }
             }
-		}
-		.padding(10)
+        }
+        .environment(\.layoutDirection, flip ? .rightToLeft : .leftToRight)
 	}
 
 }
