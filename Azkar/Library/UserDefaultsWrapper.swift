@@ -7,20 +7,24 @@
 //
 
 import Foundation
+import Combine
 
 @propertyWrapper
-public struct Preference<T: Codable> {
+public struct Preference<Value: Codable> {
     public let key: String
-    public let defaultValue: T
+    public let defaultValue: Value
     public let defaults: UserDefaults
 
-    public init(_ key: String, defaultValue: T, userDefaults: UserDefaults = .standard) {
+    private let notificationName: Notification.Name
+
+    public init(_ key: String, defaultValue: Value, userDefaults: UserDefaults = .standard) {
         self.key = key
         self.defaultValue = defaultValue
         self.defaults = userDefaults
+        notificationName = .init(key)
     }
 
-    public var wrappedValue: T {
+    public var wrappedValue: Value {
         get {
             // Read value from UserDefaults
             guard let data = UserDefaults.standard.object(forKey: key) as? Data else {
@@ -29,15 +33,25 @@ public struct Preference<T: Codable> {
             }
 
             // Convert data to the desire data type
-            let value = try? JSONDecoder().decode(T.self, from: data)
+            let value = try? JSONDecoder().decode(Value.self, from: data)
             return value ?? defaultValue
-        }
-        set {
+        } set {
             // Convert newValue to data
             let data = try? JSONEncoder().encode(newValue)
 
             // Set value to UserDefaults
             UserDefaults.standard.set(data, forKey: key)
+            NotificationCenter.default.post(name: notificationName, object: newValue)
         }
     }
+
+    public var projectedValue: Preference<Value> { self }
+
+    public func publisher() -> AnyPublisher<Value, Never> {
+        return NotificationCenter.default.publisher(for: notificationName)
+            .map { _ in self.wrappedValue }
+            .prepend(wrappedValue)
+            .eraseToAnyPublisher()
+    }
+
 }
