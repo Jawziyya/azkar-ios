@@ -67,7 +67,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             Keys.expandTranslation: true,
             Keys.expandTransliteration: true,
             Keys.morningNotificationsTime: defaultMorningNotificationTime,
-            Keys.eveningNotificationsTime: defaultEveningNotificationTime
+            Keys.eveningNotificationsTime: defaultEveningNotificationTime,
+            Keys.appIcon: AppIcon.light.rawValue
         ]
 
         UserDefaults.standard.register(defaults: defaults)

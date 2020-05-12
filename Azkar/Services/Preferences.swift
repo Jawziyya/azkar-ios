@@ -42,6 +42,9 @@ final class Preferences: ObservableObject {
     @Preference(Keys.eveningNotificationsTime, defaultValue: defaultEveningNotificationTime)
     var eveningNotificationTime: Date
 
+    @Preference(Keys.appIcon, defaultValue: AppIcon.light)
+    var appIcon: AppIcon
+
     private var notificationSubscription: AnyCancellable?
 
     init() {

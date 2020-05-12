@@ -111,7 +111,7 @@ enum Theme: Int, Codable, CaseIterable, Identifiable, PickableItem, Hashable {
 
 }
 
-enum AppIcon: String, CaseIterable, Hashable, PickableItem, Identifiable {
+enum AppIcon: String, Codable, CaseIterable, Hashable, PickableItem, Identifiable {
     case light, ink, dark, ramadan = "purple"
 
     static var availableIcons: [AppIcon] {
@@ -161,18 +161,13 @@ final class SettingsViewModel: ObservableObject {
         return !UIDevice.current.isIpad
     }
 
-    lazy var formatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .none
-        formatter.timeStyle = .short
-        return formatter
-    }()
+    private let formatter: DateFormatter
 
     @Published var arabicFont: ArabicFont
     @Published var theme: Theme
-    @Published var appIcon: AppIcon = .light
-    @Published var morningTime = ""
-    @Published var eveningTime = ""
+    @Published var appIcon: AppIcon
+    @Published var morningTime: String
+    @Published var eveningTime: String
 
     func getDatesRange(fromHour hour: Int, hours: Int) -> [Date] {
         let now = DateComponents(calendar: Calendar.current, hour: hour, minute: 0).date ?? Date()
@@ -195,6 +190,13 @@ final class SettingsViewModel: ObservableObject {
 
     init(preferences: Preferences) {
         self.preferences = preferences
+
+        let formatter = DateFormatter()
+        formatter.dateStyle = .none
+        formatter.timeStyle = .short
+
+        self.formatter = formatter
+        appIcon = preferences.appIcon
         arabicFont = preferences.arabicFont
         theme = preferences.theme
         morningTime = formatter.string(from: preferences.morningNotificationTime)
@@ -218,6 +220,7 @@ final class SettingsViewModel: ObservableObject {
             .dropFirst(1)
             .receive(on: RunLoop.main)
             .sink(receiveValue: { icon in
+                preferences.appIcon = icon
                 UIApplication.shared.setAlternateIconName(icon.iconName)
             })
             .store(in: &cancellabels)

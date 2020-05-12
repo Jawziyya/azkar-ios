@@ -16,4 +16,5 @@ enum Keys {
     static let enableNotifications = "kEnableNotifications"
     static let morningNotificationsTime = "kMorningNotificationsTime"
     static let eveningNotificationsTime = "kEveningNotificationsTime"
+    static let appIcon = "kAppIcon"
 }
