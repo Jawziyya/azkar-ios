@@ -53,6 +53,7 @@ struct PlayerView: View, Equatable {
             }
             Spacer()
             Button(action: {
+                  UIImpactFeedbackGenerator(style: .soft).impactOccurred(intensity: 0.6)
                   self.viewModel.toggleSpeed()
             }) {
                 Text(viewModel.speed.label)
