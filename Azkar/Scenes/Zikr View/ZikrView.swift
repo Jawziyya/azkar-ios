@@ -11,10 +11,10 @@ import BonMot
 
 struct ZikrView: View {
 
-    var viewModel: ZikrViewModel
+    @ObservedObject var viewModel: ZikrViewModel
     var player: Player
     
-    @EnvironmentObject var preferences: Preferences
+//    var preferences: Preferences
 
     @State private var textHeight: CGFloat = 0
     @State private var translationHeight: CGFloat = 0
@@ -80,7 +80,7 @@ struct ZikrView: View {
     private var textView: some View {
         VStack(spacing: 10) {
             CollapsableSection(
-                text: viewModel.zikr.text.styled(with: TextStyles.arabicTextStyle(fontName: self.preferences.arabicFont.fontName, textStyle: .title1, alignment: .center, sizeCategory: sizeCategory)),
+                text: viewModel.zikr.text.styled(with: TextStyles.arabicTextStyle(fontName: self.viewModel.preferences.arabicFont.fontName, textStyle: .title1, alignment: .center, sizeCategory: sizeCategory)),
                 isExpanded: .constant(true),
                 textHeight: $textHeight
             )
@@ -95,9 +95,9 @@ struct ZikrView: View {
 
     // MARK: - Translation
     private var translationView: some View {
-        CollapsableSection(title: "перевод", text: viewModel.zikr.translation.styled(with: TextStyles.bodyStyle(sizeCategory: sizeCategory)), isExpanded: self.$preferences.expandTranslation, textHeight: $translationHeight, tintColor: tintColor) {
+        CollapsableSection(title: "перевод", text: viewModel.zikr.translation.styled(with: TextStyles.bodyStyle(sizeCategory: sizeCategory)), isExpanded: $viewModel.expandTranslation, textHeight: $translationHeight, tintColor: tintColor) {
             withAnimation(Animation.easeInOut(duration: 0.2)) {
-                self.preferences.expandTranslation.toggle()
+                self.viewModel.preferences.expandTranslation.toggle()
             }
         }
         .equatable()
@@ -106,9 +106,9 @@ struct ZikrView: View {
 
     // MARK: - Transliteration
     private var transliterationView: some View {
-        CollapsableSection(title: "транскрипция", text: viewModel.zikr.transliteration.styled(with: TextStyles.bodyStyle(sizeCategory: sizeCategory)), isExpanded: self.$preferences.expandTransliteration, textHeight: $transliterationHeight, tintColor: tintColor) {
+        CollapsableSection(title: "транскрипция", text: viewModel.zikr.transliteration.styled(with: TextStyles.bodyStyle(sizeCategory: sizeCategory)), isExpanded: $viewModel.expandTransliteration, textHeight: $transliterationHeight, tintColor: tintColor) {
             withAnimation(Animation.easeInOut(duration: 0.2)) {
-                self.preferences.expandTransliteration.toggle()
+                self.viewModel.preferences.expandTransliteration.toggle()
             }
         }
         .equatable()
@@ -176,7 +176,7 @@ struct ZikrView: View {
 
 struct ZikrView_Previews: PreviewProvider {
     static var previews: some View {
-        ZikrView(viewModel: ZikrViewModel(zikr: Zikr.data[39]), player: .test)
+        ZikrView(viewModel: ZikrViewModel(zikr: Zikr.data[39], preferences: Preferences()), player: .test)
         .environmentObject(Preferences())
         .previewLayout(.fixed(width: 300, height: 500))
     }

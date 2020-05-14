@@ -19,24 +19,9 @@ struct ZikrPagesView: View, Equatable {
 
     @State var page = 0
 
-//    @State private var showSettings = false
-
     var body: some View {
         pagerView
             .background(Color.background.edgesIgnoringSafeArea(.all))
-//            .navigationBarItems(trailing:
-//                Button(action: {
-//                    self.showSettings = true
-//                }, label: {
-//                    Image(systemName: "gear")
-//                        .foregroundColor(Color.accent)
-//                        .padding()
-//                })
-//            )
-//            .sheet(isPresented: $showSettings) {
-//                SettingsView(viewModel: SettingsViewModel(preferences: Preferences()))
-//                    .embedInNavigation()
-//            }
     }
 
     var pagerView: some View {
@@ -44,7 +29,6 @@ struct ZikrPagesView: View, Equatable {
             viewModel.azkar.map { zikr in
                 LazyView(
                     ZikrView(viewModel: zikr, player: self.viewModel.player)
-                        .environmentObject(self.viewModel.preferences)
                 )
             },
             currentPage: $page,
