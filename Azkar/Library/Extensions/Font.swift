@@ -27,8 +27,11 @@ extension View {
     }
 }
 
-func textSize(forTextStyle textStyle: UIFont.TextStyle) -> CGFloat {
-   return UIFont.preferredFont(forTextStyle: textStyle).pointSize
+func textSize(forTextStyle textStyle: UIFont.TextStyle, contentSizeCategory: UIContentSizeCategory? = nil) -> CGFloat {
+    if let sizeCategory = contentSizeCategory {
+        return UIFontDescriptor.preferredFontDescriptor(withTextStyle: textStyle, compatibleWith: .init(preferredContentSizeCategory: sizeCategory)).pointSize
+    }
+    return UIFont.preferredFont(forTextStyle: textStyle).pointSize
 }
 
 extension Font {

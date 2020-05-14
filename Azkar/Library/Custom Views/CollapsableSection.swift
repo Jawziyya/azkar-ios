@@ -30,8 +30,8 @@ struct CollapsableSection: View, Equatable {
                 HStack {
                     title.flatMap { title in
                         Text(title)
-                            .font(Font.caption.weight(.thin).smallCaps())
-                            .foregroundColor(Color.secondaryText)
+                            .font(Font.caption.weight(.regular).smallCaps())
+                            .foregroundColor(Color.tertiaryText)
                     }
                     if expandingCallback != nil {
                         Spacer()
