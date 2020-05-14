@@ -45,7 +45,7 @@ public struct Preference<Value: Codable> {
         }
     }
 
-    public var projectedValue: Preference<Value> { self }
+    public var projectedValue: AnyPublisher<Value, Never> { publisher() }
 
     public func publisher() -> AnyPublisher<Value, Never> {
         return NotificationCenter.default.publisher(for: notificationName)

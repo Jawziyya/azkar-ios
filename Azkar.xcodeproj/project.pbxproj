@@ -93,6 +93,9 @@
 		9D1ECBFA245FB203007659E5 /* AdobeArabic-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 9D1ECBF9245FB203007659E5 /* AdobeArabic-Regular.otf */; };
 		9D1ECBFD245FB4E7007659E5 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D1ECBFC245FB4E7007659E5 /* SettingsView.swift */; };
 		9D1ECBFF245FB4ED007659E5 /* SettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D1ECBFE245FB4ED007659E5 /* SettingsViewModel.swift */; };
+		9D1FAD27246B493600895C2C /* ArabicFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D1FAD26246B493600895C2C /* ArabicFont.swift */; };
+		9D1FAD29246B494900895C2C /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D1FAD28246B494900895C2C /* Theme.swift */; };
+		9D1FAD2B246B495B00895C2C /* AppIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D1FAD2A246B495B00895C2C /* AppIcon.swift */; };
 		9D2CE83D2460470C00AEF730 /* ItemPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D2CE83C2460470C00AEF730 /* ItemPickerView.swift */; };
 		9D2CE83F2460485000AEF730 /* CheckboxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D2CE83E2460485000AEF730 /* CheckboxView.swift */; };
 		9D2CE84124604E4000AEF730 /* ItemPickerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D2CE84024604E4000AEF730 /* ItemPickerViewModel.swift */; };
@@ -277,6 +280,9 @@
 		9D1ECBF9245FB203007659E5 /* AdobeArabic-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "AdobeArabic-Regular.otf"; sourceTree = "<group>"; };
 		9D1ECBFC245FB4E7007659E5 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		9D1ECBFE245FB4ED007659E5 /* SettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewModel.swift; sourceTree = "<group>"; };
+		9D1FAD26246B493600895C2C /* ArabicFont.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArabicFont.swift; sourceTree = "<group>"; };
+		9D1FAD28246B494900895C2C /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		9D1FAD2A246B495B00895C2C /* AppIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIcon.swift; sourceTree = "<group>"; };
 		9D2CE83C2460470C00AEF730 /* ItemPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemPickerView.swift; sourceTree = "<group>"; };
 		9D2CE83E2460485000AEF730 /* CheckboxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckboxView.swift; sourceTree = "<group>"; };
 		9D2CE84024604E4000AEF730 /* ItemPickerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemPickerViewModel.swift; sourceTree = "<group>"; };
@@ -648,6 +654,9 @@
 			children = (
 				9D1ECBFC245FB4E7007659E5 /* SettingsView.swift */,
 				9D1ECBFE245FB4ED007659E5 /* SettingsViewModel.swift */,
+				9D1FAD26246B493600895C2C /* ArabicFont.swift */,
+				9D1FAD28246B494900895C2C /* Theme.swift */,
+				9D1FAD2A246B495B00895C2C /* AppIcon.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -1001,6 +1010,7 @@
 				6CE1728F243D11CD007AC48B /* PlayerView.swift in Sources */,
 				9D03F228245D98240024A6BC /* UserDefaultsWrapper.swift in Sources */,
 				6CF1B4F2243BC76400C7321F /* Zikr.swift in Sources */,
+				9D1FAD2B246B495B00895C2C /* AppIcon.swift in Sources */,
 				9D3B4D6A245EF0CB00D490FE /* CollapsableSection.swift in Sources */,
 				9DFF69A7245C74BF00FD8C4F /* MainMenuGroupModel.swift in Sources */,
 				9D8C3A0D2466BA3F00ACAAC9 /* SafariView.swift in Sources */,
@@ -1016,7 +1026,9 @@
 				9DE67ED9246416270041484D /* UIDevice.swift in Sources */,
 				9D129534245CB87A00C0F099 /* AppInfoView.swift in Sources */,
 				6CE1728A243D11A1007AC48B /* Player.swift in Sources */,
+				9D1FAD29246B494900895C2C /* Theme.swift in Sources */,
 				9D1ECBFF245FB4ED007659E5 /* SettingsViewModel.swift in Sources */,
+				9D1FAD27246B493600895C2C /* ArabicFont.swift in Sources */,
 				9DFF69A9245C74BF00FD8C4F /* MainMenuSmallGroup.swift in Sources */,
 				9DE854FF243F6DA5002A8643 /* ZikrPagesView.swift in Sources */,
 				9D1ECBF4245FAAC9007659E5 /* PlayerViewModel.swift in Sources */,

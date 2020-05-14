@@ -58,7 +58,7 @@ struct SettingsView: View {
 
     var iconPicker: some View {
         ItemPickerView(
-            selection: $viewModel.appIcon,
+            selection: $viewModel.preferences.appIcon,
             items: AppIcon.availableIcons
         )
     }

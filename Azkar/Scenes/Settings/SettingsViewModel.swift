@@ -11,151 +11,11 @@ import Combine
 import UIKit
 import UserNotifications
 
-enum ArabicFont: String, CaseIterable, Identifiable, Codable, Hashable, PickableItem {
-    case standard, adobe, amiri, KFGQP, noto, scheherazade
-
-    var fontName: String {
-        switch self {
-        case .standard:
-            return "iOS"
-        case .adobe:
-            return "AdobeArabic-Regular"
-        case .amiri:
-            return "Amiri-Regular"
-        case .KFGQP:
-            return "KFGQPCUthmanicScriptHAFS"
-        case .noto:
-            return "NotoNaskhArabicUI"
-        case .scheherazade:
-            return "Scheherazade"
-        }
-    }
-
-    var id: String {
-        return rawValue
-    }
-
-    var title: String {
-        switch self {
-        case .adobe, .amiri:
-            return rawValue.capitalized
-        case .KFGQP:
-            return rawValue
-        case .noto:
-            return "Noto Nashkh"
-        default:
-            return fontName
-        }
-    }
-
-    var subtitle: String? {
-        return "بسم الله"
-    }
-
-    var subtitleFont: Font {
-        return Font.custom(fontName, size: textSize(forTextStyle: .callout))
-    }
-
-}
-
-enum Theme: Int, Codable, CaseIterable, Identifiable, PickableItem, Hashable {
-    case automatic, light, dark
-
-    var id: Int {
-        return rawValue
-    }
-
-    var title: String {
-        switch self {
-        case .automatic:
-            return "Авто"
-        case .light:
-            return "Светлая"
-        case .dark:
-            return "Тёмная"
-        }
-    }
-
-    var colorScheme: ColorScheme? {
-        switch self {
-        case .light:
-            return .light
-        case .dark:
-            return .dark
-        default:
-            return nil
-        }
-    }
-
-    var statusBarStyle: UIStatusBarStyle? {
-        switch self {
-        case .automatic:
-            return nil
-        case .light:
-            return .darkContent
-        case .dark:
-            return .lightContent
-        }
-    }
-
-    var userInterfaceStyle: UIUserInterfaceStyle {
-        switch self {
-        case .automatic:
-            return .unspecified
-        case .light:
-            return .light
-        case .dark:
-            return .dark
-        }
-    }
-
-}
-
-enum AppIcon: String, Codable, CaseIterable, Hashable, PickableItem, Identifiable {
-    case light, ink, dark, ramadan = "purple"
-
-    static var availableIcons: [AppIcon] {
-        return Array(allCases.prefix(3))
-    }
-
-    var iconName: String? {
-        switch self {
-        case .light:
-            return nil
-        default:
-            return rawValue
-        }
-    }
-
-    var title: String {
-        switch self {
-        case .light:
-            return "Золото"
-        case .ink:
-            return "Чернила"
-        case .dark:
-            return "Тёмная ночь"
-        case .ramadan:
-            return "Рамадан"
-        }
-    }
-
-    var id: String {
-        rawValue
-    }
-
-    var image: Image? {
-        Image(uiImage: UIImage(named: "ic_\(rawValue).png")!)
-    }
-}
-
 final class SettingsViewModel: ObservableObject {
 
-    let notificationsCenter = UNUserNotificationCenter.current()
+    private let notificationsCenter = UNUserNotificationCenter.current()
     private let morningNotificationId = "morning.notification"
     private let eveningNotificationId = "evening.notification"
-
-    var preferences: Preferences
 
     var canChangeIcon: Bool {
         return !UIDevice.current.isIpad
@@ -163,9 +23,7 @@ final class SettingsViewModel: ObservableObject {
 
     private let formatter: DateFormatter
 
-    @Published var arabicFont: ArabicFont
-    @Published var theme: Theme
-    @Published var appIcon: AppIcon
+    @Published var preferences: Preferences
     @Published var morningTime: String
     @Published var eveningTime: String
 
@@ -196,36 +54,19 @@ final class SettingsViewModel: ObservableObject {
         formatter.timeStyle = .short
 
         self.formatter = formatter
-        appIcon = preferences.appIcon
-        arabicFont = preferences.arabicFont
-        theme = preferences.theme
         morningTime = formatter.string(from: preferences.morningNotificationTime)
         eveningTime = formatter.string(from: preferences.eveningNotificationTime)
 
-        let preferencesChange = preferences.objectWillChange
-            .receive(on: RunLoop.main)
-            .share()
-
-        preferencesChange
-            .map { _ in preferences.arabicFont }
-            .assign(to: \.arabicFont, on: self)
-            .store(in: &cancellabels)
-
-        preferencesChange
-            .map { _ in preferences.theme }
-            .assign(to: \.theme, on: self)
-            .store(in: &cancellabels)
-
-        $appIcon
+        preferences.$appIcon
             .dropFirst(1)
             .receive(on: RunLoop.main)
             .sink(receiveValue: { icon in
-                preferences.appIcon = icon
                 UIApplication.shared.setAlternateIconName(icon.iconName)
             })
             .store(in: &cancellabels)
 
         $morningTime
+            .dropFirst()
             .map { [unowned self] time in
                 self.formatter.date(from: time) ?? defaultMorningNotificationTime
             }
@@ -233,24 +74,18 @@ final class SettingsViewModel: ObservableObject {
             .store(in: &cancellabels)
 
         $eveningTime
+            .dropFirst()
             .map { [unowned self] time in
                 self.formatter.date(from: time) ?? defaultEveningNotificationTime
             }
             .assign(to: \.eveningNotificationTime, on: preferences)
             .store(in: &cancellabels)
 
-        preferences.$enableNotifications.publisher()
-            .sink { enabled in
-                print(enabled)
-            }
-            .store(in: &cancellabels)
-
         Publishers.CombineLatest3(
-                preferences.$enableNotifications.publisher(),
-                preferences.$morningNotificationTime.publisher(),
-                preferences.$eveningNotificationTime.publisher()
+                preferences.$enableNotifications.dropFirst(),
+                preferences.$morningNotificationTime.dropFirst(),
+                preferences.$eveningNotificationTime.dropFirst()
             )
-            .dropFirst()
             .receive(on: RunLoop.main)
             .sink(receiveValue: { [unowned self] (enabled, morning, evening) in
                 self.removeScheduledNotifications()
