@@ -13,6 +13,7 @@ struct SourceInfo: Identifiable {
     let url: URL
     var openUrlInApp = true
     var imageName: String?
+    var imageType: IconType = .bundled
 
     var id: String { title }
 }
@@ -56,9 +57,10 @@ struct AppInfoViewModel {
     ]
 
     let supportModels: [SourceInfo] = [
-        SourceInfo(title: "Написать на эл. почту", url: URL(string: "mailto:azkar.app@pm.me")!, openUrlInApp: false, imageName: nil),
-        SourceInfo(title: "Telegram", url: URL(string: "https://telegram.me/jawziyya")!, openUrlInApp: false, imageName: nil),
-        SourceInfo(title: "Оставить отзыв", url: URL(string: "https://itunes.apple.com/app/id1511423586?action=write-review&mt=8")!, openUrlInApp: false, imageName: nil)
+        SourceInfo(title: "Написать на эл. почту", url: URL(string: "mailto:azkar.app@pm.me")!, openUrlInApp: false),
+        SourceInfo(title: "Оставить отзыв", url: URL(string: "https://itunes.apple.com/app/id1511423586?action=write-review&mt=8")!, openUrlInApp: false),
+        SourceInfo(title: "Канал в Telegram", url: URL(string: "https://telegram.me/jawziyya")!, openUrlInApp: false),
+        SourceInfo(title: "Приложения от Jawziyya 🥜", url: URL(string: "https://apps.apple.com/ru/developer/al-jawziyya/id1165327318")!, openUrlInApp: false)
     ]
 
     init() {

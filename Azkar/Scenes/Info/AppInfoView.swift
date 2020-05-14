@@ -92,7 +92,7 @@ struct AppInfoView: View {
         }, label: {
             HStack {
                 item.imageName.flatMap { name in
-                    Image(uiImage: UIImage(named: name)!)
+                    (item.imageType == .bundled ? Image(uiImage: UIImage(named: name)!) : Image(systemName: name))
                         .renderingMode(.original)
                         .resizable()
                         .scaledToFit()
