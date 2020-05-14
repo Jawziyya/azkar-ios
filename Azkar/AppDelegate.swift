@@ -9,6 +9,7 @@
 import UIKit
 import AudioPlayer
 import UserNotifications
+import SwiftUI
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -68,7 +69,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             Keys.expandTransliteration: true,
             Keys.morningNotificationsTime: defaultMorningNotificationTime,
             Keys.eveningNotificationsTime: defaultEveningNotificationTime,
-            Keys.appIcon: AppIcon.light.rawValue
+            Keys.appIcon: AppIcon.light.rawValue,
+            Keys.useSystemFontSize: true,
+            Keys.sizeCategory: ContentSizeCategory.medium.floatValue,
         ]
 
         UserDefaults.standard.register(defaults: defaults)

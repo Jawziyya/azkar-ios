@@ -8,6 +8,7 @@
 
 import Foundation
 import Combine
+import SwiftUI
 
 let defaultMorningNotificationTime: Date = {
     let components = DateComponents(calendar: Calendar.current, hour: 8)
@@ -45,11 +46,18 @@ final class Preferences: ObservableObject {
     @Preference(Keys.appIcon, defaultValue: AppIcon.light)
     var appIcon: AppIcon
 
+    @Preference(Keys.useSystemFontSize, defaultValue: true)
+    var useSystemFontSize
+
+    @Preference(Keys.sizeCategory, defaultValue: ContentSizeCategory.medium)
+    var sizeCategory
+
     private var notificationSubscription: AnyCancellable?
 
     init() {
         notificationSubscription = NotificationCenter.default
             .publisher(for: UserDefaults.didChangeNotification)
+            .receive(on: RunLoop.main)
             .sink { _ in
                 self.objectWillChange.send()
             }

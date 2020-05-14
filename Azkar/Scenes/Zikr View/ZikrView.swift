@@ -19,7 +19,7 @@ struct ZikrView: View {
     @State private var textHeight: CGFloat = 0
     @State private var translationHeight: CGFloat = 0
     @State private var transliterationHeight: CGFloat = 0
-    @Environment(\.sizeCategory) var size
+    @Environment(\.sizeCategory) var sizeCategory
 
     private let tintColor = Color.accent
     private let dividerColor = Color.secondaryBackground
@@ -30,7 +30,6 @@ struct ZikrView: View {
         return ScrollView {
             self.getContent()
         }
-//        .background(Color.background.edgesIgnoringSafeArea(.all))
         .navigationBarTitle(UIDevice.current.isIpad ? viewModel.title : "")
     }
 
@@ -81,7 +80,7 @@ struct ZikrView: View {
     private var textView: some View {
         VStack(spacing: 10) {
             CollapsableSection(
-                text: viewModel.zikr.text.styled(with: TextStyles.arabicTextStyle(fontName: self.preferences.arabicFont.fontName, textStyle: .title1, alignment: .center)),
+                text: viewModel.zikr.text.styled(with: TextStyles.arabicTextStyle(fontName: self.preferences.arabicFont.fontName, textStyle: .title1, alignment: .center, sizeCategory: sizeCategory)),
                 isExpanded: .constant(true),
                 textHeight: $textHeight
             )
@@ -96,7 +95,7 @@ struct ZikrView: View {
 
     // MARK: - Translation
     private var translationView: some View {
-        CollapsableSection(title: "перевод", text: viewModel.zikr.translation.styled(with: TextStyles.bodyStyle()), isExpanded: self.$preferences.expandTranslation, textHeight: $translationHeight, tintColor: tintColor) {
+        CollapsableSection(title: "перевод", text: viewModel.zikr.translation.styled(with: TextStyles.bodyStyle(sizeCategory: sizeCategory)), isExpanded: self.$preferences.expandTranslation, textHeight: $translationHeight, tintColor: tintColor) {
             withAnimation(Animation.easeInOut(duration: 0.2)) {
                 self.preferences.expandTranslation.toggle()
             }
@@ -107,7 +106,7 @@ struct ZikrView: View {
 
     // MARK: - Transliteration
     private var transliterationView: some View {
-        CollapsableSection(title: "транскрипция", text: viewModel.zikr.transliteration.styled(with: TextStyles.bodyStyle()), isExpanded: self.$preferences.expandTransliteration, textHeight: $transliterationHeight, tintColor: tintColor) {
+        CollapsableSection(title: "транскрипция", text: viewModel.zikr.transliteration.styled(with: TextStyles.bodyStyle(sizeCategory: sizeCategory)), isExpanded: self.$preferences.expandTransliteration, textHeight: $transliterationHeight, tintColor: tintColor) {
             withAnimation(Animation.easeInOut(duration: 0.2)) {
                 self.preferences.expandTransliteration.toggle()
             }
@@ -128,7 +127,6 @@ struct ZikrView: View {
             }
         }
         .font(.caption)
-        .foregroundColor(.text)
         .padding()
     }
 
@@ -136,7 +134,8 @@ struct ZikrView: View {
         VStack(alignment: .leading, spacing: 0) {
             self.getCaption(label)
             Text(text.firstWord())
-                .font(Font.headline.weight(.medium).smallCaps())
+                .font(Font.subheadline.weight(.regular).smallCaps())
+                .foregroundColor(.text)
         }
     }
 
@@ -146,8 +145,8 @@ struct ZikrView: View {
 
     private func getCaption(_ text: String) -> some View {
         Text(text)
-            .font(Font.caption.weight(.thin).smallCaps())
-            .foregroundColor(Color.secondaryText)
+            .font(Font.caption.weight(.regular).smallCaps())
+            .foregroundColor(Color.tertiaryText)
     }
 
     private func getNoteView(_ text: String) -> some View {

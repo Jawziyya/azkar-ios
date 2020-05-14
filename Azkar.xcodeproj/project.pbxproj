@@ -108,6 +108,9 @@
 		9D2CE86A24608C8600AEF730 /* ic_dark@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9D2CE86724608C8600AEF730 /* ic_dark@3x.png */; };
 		9D2CE86B24608C8600AEF730 /* ic_dark@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9D2CE86824608C8600AEF730 /* ic_dark@2x.png */; };
 		9D2CE86C24608C8600AEF730 /* ic_dark.png in Resources */ = {isa = PBXBuildFile; fileRef = 9D2CE86924608C8600AEF730 /* ic_dark.png */; };
+		9D34FFBD246B2C8000A008A0 /* ContentSizeCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D34FFBC246B2C8000A008A0 /* ContentSizeCategory.swift */; };
+		9D34FFC6246B387800A008A0 /* EnvironmentOverridesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D34FFC1246B387800A008A0 /* EnvironmentOverridesView.swift */; };
+		9D34FFC7246B387800A008A0 /* GeneralHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D34FFC2246B387800A008A0 /* GeneralHelpers.swift */; };
 		9D354F5C2441110900748368 /* ASCollectionView in Frameworks */ = {isa = PBXBuildFile; productRef = 9D354F5B2441110900748368 /* ASCollectionView */; };
 		9D3B4D6A245EF0CB00D490FE /* CollapsableSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D3B4D69245EF0CB00D490FE /* CollapsableSection.swift */; };
 		9D628A0B24623EED00922935 /* PageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D628A0824623EED00922935 /* PageView.swift */; };
@@ -295,6 +298,9 @@
 		9D2CE86724608C8600AEF730 /* ic_dark@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_dark@3x.png"; sourceTree = "<group>"; };
 		9D2CE86824608C8600AEF730 /* ic_dark@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_dark@2x.png"; sourceTree = "<group>"; };
 		9D2CE86924608C8600AEF730 /* ic_dark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ic_dark.png; sourceTree = "<group>"; };
+		9D34FFBC246B2C8000A008A0 /* ContentSizeCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentSizeCategory.swift; sourceTree = "<group>"; };
+		9D34FFC1246B387800A008A0 /* EnvironmentOverridesView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EnvironmentOverridesView.swift; sourceTree = "<group>"; };
+		9D34FFC2246B387800A008A0 /* GeneralHelpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeneralHelpers.swift; sourceTree = "<group>"; };
 		9D3B4D69245EF0CB00D490FE /* CollapsableSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollapsableSection.swift; sourceTree = "<group>"; };
 		9D628A0824623EED00922935 /* PageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PageView.swift; sourceTree = "<group>"; };
 		9D628A0924623EED00922935 /* PageControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PageControl.swift; sourceTree = "<group>"; };
@@ -609,6 +615,7 @@
 				9D6D1ECE245C27FA0060CDB5 /* UIFont.swift */,
 				9D093387246358E9003DDCF4 /* Sequence.swift */,
 				9DE67ED8246416270041484D /* UIDevice.swift */,
+				9D34FFBC246B2C8000A008A0 /* ContentSizeCategory.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -711,6 +718,15 @@
 			path = Dark;
 			sourceTree = "<group>";
 		};
+		9D34FFBE246B387800A008A0 /* EnvironmentOverrides */ = {
+			isa = PBXGroup;
+			children = (
+				9D34FFC1246B387800A008A0 /* EnvironmentOverridesView.swift */,
+				9D34FFC2246B387800A008A0 /* GeneralHelpers.swift */,
+			);
+			path = EnvironmentOverrides;
+			sourceTree = "<group>";
+		};
 		9D628A0724623EB400922935 /* Pager View */ = {
 			isa = PBXGroup;
 			children = (
@@ -724,6 +740,7 @@
 		9D6D1EC6245C169B0060CDB5 /* Library */ = {
 			isa = PBXGroup;
 			children = (
+				9D34FFBE246B387800A008A0 /* EnvironmentOverrides */,
 				6CF1B4F7243BCC5300C7321F /* Extensions */,
 				6CE1728B243D11CD007AC48B /* Custom Views */,
 				9D6D1ECC245C254B0060CDB5 /* TextStyles.swift */,
@@ -999,6 +1016,7 @@
 				9DFF69AC245C75FE00FD8C4F /* MainMenuViewModel.swift in Sources */,
 				9D628A0B24623EED00922935 /* PageView.swift in Sources */,
 				9DA7370D2443029600869FBB /* String.swift in Sources */,
+				9D34FFBD246B2C8000A008A0 /* ContentSizeCategory.swift in Sources */,
 				9D6D1EC8245C16A50060CDB5 /* Label.swift in Sources */,
 				9D2CE83F2460485000AEF730 /* CheckboxView.swift in Sources */,
 				9D1ECBFD245FB4E7007659E5 /* SettingsView.swift in Sources */,
@@ -1033,10 +1051,12 @@
 				9DE854FF243F6DA5002A8643 /* ZikrPagesView.swift in Sources */,
 				9D1ECBF4245FAAC9007659E5 /* PlayerViewModel.swift in Sources */,
 				9D628A0D24623EED00922935 /* PageViewController.swift in Sources */,
+				9D34FFC6246B387800A008A0 /* EnvironmentOverridesView.swift in Sources */,
 				9D6D1ECD245C254B0060CDB5 /* TextStyles.swift in Sources */,
 				9DA737072443023000869FBB /* MainMenuView.swift in Sources */,
 				9D6D1ED2245C43D10060CDB5 /* ZikrPagesViewModel.swift in Sources */,
 				6CE172BF243D1393007AC48B /* ZikrViewModel.swift in Sources */,
+				9D34FFC7246B387800A008A0 /* GeneralHelpers.swift in Sources */,
 				9D6D1ECF245C27FA0060CDB5 /* UIFont.swift in Sources */,
 				6C1E531D243BB1360078F6FB /* SceneDelegate.swift in Sources */,
 				9D03F226245D96360024A6BC /* AppInfoViewModel.swift in Sources */,
@@ -1233,7 +1253,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Azkar/Azkar.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 8;
 				DEVELOPMENT_ASSET_PATHS = "\"Azkar/Preview Content\"";
 				DEVELOPMENT_TEAM = 486STKKP6Y;
 				ENABLE_PREVIEWS = YES;
@@ -1258,7 +1278,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Azkar/Azkar.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 8;
 				DEVELOPMENT_ASSET_PATHS = "\"Azkar/Preview Content\"";
 				DEVELOPMENT_TEAM = 486STKKP6Y;
 				ENABLE_PREVIEWS = YES;

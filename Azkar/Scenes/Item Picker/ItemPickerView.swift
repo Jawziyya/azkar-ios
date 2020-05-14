@@ -41,12 +41,14 @@ struct ItemPickerView<SelectionValue>: View where SelectionValue: Hashable & Pic
             .padding(.vertical, 10)
             .background(Color(.secondarySystemGroupedBackground))
             .onTapGesture {
-                if item != self.selection {
-                    self.selection = item
+                DispatchQueue.main.async {
+                    if item != self.selection {
+                        self.selection = item
+                    }
                     UISelectionFeedbackGenerator().selectionChanged()
-                }
-                if self.dismissOnSelect {
-                    self.presentationMode.wrappedValue.dismiss()
+                    if self.dismissOnSelect {
+                        self.presentationMode.wrappedValue.dismiss()
+                    }
                 }
             }
         }

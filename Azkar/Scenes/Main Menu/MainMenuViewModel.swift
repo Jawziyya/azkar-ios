@@ -30,7 +30,6 @@ final class MainMenuViewModel: ObservableObject {
     @Published var notificationAccessModel: AzkarMenuOtherItem?
 
     let player: Player
-    let settingsViewModel: SettingsViewModel
 
     let preferences: Preferences
 
@@ -44,8 +43,6 @@ final class MainMenuViewModel: ObservableObject {
         otherAzkar = all.filter { $0.category == .other }
         self.preferences = preferences
         self.player = player
-
-        settingsViewModel = SettingsViewModel(preferences: preferences)
 
         let morning = MainMenuItem.morning
         let evening = MainMenuItem.evening

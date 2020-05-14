@@ -30,6 +30,7 @@ struct MainMenuView: View {
         .padding(.leading, UIDevice.current.isIpad ? 0.5 : 0) // Hack for proper allVisible split view mode.
         .background(Color.background.edgesIgnoringSafeArea(.all))
         .environment(\.horizontalSizeClass, UIDevice.current.isIpad ? .regular : .compact)
+        .attachEnvironmentOverrides(preferences: viewModel.preferences)
     }
 
     private var ipadDetailView: some View {
@@ -172,7 +173,7 @@ struct MainMenuView: View {
         case .legal:
             return AppInfoView(viewModel: AppInfoViewModel()).eraseToAny()
         case .settings:
-            return SettingsView(viewModel: self.viewModel.settingsViewModel).eraseToAny()
+            return SettingsView(viewModel: SettingsViewModel(preferences: viewModel.preferences)).eraseToAny()
         default:
             return EmptyView().eraseToAny()
         }

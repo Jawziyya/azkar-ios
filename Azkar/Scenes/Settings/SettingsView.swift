@@ -21,6 +21,7 @@ struct SettingsView: View {
     var body: some View {
         Form {
             self.appearanceSection
+            self.fontsSection
             self.notificationsSection
         }
         .listStyle(GroupedListStyle())
@@ -30,13 +31,11 @@ struct SettingsView: View {
 
     // MARK: - Appearance
     var appearanceSection: some View {
-        Section(header: Text("Настройки отображения")) {
-            picker(with: "Шрифт арабского языка", subtitle: viewModel.arabicFont.title, destination: arabicFontPicker)
-
-            picker(with: "Тема", subtitle: viewModel.theme.title, destination: themePicker)
+        Section {
+            PickerView(label: "Тема", subtitle: viewModel.preferences.theme.title, destination: themePicker)
 
             if viewModel.canChangeIcon {
-                picker(with: "Значок приложения", subtitle: viewModel.appIcon.title, destination: iconPicker)
+                PickerView(label: "Значок приложения", subtitle: viewModel.preferences.appIcon.title, destination: iconPicker)
             }
         }
     }
@@ -71,9 +70,9 @@ struct SettingsView: View {
             })
 
             if viewModel.preferences.enableNotifications {
-                picker(with: "Напоминание об утренних азкарах", subtitle: viewModel.morningTime, destination: morningTimePicker)
+                PickerView(label: "Напоминание об утренних азкарах", subtitle: viewModel.morningTime, destination: morningTimePicker)
 
-                picker(with: "Напоминание о вечерних азкарах", subtitle: viewModel.eveningTime, destination: eveningTimePicker)
+                PickerView(label: "Напоминание о вечерних азкарах", subtitle: viewModel.eveningTime, destination: eveningTimePicker)
             }
         }
     }
@@ -94,14 +93,49 @@ struct SettingsView: View {
         )
     }
 
-    // MARK: - Common
-    func picker<T: View>(with label: String, subtitle: String, navigationTitle: String? = nil, destination: T) -> some View {
+    // MARK: - Content Size
+    var fontsSection: some View {
+        Section(header: Text("Текст")) {
+            PickerView(label: "Шрифт арабского языка", subtitle: viewModel.preferences.arabicFont.title, destination: arabicFontPicker)
+
+            Toggle(isOn: $viewModel.preferences.useSystemFontSize, label: {
+                Text("Системный размер текста")
+            })
+
+            if viewModel.preferences.useSystemFontSize == false {
+                self.sizePicker
+            }
+        }
+    }
+
+    var sizePicker: some View {
+        Picker("Размер текста", selection: $viewModel.preferences.sizeCategory) {
+            ForEach(ContentSizeCategory.availableCases, id: \.title) { size in
+                Text(size.title)
+                    .environment(\.sizeCategory, size)
+                    .tag(size)
+            }
+        }
+        .pickerStyle(DefaultPickerStyle())
+    }
+
+}
+
+private struct PickerView<T: View>: View {
+
+    var label: String
+    var subtitle: String
+    var navigationTitle: String?
+    var destination: T
+
+    var body: some View {
         NavigationLink(destination: destination.navigationBarTitle(navigationTitle ?? label)) {
             HStack(spacing: 8) {
                 Text(label)
                 Spacer()
                 Text(subtitle)
-                    .font(Font.caption)
+                    .multilineTextAlignment(.trailing)
+                    .font(Font.body)
                     .foregroundColor(Color.secondary)
             }
             .padding(.vertical, 10)
@@ -113,7 +147,9 @@ struct SettingsView: View {
 
 struct SettingsView_Previews: PreviewProvider {
     static var previews: some View {
-        SettingsView(viewModel: SettingsViewModel(preferences: Preferences()))
-            .embedInNavigation()
+        SettingsView(
+            viewModel: SettingsViewModel(preferences: Preferences())
+        )
+        .embedInNavigation()
     }
 }
