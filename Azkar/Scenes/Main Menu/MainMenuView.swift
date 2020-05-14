@@ -11,13 +11,6 @@ import ASCollectionView
 import AudioPlayer
 import UserNotifications
 
-private func leadingPadding(_ geometry: GeometryProxy) -> CGFloat {
-    if UIDevice.current.userInterfaceIdiom == .pad {
-        return 0.5
-    }
-    return 0
-}
-
 struct MainMenuView: View {
 
     typealias Section = MainMenuViewModel.Section
