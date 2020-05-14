@@ -80,7 +80,7 @@ extension ContentSizeCategory: Codable {
         case .medium: return "Средний"
         case .large: return "Крупный"
         case .extraLarge: return "Большой"
-        case .extraExtraLarge: return "Огромный"
+        case .extraExtraExtraLarge: return "Огромный"
         default: return name
         }
     }
