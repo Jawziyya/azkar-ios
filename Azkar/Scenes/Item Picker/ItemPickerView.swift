@@ -17,7 +17,13 @@ struct ItemPickerView<SelectionValue>: View where SelectionValue: Hashable & Pic
     var enableHapticFeedback = true
 
     var body: some View {
-        List(items, id: \.title) { item in
+        List {
+            self.content
+        }
+    }
+
+    var content: some View {
+        ForEach(items, id: \.title) { item in
             HStack(spacing: 16) {
                 item.image.flatMap { img in
                     img

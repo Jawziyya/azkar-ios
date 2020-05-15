@@ -151,6 +151,7 @@
 		9D8C3A0D2466BA3F00ACAAC9 /* SafariView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D8C3A0C2466BA3F00ACAAC9 /* SafariView.swift */; };
 		9D8C3A0F2467165800ACAAC9 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9D8C3A0E2467165800ACAAC9 /* Launch Screen.storyboard */; };
 		9D8C3A112467317A00ACAAC9 /* Keys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D8C3A102467317A00ACAAC9 /* Keys.swift */; };
+		9D97E502246F3DD700CA6F9E /* ConditionalModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D97E501246F3DD700CA6F9E /* ConditionalModifier.swift */; };
 		9DA73703244300B400869FBB /* SwiftUI-Core.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DA73702244300B400869FBB /* SwiftUI-Core.swift */; };
 		9DA737072443023000869FBB /* MainMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DA737062443023000869FBB /* MainMenuView.swift */; };
 		9DA737092443024E00869FBB /* MainMenuItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DA737082443024E00869FBB /* MainMenuItem.swift */; };
@@ -339,6 +340,7 @@
 		9D8C3A0C2466BA3F00ACAAC9 /* SafariView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariView.swift; sourceTree = "<group>"; };
 		9D8C3A0E2467165800ACAAC9 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		9D8C3A102467317A00ACAAC9 /* Keys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Keys.swift; sourceTree = "<group>"; };
+		9D97E501246F3DD700CA6F9E /* ConditionalModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConditionalModifier.swift; sourceTree = "<group>"; };
 		9DA73702244300B400869FBB /* SwiftUI-Core.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SwiftUI-Core.swift"; sourceTree = "<group>"; };
 		9DA737062443023000869FBB /* MainMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMenuView.swift; sourceTree = "<group>"; };
 		9DA737082443024E00869FBB /* MainMenuItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMenuItem.swift; sourceTree = "<group>"; };
@@ -773,6 +775,7 @@
 			children = (
 				9DA73702244300B400869FBB /* SwiftUI-Core.swift */,
 				9DE122092460F55B00823DDD /* LazyView.swift */,
+				9D97E501246F3DD700CA6F9E /* ConditionalModifier.swift */,
 			);
 			path = SwiftUI;
 			sourceTree = "<group>";
@@ -1047,6 +1050,7 @@
 				9D1FAD29246B494900895C2C /* Theme.swift in Sources */,
 				9D1ECBFF245FB4ED007659E5 /* SettingsViewModel.swift in Sources */,
 				9D1FAD27246B493600895C2C /* ArabicFont.swift in Sources */,
+				9D97E502246F3DD700CA6F9E /* ConditionalModifier.swift in Sources */,
 				9DFF69A9245C74BF00FD8C4F /* MainMenuSmallGroup.swift in Sources */,
 				9DE854FF243F6DA5002A8643 /* ZikrPagesView.swift in Sources */,
 				9D1ECBF4245FAAC9007659E5 /* PlayerViewModel.swift in Sources */,

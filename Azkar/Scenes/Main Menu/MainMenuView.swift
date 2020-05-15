@@ -77,6 +77,7 @@ struct MainMenuView: View {
                             .padding(.trailing)
                     }
                     .padding(10)
+                    .contentShape(Rectangle())
                 }
                 .isDetailLink(false)
                 if !ctx.isLastInSection {
@@ -95,6 +96,7 @@ struct MainMenuView: View {
                             .padding()
                     }
                     .padding(10)
+                    .contentShape(Rectangle())
                 }
                 if !ctx.isLastInSection {
                     Divider()
@@ -118,6 +120,7 @@ struct MainMenuView: View {
                 }, label: {
                     MainMenuSmallGroup(item: AzkarMenuOtherItem(icon: "app.badge", title: vm.title, color: Color.orange), flip: true)
                     .padding(10)
+                    .contentShape(Rectangle())
                 })
             }
             sections.append(section)
