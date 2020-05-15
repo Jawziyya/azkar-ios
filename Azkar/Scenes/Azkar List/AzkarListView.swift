@@ -8,7 +8,6 @@
 
 import SwiftUI
 import AudioPlayer
-import ASCollectionView
 
 typealias AzkarListViewModel = ZikrPagesViewModel
 
@@ -26,6 +25,7 @@ struct AzkarListView: View {
             ForEach(viewModel.azkar.indexed(), id: \.0) { index, vm in
                 NavigationLink(destination: self.pagesView(index)) {
                     Text(vm.title)
+                        .contentShape(Rectangle())
                 }
                 .buttonStyle(PlainButtonStyle())
             }
@@ -41,38 +41,6 @@ struct AzkarListView: View {
                     ZikrPagesView(viewModel: self.viewModel, page: index)
                 )
             }
-        }
-    }
-
-    var collectionView: some View {
-        ASCollectionView(section: section)
-            .alwaysBounceVertical(true)
-            .scrollIndicatorsEnabled(horizontal: false, vertical: true)
-            .shouldInvalidateLayoutOnStateChange(true)
-            .shouldAttemptToMaintainScrollPositionOnOrientationChange(maintainPosition: true)
-            .layout(self.layout)
-            .contentInsets(.init(top: 16, left: 0, bottom: 16, right: 0))
-            .edgesIgnoringSafeArea(.bottom)
-    }
-
-    private var layout: ASCollectionLayout<Int> {
-        ASCollectionLayout(scrollDirection: .vertical, interSectionSpacing: 0) {
-            .list(itemSize: .estimated(50), spacing: 8, sectionInsets: .zero)
-        }
-    }
-
-    var section: ASCollectionViewSection<Int> {
-        ASCollectionViewSection(id: 0, data: viewModel.azkar) { (zikr, ctx) in
-            NavigationLink(destination: self.pagesView(self.viewModel.azkar.firstIndex(of: zikr)!)) {
-                HStack {
-                    Text(zikr.title)
-                    Spacer()
-                    Image(systemName: "chevron.right")
-                }
-                .padding(.horizontal, 20)
-                .padding(.vertical, 16)
-            }
-            .buttonStyle(PlainButtonStyle())
         }
     }
 
