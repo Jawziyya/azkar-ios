@@ -81,6 +81,7 @@ extension ContentSizeCategory: Codable {
         case .large: return "Крупный"
         case .extraLarge: return "Большой"
         case .extraExtraExtraLarge: return "Огромный"
+        case .accessibilityLarge: return "Громадный"
         default: return name
         }
     }
@@ -91,7 +92,8 @@ extension ContentSizeCategory: Codable {
             .medium,
             .large,
             .extraLarge,
-            .extraExtraExtraLarge
+            .extraExtraExtraLarge,
+            .accessibilityLarge
         ]
     }
 
