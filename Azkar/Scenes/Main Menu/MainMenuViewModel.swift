@@ -27,7 +27,11 @@ final class MainMenuViewModel: ObservableObject {
     let dayNightSectionModels: [AzkarMenuItem]
     let otherAzkarModels: [AzkarMenuItem]
     let infoModels: [AzkarMenuOtherItem]
+
     @Published var notificationAccessModel: AzkarMenuOtherItem?
+
+    @Published var selectedNotificationCategory: String?
+    @Published var selectedMenuItem: AzkarMenuItem?
 
     let player: Player
 
@@ -76,6 +80,15 @@ final class MainMenuViewModel: ObservableObject {
                 }
             }
         }
+
+        $selectedNotificationCategory
+            .map { [unowned self] category in
+                let sectionModels = self.dayNightSectionModels + self.otherAzkarModels
+                let targetModel = sectionModels.first(where: { $0.category.rawValue == category })
+                return targetModel
+            }
+            .assign(to: \.selectedMenuItem, on: self)
+            .store(in: &cancellabels)
     }
 
     func azkarForCategory(_ category: ZikrCategory) -> [Zikr] {

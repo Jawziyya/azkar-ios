@@ -19,7 +19,7 @@ extension AzkarMenuType {
     var count: Int? { nil }
 }
 
-struct AzkarMenuItem: Identifiable, AzkarMenuType {
+struct AzkarMenuItem: Identifiable, AzkarMenuType, Hashable {
 
     var id: String {
         title

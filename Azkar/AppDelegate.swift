@@ -19,6 +19,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     let player = AudioPlayer()
+    let notificationsHandler = NotificationsHandler()
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.

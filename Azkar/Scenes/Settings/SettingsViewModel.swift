@@ -16,8 +16,6 @@ final class SettingsViewModel: ObservableObject {
     let objectWillChange = PassthroughSubject<Void, Never>()
 
     private let notificationsCenter = UNUserNotificationCenter.current()
-    private let morningNotificationId = "morning.notification"
-    private let eveningNotificationId = "evening.notification"
 
     var canChangeIcon: Bool {
         return !UIDevice.current.isIpad
@@ -106,21 +104,22 @@ final class SettingsViewModel: ObservableObject {
     }
 
     private func removeScheduledNotifications() {
-        notificationsCenter.removeDeliveredNotifications(withIdentifiers: [morningNotificationId, eveningNotificationId])
+        notificationsCenter.removeDeliveredNotifications(withIdentifiers: [Keys.morningNotificationId, Keys.eveningNotificationId])
     }
 
     private func scheduleNotifications() {
-        let morningRequest = notifiationRequest(id: morningNotificationId, date: preferences.morningNotificationTime, title: "Утренние азкары 🌅")
-        let eveningRequest = notifiationRequest(id: eveningNotificationId, date: preferences.eveningNotificationTime, title: "Вечерние азкары 🌄")
+        let morningRequest = notificationRequest(id: Keys.morningNotificationId, date: preferences.morningNotificationTime, title: "Утренние азкары 🌅", category: .morning)
+        let eveningRequest = notificationRequest(id: Keys.eveningNotificationId, date: preferences.eveningNotificationTime, title: "Вечерние азкары 🌄", category: .evening)
 
-        notificationsCenter.add(morningRequest, withCompletionHandler: nil)
-        notificationsCenter.add(eveningRequest, withCompletionHandler: nil)
+        notificationsCenter.add(morningRequest)
+        notificationsCenter.add(eveningRequest)
     }
 
-    private func notifiationRequest(id: String, date: Date, title: String) -> UNNotificationRequest {
+    private func notificationRequest(id: String, date: Date, title: String, category: ZikrCategory) -> UNNotificationRequest {
         let content = UNMutableNotificationContent()
         content.title = title
         content.sound = UNNotificationSound.default
+        content.userInfo["category"] = category.rawValue
 
         let trigger = UNCalendarNotificationTrigger(dateMatching: Calendar.current.dateComponents([.hour, .minute], from: date), repeats: true)
         let request = UNNotificationRequest(identifier: id, content: content, trigger: trigger)

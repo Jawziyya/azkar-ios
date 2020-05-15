@@ -22,10 +22,17 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
 
         let audioPlayer = AppDelegate.shared.player
+        let notificationsHandler = AppDelegate.shared.notificationsHandler
 
         let preferences = Preferences()
 
         let mainViewModel = MainMenuViewModel(preferences: preferences, player: Player(player: audioPlayer))
+
+        notificationsHandler
+            .selectedNotificationId
+            .assign(to: \.selectedNotificationCategory, on: mainViewModel)
+            .store(in: &cancellabels)
+
         let mainView = MainMenuView(viewModel: mainViewModel)
 
         // Use a UIHostingController as window root view controller.
@@ -74,6 +81,4 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // to restore the scene back to its current state.
     }
 
-
 }
-

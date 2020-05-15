@@ -20,4 +20,7 @@ enum Keys {
 
     static let useSystemFontSize = "kUseSystemFontSize"
     static let sizeCategory = "kSizeCategory"
+
+    static let morningNotificationId = "morning.notification"
+    static let eveningNotificationId = "evening.notification"
 }

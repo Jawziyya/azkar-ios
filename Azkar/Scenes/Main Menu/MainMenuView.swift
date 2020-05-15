@@ -19,6 +19,8 @@ struct MainMenuView: View {
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.horizontalSizeClass) var hSizeClass
 
+//    @State private var selectedMenuItem: AzkarMenuItem?
+
     let groupBackgroundElementID = UUID().uuidString
 
     var body: some View {
@@ -60,7 +62,7 @@ struct MainMenuView: View {
         var sections = [
         ASCollectionViewSection<Section>(id: .dayNight, data: viewModel.dayNightSectionModels) { item, _ in
 
-            NavigationLink(destination: self.azkarsDestination(for: item)) {
+            NavigationLink(destination: self.azkarsDestination(for: item), tag: item, selection: self.$viewModel.selectedMenuItem) {
                 MainMenuLargeGroup(item: item)
             }
             .isDetailLink(false)
