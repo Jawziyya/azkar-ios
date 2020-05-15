@@ -1,4 +1,5 @@
 import SwiftUI
+import Combine
 
 extension EnvironmentValues {
     struct Diff: OptionSet {
@@ -14,14 +15,29 @@ extension EnvironmentValues {
 }
 
 extension View {
-    func attachEnvironmentOverrides(preferences: Preferences, onChange: ((EnvironmentValues.Diff) -> Void)? = nil) -> some View {
-        modifier(EnvironmentOverridesModifier(preferences: preferences, onChange: onChange))
+    func attachEnvironmentOverrides(viewModel: EnvironmentOverridesViewModel, onChange: ((EnvironmentValues.Diff) -> Void)? = nil) -> some View {
+        modifier(EnvironmentOverridesModifier(viewModel: viewModel, onChange: onChange))
+    }
+}
+
+final class EnvironmentOverridesViewModel: ObservableObject {
+    @Published var preferences: Preferences
+    var objectWillChange = PassthroughSubject<Void, Never>()
+
+    private var cancellabels = Set<AnyCancellable>()
+
+    init(preferences: Preferences) {
+        self.preferences = preferences
+        preferences
+            .storageChangesPublisher()
+            .subscribe(objectWillChange)
+            .store(in: &cancellabels)
     }
 }
 
 struct EnvironmentOverridesModifier: ViewModifier {
 
-    @ObservedObject var preferences: Preferences
+    @ObservedObject var viewModel: EnvironmentOverridesViewModel
 
     @Environment(\.sizeCategory) private var defaultSizeCategory: ContentSizeCategory
     let onChange: ((EnvironmentValues.Diff) -> Void)?
@@ -29,12 +45,12 @@ struct EnvironmentOverridesModifier: ViewModifier {
     func body(content: Content) -> some View {
         content
             .onAppear { self.copyDefaultSettings() }
-            .environment(\.sizeCategory, preferences.useSystemFontSize ? defaultSizeCategory : preferences.sizeCategory)
+            .environment(\.sizeCategory, viewModel.preferences.useSystemFontSize ? defaultSizeCategory : viewModel.preferences.sizeCategory)
     }
     
     private func copyDefaultSettings() {
-        if preferences.useSystemFontSize {
-            preferences.sizeCategory = defaultSizeCategory
+        if viewModel.preferences.useSystemFontSize {
+            viewModel.preferences.sizeCategory = defaultSizeCategory
         }
     }
     

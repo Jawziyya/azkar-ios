@@ -32,10 +32,12 @@ final class MainMenuViewModel: ObservableObject {
     let player: Player
 
     let preferences: Preferences
+    let settingsViewModel: SettingsViewModel
 
     private var cancellabels = Set<AnyCancellable>()
 
     init(preferences: Preferences, player: Player) {
+        self.settingsViewModel = .init(preferences: preferences)
         let all = Zikr.data
         morningAzkar = all.filter { $0.category == .morning }
         eveningAzkar = all.filter { $0.category == .evening }

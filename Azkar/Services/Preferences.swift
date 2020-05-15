@@ -20,7 +20,7 @@ let defaultEveningNotificationTime: Date = {
     return components.date ?? Date()
 }()
 
-final class Preferences: ObservableObject {
+final class Preferences {
 
     @Preference(Keys.expandTranslation, defaultValue: true)
     var expandTranslation: Bool
@@ -54,13 +54,12 @@ final class Preferences: ObservableObject {
 
     private var notificationSubscription: AnyCancellable?
 
-    init() {
-        notificationSubscription = NotificationCenter.default
+    func storageChangesPublisher() -> AnyPublisher<Void, Never> {
+        return NotificationCenter.default
             .publisher(for: UserDefaults.didChangeNotification)
+            .map { _ in }
             .receive(on: RunLoop.main)
-            .sink { _ in
-                self.objectWillChange.send()
-            }
+            .eraseToAnyPublisher()
     }
-    
+
 }

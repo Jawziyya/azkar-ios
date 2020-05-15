@@ -19,7 +19,7 @@ struct ZikrPagesViewModel {
         self.preferences = preferences
         title = type.title
         self.azkar = azkar.map {
-            ZikrViewModel(zikr: $0, preferences: preferences)
+            ZikrViewModel(zikr: $0, preferences: preferences, player: player)
         }
         self.player = player
     }

@@ -12,9 +12,6 @@ import BonMot
 struct ZikrView: View {
 
     @ObservedObject var viewModel: ZikrViewModel
-    var player: Player
-    
-//    var preferences: Preferences
 
     @State private var textHeight: CGFloat = 0
     @State private var translationHeight: CGFloat = 0
@@ -87,8 +84,8 @@ struct ZikrView: View {
             .equatable()
             .padding([.leading, .trailing, .bottom])
 
-            viewModel.zikr.audioURL.flatMap { url in
-                self.playerView(audioURL: url)
+            viewModel.playerViewModel.flatMap { vm in
+                self.playerView(viewModel: vm)
             }
         }
     }
@@ -162,9 +159,9 @@ struct ZikrView: View {
         .padding()
     }
 
-    private func playerView(audioURL: URL) -> some View {
+    private func playerView(viewModel: PlayerViewModel) -> some View {
         PlayerView(
-            viewModel: PlayerViewModel(title: viewModel.title, subtitle: viewModel.zikr.category.title, audioURL: audioURL, player: player),
+            viewModel: viewModel,
             tintColor: tintColor,
             progressBarColor: dividerColor,
             progressBarHeight: dividerHeight
@@ -176,8 +173,7 @@ struct ZikrView: View {
 
 struct ZikrView_Previews: PreviewProvider {
     static var previews: some View {
-        ZikrView(viewModel: ZikrViewModel(zikr: Zikr.data[39], preferences: Preferences()), player: .test)
-        .environmentObject(Preferences())
+        ZikrView(viewModel: ZikrViewModel(zikr: Zikr.data[39], preferences: Preferences(), player: .test))
         .previewLayout(.fixed(width: 300, height: 500))
     }
 }

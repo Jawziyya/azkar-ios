@@ -66,7 +66,7 @@ struct SettingsView: View {
     var notificationsSection: some View {
         Section(header: Text("Уведомления")) {
             Toggle(isOn: $viewModel.preferences.enableNotifications, label: {
-                Text("Напоминать об утренних и вечерних азкарах")
+                Text("Напоминать об утренних и вечерних азкарах").padding(.vertical, 8)
             })
 
             if viewModel.preferences.enableNotifications {
@@ -99,7 +99,7 @@ struct SettingsView: View {
             PickerView(label: "Шрифт арабского языка", subtitle: viewModel.preferences.arabicFont.title, destination: arabicFontPicker)
 
             Toggle(isOn: $viewModel.preferences.useSystemFontSize, label: {
-                Text("Системный размер текста")
+                Text("Системный размер текста").padding(.vertical, 8)
             })
 
             if viewModel.preferences.useSystemFontSize == false {
@@ -109,7 +109,7 @@ struct SettingsView: View {
     }
 
     var sizePicker: some View {
-        Picker("Размер текста", selection: $viewModel.preferences.sizeCategory) {
+        Picker(selection: $viewModel.preferences.sizeCategory, label: Text("Размер текста").padding(.vertical, 8)) {
             ForEach(ContentSizeCategory.availableCases, id: \.title) { size in
                 Text(size.title)
                     .environment(\.sizeCategory, size)

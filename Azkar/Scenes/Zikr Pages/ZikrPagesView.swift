@@ -28,7 +28,7 @@ struct ZikrPagesView: View, Equatable {
         PageView(
             viewModel.azkar.map { zikr in
                 LazyView(
-                    ZikrView(viewModel: zikr, player: self.viewModel.player)
+                    ZikrView(viewModel: zikr)
                 )
             },
             currentPage: $page,

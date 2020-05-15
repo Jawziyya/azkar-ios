@@ -13,6 +13,8 @@ import UserNotifications
 
 final class SettingsViewModel: ObservableObject {
 
+    let objectWillChange = PassthroughSubject<Void, Never>()
+
     private let notificationsCenter = UNUserNotificationCenter.current()
     private let morningNotificationId = "morning.notification"
     private let eveningNotificationId = "evening.notification"
@@ -23,7 +25,7 @@ final class SettingsViewModel: ObservableObject {
 
     private let formatter: DateFormatter
 
-    @Published var preferences: Preferences
+    var preferences: Preferences
     @Published var morningTime: String
     @Published var eveningTime: String
 
@@ -57,6 +59,11 @@ final class SettingsViewModel: ObservableObject {
         morningTime = formatter.string(from: preferences.morningNotificationTime)
         eveningTime = formatter.string(from: preferences.eveningNotificationTime)
 
+        preferences
+            .storageChangesPublisher()
+            .subscribe(objectWillChange)
+            .store(in: &cancellabels)
+
         preferences.$appIcon
             .dropFirst(1)
             .receive(on: RunLoop.main)
@@ -82,10 +89,11 @@ final class SettingsViewModel: ObservableObject {
             .store(in: &cancellabels)
 
         Publishers.CombineLatest3(
-                preferences.$enableNotifications.dropFirst(),
-                preferences.$morningNotificationTime.dropFirst(),
-                preferences.$eveningNotificationTime.dropFirst()
+                preferences.$enableNotifications,
+                preferences.$morningNotificationTime,
+                preferences.$eveningNotificationTime
             )
+            .dropFirst()
             .receive(on: RunLoop.main)
             .sink(receiveValue: { [unowned self] (enabled, morning, evening) in
                 self.removeScheduledNotifications()

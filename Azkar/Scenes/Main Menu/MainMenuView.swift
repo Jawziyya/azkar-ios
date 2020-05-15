@@ -30,7 +30,7 @@ struct MainMenuView: View {
         .padding(.leading, UIDevice.current.isIpad ? 0.5 : 0) // Hack for proper allVisible split view mode.
         .background(Color.background.edgesIgnoringSafeArea(.all))
         .environment(\.horizontalSizeClass, UIDevice.current.isIpad ? .regular : .compact)
-        .attachEnvironmentOverrides(preferences: viewModel.preferences)
+        .attachEnvironmentOverrides(viewModel: EnvironmentOverridesViewModel(preferences: viewModel.preferences))
     }
 
     private var ipadDetailView: some View {
@@ -146,7 +146,6 @@ struct MainMenuView: View {
                 )
             }
         }
-        .environmentObject(viewModel.preferences)
     }
 
     private func getZikrPagesViewModel(for category: ZikrCategory) -> ZikrPagesViewModel {
@@ -164,7 +163,6 @@ struct MainMenuView: View {
                 )
             }
         }
-        .environmentObject(viewModel.preferences)
         .navigationBarTitle(viewModel.title)
     }
 
@@ -173,7 +171,7 @@ struct MainMenuView: View {
         case .legal:
             return AppInfoView(viewModel: AppInfoViewModel()).eraseToAny()
         case .settings:
-            return SettingsView(viewModel: SettingsViewModel(preferences: viewModel.preferences)).eraseToAny()
+            return SettingsView(viewModel: viewModel.settingsViewModel).eraseToAny()
         default:
             return EmptyView().eraseToAny()
         }

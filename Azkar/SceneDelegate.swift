@@ -35,9 +35,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             self.window = window
             window.makeKeyAndVisible()
 
-            preferences.objectWillChange
+            preferences.$theme
                 .receive(on: RunLoop.main)
-                .map { _ in preferences.theme }
                 .removeDuplicates()
                 .sink { theme in
                     window.overrideUserInterfaceStyle = theme.userInterfaceStyle

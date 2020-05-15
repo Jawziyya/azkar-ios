@@ -23,18 +23,24 @@ final class ZikrViewModel: ObservableObject, Identifiable, Equatable {
     let title: String
     let preferences: Preferences
 
+    var playerViewModel: PlayerViewModel?
+
     @Published var expandTranslation: Bool
     @Published var expandTransliteration: Bool
 
     private var cancellabels: [AnyCancellable] = []
 
-    init(zikr: Zikr, preferences: Preferences) {
+    init(zikr: Zikr, preferences: Preferences, player: Player) {
         self.zikr = zikr
         self.preferences = preferences
         title = zikr.title ?? "Зикр №\(zikr.rowInCategory)"
 
         expandTranslation = preferences.expandTranslation
         expandTransliteration = preferences.expandTransliteration
+
+        if let url = zikr.audioURL {
+            playerViewModel = PlayerViewModel(title: title, subtitle: zikr.category.title, audioURL: url, player: player)
+        }
 
         cancellabels = [
             preferences.$expandTranslation.assign(to: \.expandTranslation, on: self),

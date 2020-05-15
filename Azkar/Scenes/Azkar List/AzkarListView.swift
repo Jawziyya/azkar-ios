@@ -35,7 +35,7 @@ struct AzkarListView: View {
     func pagesView(_ index: Int) -> some View {
         ZStack {
             if UIDevice.current.isIpad {
-                ZikrView(viewModel: self.viewModel.azkar[index], player: viewModel.player)
+                ZikrView(viewModel: self.viewModel.azkar[index])
             } else {
                 LazyView(
                     ZikrPagesView(viewModel: self.viewModel, page: index)
