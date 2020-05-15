@@ -43,7 +43,7 @@ struct ZikrPagesView: View, Equatable {
 struct ZikrPagesView_Previews: PreviewProvider {
 
     static var previews: some View {
-        ZikrPagesView(viewModel: ZikrPagesViewModel(type: .morning, azkar: Zikr.data, preferences: Preferences(), player: Player.test))
+        ZikrPagesView(viewModel: ZikrPagesViewModel(title: ZikrCategory.morning.title, azkar: [], preferences: Preferences()))
     }
 
 }

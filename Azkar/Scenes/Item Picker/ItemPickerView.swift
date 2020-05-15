@@ -20,6 +20,8 @@ struct ItemPickerView<SelectionValue>: View where SelectionValue: Hashable & Pic
         List {
             self.content
         }
+        .listStyle(GroupedListStyle())
+        .environment(\.horizontalSizeClass, .regular)
     }
 
     var content: some View {
@@ -58,8 +60,6 @@ struct ItemPickerView<SelectionValue>: View where SelectionValue: Hashable & Pic
                 }
             }
         }
-        .listStyle(GroupedListStyle())
-        .environment(\.horizontalSizeClass, .regular)
     }
 
 }

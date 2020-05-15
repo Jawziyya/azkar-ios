@@ -13,15 +13,11 @@ struct ZikrPagesViewModel {
     let title: String
     let azkar: [ZikrViewModel]
     let preferences: Preferences
-    let player: Player
 
-    init(type: ZikrCategory, azkar: [Zikr], preferences: Preferences, player: Player) {
+    init(title: String, azkar: [ZikrViewModel], preferences: Preferences) {
+        self.title = title
         self.preferences = preferences
-        title = type.title
-        self.azkar = azkar.map {
-            ZikrViewModel(zikr: $0, preferences: preferences, player: player)
-        }
-        self.player = player
+        self.azkar = azkar
     }
 
 }

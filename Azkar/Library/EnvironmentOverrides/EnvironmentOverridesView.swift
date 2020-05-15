@@ -30,6 +30,7 @@ final class EnvironmentOverridesViewModel: ObservableObject {
         self.preferences = preferences
         preferences
             .storageChangesPublisher()
+            .receive(on: RunLoop.main)
             .subscribe(objectWillChange)
             .store(in: &cancellabels)
     }

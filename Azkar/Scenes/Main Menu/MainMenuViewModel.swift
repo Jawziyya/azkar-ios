@@ -19,10 +19,10 @@ final class MainMenuViewModel: ObservableObject {
         case notificationsAccess
     }
 
-    let morningAzkar: [Zikr]
-    let eveningAzkar: [Zikr]
-    let afterSalahAzkar: [Zikr]
-    let otherAzkar: [Zikr]
+    let morningAzkar: [ZikrViewModel]
+    let eveningAzkar: [ZikrViewModel]
+    let afterSalahAzkar: [ZikrViewModel]
+    let otherAzkar: [ZikrViewModel]
 
     let dayNightSectionModels: [AzkarMenuItem]
     let otherAzkarModels: [AzkarMenuItem]
@@ -42,11 +42,13 @@ final class MainMenuViewModel: ObservableObject {
 
     init(preferences: Preferences, player: Player) {
         self.settingsViewModel = .init(preferences: preferences)
-        let all = Zikr.data
-        morningAzkar = all.filter { $0.category == .morning }
-        eveningAzkar = all.filter { $0.category == .evening }
-        afterSalahAzkar = all.filter { $0.category == .afterSalah }
-        otherAzkar = all.filter { $0.category == .other }
+        let all = Zikr.data.map {
+            ZikrViewModel(zikr: $0, preferences: preferences, player: player)
+        }
+        morningAzkar = all.filter { $0.zikr.category == .morning }
+        eveningAzkar = all.filter { $0.zikr.category == .evening }
+        afterSalahAzkar = all.filter { $0.zikr.category == .afterSalah }
+        otherAzkar = all.filter { $0.zikr.category == .other }
         self.preferences = preferences
         self.player = player
 
@@ -91,7 +93,7 @@ final class MainMenuViewModel: ObservableObject {
             .store(in: &cancellabels)
     }
 
-    func azkarForCategory(_ category: ZikrCategory) -> [Zikr] {
+    func azkarForCategory(_ category: ZikrCategory) -> [ZikrViewModel] {
         switch category {
         case .morning: return morningAzkar
         case .evening: return eveningAzkar

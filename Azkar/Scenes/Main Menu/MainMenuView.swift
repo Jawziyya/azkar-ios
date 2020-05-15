@@ -154,7 +154,7 @@ struct MainMenuView: View {
     }
 
     private func getZikrPagesViewModel(for category: ZikrCategory) -> ZikrPagesViewModel {
-        ZikrPagesViewModel(type: category, azkar: viewModel.azkarForCategory(category), preferences: viewModel.preferences, player: viewModel.player)
+        ZikrPagesViewModel(title: category.title, azkar: viewModel.azkarForCategory(category), preferences: viewModel.preferences)
     }
 
     private func azkarsDestination(for model: AzkarMenuItem) -> some View {

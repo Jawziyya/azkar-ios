@@ -48,6 +48,6 @@ struct AzkarListView: View {
 
 struct AzkarListView_Previews: PreviewProvider {
     static var previews: some View {
-        AzkarListView(viewModel: AzkarListViewModel(type: .morning, azkar: Zikr.data, preferences: Preferences(), player: Player.test))
+        AzkarListView(viewModel: AzkarListViewModel(title: ZikrCategory.morning.title, azkar: [], preferences: Preferences()))
     }
 }

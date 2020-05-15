@@ -59,6 +59,7 @@ final class SettingsViewModel: ObservableObject {
 
         preferences
             .storageChangesPublisher()
+            .receive(on: RunLoop.main)
             .subscribe(objectWillChange)
             .store(in: &cancellabels)
 
