@@ -27,7 +27,9 @@ struct ZikrView: View {
         return ScrollView {
             self.getContent()
         }
-        .navigationBarTitle(UIDevice.current.isIpad ? viewModel.title : "")
+        .if(UIDevice.current.isIpad) { view in
+            view.navigationBarTitle(viewModel.title)
+        }
     }
 
     private func getContent() -> some View {
