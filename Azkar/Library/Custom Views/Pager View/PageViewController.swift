@@ -16,17 +16,20 @@ struct PageViewController: UIViewControllerRepresentable {
             navigationOrientation: .horizontal)
         pageViewController.dataSource = context.coordinator
         pageViewController.delegate = context.coordinator
-
         return pageViewController
     }
 
     func updateUIViewController(_ pageViewController: UIPageViewController, context: Context) {
+        guard context.coordinator.lastPage != currentPage else { return }
         pageViewController.setViewControllers(
             [controllers[currentPage]], direction: .forward, animated: true)
+        context.coordinator.lastPage = currentPage
     }
 
     class Coordinator: NSObject, UIPageViewControllerDataSource, UIPageViewControllerDelegate {
         var parent: PageViewController
+
+        fileprivate var lastPage: Int?
 
         init(_ pageViewController: PageViewController) {
             self.parent = pageViewController
