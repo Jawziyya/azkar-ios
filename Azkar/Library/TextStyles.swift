@@ -14,7 +14,7 @@ enum TextStyles {
 
     static func arabicTextStyle(fontName: String? = nil, textStyle: UIFont.TextStyle = .body, alignment: NSTextAlignment = .right, sizeCategory: ContentSizeCategory? = nil) -> StringStyle {
         let size = textSize(forTextStyle: textStyle, contentSizeCategory: sizeCategory?.uiContentSizeCategory)
-        let font = UIFont(name: fontName ?? ArabicFont.amiri.fontName, size: size) ?? UIFont.systemFont(ofSize: size)
+        let font = UIFont(name: fontName ?? ArabicFont.noto.fontName, size: size) ?? UIFont.systemFont(ofSize: size)
         return StringStyle(
             .font(font),
             .lineHeightMultiple(1.1),

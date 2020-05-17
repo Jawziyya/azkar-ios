@@ -9,16 +9,14 @@
 import SwiftUI
 
 enum ArabicFont: String, CaseIterable, Identifiable, Codable, Hashable, PickableItem {
-    case standard, adobe, amiri, KFGQP, noto, scheherazade
+    case standard, adobe, KFGQP, noto, scheherazade
 
     var fontName: String {
         switch self {
         case .standard:
-            return "iOS"
+            return "Стандартный iOS"
         case .adobe:
             return "AdobeArabic-Regular"
-        case .amiri:
-            return "Amiri-Regular"
         case .KFGQP:
             return "KFGQPCUthmanicScriptHAFS"
         case .noto:
@@ -34,7 +32,7 @@ enum ArabicFont: String, CaseIterable, Identifiable, Codable, Hashable, Pickable
 
     var title: String {
         switch self {
-        case .adobe, .amiri:
+        case .adobe:
             return rawValue.capitalized
         case .KFGQP:
             return rawValue

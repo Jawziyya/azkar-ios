@@ -87,7 +87,6 @@
 		9D170F212461AB8E0025088D /* ic_light@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9D170F1E2461AB8E0025088D /* ic_light@3x.png */; };
 		9D170F222461AB8E0025088D /* ic_light.png in Resources */ = {isa = PBXBuildFile; fileRef = 9D170F1F2461AB8E0025088D /* ic_light.png */; };
 		9D1ECBF4245FAAC9007659E5 /* PlayerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D1ECBF3245FAAC9007659E5 /* PlayerViewModel.swift */; };
-		9D1ECBF6245FB179007659E5 /* Amiri-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9D1ECBF5245FB179007659E5 /* Amiri-Regular.ttf */; };
 		9D1ECBF8245FB1CD007659E5 /* Damascus.ttc in Resources */ = {isa = PBXBuildFile; fileRef = 9D1ECBF7245FB1CD007659E5 /* Damascus.ttc */; };
 		9D1ECBFA245FB203007659E5 /* AdobeArabic-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 9D1ECBF9245FB203007659E5 /* AdobeArabic-Regular.otf */; };
 		9D1ECBFD245FB4E7007659E5 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D1ECBFC245FB4E7007659E5 /* SettingsView.swift */; };
@@ -284,7 +283,6 @@
 		9D170F1E2461AB8E0025088D /* ic_light@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_light@3x.png"; sourceTree = "<group>"; };
 		9D170F1F2461AB8E0025088D /* ic_light.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ic_light.png; sourceTree = "<group>"; };
 		9D1ECBF3245FAAC9007659E5 /* PlayerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerViewModel.swift; sourceTree = "<group>"; };
-		9D1ECBF5245FB179007659E5 /* Amiri-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Amiri-Regular.ttf"; sourceTree = "<group>"; };
 		9D1ECBF7245FB1CD007659E5 /* Damascus.ttc */ = {isa = PBXFileReference; lastKnownFileType = file; path = Damascus.ttc; sourceTree = "<group>"; };
 		9D1ECBF9245FB203007659E5 /* AdobeArabic-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "AdobeArabic-Regular.otf"; sourceTree = "<group>"; };
 		9D1ECBFC245FB4E7007659E5 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
@@ -837,7 +835,6 @@
 			children = (
 				9D1ECBF9245FB203007659E5 /* AdobeArabic-Regular.otf */,
 				9D1ECBF7245FB1CD007659E5 /* Damascus.ttc */,
-				9D1ECBF5245FB179007659E5 /* Amiri-Regular.ttf */,
 				6CF1B4FB243BCDA500C7321F /* NotoNaskhArabicUI-Regular.ttf */,
 				9DC94399245B84A700DD0065 /* Scheherazade.ttf */,
 				9DC9439C245B853300DD0065 /* KFGQPCUthmanicScriptHAFS.otf */,
@@ -1010,7 +1007,6 @@
 				6C1E5324243BB1360078F6FB /* Preview Assets.xcassets in Resources */,
 				6C1E5321243BB1360078F6FB /* Assets.xcassets in Resources */,
 				9D170F212461AB8E0025088D /* ic_light@3x.png in Resources */,
-				9D1ECBF6245FB179007659E5 /* Amiri-Regular.ttf in Resources */,
 				9D8C3A0F2467165800ACAAC9 /* Launch Screen.storyboard in Resources */,
 				6CC630AF243E69CF00906FD1 /* morning13.mp3 in Resources */,
 				9D6DFA8A245ED1FC0091CEF5 /* other1.mp3 in Resources */,
