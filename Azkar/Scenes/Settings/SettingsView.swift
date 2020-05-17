@@ -96,7 +96,7 @@ struct SettingsView: View {
     // MARK: - Content Size
     var fontsSection: some View {
         Section(header: Text("Текст")) {
-            PickerView(label: "Шрифт арабского языка", subtitle: viewModel.preferences.arabicFont.title, destination: arabicFontPicker)
+            PickerView(label: "Шрифт арабского текста", subtitle: viewModel.preferences.arabicFont.title, destination: arabicFontPicker)
 
             Toggle(isOn: $viewModel.preferences.useSystemFontSize, label: {
                 Text("Системный размер текста").padding(.vertical, 8)

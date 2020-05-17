@@ -19,7 +19,9 @@ struct MainMenuView: View {
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.horizontalSizeClass) var hSizeClass
 
-//    @State private var selectedMenuItem: AzkarMenuItem?
+    private var isIpad: Bool {
+        UIDevice.current.isIpad
+    }
 
     let groupBackgroundElementID = UUID().uuidString
 
@@ -27,11 +29,14 @@ struct MainMenuView: View {
         NavigationView {
             self.remindersStyleMenu
                 .navigationBarTitle(Text("Азкары"), displayMode: .inline)
-            UIDevice.current.isIpad ? self.ipadDetailView : nil
+                .if(isIpad) {
+                    $0.frame(minWidth: 300)
+                }
+            isIpad ? self.ipadDetailView : nil
         }
-        .padding(.leading, UIDevice.current.isIpad ? 0.5 : 0) // Hack for proper allVisible split view mode.
+        .padding(.leading, isIpad ? 0.5 : 0) // Hack for proper allVisible split view mode.
         .background(Color.background.edgesIgnoringSafeArea(.all))
-        .environment(\.horizontalSizeClass, UIDevice.current.isIpad ? .regular : .compact)
+        .environment(\.horizontalSizeClass, isIpad ? .regular : .compact)
         .attachEnvironmentOverrides(viewModel: EnvironmentOverridesViewModel(preferences: viewModel.preferences))
     }
 
@@ -135,7 +140,7 @@ struct MainMenuView: View {
         let viewModel = self.getZikrPagesViewModel(for: model.category)
 
         return ZStack {
-            if UIDevice.current.isIpad {
+            if isIpad {
                 LazyView(
                     AzkarListView(viewModel: viewModel)
                 )
@@ -160,7 +165,7 @@ struct MainMenuView: View {
     private func azkarsDestination(for model: AzkarMenuItem) -> some View {
         let viewModel = self.getZikrPagesViewModel(for: model.category)
         return ZStack {
-            if UIDevice.current.isIpad {
+            if isIpad {
                 zikrList(model)
             } else {
                 LazyView(

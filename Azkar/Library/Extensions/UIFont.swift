@@ -62,6 +62,10 @@ extension UIFont {
 
         static var all: [FontFamily] = [.georgia, .iowan, .palatino, .times]
 
+        func fontName(with type: FontType) -> String {
+            return rawValue + suffix(for: type)
+        }
+
         func suffix(for type: FontType) -> String {
             switch type {
             case .regular where self == .verdana: return ""

@@ -15,20 +15,20 @@ struct AzkarListView: View {
 
     let viewModel: AzkarListViewModel
 
+    @State private var selection: Set<ZikrViewModel>?
+
     var body: some View {
         list
             .navigationBarTitle(viewModel.title)
     }
 
     var list: some View {
-        List {
-            ForEach(viewModel.azkar.indexed(), id: \.0) { index, vm in
-                NavigationLink(destination: self.pagesView(index)) {
-                    Text(vm.title)
-                        .contentShape(Rectangle())
-                }
-                .buttonStyle(PlainButtonStyle())
+        List(viewModel.azkar.indexed(), id: \.1, selection: $selection) { index, vm in
+            NavigationLink(destination: self.pagesView(index)) {
+                Text(vm.title)
+                    .contentShape(Rectangle())
             }
+            .buttonStyle(PlainButtonStyle())
         }
     }
 
