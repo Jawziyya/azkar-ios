@@ -20,6 +20,7 @@ enum ZikrCategory: String, Codable {
 struct Zikr: Identifiable, Hashable, Equatable, Codable {
     
     let id: Int
+    let hadith: Int?
     let rowInCategory: Int
     let title: String?
     let text: String

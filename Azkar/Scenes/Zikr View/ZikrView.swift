@@ -122,18 +122,39 @@ struct ZikrView: View {
             }
 
             viewModel.zikr.source.textOrNil.flatMap { text in
-                getInfoStack(label: "источник", text: text)
+                NavigationLink.init(destination: hadithView, label: {
+                    getInfoStack(label: "источник", text: text, underline: viewModel.hadithViewModel != nil)
+                })
+                .disabled(viewModel.hadithViewModel == nil)
             }
         }
         .font(.caption)
         .padding()
     }
 
-    private func getInfoStack(label: String, text: String) -> some View {
+    private var hadithView: AnyView {
+        if let vm = viewModel.hadithViewModel {
+            return LazyView(
+                HadithView(viewModel: vm)
+            )
+            .eraseToAny()
+        } else {
+            return EmptyView().eraseToAny()
+        }
+    }
+
+    private func getInfoStack(label: String, text: String, underline: Bool = false) -> some View {
         VStack(alignment: .leading, spacing: 0) {
             self.getCaption(label)
             Text(text.firstWord())
-                .font(Font.subheadline.weight(.regular).smallCaps())
+                .font(
+                    Font.subheadline
+                        .weight(.regular)
+                        .smallCaps()
+                )
+                .if(underline, transform: { text in
+                    text.underline()
+                })
                 .foregroundColor(.text)
         }
     }
