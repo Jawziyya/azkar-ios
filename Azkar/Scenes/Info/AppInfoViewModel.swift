@@ -50,7 +50,6 @@ struct AppInfoViewModel {
     let imagesLegalInfoModels: [SourceInfo] = [
         SourceInfo(title: "Изображение значка (flaticon.com)", url: URL(string: "https://flaticon.com/free-icon/moon_414942?term=moon&page=1&position=17")!, imageName: nil),
         SourceInfo(title: "Шрифт Adobe Arabic", url: URL(string: "https://fonts.adobe.com/fonts/adobe-arabic")!, imageName: nil),
-        SourceInfo(title: "Шрифт Amiri", url: URL(string: "https://www.amirifont.org")!, imageName: nil),
         SourceInfo(title: "Шрифт Комплекса имени Короля Фахда по изданию Священного Корана", url: URL(string: "https://qurancomplex.gov.sa/en/")!, imageName: nil),
         SourceInfo(title: "Шрифт Google Noto Naskh", url: URL(string: "https://www.google.com/get/noto/#naskh-arab")!, imageName: nil),
         SourceInfo(title: "Шрифт Scheherazade", url: URL(string: "https://software.sil.org/scheherazade/")!, imageName: nil),
