@@ -11,7 +11,11 @@ import SwiftUI
 
 extension ContentSizeCategory: PickableItem { }
 
-extension ContentSizeCategory: Codable {
+extension ContentSizeCategory: Codable, Comparable {
+
+    public static func < (lhs: ContentSizeCategory, rhs: ContentSizeCategory) -> Bool {
+        return lhs.floatValue < rhs.floatValue
+    }
 
     var uiContentSizeCategory: UIContentSizeCategory {
         switch self {
@@ -92,8 +96,9 @@ extension ContentSizeCategory: Codable {
             .medium,
             .large,
             .extraLarge,
-            .extraExtraExtraLarge,
-            .accessibilityMedium
+            .extraExtraLarge,
+            .accessibilityMedium,
+            .accessibilityLarge
         ]
     }
 

@@ -46,7 +46,17 @@ struct EnvironmentOverridesModifier: ViewModifier {
     func body(content: Content) -> some View {
         content
             .onAppear { self.copyDefaultSettings() }
-            .environment(\.sizeCategory, viewModel.preferences.useSystemFontSize ? defaultSizeCategory : viewModel.preferences.sizeCategory)
+            .environment(\.sizeCategory, contentSizeCategory)
+    }
+
+    private var contentSizeCategory: ContentSizeCategory {
+        if viewModel.preferences.useSystemFontSize {
+            let smallestAvailableContentSize = ContentSizeCategory.availableCases.first!
+            let biggestAvailableContentSize = ContentSizeCategory.availableCases.last!
+            return max(smallestAvailableContentSize, min(biggestAvailableContentSize, defaultSizeCategory))
+        } else {
+            return viewModel.preferences.sizeCategory
+        }
     }
     
     private func copyDefaultSettings() {

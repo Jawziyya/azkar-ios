@@ -111,12 +111,12 @@ struct SettingsView: View {
     var sizePicker: some View {
         Picker(selection: $viewModel.preferences.sizeCategory, label: Text("Размер текста").padding(.vertical, 8)) {
             ForEach(ContentSizeCategory.availableCases, id: \.title) { size in
-                Text(size.title)
+                Text(size.name)
                     .environment(\.sizeCategory, size)
                     .tag(size)
             }
         }
-        .pickerStyle(DefaultPickerStyle())
+        .pickerStyle(SegmentedPickerStyle())
     }
 
 }
