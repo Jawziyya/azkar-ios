@@ -44,7 +44,7 @@ enum ArabicFont: String, CaseIterable, Identifiable, Codable, Hashable, Pickable
     }
 
     var subtitle: String? {
-        return "بسم الله"
+        return "باسم الله"
     }
 
     var subtitleFont: Font {
