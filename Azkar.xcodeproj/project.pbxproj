@@ -75,7 +75,6 @@
 		6CF1B4F2243BC76400C7321F /* Zikr.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CF1B4F1243BC76400C7321F /* Zikr.swift */; };
 		6CF1B4F6243BCB8200C7321F /* ZikrView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CF1B4F5243BCB8200C7321F /* ZikrView.swift */; };
 		6CF1B4F9243BCC5D00C7321F /* ColorPalette.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CF1B4F8243BCC5D00C7321F /* ColorPalette.swift */; };
-		6CF1B4FC243BCDA500C7321F /* NotoNaskhArabicUI-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6CF1B4FA243BCDA500C7321F /* NotoNaskhArabicUI-Bold.ttf */; };
 		6CF1B4FD243BCDA500C7321F /* NotoNaskhArabicUI-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6CF1B4FB243BCDA500C7321F /* NotoNaskhArabicUI-Regular.ttf */; };
 		6CF1B4FF243BCDE000C7321F /* Font.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CF1B4FE243BCDE000C7321F /* Font.swift */; };
 		9D0239152462EB360061D62D /* AzkarListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D0239142462EB360061D62D /* AzkarListView.swift */; };
@@ -266,7 +265,6 @@
 		6CF1B4F1243BC76400C7321F /* Zikr.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Zikr.swift; sourceTree = "<group>"; };
 		6CF1B4F5243BCB8200C7321F /* ZikrView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZikrView.swift; sourceTree = "<group>"; };
 		6CF1B4F8243BCC5D00C7321F /* ColorPalette.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorPalette.swift; sourceTree = "<group>"; };
-		6CF1B4FA243BCDA500C7321F /* NotoNaskhArabicUI-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NotoNaskhArabicUI-Bold.ttf"; sourceTree = "<group>"; };
 		6CF1B4FB243BCDA500C7321F /* NotoNaskhArabicUI-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NotoNaskhArabicUI-Regular.ttf"; sourceTree = "<group>"; };
 		6CF1B4FE243BCDE000C7321F /* Font.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Font.swift; sourceTree = "<group>"; };
 		9D0239142462EB360061D62D /* AzkarListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AzkarListView.swift; sourceTree = "<group>"; };
@@ -815,7 +813,6 @@
 				9D1ECBF9245FB203007659E5 /* AdobeArabic-Regular.otf */,
 				9D1ECBF7245FB1CD007659E5 /* Damascus.ttc */,
 				9D1ECBF5245FB179007659E5 /* Amiri-Regular.ttf */,
-				6CF1B4FA243BCDA500C7321F /* NotoNaskhArabicUI-Bold.ttf */,
 				6CF1B4FB243BCDA500C7321F /* NotoNaskhArabicUI-Regular.ttf */,
 				9DC94399245B84A700DD0065 /* Scheherazade.ttf */,
 				9DC9439C245B853300DD0065 /* KFGQPCUthmanicScriptHAFS.otf */,
@@ -939,7 +936,6 @@
 				9DC9439A245B84A800DD0065 /* Scheherazade.ttf in Resources */,
 				6CC630AC243E69CF00906FD1 /* morning5.mp3 in Resources */,
 				9D2CE85624608BCE00AEF730 /* ic_purple@2x.png in Resources */,
-				6CF1B4FC243BCDA500C7321F /* NotoNaskhArabicUI-Bold.ttf in Resources */,
 				6CC630B5243E69CF00906FD1 /* morning6.mp3 in Resources */,
 				6CC630CB243E762600906FD1 /* evening1.mp3 in Resources */,
 				6CC630B1243E69CF00906FD1 /* morning8.mp3 in Resources */,
