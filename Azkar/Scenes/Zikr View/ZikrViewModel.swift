@@ -9,7 +9,11 @@
 import Foundation
 import Combine
 
-final class ZikrViewModel: ObservableObject, Identifiable, Equatable {
+final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(zikr)
+    }
 
     static func == (lhs: ZikrViewModel, rhs: ZikrViewModel) -> Bool {
         return lhs.id == rhs.id
@@ -24,6 +28,7 @@ final class ZikrViewModel: ObservableObject, Identifiable, Equatable {
     let preferences: Preferences
 
     var playerViewModel: PlayerViewModel?
+    var hadithViewModel: HadithViewModel?
 
     @Published var expandTranslation: Bool
     @Published var expandTransliteration: Bool
@@ -40,6 +45,10 @@ final class ZikrViewModel: ObservableObject, Identifiable, Equatable {
 
         if let url = zikr.audioURL {
             playerViewModel = PlayerViewModel(title: title, subtitle: zikr.category.title, audioURL: url, player: player)
+        }
+
+        if zikr.hadith != nil {
+            hadithViewModel = HadithViewModel(zikrViewModel: self, preferences: preferences)
         }
 
         cancellabels = [
