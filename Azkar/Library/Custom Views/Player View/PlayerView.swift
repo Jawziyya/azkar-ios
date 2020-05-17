@@ -31,7 +31,7 @@ struct PlayerView: View, Equatable {
     private var buttonsView: some View {
         HStack(alignment: .center) {
             Text(viewModel.timeElapsed)
-                .foregroundColor(.text)
+                .foregroundColor(.tertiaryText)
                 .font(Font.caption.monospacedDigit())
             Spacer()
             Button(action: {
@@ -57,6 +57,7 @@ struct PlayerView: View, Equatable {
                   self.viewModel.toggleSpeed()
             }) {
                 Text(viewModel.speed.label)
+                    .minimumScaleFactor(0.2)
                     .frame(width: 30, height: 30)
                     .foregroundColor(tintColor)
                     .font(Font.body.monospacedDigit())
@@ -64,7 +65,7 @@ struct PlayerView: View, Equatable {
             }
             Spacer()
             Text(viewModel.timeRemaining)
-                .foregroundColor(.text)
+                .foregroundColor(.tertiaryText)
                 .font(Font.caption.monospacedDigit())
         }
         .padding(.horizontal)
@@ -80,6 +81,9 @@ struct PlayerView: View, Equatable {
 struct PlayerView_Previews: PreviewProvider {
     static var previews: some View {
         PlayerView(viewModel: PlayerViewModel(title: "", subtitle: "", audioURL: Zikr.data[39].audioURL!, player: .test))
-            .previewLayout(.fixed(width: 300, height: 100))
+            .previewDevice(.init(stringLiteral: "iPhone 11 Pro"))
+            .environment(\.sizeCategory, .accessibilityLarge)
+            .background(Color.background)
+            .environment(\.colorScheme, .dark)
     }
 }
