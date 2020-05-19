@@ -19,6 +19,9 @@ final class NotificationsHandler: NSObject {
     override init() {
         super.init()
         notificationCenter.delegate = self
+
+        // Clean up the notifications list.
+        notificationCenter.removeAllDeliveredNotifications()
     }
 
 }
