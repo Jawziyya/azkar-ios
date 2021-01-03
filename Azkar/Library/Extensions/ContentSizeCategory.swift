@@ -9,13 +9,21 @@
 import UIKit
 import SwiftUI
 
+func min(_ lhs: ContentSizeCategory, _ rhs: ContentSizeCategory) -> ContentSizeCategory {
+    lhs < rhs ? lhs : rhs
+}
+
+func max(_ lhs: ContentSizeCategory, _ rhs: ContentSizeCategory) -> ContentSizeCategory {
+    lhs < rhs ? rhs : lhs
+}
+
+func < (lhs: ContentSizeCategory, rhs: ContentSizeCategory) -> Bool {
+    return lhs.floatValue < rhs.floatValue
+}
+
 extension ContentSizeCategory: PickableItem { }
 
-extension ContentSizeCategory: Codable, Comparable {
-
-    public static func < (lhs: ContentSizeCategory, rhs: ContentSizeCategory) -> Bool {
-        return lhs.floatValue < rhs.floatValue
-    }
+extension ContentSizeCategory: Codable {
 
     var uiContentSizeCategory: UIContentSizeCategory {
         switch self {
