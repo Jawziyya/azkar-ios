@@ -47,7 +47,7 @@ final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
             playerViewModel = PlayerViewModel(title: title, subtitle: zikr.category.title, audioURL: url, player: player)
         }
 
-        #if DEBUG
+        #if SHOW_AZKAR_SOURCES
         if zikr.hadith != nil {
             hadithViewModel = HadithViewModel(zikrViewModel: self, preferences: preferences)
         }
