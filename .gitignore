@@ -6,6 +6,8 @@ Project Resources/*
 
 fastlane/report.xml
 fastlane/Changelog*
+fastlane/MatchFile
+fastlane/AuthKey.json
 
 ### Xcode ###
 build
