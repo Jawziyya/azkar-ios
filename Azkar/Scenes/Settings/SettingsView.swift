@@ -27,6 +27,7 @@ struct SettingsView: View {
         .listStyle(GroupedListStyle())
         .environment(\.horizontalSizeClass, .regular)
         .navigationBarTitle(Text("Настройки"), displayMode: .inline)
+        .toggleStyle(SwitchToggleStyle(tint: Color.accent))
     }
 
     // MARK: - Appearance
