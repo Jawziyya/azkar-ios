@@ -76,7 +76,8 @@ final class MainMenuViewModel: ObservableObject {
             DispatchQueue.main.async {
                 switch settings.authorizationStatus {
                 case .notDetermined:
-                    self.notificationAccessModel = .init(groupType: .notificationsAccess, icon: nil, title: "Включите уведомления, чтобы приложение напоминало о времени утренних и вечерних азкаров", color: Color.init(.link))
+                    let title = NSLocalizedString("alerts.turn-on-notifications-alert", comment: "The alert presented to user before asking for notifications permission.")
+                    self.notificationAccessModel = .init(groupType: .notificationsAccess, icon: nil, title: title, color: Color.init(.link))
                 default:
                     break
                 }

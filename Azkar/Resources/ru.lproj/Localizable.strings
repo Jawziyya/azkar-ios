@@ -10,3 +10,5 @@
 "category.evening" = "Вечерние";
 "category.after-salah" = "Азкары после молитвы";
 "category.other" = "Важные азкары";
+
+"alerts.turn-on-notifications-alert" = "Включите уведомления, чтобы приложение напоминало о времени утренних и вечерних азкаров";
