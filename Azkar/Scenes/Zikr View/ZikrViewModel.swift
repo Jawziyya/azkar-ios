@@ -38,7 +38,7 @@ final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
     init(zikr: Zikr, preferences: Preferences, player: Player) {
         self.zikr = zikr
         self.preferences = preferences
-        title = zikr.title ?? "Зикр №\(zikr.rowInCategory)"
+        title = zikr.title ?? "\(NSLocalizedString("common.zikr", comment: "")) №\(zikr.rowInCategory)"
 
         expandTranslation = preferences.expandTranslation
         expandTransliteration = preferences.expandTransliteration

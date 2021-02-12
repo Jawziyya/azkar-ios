@@ -28,7 +28,7 @@ struct MainMenuView: View {
     var body: some View {
         NavigationView {
             self.remindersStyleMenu
-                .navigationBarTitle(Text("Азкары"), displayMode: .inline)
+                .navigationBarTitle(Text("app-name", comment: "Name of the application."), displayMode: .inline)
                 .if(isIpad) {
                     $0.frame(minWidth: 300)
                 }
@@ -43,7 +43,7 @@ struct MainMenuView: View {
     private var ipadDetailView: some View {
         Color.secondaryBackground
         .overlay(
-            Text("Выберите раздел")
+            Text("root.pick-section", comment: "Pick section label.")
                 .font(Font.title.smallCaps())
                 .foregroundColor(Color.secondary)
             ,
@@ -179,7 +179,7 @@ struct MainMenuView: View {
     private func destination(for item: AzkarMenuOtherItem) -> AnyView {
         switch item.groupType {
         case .legal:
-            return AppInfoView(viewModel: AppInfoViewModel()).eraseToAny()
+            return AppInfoView(viewModel: AppInfoViewModel(prerences: viewModel.preferences)).eraseToAny()
         case .settings:
             return SettingsView(viewModel: viewModel.settingsViewModel).eraseToAny()
         default:

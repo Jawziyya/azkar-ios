@@ -30,7 +30,7 @@ struct AppInfoView: View {
                 }
             }
 
-            Section(header: Text(viewModel.imagesInfoHeader)) {
+            Section(header: Text(viewModel.creditsInfoHeader)) {
                 ForEach(viewModel.imagesLegalInfoModels, id: \.title) { item in
                     self.viewForItem(item)
                 }
@@ -45,8 +45,7 @@ struct AppInfoView: View {
         .listStyle(GroupedListStyle())
         .environment(\.horizontalSizeClass, .regular)
         .environment(\.verticalSizeClass, .regular)
-        .navigationBarTitle(Text("О приложении"), displayMode: .inline)
-//        .background(Color.background.edgesIgnoringSafeArea(.all))
+        .navigationTitle(Text("about.title", comment: "About app screen title."))
         .supportedOrientations(.portrait)
         .sheet(item: $url) { url in
             SafariView(url: url, entersReaderIfAvailable: false)
@@ -69,7 +68,7 @@ struct AppInfoView: View {
             HStack {
                 Spacer()
                 VStack(spacing: 0) {
-                    Text("Azkar")
+                    Text("app-name", comment: "App name.")
                         .font(Font.headline.smallCaps().weight(.heavy))
                         .frame(alignment: .center)
                         .foregroundColor(Color.accent)
@@ -116,7 +115,7 @@ struct AppInfoView: View {
 
 struct LegalInfoView_Previews: PreviewProvider {
     static var previews: some View {
-        AppInfoView(viewModel: AppInfoViewModel())
+        AppInfoView(viewModel: AppInfoViewModel(prerences: Preferences()))
             .colorScheme(.dark)
     }
 }

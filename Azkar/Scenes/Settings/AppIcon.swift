@@ -9,32 +9,14 @@
 import SwiftUI
 
 enum AppIcon: String, Codable, CaseIterable, Hashable, PickableItem, Identifiable {
-    case light, ink, dark, ramadan = "purple"
+    case gold, ink, darkNight = "dark_night", ramadan
 
     static var availableIcons: [AppIcon] {
-        return Array(allCases.prefix(3))
-    }
-
-    var iconName: String? {
-        switch self {
-        case .light:
-            return nil
-        default:
-            return rawValue
-        }
+        return allCases
     }
 
     var title: String {
-        switch self {
-        case .light:
-            return "Золото"
-        case .ink:
-            return "Чернила"
-        case .dark:
-            return "Тёмная ночь"
-        case .ramadan:
-            return "Рамадан"
-        }
+        return NSLocalizedString("settings.icon.list.\(id)", comment: "")
     }
 
     var id: String {
@@ -42,6 +24,6 @@ enum AppIcon: String, Codable, CaseIterable, Hashable, PickableItem, Identifiabl
     }
 
     var image: Image? {
-        Image(uiImage: UIImage(named: "ic_\(rawValue).png")!)
+        Image(uiImage: UIImage(named: "ic_\(id).png")!)
     }
 }

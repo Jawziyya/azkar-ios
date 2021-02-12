@@ -24,19 +24,17 @@ struct SettingsView: View {
             self.fontsSection
             self.notificationsSection
         }
-        .listStyle(GroupedListStyle())
-        .environment(\.horizontalSizeClass, .regular)
-        .navigationBarTitle(Text("Настройки"), displayMode: .inline)
+        .navigationTitle(Text("settings.title"))
         .toggleStyle(SwitchToggleStyle(tint: Color.accent))
     }
 
     // MARK: - Appearance
     var appearanceSection: some View {
         Section {
-            PickerView(label: "Тема", subtitle: viewModel.preferences.theme.title, destination: themePicker)
+            PickerView(label: NSLocalizedString("settings.theme.title", comment: "Theme settings section title."), subtitle: viewModel.preferences.theme.title, destination: themePicker)
 
             if viewModel.canChangeIcon {
-                PickerView(label: "Значок приложения", subtitle: viewModel.preferences.appIcon.title, destination: iconPicker)
+                PickerView(label: NSLocalizedString("settings.icon.title", comment: "Icon settings section title."), subtitle: viewModel.preferences.appIcon.title, destination: iconPicker)
             }
         }
     }
@@ -65,15 +63,15 @@ struct SettingsView: View {
 
     // MARK: - Notifications
     var notificationsSection: some View {
-        Section(header: Text("Уведомления")) {
+        Section(header: Text("settings.notifications.title", comment: "Notifications screen title.")) {
             Toggle(isOn: $viewModel.preferences.enableNotifications, label: {
-                Text("Напоминать об утренних и вечерних азкарах").padding(.vertical, 8)
+                Text("settings.notifications.switch-label", comment: "Notification turn on/off switch label.").padding(.vertical, 8)
             })
 
             if viewModel.preferences.enableNotifications {
-                PickerView(label: "Напоминание об утренних азкарах", subtitle: viewModel.morningTime, destination: morningTimePicker)
+                PickerView(label: NSLocalizedString("settings.notifications.morning-option-label", comment: "Morning notifications option picker title."), subtitle: viewModel.morningTime, destination: morningTimePicker)
 
-                PickerView(label: "Напоминание о вечерних азкарах", subtitle: viewModel.eveningTime, destination: eveningTimePicker)
+                PickerView(label: NSLocalizedString("settings.notifications.evening-option-label", comment: "Evening notification option picker title."), subtitle: viewModel.eveningTime, destination: eveningTimePicker)
             }
         }
     }
@@ -96,11 +94,11 @@ struct SettingsView: View {
 
     // MARK: - Content Size
     var fontsSection: some View {
-        Section(header: Text("Текст")) {
-            PickerView(label: "Шрифт арабского текста", subtitle: viewModel.preferences.arabicFont.title, destination: arabicFontPicker)
+        Section(header: Text("settings.text.title", comment: "Text settings section header.")) {
+            PickerView(label: NSLocalizedString("settings.text.arabic-text-font", comment: "Arabic font picker label."), subtitle: viewModel.preferences.arabicFont.title, destination: arabicFontPicker)
 
             Toggle(isOn: $viewModel.preferences.useSystemFontSize, label: {
-                Text("Системный размер текста").padding(.vertical, 8)
+                Text("settings.text.use-system-font-size", comment: "Enable/disable system font size usage option label.").padding(.vertical, 8)
             })
 
             if viewModel.preferences.useSystemFontSize == false {
@@ -110,7 +108,7 @@ struct SettingsView: View {
     }
 
     var sizePicker: some View {
-        Picker(selection: $viewModel.preferences.sizeCategory, label: Text("Размер текста").padding(.vertical, 8)) {
+        Picker(selection: $viewModel.preferences.sizeCategory, label: Text("settings.text.font-size", comment: "Font size settings section.").padding(.vertical, 8)) {
             ForEach(ContentSizeCategory.availableCases, id: \.title) { size in
                 Text(size.name)
                     .environment(\.sizeCategory, size)
@@ -130,7 +128,10 @@ private struct PickerView<T: View>: View {
     var destination: T
 
     var body: some View {
-        NavigationLink(destination: destination.navigationBarTitle(navigationTitle ?? label)) {
+        NavigationLink(
+            destination: destination.navigationTitle(navigationTitle ?? label)
+            )
+        {
             HStack(spacing: 8) {
                 Text(label)
                 Spacer()

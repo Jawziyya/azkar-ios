@@ -12,11 +12,11 @@
 	<dict>
 		<key>CFBundleAlternateIcons</key>
 		<dict>
-			<key>dark</key>
+			<key>dark_night</key>
 			<dict>
 				<key>CFBundleIconFiles</key>
 				<array>
-					<string>ic_dark</string>
+					<string>ic_dark_night</string>
 				</array>
 				<key>UIPrerenderedIcon</key>
 				<false/>
@@ -30,11 +30,11 @@
 				<key>UIPrerenderedIcon</key>
 				<false/>
 			</dict>
-			<key>purple</key>
+			<key>ramadan</key>
 			<dict>
 				<key>CFBundleIconFiles</key>
 				<array>
-					<string>ic_purple</string>
+					<string>ic_ramadan</string>
 				</array>
 				<key>UIPrerenderedIcon</key>
 				<false/>

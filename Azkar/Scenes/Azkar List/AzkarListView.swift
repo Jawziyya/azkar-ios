@@ -19,7 +19,7 @@ struct AzkarListView: View {
 
     var body: some View {
         list
-            .navigationBarTitle(viewModel.title)
+            .navigationTitle(viewModel.title)
     }
 
     var list: some View {

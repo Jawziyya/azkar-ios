@@ -14,7 +14,7 @@ enum ArabicFont: String, CaseIterable, Identifiable, Codable, Hashable, Pickable
     var fontName: String {
         switch self {
         case .standard:
-            return "Стандартный iOS"
+            return ""
         case .adobe:
             return "AdobeArabic-Regular"
         case .KFGQP:
@@ -32,6 +32,8 @@ enum ArabicFont: String, CaseIterable, Identifiable, Codable, Hashable, Pickable
 
     var title: String {
         switch self {
+        case .standard:
+            return NSLocalizedString("settings.text.standard-font-name", comment: "")
         case .adobe:
             return rawValue.capitalized
         case .KFGQP:

@@ -75,15 +75,7 @@ extension ContentSizeCategory: Codable {
     }
 
     var title: String {
-        switch self {
-        case .small: return "Мелкий"
-        case .medium: return "Средний"
-        case .large: return "Крупный"
-        case .extraLarge: return "Большой"
-        case .extraExtraExtraLarge: return "Огромный"
-        case .accessibilityMedium: return "Громадный"
-        default: return name
-        }
+        return name
     }
 
     static var availableCases: [Self] {

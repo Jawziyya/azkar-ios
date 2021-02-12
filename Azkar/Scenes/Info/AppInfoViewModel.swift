@@ -31,48 +31,38 @@ struct AppInfoViewModel {
 
     let iconImageName: String
 
-    let legalInfoHeader = """
-    Перевод, транскрипция, аудиофайлы озвучки
-    """
+    let legalInfoHeader = NSLocalizedString("about.credits.sources-header", comment: "Legal information section header.")
 
-    let imagesInfoHeader = """
-    Графические материалы и шрифты
-    """
+    let creditsInfoHeader = NSLocalizedString("about.credits.graphics-header", comment: "Credits section header.")
 
-    let supportHeader = """
-    Обратная связь
-    """
+    let supportHeader = NSLocalizedString("about.support.header", comment: "Support section header.")
 
     let azkarLegalInfoModels: [SourceInfo] = [
         SourceInfo(title: "azkar.ru", url: URL(string: "https://azkar.ru")!),
     ]
 
     let imagesLegalInfoModels: [SourceInfo] = [
-        SourceInfo(title: "Изображение значка (flaticon.com)", url: URL(string: "https://flaticon.com/free-icon/moon_414942?term=moon&page=1&position=17")!, imageName: nil),
-        SourceInfo(title: "Шрифт Adobe Arabic", url: URL(string: "https://fonts.adobe.com/fonts/adobe-arabic")!, imageName: nil),
-        SourceInfo(title: "Шрифт Комплекса имени Короля Фахда по изданию Священного Корана", url: URL(string: "https://qurancomplex.gov.sa/en/")!, imageName: nil),
-        SourceInfo(title: "Шрифт Google Noto Naskh", url: URL(string: "https://www.google.com/get/noto/#naskh-arab")!, imageName: nil),
-        SourceInfo(title: "Шрифт Scheherazade", url: URL(string: "https://software.sil.org/scheherazade/")!, imageName: nil),
+        SourceInfo(title: NSLocalizedString("about.credits.icon", comment: "App icon credit button."), url: URL(string: "https://flaticon.com/free-icon/moon_414942?term=moon&page=1&position=17")!, imageName: nil),
+        SourceInfo(title: NSLocalizedString("about.credits.adobe-arabic-font", comment: "Adobe font credit button."), url: URL(string: "https://fonts.adobe.com/fonts/adobe-arabic")!, imageName: nil),
+        SourceInfo(title: NSLocalizedString("about.credits.quran-complex-font", comment: "Quran complex link."), url: URL(string: "https://qurancomplex.gov.sa/en/")!, imageName: nil),
+        SourceInfo(title: NSLocalizedString("about.credits.naskh-font", comment: "Google Noto Naskh font."), url: URL(string: "https://www.google.com/get/noto/#naskh-arab")!, imageName: nil),
+        SourceInfo(title: NSLocalizedString("about.credits.scheherazade-font", comment: "Scheherazade font credit."), url: URL(string: "https://software.sil.org/scheherazade/")!, imageName: nil),
     ]
 
     let supportModels: [SourceInfo] = [
-        SourceInfo(title: "Написать на эл. почту", url: URL(string: "mailto:azkar.app@pm.me")!, openUrlInApp: false),
-        SourceInfo(title: "Оставить отзыв", url: URL(string: "https://itunes.apple.com/app/id1511423586?action=write-review&mt=8")!, openUrlInApp: false),
-        SourceInfo(title: "Канал в Telegram", url: URL(string: "https://telegram.me/jawziyya")!, openUrlInApp: false),
-        SourceInfo(title: "Приложения от Jawziyya 🥜", url: URL(string: "https://apps.apple.com/ru/developer/al-jawziyya/id1165327318")!, openUrlInApp: false)
+        SourceInfo(title: NSLocalizedString("about.support.write-to-email", comment: "Write email button."), url: URL(string: "mailto:azkar.app@pm.me")!, openUrlInApp: false),
+        SourceInfo(title: NSLocalizedString("about.support.leave-review", comment: "Write review button."), url: URL(string: "https://itunes.apple.com/app/id1511423586?action=write-review&mt=8")!, openUrlInApp: false),
+        SourceInfo(title: NSLocalizedString("about.support.telegram-channel", comment: "Telegram channel link."), url: URL(string: "https://telegram.me/jawziyya")!, openUrlInApp: false),
+        SourceInfo(title: NSLocalizedString("about.support.jawziyya-apps", comment: "Jawziyya apps button."), url: URL(string: "https://apps.apple.com/ru/developer/al-jawziyya/id1165327318")!, openUrlInApp: false)
     ]
 
-    init() {
-        if let name = UIApplication.shared.alternateIconName {
-            iconImageName = "ic_\(name).png"
-        } else {
-            iconImageName = "ic_light.png"
-        }
+    init(prerences: Preferences) {
+        iconImageName = "ic_\(prerences.appIcon.rawValue).png"
 
         let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString")!
         let build = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion")!
 
-        appVersion = "Версия \(version) (\(build))"
+        appVersion = "\(NSLocalizedString("common.version", comment: "App version label.")) \(version) (\(build))"
     }
 
 }

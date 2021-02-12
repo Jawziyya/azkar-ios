@@ -43,7 +43,7 @@ final class Preferences {
     @Preference(Keys.eveningNotificationsTime, defaultValue: defaultEveningNotificationTime)
     var eveningNotificationTime: Date
 
-    @Preference(Keys.appIcon, defaultValue: AppIcon.light)
+    @Preference(Keys.appIcon, defaultValue: AppIcon.gold)
     var appIcon: AppIcon
 
     @Preference(Keys.useSystemFontSize, defaultValue: true)

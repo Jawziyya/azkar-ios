@@ -67,7 +67,12 @@ final class SettingsViewModel: ObservableObject {
             .dropFirst(1)
             .receive(on: RunLoop.main)
             .sink(receiveValue: { icon in
-                UIApplication.shared.setAlternateIconName(icon.iconName)
+                switch icon {
+                case .gold:
+                    UIApplication.shared.setAlternateIconName(nil)
+                default:
+                    UIApplication.shared.setAlternateIconName(icon.id)
+                }
             })
             .store(in: &cancellabels)
 
@@ -109,8 +114,8 @@ final class SettingsViewModel: ObservableObject {
     }
 
     private func scheduleNotifications() {
-        let morningRequest = notificationRequest(id: Keys.morningNotificationId, date: preferences.morningNotificationTime, title: "Утренние азкары 🌅", category: .morning)
-        let eveningRequest = notificationRequest(id: Keys.eveningNotificationId, date: preferences.eveningNotificationTime, title: "Вечерние азкары 🌄", category: .evening)
+        let morningRequest = notificationRequest(id: Keys.morningNotificationId, date: preferences.morningNotificationTime, title: NSLocalizedString("notifications.morning-notification-title", comment: "Morning notification title."), category: .morning)
+        let eveningRequest = notificationRequest(id: Keys.eveningNotificationId, date: preferences.eveningNotificationTime, title: NSLocalizedString("notifications.evening-notification-title", comment: "Evening notification title."), category: .evening)
 
         notificationsCenter.add(morningRequest)
         notificationsCenter.add(eveningRequest)

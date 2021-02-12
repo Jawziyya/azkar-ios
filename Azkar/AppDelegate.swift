@@ -70,7 +70,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             Keys.expandTransliteration: true,
             Keys.morningNotificationsTime: defaultMorningNotificationTime,
             Keys.eveningNotificationsTime: defaultEveningNotificationTime,
-            Keys.appIcon: AppIcon.light.rawValue,
+            Keys.appIcon: AppIcon.gold.rawValue,
             Keys.useSystemFontSize: true,
             Keys.sizeCategory: ContentSizeCategory.medium.floatValue,
         ]

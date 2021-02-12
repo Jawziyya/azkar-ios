@@ -67,8 +67,8 @@ final class MainMenuViewModel: ObservableObject {
 
         infoModels = [
 //            AzkarMenuOtherItem(groupType: .fadail, icon: "info.circle.fill", title: "Достоинства поминания Аллаха", color: Color(.systemGreen)),
-            AzkarMenuOtherItem(groupType: .legal, icon: "checkmark.seal.fill", title: "О приложении", color: Color.accent),
-            AzkarMenuOtherItem(groupType: .settings, icon: "gear", title: "Настройки", color: Color.init(.systemGray)),
+            AzkarMenuOtherItem(groupType: .legal, icon: "checkmark.seal.fill", title: NSLocalizedString("root.about", comment: "About app section."), color: Color.accent),
+            AzkarMenuOtherItem(groupType: .settings, icon: "gear", title: NSLocalizedString("root.settings", comment: "Settings app section."), color: Color.init(.systemGray)),
         ]
 
         UNUserNotificationCenter.current().getNotificationSettings { settings

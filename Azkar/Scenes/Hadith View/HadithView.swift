@@ -34,7 +34,7 @@ struct HadithView: View {
             }
 
             VStack(alignment: .leading, spacing: 0) {
-                getCaption("привёл")
+                getCaption(NSLocalizedString("read.narrated-by", comment: "Hadith narrater name label."))
                 Text(viewModel.source)
                     .font(
                         Font.subheadline

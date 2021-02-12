@@ -6,9 +6,67 @@
   Copyright © 2020 Al Jawziyya. All rights reserved.
 */
 
+"app-name" = "Azkar";
+
+"common.zikr" = "Зикр";
+"common.version" = "Версия";
+
+"root.pick-section" = "Выберите раздел";
+"root.about" = "О приложении";
+"root.settings" = "Настройки";
+
+"about.credits.sources-header" = "Перевод, транскрипция, аудиофайлы озвучки";
+"about.credits.graphics-header" = "Графические материалы и шрифты";
+"about.credits.icon" = "Изображение значка (flaticon.com)";
+"about.credits.adobe-arabic-font" = "Шрифт Adobe Arabic";
+"about.credits.quran-complex-font" = "Шрифт Комплекса имени Короля Фахда по изданию Священного Корана";
+"about.credits.naskh-font" = "Шрифт Google Noto Naskh";
+"about.credits.scheherazade-font" = "Шрифт Scheherazade";
+
+"about.support.header" = "Обратная связь";
+"about.support.write-to-email" = "Написать на эл. почту";
+"about.support.leave-review" = "Оставить отзыв";
+"about.support.telegram-channel" = "Канал в Telegram";
+"about.support.jawziyya-apps" = "Приложения от Jawziyya 🥜";
+
 "category.morning" = "Утренние";
 "category.evening" = "Вечерние";
 "category.after-salah" = "Азкары после молитвы";
 "category.other" = "Важные азкары";
 
 "alerts.turn-on-notifications-alert" = "Включите уведомления, чтобы приложение напоминало о времени утренних и вечерних азкаров";
+
+"notifications.morning-notification-title" = "Утренние азкары 🌅";
+"notifications.evening-notification-title" = "Вечерние азкары 🌄";
+
+"about.title" = "О приложении";
+
+"settings.title" = "Настройки";
+
+"settings.theme.title" = "Тема";
+"settings.theme.auto" = "Авто";
+"settings.theme.light" = "Светлая";
+"settings.theme.dark" = "Тёмная";
+
+"settings.icon.title" = "Значок";
+"settings.icon.list.gold" = "Золото";
+"settings.icon.list.ink" = "Чернила";
+"settings.icon.list.dark_night" = "Тёмная ночь";
+"settings.icon.list.ramadan" = "Рамадан";
+
+"settings.notifications.title" = "Уведомления";
+"settings.notifications.switch-label" = "Напоминать об утренних и вечерних азкарах";
+"settings.notifications.morning-option-label" = "Напоминание об утренних азкарах";
+"settings.notifications.evening-option-label" = "Напоминание о вечерних азкарах";
+
+"settings.text.title" = "Текст";
+"settings.text.use-system-font-size" = "Системный размер текста";
+"settings.text.arabic-text-font" = "Шрифт арабского текста";
+"settings.text.font-size" = "Размер текста";
+"settings.text.standard-font-name" = "Стандартный iOS";
+
+"read.translation" = "перевод";
+"read.transcription" = "транскрипция";
+"read.repeats" = "повторения";
+"read.source" = "источник";
+"read.narrated-by" = "привёл";
