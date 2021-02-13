@@ -106,7 +106,6 @@
 		9D34FFBD246B2C8000A008A0 /* ContentSizeCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D34FFBC246B2C8000A008A0 /* ContentSizeCategory.swift */; };
 		9D34FFC6246B387800A008A0 /* EnvironmentOverridesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D34FFC1246B387800A008A0 /* EnvironmentOverridesView.swift */; };
 		9D34FFC7246B387800A008A0 /* GeneralHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D34FFC2246B387800A008A0 /* GeneralHelpers.swift */; };
-		9D354F5C2441110900748368 /* ASCollectionView in Frameworks */ = {isa = PBXBuildFile; productRef = 9D354F5B2441110900748368 /* ASCollectionView */; };
 		9D3B4D6A245EF0CB00D490FE /* CollapsableSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D3B4D69245EF0CB00D490FE /* CollapsableSection.swift */; };
 		9D4DC090246FE9610061B501 /* HadithView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D4DC08F246FE9610061B501 /* HadithView.swift */; };
 		9D4DC092246FE9690061B501 /* Hadith.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D4DC091246FE9690061B501 /* Hadith.swift */; };
@@ -379,7 +378,6 @@
 			files = (
 				6CE1729C243D128A007AC48B /* AudioPlayer.framework in Frameworks */,
 				9D6D1ECB245C18200060CDB5 /* BonMot in Frameworks */,
-				9D354F5C2441110900748368 /* ASCollectionView in Frameworks */,
 				9D4DC09924703A4A0061B501 /* SwiftyMarkdown in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -878,7 +876,6 @@
 			);
 			name = Azkar;
 			packageProductDependencies = (
-				9D354F5B2441110900748368 /* ASCollectionView */,
 				9D6D1ECA245C18200060CDB5 /* BonMot */,
 				9D4DC09824703A4A0061B501 /* SwiftyMarkdown */,
 			);
@@ -932,7 +929,6 @@
 			);
 			mainGroup = 6C1E530E243BB1360078F6FB;
 			packageReferences = (
-				9D354F5A2441110900748368 /* XCRemoteSwiftPackageReference "ASCollectionView" */,
 				9D6D1EC9245C18200060CDB5 /* XCRemoteSwiftPackageReference "BonMot" */,
 				9D4DC09724703A4A0061B501 /* XCRemoteSwiftPackageReference "SwiftyMarkdown" */,
 			);
@@ -1436,14 +1432,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		9D354F5A2441110900748368 /* XCRemoteSwiftPackageReference "ASCollectionView" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/apptekstudios/ASCollectionView";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.5.0;
-			};
-		};
 		9D4DC09724703A4A0061B501 /* XCRemoteSwiftPackageReference "SwiftyMarkdown" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SimonFairbairn/SwiftyMarkdown";
@@ -1463,11 +1451,6 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		9D354F5B2441110900748368 /* ASCollectionView */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 9D354F5A2441110900748368 /* XCRemoteSwiftPackageReference "ASCollectionView" */;
-			productName = ASCollectionView;
-		};
 		9D4DC09824703A4A0061B501 /* SwiftyMarkdown */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 9D4DC09724703A4A0061B501 /* XCRemoteSwiftPackageReference "SwiftyMarkdown" */;

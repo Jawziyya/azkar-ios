@@ -2,15 +2,6 @@
   "object": {
     "pins": [
       {
-        "package": "ASCollectionView",
-        "repositoryURL": "https://github.com/apptekstudios/ASCollectionView",
-        "state": {
-          "branch": null,
-          "revision": "91d85a3aec1bdc88fb285b3908ba036ba9d1dd09",
-          "version": "1.5.0"
-        }
-      },
-      {
         "package": "BonMot",
         "repositoryURL": "https://github.com/Rightpoint/BonMot",
         "state": {
