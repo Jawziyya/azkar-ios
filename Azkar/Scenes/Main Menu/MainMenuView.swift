@@ -86,6 +86,7 @@ struct MainMenuView: View {
                             MainMenuLargeGroup(item: item)
                         }
                     }
+                    .foregroundColor(Color.text)
                     .background(itemsBackgroundColor)
                     .clipShape(RoundedRectangle(cornerRadius: Constants.cornerRadius))
                 }
