@@ -85,8 +85,10 @@ struct AppInfoView: View {
         Button(action: {
             if item.openUrlInApp {
                 self.url = item.url
-            } else {
-                UIApplication.shared.open(item.url)
+            } else if let url = item.url {
+                UIApplication.shared.open(url)
+            } else if let action = item.action {
+                action()
             }
         }, label: {
             HStack {

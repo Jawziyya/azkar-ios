@@ -10,10 +10,11 @@ import UIKit
 
 struct SourceInfo: Identifiable {
     let title: String
-    let url: URL
+    var url: URL?
     var openUrlInApp = true
     var imageName: String?
     var imageType: IconType = .bundled
+    var action: (() -> Void)?
 
     var id: String { title }
 }
@@ -51,6 +52,11 @@ struct AppInfoViewModel {
 
     let supportModels: [SourceInfo] = [
         SourceInfo(title: NSLocalizedString("about.support.write-to-email", comment: "Write email button."), url: URL(string: "mailto:azkar.app@pm.me")!, openUrlInApp: false),
+        SourceInfo(title: NSLocalizedString("common.share-app", comment: "Share the app button."), openUrlInApp: false, action: {
+            let url = URL(string: "https://itunes.apple.com/app/id1511423586")!
+            let activity = UIActivityViewController(activityItems: [url], applicationActivities: nil)
+            UIApplication.shared.windows.first?.rootViewController?.present(activity, animated: true, completion: nil)
+        }),
         SourceInfo(title: NSLocalizedString("about.support.leave-review", comment: "Write review button."), url: URL(string: "https://itunes.apple.com/app/id1511423586?action=write-review&mt=8")!, openUrlInApp: false),
         SourceInfo(title: NSLocalizedString("about.support.telegram-channel", comment: "Telegram channel link."), url: URL(string: "https://telegram.me/jawziyya")!, openUrlInApp: false),
         SourceInfo(title: NSLocalizedString("about.support.jawziyya-apps", comment: "Jawziyya apps button."), url: URL(string: "https://apps.apple.com/ru/developer/al-jawziyya/id1165327318")!, openUrlInApp: false)

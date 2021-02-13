@@ -10,6 +10,7 @@
 
 "common.zikr" = "Зикр";
 "common.version" = "Версия";
+"common.share-app" = "Поделиться приложением";
 
 "root.pick-section" = "Выберите раздел";
 "root.about" = "О приложении";
@@ -23,11 +24,11 @@
 "about.credits.naskh-font" = "Шрифт Google Noto Naskh";
 "about.credits.scheherazade-font" = "Шрифт Scheherazade";
 
-"about.support.header" = "Обратная связь";
+"about.support.header" = "Студия Jawziyya 🥜";
 "about.support.write-to-email" = "Написать на эл. почту";
 "about.support.leave-review" = "Оставить отзыв";
 "about.support.telegram-channel" = "Канал в Telegram";
-"about.support.jawziyya-apps" = "Приложения от Jawziyya 🥜";
+"about.support.jawziyya-apps" = "Наши приложения";
 
 "category.morning" = "Утренние";
 "category.evening" = "Вечерние";
