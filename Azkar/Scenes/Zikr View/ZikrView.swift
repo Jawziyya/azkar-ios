@@ -23,7 +23,6 @@ struct ZikrView: View {
     private let dividerHeight: CGFloat = 1
 
     var body: some View {
-        print(#function, viewModel.title)
         return ScrollView {
             self.getContent()
         }

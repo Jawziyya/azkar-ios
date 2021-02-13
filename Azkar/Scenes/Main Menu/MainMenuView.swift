@@ -11,9 +11,13 @@ import ASCollectionView
 import AudioPlayer
 import UserNotifications
 
+enum Constants {
+    static var cornerRadius: CGFloat = 12
+}
+
 struct MainMenuView: View {
 
-    typealias Section = MainMenuViewModel.Section
+    typealias MenuSection = MainMenuViewModel.Section
 
     @ObservedObject var viewModel: MainMenuViewModel
     @Environment(\.colorScheme) var colorScheme
@@ -23,21 +27,132 @@ struct MainMenuView: View {
         UIDevice.current.isIpad
     }
 
-    let groupBackgroundElementID = UUID().uuidString
+    private var itemsBackgroundColor: Color {
+        if colorScheme == .dark {
+            return Color.secondaryBackground
+        } else {
+            return Color.background
+        }
+    }
+
+    private var backgroundColor: Color {
+        if colorScheme == .dark {
+            return Color.background
+        } else {
+            return Color.secondaryBackground
+        }
+    }
+
+    private let randomEmoji = ["🌕", "🌖", "🌗", "🌘", "🌒", "🌓", "🌔", "🌙", "🌸", "☘️", "🌳", "🌴", "🌱", "🌼", "💫", "🌎", "🌍", "🌏", "🪐", "✨", "❄️"].randomElement()!
 
     var body: some View {
         NavigationView {
-            self.remindersStyleMenu
-                .navigationBarTitle(Text("app-name", comment: "Name of the application."), displayMode: .inline)
-                .if(isIpad) {
-                    $0.frame(minWidth: 300)
-                }
+            ZStack {
+                backgroundColor.edgesIgnoringSafeArea(.all)
+                scrollView
+                    .navigationTitle("")
+            }
+            .if(isIpad) {
+                $0.frame(minWidth: 300)
+            }
             isIpad ? self.ipadDetailView : nil
         }
         .padding(.leading, isIpad ? 0.5 : 0) // Hack for proper allVisible split view mode.
-        .background(Color.background.edgesIgnoringSafeArea(.all))
         .environment(\.horizontalSizeClass, isIpad ? .regular : .compact)
         .attachEnvironmentOverrides(viewModel: EnvironmentOverridesViewModel(preferences: viewModel.preferences))
+    }
+
+    private var scrollView: some View {
+        ScrollView {
+            menuContent
+        }
+        .fixingFlickering() // Fixes the glitch bug on iOS 14.4
+        .navigationBarTitle(Text("app-name", comment: "Name of the application.") + Text(" " + randomEmoji), displayMode: .automatic)
+    }
+
+    private var menuContent: some View {
+        VStack {
+            Spacer(minLength: 16)
+
+            VStack(spacing: 16) {
+
+                HStack(spacing: 16) {
+                    ForEach(viewModel.dayNightSectionModels) { item in
+                        NavigationButton(isDetail: false) {
+                            self.viewModel.selectedMenuItem = item
+                        } destination: {
+                            self.azkarsDestination(for: item)
+                        } label: {
+                            MainMenuLargeGroup(item: item)
+                        }
+                    }
+                    .background(itemsBackgroundColor)
+                    .clipShape(RoundedRectangle(cornerRadius: Constants.cornerRadius))
+                }
+
+                VStack(spacing: 0) {
+                    ForEach(viewModel.otherAzkarModels) { item in
+                        NavigationButton(isDetail: false) {
+                            self.viewModel.selectedMenuItem = item
+                        } destination: {
+                            self.getZikrList(item)
+                        } label: {
+                            HStack {
+                                MainMenuSmallGroup(item: item)
+                                Image(systemName: "chevron.right")
+                                    .foregroundColor(Color.tertiaryText)
+                                    .padding(.trailing)
+                            }
+                            .padding(10)
+                            .background(itemsBackgroundColor)
+                        }
+                    }
+                }
+                .background(itemsBackgroundColor)
+                .clipShape(RoundedRectangle(cornerRadius: Constants.cornerRadius))
+
+                VStack(spacing: 0) {
+                    ForEach(viewModel.infoModels) { item in
+                        NavigationButton(isDetail: false, destination: {
+                            self.destination(for: item)
+                        }, label: {
+                            HStack {
+                                MainMenuSmallGroup(item: item)
+                                Image(systemName: "chevron.right")
+                                    .foregroundColor(Color.tertiaryText)
+                                    .padding(.trailing)
+                            }
+                            .padding(10)
+                            .background(itemsBackgroundColor)
+                        })
+                    }
+                }
+                .background(itemsBackgroundColor)
+                .clipShape(RoundedRectangle(cornerRadius: Constants.cornerRadius))
+
+                viewModel.notificationAccessModel.flatMap { vm in
+                    Button(action: {
+                        UNUserNotificationCenter.current()
+                            .requestAuthorization(options: [.alert, .sound, ]) { (granted, error) in
+                                self.viewModel.hideNotificationsAccessMessage()
+                                guard granted else {
+                                    return
+                                }
+                                self.viewModel.preferences.enableNotifications = true
+                            }
+                    }, label: {
+                        MainMenuSmallGroup(item: AzkarMenuOtherItem(icon: "app.badge", title: vm.title, color: Color.orange), flip: true)
+                            .padding()
+                            .background(itemsBackgroundColor)
+                            .clipShape(RoundedRectangle(cornerRadius: Constants.cornerRadius))
+                    })
+                }
+
+            }
+
+            Spacer(minLength: 16)
+        }
+        .padding(.horizontal)
     }
 
     private var ipadDetailView: some View {
@@ -52,91 +167,7 @@ struct MainMenuView: View {
         .edgesIgnoringSafeArea(.all)
     }
 
-    private var remindersStyleMenu: some View {
-        ASCollectionView {
-            sections
-        }
-        .layout(menuLayout)
-        .contentInsets(.init(top: 20, left: 0, bottom: 20, right: 0))
-        .alwaysBounceVertical()
-        .background(Color(.systemGroupedBackground))
-        .edgesIgnoringSafeArea(.all)
-    }
-
-    private var sections: [ASCollectionViewSection<Section>] {
-        var sections = [
-        ASCollectionViewSection<Section>(id: .dayNight, data: viewModel.dayNightSectionModels) { item, _ in
-
-            NavigationLink(destination: self.azkarsDestination(for: item), tag: item, selection: self.$viewModel.selectedMenuItem) {
-                MainMenuLargeGroup(item: item)
-            }
-            .isDetailLink(false)
-            .buttonStyle(PlainButtonStyle())
-        },
-
-        ASCollectionViewSection<Section>(id: .afterSalah, data: viewModel.otherAzkarModels) { item, ctx in
-            VStack(spacing: 0) {
-                NavigationLink(destination: self.zikrList(item)) {
-                    HStack {
-                        MainMenuSmallGroup(item: item)
-                        Image(systemName: "chevron.right")
-                            .foregroundColor(Color.tertiaryText)
-                            .padding(.trailing)
-                    }
-                    .padding(10)
-                    .contentShape(Rectangle())
-                }
-                .isDetailLink(false)
-                if !ctx.isLastInSection {
-                    Divider()
-                }
-            }
-        },
-
-        ASCollectionViewSection<Section>(id: .info, data: viewModel.infoModels) { item, ctx in
-            VStack(spacing: 0) {
-                NavigationLink(destination: self.destination(for: item)) {
-                    HStack {
-                        MainMenuSmallGroup(item: item)
-                        Image(systemName: "chevron.right")
-                            .foregroundColor(Color.tertiaryText)
-                            .padding()
-                    }
-                    .padding(10)
-                    .contentShape(Rectangle())
-                }
-                if !ctx.isLastInSection {
-                    Divider()
-                }
-            }
-        }
-
-        ]
-
-        if let vm = viewModel.notificationAccessModel {
-            let section = ASCollectionViewSection<Section>.init(id: .notificationsAccess) {
-                Button(action: {
-                    UNUserNotificationCenter.current()
-                        .requestAuthorization(options: [.alert, .sound, ]) { (granted, error) in
-                            self.viewModel.hideNotificationsAccessMessage()
-                            guard granted else {
-                                return
-                            }
-                            self.viewModel.preferences.enableNotifications = true
-                    }
-                }, label: {
-                    MainMenuSmallGroup(item: AzkarMenuOtherItem(icon: "app.badge", title: vm.title, color: Color.orange), flip: true)
-                    .padding(10)
-                    .contentShape(Rectangle())
-                })
-            }
-            sections.append(section)
-        }
-
-        return sections
-    }
-
-    private func zikrList(_ model: AzkarMenuItem) -> some View {
+    private func getZikrList(_ model: AzkarMenuItem) -> some View {
         let viewModel = self.getZikrPagesViewModel(for: model.category)
 
         return ZStack {
@@ -149,6 +180,7 @@ struct MainMenuView: View {
                     ZStack {
                         if model.category == .afterSalah {
                             ZikrPagesView(viewModel: viewModel)
+                                .navigationBarTitle("", displayMode: .inline)
                         } else {
                             AzkarListView(viewModel: viewModel)
                         }
@@ -166,14 +198,14 @@ struct MainMenuView: View {
         let viewModel = self.getZikrPagesViewModel(for: model.category)
         return ZStack {
             if isIpad {
-                zikrList(model)
+                getZikrList(model)
             } else {
                 LazyView(
                     ZikrPagesView(viewModel: viewModel)
                 )
             }
         }
-        .navigationBarTitle(viewModel.title)
+        .navigationBarTitle(viewModel.title, displayMode: .inline)
     }
 
     private func destination(for item: AzkarMenuOtherItem) -> AnyView {
@@ -187,65 +219,11 @@ struct MainMenuView: View {
         }
     }
 
-    private var menuLayout: ASCollectionLayout<Section> {
-        ASCollectionLayout<Section>(interSectionSpacing: 20) { sectionID in
-            switch sectionID {
-            case .dayNight:
-                return .grid(
-                    layoutMode: .fixedNumberOfColumns(2),
-                    itemSpacing: 20,
-                    lineSpacing: 20,
-                    itemSize: .estimated(90)
-                )
-            case .afterSalah, .info, .notificationsAccess:
-                return ASCollectionLayoutSection {
-                    let itemSize = NSCollectionLayoutSize(
-                        widthDimension: .fractionalWidth(1.0),
-                        heightDimension: .estimated(100))
-                    let item = NSCollectionLayoutItem(layoutSize: itemSize)
-
-                    let groupSize = NSCollectionLayoutSize(
-                        widthDimension: .fractionalWidth(1.0),
-                        heightDimension: .estimated(100))
-                    let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
-
-                    let section = NSCollectionLayoutSection(group: group)
-                    section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
-
-                    let supplementarySize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(50))
-                    let headerSupplementary = NSCollectionLayoutBoundarySupplementaryItem(
-                        layoutSize: supplementarySize,
-                        elementKind: UICollectionView.elementKindSectionHeader,
-                        alignment: .top)
-                    let footerSupplementary = NSCollectionLayoutBoundarySupplementaryItem(
-                        layoutSize: supplementarySize,
-                        elementKind: UICollectionView.elementKindSectionFooter,
-                        alignment: .bottom)
-                    section.boundarySupplementaryItems = [headerSupplementary, footerSupplementary]
-
-                    let sectionBackgroundDecoration = NSCollectionLayoutDecorationItem.background(elementKind: self.groupBackgroundElementID)
-                    sectionBackgroundDecoration.contentInsets = section.contentInsets
-                    section.decorationItems = [sectionBackgroundDecoration]
-
-                    return section
-                }
-            }
-        }
-        .decorationView(GroupBackground.self, forDecorationViewOfKind: groupBackgroundElementID)
-    }
-
-}
-
-struct GroupBackground: View, Decoration {
-    let cornerRadius: CGFloat = 12
-    var body: some View {
-        RoundedRectangle(cornerRadius: cornerRadius)
-            .fill(Color(.secondarySystemGroupedBackground))
-    }
 }
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         MainMenuView(viewModel: MainMenuViewModel(preferences: Preferences(), player: .test))
+            .environment(\.colorScheme, .dark)
     }
 }

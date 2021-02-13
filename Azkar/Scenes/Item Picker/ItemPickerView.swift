@@ -20,7 +20,7 @@ struct ItemPickerView<SelectionValue>: View where SelectionValue: Hashable & Pic
         List {
             self.content
         }
-        .listStyle(GroupedListStyle())
+        .listStyle(InsetGroupedListStyle())
         .environment(\.horizontalSizeClass, .regular)
     }
 

@@ -31,10 +31,10 @@ struct SettingsView: View {
     // MARK: - Appearance
     var appearanceSection: some View {
         Section {
-            PickerView(label: NSLocalizedString("settings.theme.title", comment: "Theme settings section title."), subtitle: viewModel.preferences.theme.title, destination: themePicker)
+            PickerView(label: NSLocalizedString("settings.theme.title", comment: "Theme settings section title."), titleDisplayMode: .inline, subtitle: viewModel.preferences.theme.title, destination: themePicker)
 
             if viewModel.canChangeIcon {
-                PickerView(label: NSLocalizedString("settings.icon.title", comment: "Icon settings section title."), subtitle: viewModel.preferences.appIcon.title, destination: iconPicker)
+                PickerView(label: NSLocalizedString("settings.icon.title", comment: "Icon settings section title."), titleDisplayMode: .inline, subtitle: viewModel.preferences.appIcon.title, destination: iconPicker)
             }
         }
     }
@@ -69,9 +69,9 @@ struct SettingsView: View {
             })
 
             if viewModel.preferences.enableNotifications {
-                PickerView(label: NSLocalizedString("settings.notifications.morning-option-label", comment: "Morning notifications option picker title."), subtitle: viewModel.morningTime, destination: morningTimePicker)
+                PickerView(label: NSLocalizedString("settings.notifications.morning-option-label", comment: "Morning notifications option picker title."), titleDisplayMode: .inline, subtitle: viewModel.morningTime, destination: morningTimePicker)
 
-                PickerView(label: NSLocalizedString("settings.notifications.evening-option-label", comment: "Evening notification option picker title."), subtitle: viewModel.eveningTime, destination: eveningTimePicker)
+                PickerView(label: NSLocalizedString("settings.notifications.evening-option-label", comment: "Evening notification option picker title."), titleDisplayMode: .inline, subtitle: viewModel.eveningTime, destination: eveningTimePicker)
             }
         }
     }
@@ -95,7 +95,7 @@ struct SettingsView: View {
     // MARK: - Content Size
     var fontsSection: some View {
         Section(header: Text("settings.text.title", comment: "Text settings section header.")) {
-            PickerView(label: NSLocalizedString("settings.text.arabic-text-font", comment: "Arabic font picker label."), subtitle: viewModel.preferences.arabicFont.title, destination: arabicFontPicker)
+            PickerView(label: NSLocalizedString("settings.text.arabic-text-font", comment: "Arabic font picker label."), titleDisplayMode: .inline, subtitle: viewModel.preferences.arabicFont.title, destination: arabicFontPicker)
 
             Toggle(isOn: $viewModel.preferences.useSystemFontSize, label: {
                 Text("settings.text.use-system-font-size", comment: "Enable/disable system font size usage option label.").padding(.vertical, 8)
@@ -123,13 +123,14 @@ struct SettingsView: View {
 private struct PickerView<T: View>: View {
 
     var label: String
-    var subtitle: String
     var navigationTitle: String?
+    var titleDisplayMode: NavigationBarItem.TitleDisplayMode = .automatic
+    var subtitle: String
     var destination: T
 
     var body: some View {
         NavigationLink(
-            destination: destination.navigationTitle(navigationTitle ?? label)
+            destination: destination.navigationBarTitle(navigationTitle ?? label, displayMode: titleDisplayMode)
             )
         {
             HStack(spacing: 8) {

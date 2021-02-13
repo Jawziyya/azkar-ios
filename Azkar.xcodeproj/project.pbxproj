@@ -170,6 +170,8 @@
 		9DFF69A9245C74BF00FD8C4F /* MainMenuSmallGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DFF69A5245C74BF00FD8C4F /* MainMenuSmallGroup.swift */; };
 		9DFF69AC245C75FE00FD8C4F /* MainMenuViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DFF69AB245C75FE00FD8C4F /* MainMenuViewModel.swift */; };
 		9DFF69AF245C8EE400FD8C4F /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9DFF69B1245C8EE400FD8C4F /* Localizable.strings */; };
+		F46B433C25D7E07900BAB57B /* ScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46B433B25D7E07900BAB57B /* ScrollView.swift */; };
+		F474EC6C25D7B6F200EA4037 /* NavigationButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = F474EC6B25D7B6F200EA4037 /* NavigationButton.swift */; };
 		F4EBE14725D5C96F00E3CCA8 /* ic_ramadan.png in Resources */ = {isa = PBXBuildFile; fileRef = F4EBE14425D5C96F00E3CCA8 /* ic_ramadan.png */; };
 		F4EBE14825D5C96F00E3CCA8 /* ic_ramadan@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F4EBE14525D5C96F00E3CCA8 /* ic_ramadan@2x.png */; };
 		F4EBE14925D5C96F00E3CCA8 /* ic_ramadan@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = F4EBE14625D5C96F00E3CCA8 /* ic_ramadan@3x.png */; };
@@ -363,6 +365,8 @@
 		9DFF69A5245C74BF00FD8C4F /* MainMenuSmallGroup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainMenuSmallGroup.swift; sourceTree = "<group>"; };
 		9DFF69AB245C75FE00FD8C4F /* MainMenuViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMenuViewModel.swift; sourceTree = "<group>"; };
 		9DFF69B2245C8EE900FD8C4F /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
+		F46B433B25D7E07900BAB57B /* ScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollView.swift; sourceTree = "<group>"; };
+		F474EC6B25D7B6F200EA4037 /* NavigationButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationButton.swift; sourceTree = "<group>"; };
 		F4EBE14425D5C96F00E3CCA8 /* ic_ramadan.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ic_ramadan.png; sourceTree = "<group>"; };
 		F4EBE14525D5C96F00E3CCA8 /* ic_ramadan@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_ramadan@2x.png"; sourceTree = "<group>"; };
 		F4EBE14625D5C96F00E3CCA8 /* ic_ramadan@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_ramadan@3x.png"; sourceTree = "<group>"; };
@@ -592,6 +596,7 @@
 				9DE122072460B40200823DDD /* BottomSheetView.swift */,
 				9D170F0E246169AE0025088D /* OrientationalLockView.swift */,
 				9D8C3A0C2466BA3F00ACAAC9 /* SafariView.swift */,
+				F474EC6B25D7B6F200EA4037 /* NavigationButton.swift */,
 			);
 			path = "Custom Views";
 			sourceTree = "<group>";
@@ -789,6 +794,7 @@
 				9DA73702244300B400869FBB /* SwiftUI-Core.swift */,
 				9DE122092460F55B00823DDD /* LazyView.swift */,
 				9D97E501246F3DD700CA6F9E /* ConditionalModifier.swift */,
+				F46B433B25D7E07900BAB57B /* ScrollView.swift */,
 			);
 			path = SwiftUI;
 			sourceTree = "<group>";
@@ -1086,8 +1092,10 @@
 				9D6D1ECD245C254B0060CDB5 /* TextStyles.swift in Sources */,
 				9DA737072443023000869FBB /* MainMenuView.swift in Sources */,
 				9D6D1ED2245C43D10060CDB5 /* ZikrPagesViewModel.swift in Sources */,
+				F474EC6C25D7B6F200EA4037 /* NavigationButton.swift in Sources */,
 				6CE172BF243D1393007AC48B /* ZikrViewModel.swift in Sources */,
 				9D34FFC7246B387800A008A0 /* GeneralHelpers.swift in Sources */,
+				F46B433C25D7E07900BAB57B /* ScrollView.swift in Sources */,
 				9D6D1ECF245C27FA0060CDB5 /* UIFont.swift in Sources */,
 				6C1E531D243BB1360078F6FB /* SceneDelegate.swift in Sources */,
 				9D03F226245D96360024A6BC /* AppInfoViewModel.swift in Sources */,

@@ -33,8 +33,6 @@ struct MainMenuLargeGroup: View {
 				.foregroundColor(Color.secondaryText)
 		}
 		.padding()
-		.background(Color(.secondarySystemGroupedBackground))
-		.clipShape(RoundedRectangle(cornerRadius: 12))
 	}
 }
 

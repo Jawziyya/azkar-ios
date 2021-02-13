@@ -19,17 +19,19 @@ struct AzkarListView: View {
 
     var body: some View {
         list
-            .navigationTitle(viewModel.title)
+            .navigationBarTitle(viewModel.title, displayMode: .inline)
     }
 
     var list: some View {
         List(viewModel.azkar.indexed(), id: \.1, selection: $selection) { index, vm in
             NavigationLink(destination: self.pagesView(index)) {
                 Text(vm.title)
+                    .padding(.vertical)
                     .contentShape(Rectangle())
             }
             .buttonStyle(PlainButtonStyle())
         }
+        .listStyle(PlainListStyle())
     }
 
     func pagesView(_ index: Int) -> some View {

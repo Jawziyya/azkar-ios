@@ -23,11 +23,11 @@ struct MainMenuSmallGroup: View {
                     .multilineTextAlignment(.leading)
                     .foregroundColor(Color(.label))
                     .environment(\.layoutDirection, .leftToRight)
-                
+
                 Spacer()
-                
-                item.count.flatMap {
-                    Text("\($0)")
+
+                item.count.flatMap { count in
+                    Text("\(count)")
                         .font(Font.subheadline)
                         .foregroundColor(Color.secondaryText)
                 }
@@ -40,6 +40,11 @@ struct MainMenuSmallGroup: View {
 
 struct GroupSmall_Previews: PreviewProvider {
 	static var previews: some View {
-        MainMenuSmallGroup(item: AzkarMenuItem.demo)
+        Group {
+            MainMenuSmallGroup(item: AzkarMenuItem.demo)
+            MainMenuSmallGroup(item: AzkarMenuItem.noCountDemo)
+            MainMenuSmallGroup(item: AzkarMenuItem.noCountDemo, flip: true)
+        }
+        .previewLayout(.fixed(width: 300, height: 400))
 	}
 }

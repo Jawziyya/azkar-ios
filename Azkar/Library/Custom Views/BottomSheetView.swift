@@ -6,7 +6,7 @@
 //
 import SwiftUI
 
-fileprivate enum Constants {
+fileprivate enum Constant {
     static let radius: CGFloat = 16
     static let indicatorHeight: CGFloat = 6
     static let indicatorWidth: CGFloat = 60
@@ -28,18 +28,18 @@ struct BottomSheetView<Content: View>: View {
     }
 
     private var indicator: some View {
-        RoundedRectangle(cornerRadius: Constants.radius)
+        RoundedRectangle(cornerRadius: Constant.radius)
             .fill(Color.secondary)
             .frame(
-                width: Constants.indicatorWidth,
-                height: Constants.indicatorHeight
+                width: Constant.indicatorWidth,
+                height: Constant.indicatorHeight
         ).onTapGesture {
             self.isOpen.toggle()
         }
     }
 
     init(isOpen: Binding<Bool>, maxHeight: CGFloat, @ViewBuilder content: () -> Content) {
-        self.minHeight = maxHeight * Constants.minHeightRatio
+        self.minHeight = maxHeight * Constant.minHeightRatio
         self.maxHeight = maxHeight
         self.content = content()
         self._isOpen = isOpen
@@ -53,7 +53,7 @@ struct BottomSheetView<Content: View>: View {
             }
             .frame(width: geometry.size.width, height: self.maxHeight, alignment: .top)
             .background(Color(.secondarySystemBackground))
-            .cornerRadius(Constants.radius)
+            .cornerRadius(Constant.radius)
             .frame(height: geometry.size.height, alignment: .bottom)
             .offset(y: max(self.offset + self.translation, 0))
             .animation(.interactiveSpring())
@@ -61,7 +61,7 @@ struct BottomSheetView<Content: View>: View {
                 DragGesture().updating(self.$translation) { value, state, _ in
                     state = value.translation.height
                 }.onEnded { value in
-                    let snapDistance = self.maxHeight * Constants.snapRatio
+                    let snapDistance = self.maxHeight * Constant.snapRatio
                     guard abs(value.translation.height) > snapDistance else {
                         return
                     }

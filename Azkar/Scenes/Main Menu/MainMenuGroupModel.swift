@@ -45,6 +45,10 @@ struct AzkarMenuItem: Identifiable, AzkarMenuType, Hashable {
         AzkarMenuItem(category: .evening, imageName: "sun.max", title: UUID().uuidString, color: Color.blue, count: Int.random(in: 1...100))
     }
 
+    static var noCountDemo: Self {
+        AzkarMenuItem(category: .other, imageName: "sun.min", title: "Title", color: Color.green, count: nil, iconType: .system)
+    }
+
 }
 
 struct AzkarMenuOtherItem: Identifiable, AzkarMenuType {

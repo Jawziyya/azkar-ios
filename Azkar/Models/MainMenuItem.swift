@@ -9,7 +9,7 @@
 import SwiftUI
 
 enum MainMenuItem: String, CaseIterable, Identifiable {
-    case morning, evening, bedtime, quranic, afterPrayer, favorites
+    case morning, evening, bedtime, quranic, afterPrayer = "after-salah", favorites
 
     var title: String {
         return rawValue.capitalized
