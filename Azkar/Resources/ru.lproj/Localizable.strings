@@ -16,15 +16,17 @@
 "root.about" = "О приложении";
 "root.settings" = "Настройки";
 
-"about.credits.sources-header" = "Перевод, транскрипция, аудиофайлы озвучки";
-"about.credits.graphics-header" = "Графические материалы и шрифты";
+"about.credits.sources-header" = "🗃 Перевод, транскрипция, аудиофайлы озвучки";
+"about.credits.graphics-header" = "🎨 Графические материалы и шрифты";
+"about.credits.open-source-libraries-header" = "🛠 Библиотеки с открытым кодом";
+
 "about.credits.icon" = "Изображение значка (flaticon.com)";
 "about.credits.adobe-arabic-font" = "Шрифт Adobe Arabic";
 "about.credits.quran-complex-font" = "Шрифт Комплекса имени Короля Фахда по изданию Священного Корана";
 "about.credits.naskh-font" = "Шрифт Google Noto Naskh";
 "about.credits.scheherazade-font" = "Шрифт Scheherazade";
 
-"about.support.header" = "Студия Jawziyya 🥜";
+"about.support.header" = "🥜 Студия Jawziyya";
 "about.support.write-to-email" = "Написать на эл. почту";
 "about.support.leave-review" = "Оставить отзыв";
 "about.support.telegram-channel" = "Канал в Telegram";

@@ -24,19 +24,25 @@ struct AppInfoView: View {
                     .padding(-20)
             )
 
-            Section(header: Text(viewModel.legalInfoHeader)) {
+            Section(header: Text("about.credits.sources-header", comment: "Legal information section header.")) {
                 ForEach(viewModel.azkarLegalInfoModels, id: \.title) { item in
                     self.viewForItem(item)
                 }
             }
 
-            Section(header: Text(viewModel.creditsInfoHeader)) {
+            Section(header: Text("about.credits.graphics-header", comment: "Credits section header.")) {
                 ForEach(viewModel.imagesLegalInfoModels, id: \.title) { item in
                     self.viewForItem(item)
                 }
             }
 
-            Section(header: Text(viewModel.supportHeader)) {
+            Section(header: Text("about.credits.open-source-libraries-header", comment: "Open-source libraries section title.")) {
+                ForEach(viewModel.openSourceLibraries, id: \.title) { item in
+                    self.viewForItem(item)
+                }
+            }
+
+            Section(header: Text("about.support.header", comment: "Support section header.")) {
                 ForEach(viewModel.supportModels, id: \.title) { item in
                     self.viewForItem(item)
                 }

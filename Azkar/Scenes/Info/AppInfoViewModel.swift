@@ -32,12 +32,6 @@ struct AppInfoViewModel {
 
     let iconImageName: String
 
-    let legalInfoHeader = NSLocalizedString("about.credits.sources-header", comment: "Legal information section header.")
-
-    let creditsInfoHeader = NSLocalizedString("about.credits.graphics-header", comment: "Credits section header.")
-
-    let supportHeader = NSLocalizedString("about.support.header", comment: "Support section header.")
-
     let azkarLegalInfoModels: [SourceInfo] = [
         SourceInfo(title: "azkar.ru", url: URL(string: "https://azkar.ru")!),
     ]
@@ -48,6 +42,11 @@ struct AppInfoViewModel {
         SourceInfo(title: NSLocalizedString("about.credits.quran-complex-font", comment: "Quran complex link."), url: URL(string: "https://qurancomplex.gov.sa/en/")!, imageName: nil),
         SourceInfo(title: NSLocalizedString("about.credits.naskh-font", comment: "Google Noto Naskh font."), url: URL(string: "https://www.google.com/get/noto/#naskh-arab")!, imageName: nil),
         SourceInfo(title: NSLocalizedString("about.credits.scheherazade-font", comment: "Scheherazade font credit."), url: URL(string: "https://software.sil.org/scheherazade/")!, imageName: nil),
+    ]
+
+    let openSourceLibraries: [SourceInfo] = [
+        SourceInfo(title: "BonMot", url: URL(string: "https://github.com/Rightpoint/BonMot")),
+        SourceInfo(title: "SwiftyMarkdown", url: URL(string: "https://github.com/SimonFairbairn/SwiftyMarkdown")),
     ]
 
     let supportModels: [SourceInfo] = [
