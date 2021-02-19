@@ -9,22 +9,34 @@ struct MainMenuSmallGroup: View {
 
 	var body: some View {
 		HStack {
-            item.image.flatMap { image in
-                image
-                    .resizable()
-                    .scaledToFit()
-                    .padding(8)
-                    .frame(width: 40, height: 40)
-                    .foregroundColor(item.color)
+
+            switch item.iconType {
+            case .system, .bundled:
+                item.image.flatMap { image in
+                    image
+                        .resizable()
+                        .scaledToFit()
+                        .padding(8)
+                        .frame(width: 40, height: 40)
+                        .foregroundColor(item.color)
+                }
+            case .emoji:
+                Text(item.imageName)
+                    .minimumScaleFactor(0.1)
+                    .font(Font.largeTitle)
+                    .frame(maxWidth: 35, maxHeight: 35)
             }
 
             HStack {
-                Text(item.title)
-                    .multilineTextAlignment(.leading)
-                    .foregroundColor(Color(.label))
-                    .environment(\.layoutDirection, .leftToRight)
+                if item.count == nil {
+                    Spacer()
+                }
 
-                Spacer()
+                title
+
+                if item.count != nil {
+                    Spacer()
+                }
 
                 item.count.flatMap { count in
                     Text("\(count)")
@@ -32,9 +44,18 @@ struct MainMenuSmallGroup: View {
                         .foregroundColor(Color.secondaryText)
                 }
             }
+
         }
         .environment(\.layoutDirection, flip ? .rightToLeft : .leftToRight)
 	}
+
+    var title: some View {
+        Text(item.title)
+            .frame(maxWidth: .infinity, alignment: flip ? .trailing : .leading)
+            .foregroundColor(Color.text)
+            .multilineTextAlignment(flip ? .trailing : .leading)
+            .environment(\.layoutDirection, flip ? .rightToLeft : .leftToRight)
+    }
 
 }
 
@@ -44,6 +65,8 @@ struct GroupSmall_Previews: PreviewProvider {
             MainMenuSmallGroup(item: AzkarMenuItem.demo)
             MainMenuSmallGroup(item: AzkarMenuItem.noCountDemo)
             MainMenuSmallGroup(item: AzkarMenuItem.noCountDemo, flip: true)
+            MainMenuSmallGroup(item: AzkarMenuOtherItem(groupType: .notificationsAccess, imageName: "🌍", title: "Title", color: Color.red, iconType: .emoji), flip: true)
+            MainMenuSmallGroup(item: AzkarMenuOtherItem(groupType: .notificationsAccess, imageName: "🌗", title: "Священный месяц рамадан 1442 г.х. (2021 г.)", color: Color.red, iconType: .emoji), flip: true)
         }
         .previewLayout(.fixed(width: 300, height: 400))
 	}

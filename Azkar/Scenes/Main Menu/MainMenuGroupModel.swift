@@ -6,6 +6,7 @@ import SwiftUI
 enum IconType {
     case system
     case bundled
+    case emoji
 }
 
 protocol AzkarMenuType {
@@ -13,6 +14,8 @@ protocol AzkarMenuType {
     var count: Int? { get }
     var color: Color { get }
     var image: Image? { get }
+    var iconType: IconType { get }
+    var imageName: String { get }
 }
 
 extension AzkarMenuType {
@@ -38,6 +41,8 @@ struct AzkarMenuItem: Identifiable, AzkarMenuType, Hashable {
             return Image(imageName).renderingMode(.original)
         case .system:
             return Image(systemName: imageName).renderingMode(.template)
+        case .emoji:
+            return nil
         }
     }
 
@@ -51,27 +56,28 @@ struct AzkarMenuItem: Identifiable, AzkarMenuType, Hashable {
 
 }
 
-struct AzkarMenuOtherItem: Identifiable, AzkarMenuType {
+struct AzkarMenuOtherItem: Identifiable, AzkarMenuType, Hashable {
 
     enum GroupType {
         case fadail, legal, settings, notificationsAccess
     }
 
     var groupType: GroupType?
-	var icon: String?
+	var imageName: String
 	let title: String
 	let color: Color
     var iconType = IconType.system
 
-    static var demo = AzkarMenuOtherItem(groupType: .fadail, icon: "paperplane", title: "Test category", color: Color.init(.systemTeal))
+    static var demo = AzkarMenuOtherItem(groupType: .fadail, imageName: "paperplane", title: "Test category", color: Color.init(.systemTeal))
 
     var image: Image? {
-        guard let icon = icon else { return nil }
         switch iconType {
         case .bundled:
-            return Image(icon).renderingMode(.original)
-        case .system:
-            return Image(systemName: icon).renderingMode(.template)
+            return Image(imageName).renderingMode(.original)
+        case .system: 
+            return Image(systemName: imageName).renderingMode(.template)
+        case .emoji:
+            return nil
         }
     }
 
