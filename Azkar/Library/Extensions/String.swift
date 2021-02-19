@@ -25,3 +25,19 @@ extension String {
         return self.components(separatedBy: ",").first ?? self
     }
 }
+
+extension String {
+
+    func imageWith(font: UIFont, color: UIColor, size: CGSize) -> UIImage? {
+        let nsstring = (self as NSString)
+        let attributes: [NSAttributedString.Key: Any] = [.font: font, .foregroundColor: color]
+        let stringSize = nsstring.size(withAttributes: attributes)
+        UIGraphicsBeginImageContextWithOptions(size, false, 0)
+        let origin = CGPoint(x: size.width/2 - stringSize.width/2, y: size.height/2 - stringSize.height/2)
+        nsstring.draw(in: .init(origin: origin, size: stringSize), withAttributes: attributes)
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return image
+    }
+
+}
