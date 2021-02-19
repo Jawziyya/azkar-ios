@@ -28,10 +28,14 @@ final class MainMenuViewModel: ObservableObject {
     let otherAzkarModels: [AzkarMenuItem]
     let infoModels: [AzkarMenuOtherItem]
 
-    @Published var notificationAccessModel: AzkarMenuOtherItem?
+    @Published var additionalMenuItems: [AzkarMenuOtherItem] = []
 
     @Published var selectedNotificationCategory: String?
-    @Published var selectedMenuItem: AzkarMenuItem?
+
+    @Published var selectedAzkarItem: ZikrCategory?
+    @Published var selectedAzkarListItem: ZikrCategory?
+
+    @Published var selectedMenuItem: AzkarMenuOtherItem?
 
     let player: Player
 
@@ -39,6 +43,21 @@ final class MainMenuViewModel: ObservableObject {
     let settingsViewModel: SettingsViewModel
 
     private var cancellabels = Set<AnyCancellable>()
+
+    private lazy var notificationsAccessMenuItem: AzkarMenuOtherItem = {
+        let title = NSLocalizedString("alerts.turn-on-notifications-alert", comment: "The alert presented to user before asking for notifications permission.")
+        var item = AzkarMenuOtherItem(imageName: "app.badge", title: title, color: Color.blue)
+        item.action = {
+            NotificationsHandler.shared.requestNotificationsPermission { result in
+                switch result {
+                case .success:
+                    self.hideNotificationsAccessMessage()
+                case .failure: break
+                }
+            }
+        }
+        return item
+    }()
 
     init(preferences: Preferences, player: Player) {
         self.settingsViewModel = .init(preferences: preferences)
@@ -71,13 +90,11 @@ final class MainMenuViewModel: ObservableObject {
             AzkarMenuOtherItem(groupType: .settings, imageName: "gear", title: NSLocalizedString("root.settings", comment: "Settings app section."), color: Color.init(.systemGray)),
         ]
 
-        UNUserNotificationCenter.current().getNotificationSettings { settings
-            in
-            DispatchQueue.main.async {
-                switch settings.authorizationStatus {
+        NotificationsHandler.shared
+            .getNotificationsAuthorizationStatus(completion: { [unowned self] status in
+                switch status {
                 case .notDetermined:
-                    let title = NSLocalizedString("alerts.turn-on-notifications-alert", comment: "The alert presented to user before asking for notifications permission.")
-                    self.notificationAccessModel = .init(groupType: .notificationsAccess, icon: nil, title: title, color: Color.init(.link))
+                    self.additionalMenuItems.insert(self.notificationsAccessMenuItem, at: 0)
                 default:
                     break
                 }
@@ -103,9 +120,15 @@ final class MainMenuViewModel: ObservableObject {
         }
     }
 
+    func getZikrPagesViewModel(for category: ZikrCategory) -> ZikrPagesViewModel {
+        ZikrPagesViewModel(category: category, title: category.title, azkar: azkarForCategory(category), preferences: preferences)
+    }
+
     func hideNotificationsAccessMessage() {
         DispatchQueue.main.async {
-            self.notificationAccessModel = nil
+            if let index = self.additionalMenuItems.firstIndex(where: { $0 == self.notificationsAccessMenuItem }) {
+                self.additionalMenuItems.remove(at: index)
+            }
         }
     }
 

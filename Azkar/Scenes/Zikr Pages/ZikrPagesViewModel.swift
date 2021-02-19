@@ -10,11 +10,13 @@ import Foundation
 
 struct ZikrPagesViewModel {
 
+    let category: ZikrCategory
     let title: String
     let azkar: [ZikrViewModel]
     let preferences: Preferences
 
-    init(title: String, azkar: [ZikrViewModel], preferences: Preferences) {
+    init(category: ZikrCategory, title: String, azkar: [ZikrViewModel], preferences: Preferences) {
+        self.category = category
         self.title = title
         self.preferences = preferences
         self.azkar = azkar

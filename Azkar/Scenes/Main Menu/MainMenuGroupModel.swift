@@ -56,7 +56,11 @@ struct AzkarMenuItem: Identifiable, AzkarMenuType, Hashable {
 
 }
 
-struct AzkarMenuOtherItem: Identifiable, AzkarMenuType, Hashable {
+struct AzkarMenuOtherItem: Identifiable, AzkarMenuType {
+
+    static func == (lhs: AzkarMenuOtherItem, rhs: AzkarMenuOtherItem) -> Bool {
+        return lhs.id == rhs.id
+    }
 
     enum GroupType {
         case fadail, legal, settings, notificationsAccess
@@ -67,6 +71,7 @@ struct AzkarMenuOtherItem: Identifiable, AzkarMenuType, Hashable {
 	let title: String
 	let color: Color
     var iconType = IconType.system
+    var action: (() -> Void)?
 
     static var demo = AzkarMenuOtherItem(groupType: .fadail, imageName: "paperplane", title: "Test category", color: Color.init(.systemTeal))
 

@@ -12,16 +12,36 @@ import Combine
 
 final class NotificationsHandler: NSObject {
 
+    static let shared = NotificationsHandler()
+
     let selectedNotificationId = PassthroughSubject<String?, Never>()
 
     private let notificationCenter = UNUserNotificationCenter.current()
 
-    override init() {
+    private override init() {
         super.init()
         notificationCenter.delegate = self
 
         // Clean up the notifications list.
         notificationCenter.removeAllDeliveredNotifications()
+    }
+
+    func getNotificationsAuthorizationStatus(completion: @escaping ((UNAuthorizationStatus) -> Void)) {
+        UNUserNotificationCenter.current().getNotificationSettings { settings
+            in
+            completion(settings.authorizationStatus)
+        }
+    }
+
+    func requestNotificationsPermission(completion: @escaping ((Result<Bool, Error>) -> Void)) {
+        UNUserNotificationCenter.current()
+            .requestAuthorization(options: [.alert, .sound, ]) { (granted, error) in
+                if let error = error {
+                    completion(.failure(error))
+                } else {
+                    completion(.success(granted))
+                }
+            }
     }
 
 }
@@ -30,7 +50,7 @@ extension NotificationsHandler: UNUserNotificationCenterDelegate {
 
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         // Just present the notification as it comes.
-        completionHandler([.alert, .sound])
+        completionHandler([.list, .sound])
     }
 
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {

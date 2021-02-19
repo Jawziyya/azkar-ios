@@ -71,87 +71,81 @@ struct MainMenuView: View {
     }
 
     private var menuContent: some View {
-        VStack {
+        VStack(spacing: 16) {
+
             Spacer(minLength: 16)
 
-            VStack(spacing: 16) {
-
-                HStack(spacing: 16) {
-                    ForEach(viewModel.dayNightSectionModels) { item in
-                        NavigationButton(isDetail: false) {
-                            self.viewModel.selectedMenuItem = item
-                        } destination: {
-                            self.azkarsDestination(for: item)
-                        } label: {
-                            MainMenuLargeGroup(item: item)
-                        }
+            // MARK: - Day & Night Azkar
+            HStack(spacing: 16) {
+                ForEach(viewModel.dayNightSectionModels) { item in
+                    Button {
+                        self.viewModel.selectedAzkarItem = item.category
+                    } label: {
+                        MainMenuLargeGroup(item: item)
                     }
-                    .foregroundColor(Color.text)
+                    .navigate(using: $viewModel.selectedAzkarItem, destination: azkarDestination(for:))
+                }
+                .foregroundColor(Color.text)
+                .background(itemsBackgroundColor)
+                .clipShape(RoundedRectangle(cornerRadius: Constants.cornerRadius))
+            }
+
+            // MARK: - Other Azkar
+            VStack(spacing: 0) {
+                ForEach(viewModel.otherAzkarModels) { item in
+                    Button {
+                        self.viewModel.selectedAzkarListItem = item.category
+                    } label: {
+                        HStack {
+                            MainMenuSmallGroup(item: item)
+                            Image(systemName: "chevron.right")
+                                .foregroundColor(Color.tertiaryText)
+                                .padding(.trailing)
+                        }
+                        .padding(10)
+                        .background(itemsBackgroundColor)
+                    }
+                    .navigate(using: $viewModel.selectedAzkarListItem, destination: getZikrList)
+                }
+            }
+            .background(itemsBackgroundColor)
+            .clipShape(RoundedRectangle(cornerRadius: Constants.cornerRadius))
+
+            // MARK: - App Sections
+            VStack(spacing: 0) {
+                ForEach(viewModel.infoModels) { item in
+                    Button {
+                        self.viewModel.selectedMenuItem = item
+                    } label: {
+                        HStack {
+                            MainMenuSmallGroup(item: item)
+                            Image(systemName: "chevron.right")
+                                .foregroundColor(Color.tertiaryText)
+                                .padding(.trailing)
+                        }
+                        .padding(10)
+                        .background(itemsBackgroundColor)
+                    }
+                    .navigate(using: $viewModel.selectedMenuItem, destination: self.menuDestination(for:))
+                }
+            }
+            .background(itemsBackgroundColor)
+            .clipShape(RoundedRectangle(cornerRadius: Constants.cornerRadius))
+
+            // MARK: - Additional Sections
+            VStack {
+                ForEach(viewModel.additionalMenuItems) { item in
+                    Button {
+                        item.action?()
+                    } label: {
+                        MainMenuSmallGroup(item: item, flip: true)
+                            .padding()
+                    }
+                    .disabled(item.action == nil)
                     .background(itemsBackgroundColor)
                     .clipShape(RoundedRectangle(cornerRadius: Constants.cornerRadius))
                 }
-
-                VStack(spacing: 0) {
-                    ForEach(viewModel.otherAzkarModels) { item in
-                        NavigationButton(isDetail: false) {
-                            self.viewModel.selectedMenuItem = item
-                        } destination: {
-                            self.getZikrList(item)
-                        } label: {
-                            HStack {
-                                MainMenuSmallGroup(item: item)
-                                Image(systemName: "chevron.right")
-                                    .foregroundColor(Color.tertiaryText)
-                                    .padding(.trailing)
-                            }
-                            .padding(10)
-                            .background(itemsBackgroundColor)
-                        }
-                    }
-                }
-                .background(itemsBackgroundColor)
-                .clipShape(RoundedRectangle(cornerRadius: Constants.cornerRadius))
-
-                VStack(spacing: 0) {
-                    ForEach(viewModel.infoModels) { item in
-                        NavigationButton(isDetail: false, destination: {
-                            self.destination(for: item)
-                        }, label: {
-                            HStack {
-                                MainMenuSmallGroup(item: item)
-                                Image(systemName: "chevron.right")
-                                    .foregroundColor(Color.tertiaryText)
-                                    .padding(.trailing)
-                            }
-                            .padding(10)
-                            .background(itemsBackgroundColor)
-                        })
-                    }
-                }
-                .background(itemsBackgroundColor)
-                .clipShape(RoundedRectangle(cornerRadius: Constants.cornerRadius))
-
-                viewModel.notificationAccessModel.flatMap { vm in
-                    Button(action: {
-                        UNUserNotificationCenter.current()
-                            .requestAuthorization(options: [.alert, .sound, ]) { (granted, error) in
-                                self.viewModel.hideNotificationsAccessMessage()
-                                guard granted else {
-                                    return
-                                }
-                                self.viewModel.preferences.enableNotifications = true
-                            }
-                    }, label: {
-                        MainMenuSmallGroup(item: AzkarMenuOtherItem(icon: "app.badge", title: vm.title, color: Color.orange), flip: true)
-                            .padding()
-                            .background(itemsBackgroundColor)
-                            .clipShape(RoundedRectangle(cornerRadius: Constants.cornerRadius))
-                    })
-                }
-
             }
-
-            Spacer(minLength: 16)
         }
         .padding(.horizontal)
     }
@@ -168,55 +162,46 @@ struct MainMenuView: View {
         .edgesIgnoringSafeArea(.all)
     }
 
-    private func getZikrList(_ model: AzkarMenuItem) -> some View {
-        let viewModel = self.getZikrPagesViewModel(for: model.category)
+    @ViewBuilder
+    private func getZikrList(_ model: ZikrCategory) -> some View {
+        let viewModel = self.viewModel.getZikrPagesViewModel(for: model)
 
-        return ZStack {
-            if isIpad {
-                LazyView(
+        if isIpad {
+            AzkarListView(viewModel: viewModel)
+        } else {
+            ZStack {
+                if model == .afterSalah {
+                    ZikrPagesView(viewModel: viewModel)
+                        .navigationBarTitle("", displayMode: .inline)
+                } else {
                     AzkarListView(viewModel: viewModel)
-                )
-            } else {
-                LazyView(
-                    ZStack {
-                        if model.category == .afterSalah {
-                            ZikrPagesView(viewModel: viewModel)
-                                .navigationBarTitle("", displayMode: .inline)
-                        } else {
-                            AzkarListView(viewModel: viewModel)
-                        }
-                    }
-                )
+                }
             }
         }
     }
 
-    private func getZikrPagesViewModel(for category: ZikrCategory) -> ZikrPagesViewModel {
-        ZikrPagesViewModel(title: category.title, azkar: viewModel.azkarForCategory(category), preferences: viewModel.preferences)
-    }
-
-    private func azkarsDestination(for model: AzkarMenuItem) -> some View {
-        let viewModel = self.getZikrPagesViewModel(for: model.category)
-        return ZStack {
+    @ViewBuilder
+    private func azkarDestination(for model: ZikrCategory) -> some View {
+        let viewModel = self.viewModel.getZikrPagesViewModel(for: model)
+        ZStack {
             if isIpad {
                 getZikrList(model)
             } else {
-                LazyView(
-                    ZikrPagesView(viewModel: viewModel)
-                )
+                ZikrPagesView(viewModel: viewModel)
             }
         }
         .navigationBarTitle(viewModel.title, displayMode: .inline)
     }
 
-    private func destination(for item: AzkarMenuOtherItem) -> AnyView {
+    @ViewBuilder
+    private func menuDestination(for item: AzkarMenuOtherItem) -> some View {
         switch item.groupType {
         case .legal:
-            return AppInfoView(viewModel: AppInfoViewModel(prerences: viewModel.preferences)).eraseToAny()
+            AppInfoView(viewModel: AppInfoViewModel(prerences: viewModel.preferences))
         case .settings:
-            return SettingsView(viewModel: viewModel.settingsViewModel).eraseToAny()
+            SettingsView(viewModel: viewModel.settingsViewModel)
         default:
-            return EmptyView().eraseToAny()
+            EmptyView()
         }
     }
 
