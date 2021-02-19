@@ -64,10 +64,14 @@ extension Color {
     }
 
     static var background: Color {
-        Color(.systemBackground)
+        Color(#function)
     }
 
     static var secondaryBackground: Color {
+        Color(#function)
+    }
+
+    static var dimmedBackground: Color {
         Color(#function)
     }
     

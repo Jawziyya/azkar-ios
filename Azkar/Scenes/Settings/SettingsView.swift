@@ -26,6 +26,7 @@ struct SettingsView: View {
         }
         .navigationTitle(Text("settings.title"))
         .toggleStyle(SwitchToggleStyle(tint: Color.accent))
+        .background(Color.dimmedBackground.edgesIgnoringSafeArea(.all))
     }
 
     // MARK: - Appearance

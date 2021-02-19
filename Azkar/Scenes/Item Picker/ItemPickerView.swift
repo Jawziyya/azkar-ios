@@ -22,33 +22,12 @@ struct ItemPickerView<SelectionValue>: View where SelectionValue: Hashable & Pic
         }
         .listStyle(InsetGroupedListStyle())
         .environment(\.horizontalSizeClass, .regular)
+        .background(Color.dimmedBackground.edgesIgnoringSafeArea(.all))
     }
 
     var content: some View {
         ForEach(items, id: \.title) { item in
-            HStack(spacing: 16) {
-                item.image.flatMap { img in
-                    img
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 50, height: 50)
-                        .clipShape(RoundedRectangle(cornerRadius: 10))
-                        .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 1)
-                }
-
-                Text(item.title)
-                Spacer()
-                item.subtitle.flatMap { text in
-                    Text(text)
-                        .font(item.subtitleFont)
-                        .foregroundColor(Color.secondary)
-                }
-                CheckboxView(isCheked:  .constant(self.selection.hashValue == item.hashValue))
-                    .frame(width: 20, height: 20)
-            }
-            .padding(.vertical, 10)
-            .background(Color(.secondarySystemGroupedBackground))
-            .onTapGesture {
+            Button {
                 DispatchQueue.main.async {
                     if item != self.selection {
                         self.selection = item
@@ -58,7 +37,33 @@ struct ItemPickerView<SelectionValue>: View where SelectionValue: Hashable & Pic
                         self.presentationMode.wrappedValue.dismiss()
                     }
                 }
+            } label: {
+                HStack(spacing: 16) {
+                    item.image.flatMap { img in
+                        img
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 50, height: 50)
+                            .clipShape(RoundedRectangle(cornerRadius: 10))
+                            .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 1)
+                    }
+
+                    Text(item.title)
+                    Spacer()
+                    item.subtitle.flatMap { text in
+                        Text(text)
+                            .font(item.subtitleFont)
+                            .foregroundColor(Color.secondary)
+                    }
+                    CheckboxView(isCheked:  .constant(self.selection.hashValue == item.hashValue))
+                        .frame(width: 20, height: 20)
+                }
+                .padding(.vertical, 10)
+                .background(Color(.secondarySystemGroupedBackground))
+                .clipShape(Rectangle())
             }
+            .buttonStyle(PlainButtonStyle())
+            .foregroundColor(Color.text)
         }
     }
 

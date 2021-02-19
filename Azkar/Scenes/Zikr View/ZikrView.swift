@@ -23,12 +23,13 @@ struct ZikrView: View {
     private let dividerHeight: CGFloat = 1
 
     var body: some View {
-        return ScrollView {
+        ScrollView {
             self.getContent()
         }
         .if(UIDevice.current.isIpad) { view in
             view.navigationTitle(viewModel.title)
         }
+        .background(Color.background.edgesIgnoringSafeArea(.all))
     }
 
     private func getContent() -> some View {

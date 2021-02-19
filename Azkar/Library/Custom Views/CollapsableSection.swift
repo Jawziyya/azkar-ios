@@ -42,7 +42,6 @@ struct CollapsableSection: View, Equatable {
                 }
             })
             .buttonStyle(BorderlessButtonStyle())
-            .background(Color.background)
             .zIndex(1)
 
             ZStack {

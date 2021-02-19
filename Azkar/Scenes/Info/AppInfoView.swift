@@ -13,15 +13,13 @@ struct AppInfoView: View {
     typealias ItemSection = AppInfoViewModel.Section
 
     let viewModel: AppInfoViewModel
-    let groupBackgroundElementID = UUID().uuidString
 
     @State private var url: URL?
 
     var body: some View {
         Form {
             self.iconAndVersion.background(
-                Color(.systemGroupedBackground)
-                    .padding(-20)
+                Color.dimmedBackground.padding(-20)
             )
 
             Section(header: Text("about.credits.sources-header", comment: "Legal information section header.")) {
@@ -56,6 +54,7 @@ struct AppInfoView: View {
         .sheet(item: $url) { url in
             SafariView(url: url, entersReaderIfAvailable: false)
         }
+        .background(Color.dimmedBackground.edgesIgnoringSafeArea(.all))
     }
 
     private var iconAndVersion: some View {
@@ -114,6 +113,7 @@ struct AppInfoView: View {
                     .foregroundColor(Color.tertiaryText)
             }
             .background(Color(.secondarySystemGroupedBackground))
+            .clipShape(Rectangle())
         })
         .buttonStyle(PlainButtonStyle())
         .padding(.vertical, 8)

@@ -20,7 +20,6 @@ struct MainMenuView: View {
     typealias MenuSection = MainMenuViewModel.Section
 
     @ObservedObject var viewModel: MainMenuViewModel
-    @Environment(\.colorScheme) var colorScheme
     @Environment(\.horizontalSizeClass) var hSizeClass
 
     private var isIpad: Bool {
@@ -28,19 +27,7 @@ struct MainMenuView: View {
     }
 
     private var itemsBackgroundColor: Color {
-        if colorScheme == .dark {
-            return Color.secondaryBackground
-        } else {
-            return Color.background
-        }
-    }
-
-    private var backgroundColor: Color {
-        if colorScheme == .dark {
-            return Color.background
-        } else {
-            return Color.secondaryBackground
-        }
+        Color(.secondarySystemGroupedBackground)
     }
 
     private let randomEmoji = ["🌕", "🌖", "🌗", "🌘", "🌒", "🌓", "🌔", "🌙", "🌸", "☘️", "🌳", "🌴", "🌱", "🌼", "💫", "🌎", "🌍", "🌏", "🪐", "✨", "❄️"].randomElement()!
