@@ -21,22 +21,24 @@ struct SourceInfo: Identifiable {
 
 struct AppInfoViewModel {
 
-    enum Section {
-        case versionAndName
-        case azkarLegal
-        case imagesLegal
-        case support
+    var sections: [Section] = []
+
+    struct Section: Identifiable {
+        let id = UUID().uuidString
+        var header: String?
+        var footer: String?
+        let items: [SourceInfo]
     }
 
     let appVersion: String
 
     let iconImageName: String
 
-    let azkarLegalInfoModels: [SourceInfo] = [
+    private let materialsCredits: [SourceInfo] = [
         SourceInfo(title: "azkar.ru", url: URL(string: "https://azkar.ru")!),
     ]
 
-    let imagesLegalInfoModels: [SourceInfo] = [
+    private let graphicMaterialsCredits: [SourceInfo] = [
         SourceInfo(title: NSLocalizedString("about.credits.icon", comment: "App icon credit button."), url: URL(string: "https://flaticon.com/free-icon/moon_414942?term=moon&page=1&position=17")!, imageName: nil),
         SourceInfo(title: NSLocalizedString("about.credits.adobe-arabic-font", comment: "Adobe font credit button."), url: URL(string: "https://fonts.adobe.com/fonts/adobe-arabic")!, imageName: nil),
         SourceInfo(title: NSLocalizedString("about.credits.quran-complex-font", comment: "Quran complex link."), url: URL(string: "https://qurancomplex.gov.sa/en/")!, imageName: nil),
@@ -44,12 +46,13 @@ struct AppInfoViewModel {
         SourceInfo(title: NSLocalizedString("about.credits.scheherazade-font", comment: "Scheherazade font credit."), url: URL(string: "https://software.sil.org/scheherazade/")!, imageName: nil),
     ]
 
-    let openSourceLibraries: [SourceInfo] = [
+    private let openSourceLibraries: [SourceInfo] = [
         SourceInfo(title: "BonMot", url: URL(string: "https://github.com/Rightpoint/BonMot")),
         SourceInfo(title: "SwiftyMarkdown", url: URL(string: "https://github.com/SimonFairbairn/SwiftyMarkdown")),
+        SourceInfo(title: "SwiftyStoreKit", url: URL(string: "https://github.com/bizz84/SwiftyStoreKit"))
     ]
 
-    let supportModels: [SourceInfo] = [
+    private let supportModels: [SourceInfo] = [
         SourceInfo(title: NSLocalizedString("about.support.write-to-email", comment: "Write email button."), url: URL(string: "mailto:azkar.app@pm.me")!, openUrlInApp: false),
         SourceInfo(title: NSLocalizedString("common.share-app", comment: "Share the app button."), openUrlInApp: false, action: {
             let url = URL(string: "https://itunes.apple.com/app/id1511423586")!
@@ -62,12 +65,38 @@ struct AppInfoViewModel {
     ]
 
     init(prerences: Preferences) {
-        iconImageName = "ic_\(prerences.appIcon.rawValue).png"
+        iconImageName = prerences.appIcon.imageName
 
         let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString")!
         let build = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion")!
 
         appVersion = "\(NSLocalizedString("common.version", comment: "App version label.")) \(version) (\(build))"
+
+        let materialsCreditsSection = Section(
+            header: NSLocalizedString("about.credits.sources-header", comment: "Legal information section header."),
+            items: materialsCredits)
+
+        let graphicMaterialsSection = Section(
+            header: NSLocalizedString("about.credits.graphics-header", comment: "Credits section header."),
+            items: graphicMaterialsCredits
+        )
+
+        let openSourceLibrariesSection = Section(
+            header: NSLocalizedString("about.credits.open-source-libraries-header", comment: "Open-source libraries section title."),
+            items: openSourceLibraries
+        )
+
+        let supportAndFeedbackSection = Section(
+            header: NSLocalizedString("about.support.header", comment: "Support section header."),
+            items: supportModels
+        )
+
+        sections = [
+            materialsCreditsSection,
+            graphicMaterialsSection,
+            openSourceLibrariesSection,
+            supportAndFeedbackSection,
+        ]
     }
 
 }

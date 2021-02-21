@@ -22,29 +22,14 @@ struct AppInfoView: View {
                 Color.dimmedBackground.padding(-20)
             )
 
-            Section(header: Text("about.credits.sources-header", comment: "Legal information section header.")) {
-                ForEach(viewModel.azkarLegalInfoModels, id: \.title) { item in
-                    self.viewForItem(item)
+            ForEach(viewModel.sections) { section in
+                Section(header: Text(section.header ?? ""), footer: Text(section.footer ?? "")) {
+                    ForEach(section.items) { item in
+                        self.viewForItem(item)
+                    }
                 }
             }
 
-            Section(header: Text("about.credits.graphics-header", comment: "Credits section header.")) {
-                ForEach(viewModel.imagesLegalInfoModels, id: \.title) { item in
-                    self.viewForItem(item)
-                }
-            }
-
-            Section(header: Text("about.credits.open-source-libraries-header", comment: "Open-source libraries section title.")) {
-                ForEach(viewModel.openSourceLibraries, id: \.title) { item in
-                    self.viewForItem(item)
-                }
-            }
-
-            Section(header: Text("about.support.header", comment: "Support section header.")) {
-                ForEach(viewModel.supportModels, id: \.title) { item in
-                    self.viewForItem(item)
-                }
-            }
         }
         .listStyle(GroupedListStyle())
         .environment(\.horizontalSizeClass, .regular)
