@@ -24,6 +24,13 @@ extension String {
     func firstWord() -> Self {
         return self.components(separatedBy: ",").first ?? self
     }
+
+    /// Returns a new string without any arabic vowels (tashkeel) in
+    var trimmingArabicVowels: String {
+      let arabicVowelsRange = UnicodeScalar(1611)!...UnicodeScalar(1630)!
+      let arabicVowelsSet = CharacterSet(charactersIn: arabicVowelsRange)
+      return components(separatedBy: arabicVowelsSet).joined()
+    }
 }
 
 extension String {

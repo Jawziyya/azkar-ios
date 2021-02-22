@@ -25,6 +25,9 @@ final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
 
     let zikr: Zikr
     let title: String
+    var text: String {
+        preferences.showTashkeel ? zikr.text : zikr.text.trimmingArabicVowels
+    }
     let preferences: Preferences
 
     var playerViewModel: PlayerViewModel?

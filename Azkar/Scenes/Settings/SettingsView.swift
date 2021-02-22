@@ -98,6 +98,10 @@ struct SettingsView: View {
         Section(header: Text("settings.text.title", comment: "Text settings section header.")) {
             PickerView(label: NSLocalizedString("settings.text.arabic-text-font", comment: "Arabic font picker label."), titleDisplayMode: .inline, subtitle: viewModel.preferences.arabicFont.title, destination: arabicFontPicker)
 
+            Toggle(isOn: $viewModel.preferences.showTashkeel) {
+                Text("settings.text.show-tashkeel", comment: "Enable/disable tashkeel in arabic text.").padding(.vertical, 8)
+            }
+
             Toggle(isOn: $viewModel.preferences.useSystemFontSize, label: {
                 Text("settings.text.use-system-font-size", comment: "Enable/disable system font size usage option label.").padding(.vertical, 8)
             })

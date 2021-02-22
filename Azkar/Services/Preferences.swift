@@ -31,6 +31,9 @@ final class Preferences {
     @Preference(Keys.arabicFont, defaultValue: .noto)
     var arabicFont: ArabicFont
 
+    @Preference(Keys.showTashkeel, defaultValue: true)
+    var showTashkeel
+
     @Preference(Keys.theme, defaultValue: .automatic)
     var theme: Theme
 

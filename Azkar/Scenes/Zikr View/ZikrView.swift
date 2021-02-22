@@ -93,7 +93,7 @@ struct ZikrView: View {
     private var textView: some View {
         VStack(spacing: 10) {
             CollapsableSection(
-                text: viewModel.zikr.text.set(style: TextStyles.arabicTextStyle(fontName: self.viewModel.preferences.arabicFont.fontName, textStyle: .title1, alignment: .center, sizeCategory: sizeCategory)),
+                text: viewModel.text.set(style: TextStyles.arabicTextStyle(fontName: self.viewModel.preferences.arabicFont.fontName, textStyle: .title1, alignment: .center, sizeCategory: sizeCategory)),
                 isExpanded: .constant(true),
                 textHeight: $textHeight
             )

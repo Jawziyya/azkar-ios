@@ -69,6 +69,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             Keys.arabicFont: ArabicFont.noto.fontName,
             Keys.expandTranslation: true,
             Keys.expandTransliteration: true,
+            Keys.showTashkeel: true,
             Keys.morningNotificationsTime: defaultMorningNotificationTime,
             Keys.eveningNotificationsTime: defaultEveningNotificationTime,
             Keys.appIcon: AppIcon.gold.rawValue,
