@@ -47,13 +47,28 @@ struct ZikrView: View {
 
             infoView
             
-            // MARK: - Note
-            viewModel.zikr.notes.flatMap { _ in
-                self.getDivider()
-            }
+            // MARK: - Notes
+            Group {
+                viewModel.zikr.notes.flatMap { _ in
+                    self.getDivider()
+                }
 
-            viewModel.zikr.notes.flatMap { notes in
-                self.getNoteView(notes)
+                viewModel.zikr.notes.flatMap { notes in
+                    self.getNoteView(notes)
+                }
+
+                viewModel.zikr.benefit.flatMap { text in
+                    HStack(alignment: .top, spacing: 8) {
+                        Text("💎")
+                            .minimumScaleFactor(0.1)
+                            .font(Font.largeTitle)
+                            .frame(maxWidth: 20, maxHeight: 15)
+                            .foregroundColor(Color.accent)
+                        Text(text)
+                            .font(Font.footnote)
+                    }
+                    .padding()
+                }
             }
 
             Spacer(minLength: 20)

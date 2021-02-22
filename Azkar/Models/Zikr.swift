@@ -9,7 +9,7 @@
 import Foundation
 import AVFoundation
 
-enum ZikrCategory: String, Codable {
+enum ZikrCategory: String, Codable, Equatable {
     case morning, evening, afterSalah = "after-salah", other
 
     var title: String {
@@ -27,6 +27,7 @@ struct Zikr: Identifiable, Hashable, Equatable, Codable {
     let translation: String
     let transliteration: String
     let notes: String?
+    let benefit: String?
     let category: ZikrCategory
 
     var audioURL: URL? {
