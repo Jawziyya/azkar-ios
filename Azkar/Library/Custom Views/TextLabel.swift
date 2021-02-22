@@ -1,5 +1,5 @@
 //
-//  Label.swift
+//  TextLabel.swift
 //  Azkar
 //
 //  Created by Abdurahim Jauzee on 01.05.2020.
@@ -19,12 +19,12 @@ extension NSAttributedString {
 
 }
 
-struct Label: UIViewRepresentable {
+struct TextLabel: UIViewRepresentable {
 
     public final class Coordinator: NSObject {
-        private let parent: Label
+        private let parent: TextLabel
 
-        public init(_ parent: Label) {
+        public init(_ parent: TextLabel) {
             self.parent = parent
         }
     }

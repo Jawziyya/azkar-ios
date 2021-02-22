@@ -47,7 +47,7 @@ struct CollapsableSection: View, Equatable {
             ZStack {
                 if isExpanded {
                     GeometryReader { proxy in
-                        Label(height: self.$textHeight, containerWidth: proxy.size.width) {
+                        TextLabel(height: self.$textHeight, containerWidth: proxy.size.width) {
                             return self.text
                         }
                     }
