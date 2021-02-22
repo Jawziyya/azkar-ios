@@ -15,7 +15,7 @@ final class SettingsViewModel: ObservableObject {
 
     let objectWillChange = PassthroughSubject<Void, Never>()
 
-    private let notificationsCenter = UNUserNotificationCenter.current()
+    private let notificationsHandler: NotificationsHandler
 
     var canChangeIcon: Bool {
         return !UIDevice.current.isIpad
@@ -46,8 +46,9 @@ final class SettingsViewModel: ObservableObject {
 
     private var cancellabels = Set<AnyCancellable>()
 
-    init(preferences: Preferences) {
+    init(preferences: Preferences, notificationsHandler: NotificationsHandler = .shared) {
         self.preferences = preferences
+        self.notificationsHandler = notificationsHandler
 
         let formatter = DateFormatter()
         formatter.dateStyle = .none
@@ -100,7 +101,7 @@ final class SettingsViewModel: ObservableObject {
             .dropFirst()
             .receive(on: RunLoop.main)
             .sink(receiveValue: { [unowned self] (enabled, morning, evening) in
-                self.removeScheduledNotifications()
+                self.notificationsHandler.removeScheduledNotifications()
                 guard enabled else {
                     return
                 }
@@ -109,27 +110,9 @@ final class SettingsViewModel: ObservableObject {
             .store(in: &cancellabels)
     }
 
-    private func removeScheduledNotifications() {
-        notificationsCenter.removeDeliveredNotifications(withIdentifiers: [Keys.morningNotificationId, Keys.eveningNotificationId])
-    }
-
     private func scheduleNotifications() {
-        let morningRequest = notificationRequest(id: Keys.morningNotificationId, date: preferences.morningNotificationTime, title: NSLocalizedString("notifications.morning-notification-title", comment: "Morning notification title."), category: .morning)
-        let eveningRequest = notificationRequest(id: Keys.eveningNotificationId, date: preferences.eveningNotificationTime, title: NSLocalizedString("notifications.evening-notification-title", comment: "Evening notification title."), category: .evening)
-
-        notificationsCenter.add(morningRequest)
-        notificationsCenter.add(eveningRequest)
-    }
-
-    private func notificationRequest(id: String, date: Date, title: String, category: ZikrCategory) -> UNNotificationRequest {
-        let content = UNMutableNotificationContent()
-        content.title = title
-        content.sound = UNNotificationSound.default
-        content.userInfo["category"] = category.rawValue
-
-        let trigger = UNCalendarNotificationTrigger(dateMatching: Calendar.current.dateComponents([.hour, .minute], from: date), repeats: true)
-        let request = UNNotificationRequest(identifier: id, content: content, trigger: trigger)
-        return request
+        notificationsHandler.scheduleNotification(id: Keys.morningNotificationId, date: preferences.morningNotificationTime, title: NSLocalizedString("notifications.morning-notification-title", comment: "Morning notification title."), categoryId: ZikrCategory.morning.rawValue)
+        notificationsHandler.scheduleNotification(id: Keys.eveningNotificationId, date: preferences.eveningNotificationTime, title: NSLocalizedString("notifications.evening-notification-title", comment: "Evening notification title."), categoryId: ZikrCategory.evening.rawValue)
     }
 
 }
