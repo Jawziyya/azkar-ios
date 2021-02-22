@@ -19,9 +19,20 @@ enum MarkdownProcessor {
         md.setFontNameForAllStyles(with: fontName)
         md.setFontSizeForAllStyles(with: size)
         md.body.alignment = alignment
-        md.body.color = UIColor.label.withAlphaComponent(0.6)
-        md.bold.color = UIColor.label
-        return md.attributedString()
+        md.body.color = UIColor(Color.text).withAlphaComponent(0.6)
+        md.bold.color = UIColor(Color.text)
+        let attributedString = md.attributedString().mutableCopy() as! NSMutableAttributedString
+
+        let string = attributedString.string
+        let regex = try! NSRegularExpression(pattern: "،", options: [])
+        let range = NSRange(string.range(of: string)!, in: string)
+        regex.enumerateMatches(in: string, options: .reportProgress, range: range) { (result, _, _) in
+            if let range = result?.range {
+                attributedString.addAttribute(.font, value: UIFont(name: ArabicFont.adobe.fontName, size: size)!, range: range)
+            }
+        }
+
+        return attributedString
     }
 
     static func translationText(_ text: String, alignment: NSTextAlignment = .natural, sizeCategory: ContentSizeCategory? = nil) -> NSAttributedString {

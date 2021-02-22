@@ -7,7 +7,6 @@
 //
 
 import SwiftUI
-import BonMot
 
 struct ZikrView: View {
 
@@ -79,7 +78,7 @@ struct ZikrView: View {
     private var textView: some View {
         VStack(spacing: 10) {
             CollapsableSection(
-                text: viewModel.zikr.text.styled(with: TextStyles.arabicTextStyle(fontName: self.viewModel.preferences.arabicFont.fontName, textStyle: .title1, alignment: .center, sizeCategory: sizeCategory)),
+                text: viewModel.zikr.text.set(style: TextStyles.arabicTextStyle(fontName: self.viewModel.preferences.arabicFont.fontName, textStyle: .title1, alignment: .center, sizeCategory: sizeCategory)),
                 isExpanded: .constant(true),
                 textHeight: $textHeight
             )
@@ -94,7 +93,7 @@ struct ZikrView: View {
 
     // MARK: - Translation
     private var translationView: some View {
-        CollapsableSection(title: NSLocalizedString("read.translation", comment: "Zikr translation label."), text: viewModel.zikr.translation.styled(with: TextStyles.bodyStyle(sizeCategory: sizeCategory)), isExpanded: $viewModel.expandTranslation, textHeight: $translationHeight, tintColor: tintColor) {
+        CollapsableSection(title: NSLocalizedString("read.translation", comment: "Zikr translation label."), text: viewModel.zikr.translation.set(style: TextStyles.bodyStyle(sizeCategory: sizeCategory)), isExpanded: $viewModel.expandTranslation, textHeight: $translationHeight, tintColor: tintColor) {
             withAnimation(Animation.easeInOut(duration: 0.2)) {
                 self.viewModel.preferences.expandTranslation.toggle()
             }
@@ -105,7 +104,7 @@ struct ZikrView: View {
 
     // MARK: - Transliteration
     private var transliterationView: some View {
-        CollapsableSection(title: NSLocalizedString("read.transcription", comment: "Zikr transcription label."), text: viewModel.zikr.transliteration.styled(with: TextStyles.bodyStyle(sizeCategory: sizeCategory)), isExpanded: $viewModel.expandTransliteration, textHeight: $transliterationHeight, tintColor: tintColor) {
+        CollapsableSection(title: NSLocalizedString("read.transcription", comment: "Zikr transcription label."), text: viewModel.zikr.transliteration.set(style: TextStyles.bodyStyle(sizeCategory: sizeCategory)), isExpanded: $viewModel.expandTransliteration, textHeight: $transliterationHeight, tintColor: tintColor) {
             withAnimation(Animation.easeInOut(duration: 0.2)) {
                 self.viewModel.preferences.expandTransliteration.toggle()
             }

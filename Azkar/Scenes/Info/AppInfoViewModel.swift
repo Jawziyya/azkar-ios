@@ -47,7 +47,7 @@ struct AppInfoViewModel {
     ]
 
     private let openSourceLibraries: [SourceInfo] = [
-        SourceInfo(title: "BonMot", url: URL(string: "https://github.com/Rightpoint/BonMot")),
+        SourceInfo(title: "SwiftRichString", url: URL(string: "https://github.com/malcommac/SwiftRichString")),
         SourceInfo(title: "SwiftyMarkdown", url: URL(string: "https://github.com/SimonFairbairn/SwiftyMarkdown")),
         SourceInfo(title: "SwiftyStoreKit", url: URL(string: "https://github.com/bizz84/SwiftyStoreKit"))
     ]

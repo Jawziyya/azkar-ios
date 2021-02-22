@@ -2,12 +2,12 @@
   "object": {
     "pins": [
       {
-        "package": "BonMot",
-        "repositoryURL": "https://github.com/Rightpoint/BonMot",
+        "package": "SwiftRichString",
+        "repositoryURL": "https://github.com/malcommac/SwiftRichString",
         "state": {
           "branch": null,
-          "revision": "76fbef6e8d2095c7dace1912aa3b79ba86ad1150",
-          "version": "5.5.1"
+          "revision": "9bf4b5af6bb4386865636fc504d6c588c2b65040",
+          "version": "3.7.2"
         }
       },
       {

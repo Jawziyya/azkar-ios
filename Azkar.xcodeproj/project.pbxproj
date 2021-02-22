@@ -117,7 +117,6 @@
 		9D628A0C24623EED00922935 /* PageControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D628A0924623EED00922935 /* PageControl.swift */; };
 		9D628A0D24623EED00922935 /* PageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D628A0A24623EED00922935 /* PageViewController.swift */; };
 		9D6D1EC8245C16A50060CDB5 /* Label.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D6D1EC7245C16A50060CDB5 /* Label.swift */; };
-		9D6D1ECB245C18200060CDB5 /* BonMot in Frameworks */ = {isa = PBXBuildFile; productRef = 9D6D1ECA245C18200060CDB5 /* BonMot */; };
 		9D6D1ECD245C254B0060CDB5 /* TextStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D6D1ECC245C254B0060CDB5 /* TextStyles.swift */; };
 		9D6D1ECF245C27FA0060CDB5 /* UIFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D6D1ECE245C27FA0060CDB5 /* UIFont.swift */; };
 		9D6D1ED2245C43D10060CDB5 /* ZikrPagesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D6D1ED1245C43D10060CDB5 /* ZikrPagesViewModel.swift */; };
@@ -377,7 +376,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6CE1729C243D128A007AC48B /* AudioPlayer.framework in Frameworks */,
-				9D6D1ECB245C18200060CDB5 /* BonMot in Frameworks */,
+				F4CC2B2125E3AECF005FFEDB /* SwiftRichString in Frameworks */,
 				9D4DC09924703A4A0061B501 /* SwiftyMarkdown in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -876,8 +875,8 @@
 			);
 			name = Azkar;
 			packageProductDependencies = (
-				9D6D1ECA245C18200060CDB5 /* BonMot */,
 				9D4DC09824703A4A0061B501 /* SwiftyMarkdown */,
+				F4CC2B2025E3AECF005FFEDB /* SwiftRichString */,
 			);
 			productName = Azkar;
 			productReference = 6C1E5317243BB1360078F6FB /* Azkar.app */;
@@ -929,8 +928,8 @@
 			);
 			mainGroup = 6C1E530E243BB1360078F6FB;
 			packageReferences = (
-				9D6D1EC9245C18200060CDB5 /* XCRemoteSwiftPackageReference "BonMot" */,
 				9D4DC09724703A4A0061B501 /* XCRemoteSwiftPackageReference "SwiftyMarkdown" */,
+				F4CC2B1F25E3AECF005FFEDB /* XCRemoteSwiftPackageReference "SwiftRichString" */,
 			);
 			productRefGroup = 6C1E5318243BB1360078F6FB /* Products */;
 			projectDirPath = "";
@@ -1440,12 +1439,12 @@
 				minimumVersion = 1.2.1;
 			};
 		};
-		9D6D1EC9245C18200060CDB5 /* XCRemoteSwiftPackageReference "BonMot" */ = {
+		F4CC2B1F25E3AECF005FFEDB /* XCRemoteSwiftPackageReference "SwiftRichString" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/Rightpoint/BonMot";
+			repositoryURL = "https://github.com/malcommac/SwiftRichString";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 5.5.1;
+				minimumVersion = 3.7.2;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -1456,10 +1455,15 @@
 			package = 9D4DC09724703A4A0061B501 /* XCRemoteSwiftPackageReference "SwiftyMarkdown" */;
 			productName = SwiftyMarkdown;
 		};
-		9D6D1ECA245C18200060CDB5 /* BonMot */ = {
+		F483E08625D969AE00210ABE /* SwiftyStoreKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 9D6D1EC9245C18200060CDB5 /* XCRemoteSwiftPackageReference "BonMot" */;
-			productName = BonMot;
+			package = F483E08525D969AE00210ABE /* XCRemoteSwiftPackageReference "SwiftyStoreKit" */;
+			productName = SwiftyStoreKit;
+		};
+		F4CC2B2025E3AECF005FFEDB /* SwiftRichString */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F4CC2B1F25E3AECF005FFEDB /* XCRemoteSwiftPackageReference "SwiftRichString" */;
+			productName = SwiftRichString;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
