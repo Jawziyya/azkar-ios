@@ -30,6 +30,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UITableViewCell.appearance().selectionStyle = .none
         UITableView.appearance().allowsSelection = false
         UITableView.appearance().separatorColor = .clear
+        UITableView.appearance().backgroundColor = .clear
         UISwitch.appearance().onTintColor = UIColor(named: "accent")
 
         return true

@@ -35,7 +35,7 @@ struct MainMenuView: View {
     var body: some View {
         NavigationView {
             ZStack {
-                backgroundColor.edgesIgnoringSafeArea(.all)
+                Color.dimmedBackground.edgesIgnoringSafeArea(.all)
                 scrollView
                     .navigationTitle("")
             }

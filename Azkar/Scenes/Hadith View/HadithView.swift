@@ -23,6 +23,7 @@ struct HadithView: View {
         ScrollView {
             self.getContent()
         }
+        .background(Color.background.edgesIgnoringSafeArea(.all))
     }
 
     private func getContent() -> some View {
