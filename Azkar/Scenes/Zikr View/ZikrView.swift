@@ -161,11 +161,7 @@ struct ZikrView: View {
         VStack(alignment: .leading, spacing: 0) {
             self.getCaption(label)
             Text(text.firstWord())
-                .font(
-                    Font.subheadline
-                        .weight(.regular)
-                        .smallCaps()
-                )
+                .font(Font.caption.weight(.medium).smallCaps())
                 .if(underline, transform: { text in
                     text.underline()
                 })
@@ -179,7 +175,7 @@ struct ZikrView: View {
 
     private func getCaption(_ text: String) -> some View {
         Text(text)
-            .font(Font.caption.weight(.regular).smallCaps())
+            .font(Font.caption2.smallCaps())
             .foregroundColor(Color.tertiaryText)
     }
 

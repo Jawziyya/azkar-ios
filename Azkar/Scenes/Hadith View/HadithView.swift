@@ -21,13 +21,13 @@ struct HadithView: View {
 
     var body: some View {
         ScrollView {
-            self.getContent()
+            self.getContent().padding()
         }
         .background(Color.background.edgesIgnoringSafeArea(.all))
     }
 
     private func getContent() -> some View {
-        VStack(alignment: .leading, spacing: 0) {
+        VStack(alignment: .leading, spacing: 16) {
             textView
 
             viewModel.translation.flatMap { text in
@@ -35,27 +35,18 @@ struct HadithView: View {
             }
 
             VStack(alignment: .leading, spacing: 0) {
-                getCaption(NSLocalizedString("read.narrated-by", comment: "Hadith narrater name label."))
+                Text("read.narrated-by", comment: "Hadith narrater name label.")
+                    .font(Font.caption2.smallCaps())
+                    .foregroundColor(Color.tertiaryText)
                 Text(viewModel.source)
-                    .font(
-                        Font.subheadline
-                            .weight(.regular)
-                            .smallCaps()
-                    )
+                    .font(Font.caption.weight(.medium).smallCaps())
                     .foregroundColor(.text)
             }
-            .padding()
         }
     }
 
     private func getDivider() -> some View {
         dividerColor.frame(height: dividerHeight)
-    }
-
-    private func getCaption(_ text: String) -> some View {
-        Text(text)
-            .font(Font.caption.weight(.regular).smallCaps())
-            .foregroundColor(Color.tertiaryText)
     }
 
     // MARK: - Text
@@ -67,7 +58,6 @@ struct HadithView: View {
                 textHeight: $textHeight
             )
             .equatable()
-            .padding([.leading, .trailing, .bottom])
         }
     }
 
@@ -79,7 +69,6 @@ struct HadithView: View {
             isExpanded: .constant(true),
             textHeight: $translationHeight
         )
-        .padding()
     }
 
 }
