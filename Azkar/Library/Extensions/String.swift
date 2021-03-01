@@ -29,6 +29,7 @@ extension String {
     var trimmingArabicVowels: String {
       let arabicVowelsRange = UnicodeScalar(1611)!...UnicodeScalar(1630)!
       let arabicVowelsSet = CharacterSet(charactersIn: arabicVowelsRange)
+        .subtracting(CharacterSet(charactersIn: "ّ"))
       return components(separatedBy: arabicVowelsSet).joined()
     }
 }
