@@ -57,6 +57,7 @@ struct ZikrView: View {
                     self.getNoteView(notes)
                 }
 
+                #if SHOW_BENEFITS
                 viewModel.zikr.benefit.flatMap { text in
                     HStack(alignment: .top, spacing: 8) {
                         Text("💎")
@@ -69,6 +70,7 @@ struct ZikrView: View {
                     }
                     .padding()
                 }
+                #endif
             }
 
             Spacer(minLength: 20)
