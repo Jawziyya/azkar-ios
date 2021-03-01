@@ -63,7 +63,7 @@ struct AzkarMenuOtherItem: Identifiable, AzkarMenuType {
     }
 
     enum GroupType {
-        case fadail, legal, settings, notificationsAccess
+        case about, settings, notificationsAccess
     }
 
     var groupType: GroupType?
@@ -73,7 +73,7 @@ struct AzkarMenuOtherItem: Identifiable, AzkarMenuType {
     var iconType = IconType.system
     var action: (() -> Void)?
 
-    static var demo = AzkarMenuOtherItem(groupType: .fadail, imageName: "paperplane", title: "Test category", color: Color.init(.systemTeal))
+    static var demo = AzkarMenuOtherItem(groupType: .settings, imageName: "paperplane", title: "Test category", color: Color.init(.systemTeal))
 
     var image: Image? {
         switch iconType {

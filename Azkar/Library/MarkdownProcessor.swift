@@ -40,9 +40,8 @@ enum MarkdownProcessor {
         let textStyle = UIFont.TextStyle.body
         let size = textSize(forTextStyle: textStyle, contentSizeCategory: sizeCategory?.uiContentSizeCategory)
         md.setFontSizeForAllStyles(with: size)
-
         let fontName = UIFont.FontFamily.iowan.fontName(with: .regular)
-        md.body.fontName = fontName
+        md.setFontNameForAllStyles(with: fontName)
         md.body.alignment = alignment
         return md.attributedString()
     }

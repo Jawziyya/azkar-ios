@@ -7,9 +7,9 @@
 //
 
 import SwiftUI
-import ASCollectionView
 import AudioPlayer
 import UserNotifications
+import SwiftRichString
 
 enum Constants {
     static var cornerRadius: CGFloat = 12
@@ -26,7 +26,7 @@ struct MainMenuView: View {
         UIDevice.current.isIpad
     }
 
-    private var itemsBackgroundColor: Color {
+    private var itemsBackgroundColor: SwiftUI.Color {
         Color(.secondarySystemGroupedBackground)
     }
 
@@ -133,6 +133,20 @@ struct MainMenuView: View {
                     .clipShape(RoundedRectangle(cornerRadius: Constants.cornerRadius))
                 }
             }
+
+            VStack(spacing: 8) {
+                Text(viewModel.fadl.text)
+                    .font(Font.textFont(.headline))
+                    .tracking(1.2)
+                    .foregroundColor(Color.text.opacity(0.7))
+
+                Text(viewModel.fadl.source)
+                    .font(Font.caption2.smallCaps())
+                    .foregroundColor(Color.secondaryText.opacity(0.5))
+            }
+            .shadow(color: Color.text.opacity(0.5), radius: 0.5, x: 0.0, y: 0.05)
+            .multilineTextAlignment(.center) 
+            .padding(.horizontal)
         }
         .padding(.horizontal)
     }
@@ -183,7 +197,7 @@ struct MainMenuView: View {
     @ViewBuilder
     private func menuDestination(for item: AzkarMenuOtherItem) -> some View {
         switch item.groupType {
-        case .legal:
+        case .about:
             AppInfoView(viewModel: AppInfoViewModel(prerences: viewModel.preferences))
         case .settings:
             SettingsView(viewModel: viewModel.settingsViewModel)
