@@ -22,7 +22,7 @@ struct CollapsableSection: View, Equatable {
     var expandingCallback: (() -> Void)?
 
     var body: some View {
-        VStack(alignment: .leading, spacing: isExpanded ? 10 : 0) {
+        VStack(alignment: .leading, spacing: isExpanded && expandingCallback != nil ? 10 : 0) {
             Button(action: {
                 UIImpactFeedbackGenerator(style: .soft).impactOccurred()
                 self.expandingCallback?()
@@ -47,13 +47,13 @@ struct CollapsableSection: View, Equatable {
             ZStack {
                 if isExpanded {
                     GeometryReader { proxy in
-                        TextLabel(height: self.$textHeight, containerWidth: proxy.size.width) {
+                        TextLabel(height: self.$textHeight, containerWidth: proxy.size.width.rounded(.down)) {
                             return self.text
                         }
                     }
                     .clipped()
                     .transition(.move(edge: .top))
-                    .frame(height: self.textHeight)
+                    .frame(minHeight: self.textHeight)
                 }
             }
             .zIndex(0)

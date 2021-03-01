@@ -9,16 +9,6 @@
 import SwiftUI
 import Combine
 
-extension NSAttributedString {
-
-    func height(withMaxWidth maxWidth: CGFloat) -> CGFloat {
-        let size = CGSize(width: maxWidth, height: .greatestFiniteMagnitude)
-        let height = boundingRect(with: size, options: [.usesLineFragmentOrigin, .usesFontLeading], context: nil).height
-        return height
-    }
-
-}
-
 struct TextLabel: UIViewRepresentable {
 
     public final class Coordinator: NSObject {
@@ -54,14 +44,10 @@ struct TextLabel: UIViewRepresentable {
         let string = self.attributedString()
         DispatchQueue.main.async {
             label.attributedText = string
-            let height = (self.getHeightOfTheText(maxWidth: self.containerWidth, attributedText: string)).rounded(.up)
-            self.height = max(30, height)
+            label.sizeToFit()
+            let size = label.systemLayoutSizeFitting(CGSize(width: containerWidth, height: CGFloat.greatestFiniteMagnitude))
+            self.height = max(30, size.height.rounded(.up))
         }
-    }
-
-    private func getHeightOfTheText(maxWidth: CGFloat, attributedText: NSAttributedString) -> CGFloat {
-        let height = attributedText.height(withMaxWidth: maxWidth)
-        return height
     }
 
 }
