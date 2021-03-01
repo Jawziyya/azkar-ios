@@ -16,6 +16,11 @@ extension String: Identifiable {
 }
 
 extension String {
+
+    var nsRange: NSRange {
+      return NSRange(range(of: self)!, in: self)
+    }
+
     var textOrNil: String? {
         let text = trimmingCharacters(in: .whitespacesAndNewlines)
         return text.isEmpty ? nil : text
