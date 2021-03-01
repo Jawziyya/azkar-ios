@@ -140,6 +140,7 @@ struct ZikrView: View {
             viewModel.zikr.source.textOrNil.flatMap { text in
                 NavigationLink.init(destination: hadithView, label: {
                     getInfoStack(label: NSLocalizedString("read.source", comment: "Zikr source label."), text: text, underline: viewModel.hadithViewModel != nil)
+                        .hoverEffect(.highlight)
                 })
                 .disabled(viewModel.hadithViewModel == nil)
             }
