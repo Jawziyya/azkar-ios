@@ -14,7 +14,7 @@ final class NotificationsHandler: NSObject {
 
     static let shared = NotificationsHandler()
 
-    let selectedNotificationId = PassthroughSubject<String?, Never>()
+    let selectedNotificationCategory = PassthroughSubject<String, Never>()
 
     private let notificationCenter = UNUserNotificationCenter.current()
 
@@ -24,6 +24,24 @@ final class NotificationsHandler: NSObject {
 
         // Clean up the notifications list.
         notificationCenter.removeAllDeliveredNotifications()
+    }
+
+    func removeDeliveredNotifications() {
+        notificationCenter.removeAllDeliveredNotifications()
+    }
+
+    func removeScheduledNotifications() {
+        notificationCenter.removeAllPendingNotificationRequests()
+    }
+
+    func scheduleNotification(id: String, date: Date, title: String, categoryId: String) {
+        let content = UNMutableNotificationContent()
+        content.title = title
+        content.sound = UNNotificationSound.default
+        content.categoryIdentifier = categoryId
+        let trigger = UNCalendarNotificationTrigger(dateMatching: Calendar.current.dateComponents([.hour, .minute], from: date), repeats: true)
+        let request = UNNotificationRequest(identifier: id, content: content, trigger: trigger)
+        notificationCenter.add(request)
     }
 
     func getNotificationsAuthorizationStatus(completion: @escaping ((UNAuthorizationStatus) -> Void)) {
@@ -58,8 +76,8 @@ extension NotificationsHandler: UNUserNotificationCenterDelegate {
     }
 
     private func handleNotification(request: UNNotificationRequest, completionHandler: @escaping () -> Void) {
-        let category = request.content.userInfo["category"] as? String
-        selectedNotificationId.send(category)
+        let category = request.content.categoryIdentifier
+        selectedNotificationCategory.send(category)
         completionHandler()
     }
 
