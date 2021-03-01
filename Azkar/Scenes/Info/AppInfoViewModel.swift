@@ -35,7 +35,8 @@ struct AppInfoViewModel {
     let iconImageName: String
 
     private let materialsCredits: [SourceInfo] = [
-        SourceInfo(title: "azkar.ru", url: URL(string: "https://azkar.ru")!),
+        SourceInfo(title: "Перевод, транскрипция, аудиофайлы озвучки (azkar.ru)", url: URL(string: "https://azkar.ru")!),
+        SourceInfo(title: "Исходный код приложения Azkar (github.com)", url: URL(string: "https://github.com/Jawziyya/azkar-ios")!),
     ]
 
     private let graphicMaterialsCredits: [SourceInfo] = [
