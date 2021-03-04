@@ -36,6 +36,14 @@ struct MainMenuView: View {
         NavigationView {
             ZStack {
                 Color.dimmedBackground.edgesIgnoringSafeArea(.all)
+                    .if(Date().isEndOfRamadan) { view in
+                        view.overlay(
+                            Image("eid_background")
+                                .resizable()
+                                .overlay(Color.text.opacity(0.2))
+                                .edgesIgnoringSafeArea(.all)
+                        )
+                    }
                 scrollView
                     .navigationTitle("")
             }
