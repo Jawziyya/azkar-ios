@@ -21,6 +21,10 @@ final class SettingsViewModel: ObservableObject {
         return !UIDevice.current.isIpad
     }
 
+    var appIconPackListViewModel: AppIconPackListViewModel {
+        .init(preferences: preferences)
+    }
+
     private let formatter: DateFormatter
 
     var preferences: Preferences
@@ -62,19 +66,6 @@ final class SettingsViewModel: ObservableObject {
             .storageChangesPublisher()
             .receive(on: RunLoop.main)
             .subscribe(objectWillChange)
-            .store(in: &cancellabels)
-
-        preferences.$appIcon
-            .dropFirst(1)
-            .receive(on: RunLoop.main)
-            .sink(receiveValue: { icon in
-                switch icon {
-                case .gold:
-                    UIApplication.shared.setAlternateIconName(nil)
-                default:
-                    UIApplication.shared.setAlternateIconName(icon.id)
-                }
-            })
             .store(in: &cancellabels)
 
         $morningTime

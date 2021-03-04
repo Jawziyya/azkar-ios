@@ -116,7 +116,7 @@
 		9D628A0B24623EED00922935 /* PageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D628A0824623EED00922935 /* PageView.swift */; };
 		9D628A0C24623EED00922935 /* PageControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D628A0924623EED00922935 /* PageControl.swift */; };
 		9D628A0D24623EED00922935 /* PageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D628A0A24623EED00922935 /* PageViewController.swift */; };
-		9D6D1EC8245C16A50060CDB5 /* Label.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D6D1EC7245C16A50060CDB5 /* Label.swift */; };
+		9D6D1EC8245C16A50060CDB5 /* TextLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D6D1EC7245C16A50060CDB5 /* TextLabel.swift */; };
 		9D6D1ECD245C254B0060CDB5 /* TextStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D6D1ECC245C254B0060CDB5 /* TextStyles.swift */; };
 		9D6D1ECF245C27FA0060CDB5 /* UIFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D6D1ECE245C27FA0060CDB5 /* UIFont.swift */; };
 		9D6D1ED2245C43D10060CDB5 /* ZikrPagesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D6D1ED1245C43D10060CDB5 /* ZikrPagesViewModel.swift */; };
@@ -168,11 +168,32 @@
 		9DFF69A9245C74BF00FD8C4F /* MainMenuSmallGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DFF69A5245C74BF00FD8C4F /* MainMenuSmallGroup.swift */; };
 		9DFF69AC245C75FE00FD8C4F /* MainMenuViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DFF69AB245C75FE00FD8C4F /* MainMenuViewModel.swift */; };
 		9DFF69AF245C8EE400FD8C4F /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9DFF69B1245C8EE400FD8C4F /* Localizable.strings */; };
+		F4354D1B25D9AABF0077AEC0 /* NavigationLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4354D1A25D9AABF0077AEC0 /* NavigationLink.swift */; };
+		F43D9A0825D8117100655E82 /* AppIconPackInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F43D9A0725D8117100655E82 /* AppIconPackInfoView.swift */; };
+		F43D9A1025D8165900655E82 /* AppIconPackListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F43D9A0F25D8165900655E82 /* AppIconPackListView.swift */; };
 		F46B433C25D7E07900BAB57B /* ScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46B433B25D7E07900BAB57B /* ScrollView.swift */; };
 		F474EC6C25D7B6F200EA4037 /* NavigationButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = F474EC6B25D7B6F200EA4037 /* NavigationButton.swift */; };
-		F4EBE14725D5C96F00E3CCA8 /* ic_ramadan.png in Resources */ = {isa = PBXBuildFile; fileRef = F4EBE14425D5C96F00E3CCA8 /* ic_ramadan.png */; };
-		F4EBE14825D5C96F00E3CCA8 /* ic_ramadan@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F4EBE14525D5C96F00E3CCA8 /* ic_ramadan@2x.png */; };
-		F4EBE14925D5C96F00E3CCA8 /* ic_ramadan@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = F4EBE14625D5C96F00E3CCA8 /* ic_ramadan@3x.png */; };
+		F475B31C25E055B8004B2BAB /* ic_maccinz_house@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F475B31025E055B8004B2BAB /* ic_maccinz_house@2x.png */; };
+		F475B31F25E055B8004B2BAB /* ic_maccinz_house@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = F475B31325E055B8004B2BAB /* ic_maccinz_house@3x.png */; };
+		F475B32125E055B8004B2BAB /* ic_maccinz_mountains.png in Resources */ = {isa = PBXBuildFile; fileRef = F475B31525E055B8004B2BAB /* ic_maccinz_mountains.png */; };
+		F475B32225E055B8004B2BAB /* ic_maccinz_mountains@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F475B31625E055B8004B2BAB /* ic_maccinz_mountains@2x.png */; };
+		F475B32325E055B8004B2BAB /* ic_maccinz_mountains@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = F475B31725E055B8004B2BAB /* ic_maccinz_mountains@3x.png */; };
+		F475B32525E055B8004B2BAB /* ic_maccinz_house.png in Resources */ = {isa = PBXBuildFile; fileRef = F475B31925E055B8004B2BAB /* ic_maccinz_house.png */; };
+		F481BE7825D91A9C0024519B /* ActivityIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F481BE7725D91A9C0024519B /* ActivityIndicatorView.swift */; };
+		F481BE7F25D920860024519B /* InAppPurchaseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F481BE7E25D920860024519B /* InAppPurchaseService.swift */; };
+		F481BE8325D92C550024519B /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F481BE8225D92C550024519B /* StoreKit.framework */; };
+		F483E08725D969AE00210ABE /* SwiftyStoreKit in Frameworks */ = {isa = PBXBuildFile; productRef = F483E08625D969AE00210ABE /* SwiftyStoreKit */; };
+		F483E08C25D9719700210ABE /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = F483E08B25D9719700210ABE /* Date.swift */; };
+		F4CC2AFF25E27D83005FFEDB /* ic_maccinz_ramadan_night.png in Resources */ = {isa = PBXBuildFile; fileRef = F4CC2AFC25E27D83005FFEDB /* ic_maccinz_ramadan_night.png */; };
+		F4CC2B0025E27D83005FFEDB /* ic_maccinz_ramadan_night@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = F4CC2AFD25E27D83005FFEDB /* ic_maccinz_ramadan_night@3x.png */; };
+		F4CC2B0125E27D83005FFEDB /* ic_maccinz_ramadan_night@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F4CC2AFE25E27D83005FFEDB /* ic_maccinz_ramadan_night@2x.png */; };
+		F4CC2B0625E2848B005FFEDB /* ic_maccinz_day.png in Resources */ = {isa = PBXBuildFile; fileRef = F4CC2B0325E2848B005FFEDB /* ic_maccinz_day.png */; };
+		F4CC2B0725E2848B005FFEDB /* ic_maccinz_day@1x.png in Resources */ = {isa = PBXBuildFile; fileRef = F4CC2B0425E2848B005FFEDB /* ic_maccinz_day@1x.png */; };
+		F4CC2B0825E2848B005FFEDB /* ic_maccinz_day@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F4CC2B0525E2848B005FFEDB /* ic_maccinz_day@2x.png */; };
+		F4CC2B2125E3AECF005FFEDB /* SwiftRichString in Frameworks */ = {isa = PBXBuildFile; productRef = F4CC2B2025E3AECF005FFEDB /* SwiftRichString */; };
+		F4CC2B2925E3E347005FFEDB /* fudul.json in Resources */ = {isa = PBXBuildFile; fileRef = F4CC2B2B25E3E347005FFEDB /* fudul.json */; };
+		F4CC2B2E25E3E36A005FFEDB /* Fadl.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4CC2B2D25E3E36A005FFEDB /* Fadl.swift */; };
+		F4F89ACF25DEFA7C005F6E03 /* Deeplinker.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F89ACE25DEFA7C005F6E03 /* Deeplinker.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -311,7 +332,7 @@
 		9D628A0824623EED00922935 /* PageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PageView.swift; sourceTree = "<group>"; };
 		9D628A0924623EED00922935 /* PageControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PageControl.swift; sourceTree = "<group>"; };
 		9D628A0A24623EED00922935 /* PageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PageViewController.swift; sourceTree = "<group>"; };
-		9D6D1EC7245C16A50060CDB5 /* Label.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Label.swift; sourceTree = "<group>"; };
+		9D6D1EC7245C16A50060CDB5 /* TextLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextLabel.swift; sourceTree = "<group>"; };
 		9D6D1ECC245C254B0060CDB5 /* TextStyles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextStyles.swift; sourceTree = "<group>"; };
 		9D6D1ECE245C27FA0060CDB5 /* UIFont.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIFont.swift; sourceTree = "<group>"; };
 		9D6D1ED1245C43D10060CDB5 /* ZikrPagesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZikrPagesViewModel.swift; sourceTree = "<group>"; };
@@ -363,11 +384,30 @@
 		9DFF69A5245C74BF00FD8C4F /* MainMenuSmallGroup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainMenuSmallGroup.swift; sourceTree = "<group>"; };
 		9DFF69AB245C75FE00FD8C4F /* MainMenuViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMenuViewModel.swift; sourceTree = "<group>"; };
 		9DFF69B2245C8EE900FD8C4F /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
+		F4354D1A25D9AABF0077AEC0 /* NavigationLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationLink.swift; sourceTree = "<group>"; };
+		F43D9A0725D8117100655E82 /* AppIconPackInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIconPackInfoView.swift; sourceTree = "<group>"; };
+		F43D9A0F25D8165900655E82 /* AppIconPackListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIconPackListView.swift; sourceTree = "<group>"; };
 		F46B433B25D7E07900BAB57B /* ScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollView.swift; sourceTree = "<group>"; };
 		F474EC6B25D7B6F200EA4037 /* NavigationButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationButton.swift; sourceTree = "<group>"; };
-		F4EBE14425D5C96F00E3CCA8 /* ic_ramadan.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ic_ramadan.png; sourceTree = "<group>"; };
-		F4EBE14525D5C96F00E3CCA8 /* ic_ramadan@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_ramadan@2x.png"; sourceTree = "<group>"; };
-		F4EBE14625D5C96F00E3CCA8 /* ic_ramadan@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_ramadan@3x.png"; sourceTree = "<group>"; };
+		F475B31025E055B8004B2BAB /* ic_maccinz_house@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_maccinz_house@2x.png"; sourceTree = "<group>"; };
+		F475B31325E055B8004B2BAB /* ic_maccinz_house@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_maccinz_house@3x.png"; sourceTree = "<group>"; };
+		F475B31525E055B8004B2BAB /* ic_maccinz_mountains.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ic_maccinz_mountains.png; sourceTree = "<group>"; };
+		F475B31625E055B8004B2BAB /* ic_maccinz_mountains@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_maccinz_mountains@2x.png"; sourceTree = "<group>"; };
+		F475B31725E055B8004B2BAB /* ic_maccinz_mountains@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_maccinz_mountains@3x.png"; sourceTree = "<group>"; };
+		F475B31925E055B8004B2BAB /* ic_maccinz_house.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ic_maccinz_house.png; sourceTree = "<group>"; };
+		F481BE7725D91A9C0024519B /* ActivityIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityIndicatorView.swift; sourceTree = "<group>"; };
+		F481BE7E25D920860024519B /* InAppPurchaseService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InAppPurchaseService.swift; sourceTree = "<group>"; };
+		F481BE8225D92C550024519B /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		F483E08B25D9719700210ABE /* Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
+		F4CC2AFC25E27D83005FFEDB /* ic_maccinz_ramadan_night.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ic_maccinz_ramadan_night.png; sourceTree = "<group>"; };
+		F4CC2AFD25E27D83005FFEDB /* ic_maccinz_ramadan_night@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_maccinz_ramadan_night@3x.png"; sourceTree = "<group>"; };
+		F4CC2AFE25E27D83005FFEDB /* ic_maccinz_ramadan_night@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_maccinz_ramadan_night@2x.png"; sourceTree = "<group>"; };
+		F4CC2B0325E2848B005FFEDB /* ic_maccinz_day.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ic_maccinz_day.png; sourceTree = "<group>"; };
+		F4CC2B0425E2848B005FFEDB /* ic_maccinz_day@1x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_maccinz_day@1x.png"; sourceTree = "<group>"; };
+		F4CC2B0525E2848B005FFEDB /* ic_maccinz_day@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_maccinz_day@2x.png"; sourceTree = "<group>"; };
+		F4CC2B2A25E3E347005FFEDB /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = ru; path = ru.lproj/fudul.json; sourceTree = "<group>"; };
+		F4CC2B2D25E3E36A005FFEDB /* Fadl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fadl.swift; sourceTree = "<group>"; };
+		F4F89ACE25DEFA7C005F6E03 /* Deeplinker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Deeplinker.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -376,6 +416,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				6CE1729C243D128A007AC48B /* AudioPlayer.framework in Frameworks */,
+				F481BE8325D92C550024519B /* StoreKit.framework in Frameworks */,
+				F483E08725D969AE00210ABE /* SwiftyStoreKit in Frameworks */,
 				F4CC2B2125E3AECF005FFEDB /* SwiftRichString in Frameworks */,
 				9D4DC09924703A4A0061B501 /* SwiftyMarkdown in Frameworks */,
 			);
@@ -397,6 +439,7 @@
 				6C1E5319243BB1360078F6FB /* Azkar */,
 				6CE17296243D128A007AC48B /* AudioPlayer */,
 				6C1E5318243BB1360078F6FB /* Products */,
+				F481BE8125D92C550024519B /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -502,6 +545,7 @@
 				9DD1222F245C699C00BC0AE7 /* Localizable.stringsdict */,
 				9D4DC093246FECA10061B501 /* ahadith.json */,
 				6CE17201243D0EB6007AC48B /* azkar.json */,
+				F4CC2B2B25E3E347005FFEDB /* fudul.json */,
 				6C1E5320243BB1360078F6FB /* Assets.xcassets */,
 			);
 			path = Resources;
@@ -513,6 +557,7 @@
 				9D6DFA68245EBC910091CEF5 /* Preferences.swift */,
 				6CE1726C243D11A1007AC48B /* Player.swift */,
 				9D97E503246F413800CA6F9E /* NotificationsHandler.swift */,
+				F481BE7E25D920860024519B /* InAppPurchaseService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -587,13 +632,14 @@
 				9D1ECBF2245FAABE007659E5 /* Player View */,
 				6CE1728C243D11CD007AC48B /* CircularProgressBar.swift */,
 				6CC630B9243E6F3200906FD1 /* ProgressBar.swift */,
-				9D6D1EC7245C16A50060CDB5 /* Label.swift */,
+				9D6D1EC7245C16A50060CDB5 /* TextLabel.swift */,
 				9D3B4D69245EF0CB00D490FE /* CollapsableSection.swift */,
 				9D2CE83E2460485000AEF730 /* CheckboxView.swift */,
 				9DE122072460B40200823DDD /* BottomSheetView.swift */,
 				9D170F0E246169AE0025088D /* OrientationalLockView.swift */,
 				9D8C3A0C2466BA3F00ACAAC9 /* SafariView.swift */,
 				F474EC6B25D7B6F200EA4037 /* NavigationButton.swift */,
+				F481BE7725D91A9C0024519B /* ActivityIndicatorView.swift */,
 			);
 			path = "Custom Views";
 			sourceTree = "<group>";
@@ -618,6 +664,7 @@
 				9DA737082443024E00869FBB /* MainMenuItem.swift */,
 				6CF1B4F1243BC76400C7321F /* Zikr.swift */,
 				9D4DC091246FE9690061B501 /* Hadith.swift */,
+				F4CC2B2D25E3E36A005FFEDB /* Fadl.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -625,6 +672,7 @@
 		6CF1B4F7243BCC5300C7321F /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				F483E08A25D9718B00210ABE /* Date */,
 				9DA73701244300A800869FBB /* SwiftUI */,
 				6CF1B4F8243BCC5D00C7321F /* ColorPalette.swift */,
 				6CF1B4FE243BCDE000C7321F /* Font.swift */,
@@ -676,6 +724,7 @@
 		9D1ECBFB245FB4DA007659E5 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
+				F43D9A0625D8109100655E82 /* App Icons View */,
 				9D1ECBFC245FB4E7007659E5 /* SettingsView.swift */,
 				9D1ECBFE245FB4ED007659E5 /* SettingsViewModel.swift */,
 				9D1FAD26246B493600895C2C /* ArabicFont.swift */,
@@ -697,7 +746,7 @@
 		9D2CE84224608B9E00AEF730 /* Alternate Icons */ = {
 			isa = PBXGroup;
 			children = (
-				F4EBE14325D5C96F00E3CCA8 /* Ramadan */,
+				F475B30F25E055B8004B2BAB /* maccinz_pack */,
 				9D170F1C2461AB8E0025088D /* Gold */,
 				9D2CE86624608C8600AEF730 /* Dark */,
 				9D2CE84A24608BB900AEF730 /* Ink */,
@@ -763,6 +812,7 @@
 				9D03F227245D98240024A6BC /* UserDefaultsWrapper.swift */,
 				9D8C3A102467317A00ACAAC9 /* Keys.swift */,
 				9D4DC09C24703B010061B501 /* MarkdownProcessor.swift */,
+				F4F89ACE25DEFA7C005F6E03 /* Deeplinker.swift */,
 			);
 			path = Library;
 			sourceTree = "<group>";
@@ -792,6 +842,7 @@
 				9DE122092460F55B00823DDD /* LazyView.swift */,
 				9D97E501246F3DD700CA6F9E /* ConditionalModifier.swift */,
 				F46B433B25D7E07900BAB57B /* ScrollView.swift */,
+				F4354D1A25D9AABF0077AEC0 /* NavigationLink.swift */,
 			);
 			path = SwiftUI;
 			sourceTree = "<group>";
@@ -835,14 +886,48 @@
 			path = Fonts;
 			sourceTree = "<group>";
 		};
-		F4EBE14325D5C96F00E3CCA8 /* Ramadan */ = {
+		F43D9A0625D8109100655E82 /* App Icons View */ = {
 			isa = PBXGroup;
 			children = (
-				F4EBE14425D5C96F00E3CCA8 /* ic_ramadan.png */,
-				F4EBE14525D5C96F00E3CCA8 /* ic_ramadan@2x.png */,
-				F4EBE14625D5C96F00E3CCA8 /* ic_ramadan@3x.png */,
+				F43D9A0725D8117100655E82 /* AppIconPackInfoView.swift */,
+				F43D9A0F25D8165900655E82 /* AppIconPackListView.swift */,
 			);
-			path = Ramadan;
+			path = "App Icons View";
+			sourceTree = "<group>";
+		};
+		F475B30F25E055B8004B2BAB /* maccinz_pack */ = {
+			isa = PBXGroup;
+			children = (
+				F4CC2B0325E2848B005FFEDB /* ic_maccinz_day.png */,
+				F4CC2B0425E2848B005FFEDB /* ic_maccinz_day@1x.png */,
+				F4CC2B0525E2848B005FFEDB /* ic_maccinz_day@2x.png */,
+				F4CC2AFC25E27D83005FFEDB /* ic_maccinz_ramadan_night.png */,
+				F4CC2AFE25E27D83005FFEDB /* ic_maccinz_ramadan_night@2x.png */,
+				F4CC2AFD25E27D83005FFEDB /* ic_maccinz_ramadan_night@3x.png */,
+				F475B31025E055B8004B2BAB /* ic_maccinz_house@2x.png */,
+				F475B31325E055B8004B2BAB /* ic_maccinz_house@3x.png */,
+				F475B31525E055B8004B2BAB /* ic_maccinz_mountains.png */,
+				F475B31625E055B8004B2BAB /* ic_maccinz_mountains@2x.png */,
+				F475B31725E055B8004B2BAB /* ic_maccinz_mountains@3x.png */,
+				F475B31925E055B8004B2BAB /* ic_maccinz_house.png */,
+			);
+			path = maccinz_pack;
+			sourceTree = "<group>";
+		};
+		F481BE8125D92C550024519B /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				F481BE8225D92C550024519B /* StoreKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		F483E08A25D9718B00210ABE /* Date */ = {
+			isa = PBXGroup;
+			children = (
+				F483E08B25D9719700210ABE /* Date.swift */,
+			);
+			path = Date;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -876,6 +961,7 @@
 			name = Azkar;
 			packageProductDependencies = (
 				9D4DC09824703A4A0061B501 /* SwiftyMarkdown */,
+				F483E08625D969AE00210ABE /* SwiftyStoreKit */,
 				F4CC2B2025E3AECF005FFEDB /* SwiftRichString */,
 			);
 			productName = Azkar;
@@ -929,6 +1015,7 @@
 			mainGroup = 6C1E530E243BB1360078F6FB;
 			packageReferences = (
 				9D4DC09724703A4A0061B501 /* XCRemoteSwiftPackageReference "SwiftyMarkdown" */,
+				F483E08525D969AE00210ABE /* XCRemoteSwiftPackageReference "SwiftyStoreKit" */,
 				F4CC2B1F25E3AECF005FFEDB /* XCRemoteSwiftPackageReference "SwiftRichString" */,
 			);
 			productRefGroup = 6C1E5318243BB1360078F6FB /* Products */;
@@ -948,6 +1035,7 @@
 			files = (
 				6CC630CC243E762600906FD1 /* evening10.mp3 in Resources */,
 				9D6DFA71245EC0680091CEF5 /* after-salah4.mp3 in Resources */,
+				F4CC2B0825E2848B005FFEDB /* ic_maccinz_day@2x.png in Resources */,
 				9D6DFA70245EC0680091CEF5 /* after-salah3.mp3 in Resources */,
 				9D6DFA8D245ED1FC0091CEF5 /* other15.mp3 in Resources */,
 				6CE17202243D0EB6007AC48B /* azkar.json in Resources */,
@@ -962,8 +1050,9 @@
 				6CC630B5243E69CF00906FD1 /* morning6.mp3 in Resources */,
 				6CC630CB243E762600906FD1 /* evening1.mp3 in Resources */,
 				6CC630B1243E69CF00906FD1 /* morning8.mp3 in Resources */,
-				F4EBE14725D5C96F00E3CCA8 /* ic_ramadan.png in Resources */,
+				F4CC2B0025E27D83005FFEDB /* ic_maccinz_ramadan_night@3x.png in Resources */,
 				6CC630B4243E69CF00906FD1 /* morning1.mp3 in Resources */,
+				F475B32325E055B8004B2BAB /* ic_maccinz_mountains@3x.png in Resources */,
 				6CC630B0243E69CF00906FD1 /* morning7.mp3 in Resources */,
 				9D2CE84E24608BB900AEF730 /* ic_ink.png in Resources */,
 				9D6DFA9D245ED1FC0091CEF5 /* other6.mp3 in Resources */,
@@ -972,7 +1061,6 @@
 				9D2CE84F24608BB900AEF730 /* ic_ink@2x.png in Resources */,
 				6CC630C8243E762600906FD1 /* evening8.mp3 in Resources */,
 				9D6DFA74245EC0680091CEF5 /* after-salah6.mp3 in Resources */,
-				F4EBE14925D5C96F00E3CCA8 /* ic_ramadan@3x.png in Resources */,
 				9D6DFA9B245ED1FC0091CEF5 /* other7.mp3 in Resources */,
 				6CC630D0243E762600906FD1 /* evening6.mp3 in Resources */,
 				9D6DFA8C245ED1FC0091CEF5 /* other3.mp3 in Resources */,
@@ -980,32 +1068,40 @@
 				9D1ECBFA245FB203007659E5 /* AdobeArabic-Regular.otf in Resources */,
 				9D6DFA95245ED1FC0091CEF5 /* other5.mp3 in Resources */,
 				9D6DFA9C245ED1FC0091CEF5 /* other4.mp3 in Resources */,
+				F4CC2AFF25E27D83005FFEDB /* ic_maccinz_ramadan_night.png in Resources */,
+				F475B31C25E055B8004B2BAB /* ic_maccinz_house@2x.png in Resources */,
 				6CC630AA243E69CF00906FD1 /* morning9.mp3 in Resources */,
 				6CC630CE243E762600906FD1 /* evening7.mp3 in Resources */,
 				6CC630B3243E69CF00906FD1 /* morning3.mp3 in Resources */,
 				9D4DC094246FECA10061B501 /* ahadith.json in Resources */,
+				F475B32125E055B8004B2BAB /* ic_maccinz_mountains.png in Resources */,
 				9D6DFA92245ED1FC0091CEF5 /* other10.mp3 in Resources */,
 				9D6DFA8F245ED1FC0091CEF5 /* other19.mp3 in Resources */,
+				F475B32225E055B8004B2BAB /* ic_maccinz_mountains@2x.png in Resources */,
 				9D6DFA94245ED1FC0091CEF5 /* other8.mp3 in Resources */,
 				9D6DFA91245ED1FC0091CEF5 /* other12.mp3 in Resources */,
+				F4CC2B0125E27D83005FFEDB /* ic_maccinz_ramadan_night@2x.png in Resources */,
 				9D6DFA73245EC0680091CEF5 /* after-salah1.mp3 in Resources */,
 				9D2CE85024608BB900AEF730 /* ic_ink@3x.png in Resources */,
 				6CC630B6243E69CF00906FD1 /* morning4.mp3 in Resources */,
 				6CC630AB243E69CF00906FD1 /* morning2.mp3 in Resources */,
 				6CC630AD243E69CF00906FD1 /* morning10.mp3 in Resources */,
 				9D170F222461AB8E0025088D /* ic_gold.png in Resources */,
+				F475B32525E055B8004B2BAB /* ic_maccinz_house.png in Resources */,
 				9D2CE86B24608C8600AEF730 /* ic_dark_night@2x.png in Resources */,
 				9D6DFA93245ED1FC0091CEF5 /* other17.mp3 in Resources */,
 				9D2CE86C24608C8600AEF730 /* ic_dark_night.png in Resources */,
 				9D6DFA97245ED1FC0091CEF5 /* other11.mp3 in Resources */,
 				6CC630C7243E762600906FD1 /* evening2.mp3 in Resources */,
 				9DD1222D245C699C00BC0AE7 /* Localizable.stringsdict in Resources */,
+				F4CC2B0725E2848B005FFEDB /* ic_maccinz_day@1x.png in Resources */,
+				F4CC2B2925E3E347005FFEDB /* fudul.json in Resources */,
 				9D6DFA72245EC0680091CEF5 /* after-salah2.mp3 in Resources */,
 				9D170F202461AB8E0025088D /* ic_gold@2x.png in Resources */,
 				9D6DFA9A245ED1FC0091CEF5 /* other9.mp3 in Resources */,
+				F475B31F25E055B8004B2BAB /* ic_maccinz_house@3x.png in Resources */,
 				9D6DFA90245ED1FC0091CEF5 /* other18.mp3 in Resources */,
 				6C1E5324243BB1360078F6FB /* Preview Assets.xcassets in Resources */,
-				F4EBE14825D5C96F00E3CCA8 /* ic_ramadan@2x.png in Resources */,
 				6C1E5321243BB1360078F6FB /* Assets.xcassets in Resources */,
 				9D170F212461AB8E0025088D /* ic_gold@3x.png in Resources */,
 				9D8C3A0F2467165800ACAAC9 /* Launch Screen.storyboard in Resources */,
@@ -1016,6 +1112,7 @@
 				9D2CE86A24608C8600AEF730 /* ic_dark_night@3x.png in Resources */,
 				9D6DFA96245ED1FC0091CEF5 /* other2.mp3 in Resources */,
 				9D6DFA8B245ED1FC0091CEF5 /* other13.mp3 in Resources */,
+				F4CC2B0625E2848B005FFEDB /* ic_maccinz_day.png in Resources */,
 				6CC630CF243E762600906FD1 /* evening4.mp3 in Resources */,
 				9D6DFA98245ED1FC0091CEF5 /* other14.mp3 in Resources */,
 				9D1ECBF8245FB1CD007659E5 /* Damascus.ttc in Resources */,
@@ -1043,12 +1140,15 @@
 				6CF1B4F6243BCB8200C7321F /* ZikrView.swift in Sources */,
 				9DFF69AC245C75FE00FD8C4F /* MainMenuViewModel.swift in Sources */,
 				9D628A0B24623EED00922935 /* PageView.swift in Sources */,
+				F481BE7825D91A9C0024519B /* ActivityIndicatorView.swift in Sources */,
 				9DA7370D2443029600869FBB /* String.swift in Sources */,
 				9D34FFBD246B2C8000A008A0 /* ContentSizeCategory.swift in Sources */,
-				9D6D1EC8245C16A50060CDB5 /* Label.swift in Sources */,
+				9D6D1EC8245C16A50060CDB5 /* TextLabel.swift in Sources */,
 				9D2CE83F2460485000AEF730 /* CheckboxView.swift in Sources */,
+				F483E08C25D9719700210ABE /* Date.swift in Sources */,
 				9D1ECBFD245FB4E7007659E5 /* SettingsView.swift in Sources */,
 				9DFF69A8245C74BF00FD8C4F /* MainMenuLargeGroup.swift in Sources */,
+				F43D9A1025D8165900655E82 /* AppIconPackListView.swift in Sources */,
 				9D628A0C24623EED00922935 /* PageControl.swift in Sources */,
 				9DE122082460B40200823DDD /* BottomSheetView.swift in Sources */,
 				9D2CE83D2460470C00AEF730 /* ItemPickerView.swift in Sources */,
@@ -1060,15 +1160,19 @@
 				9D3B4D6A245EF0CB00D490FE /* CollapsableSection.swift in Sources */,
 				9DFF69A7245C74BF00FD8C4F /* MainMenuGroupModel.swift in Sources */,
 				9D8C3A0D2466BA3F00ACAAC9 /* SafariView.swift in Sources */,
+				F481BE7F25D920860024519B /* InAppPurchaseService.swift in Sources */,
 				9D4DC096246FECAD0061B501 /* HadithViewModel.swift in Sources */,
+				F4F89ACF25DEFA7C005F6E03 /* Deeplinker.swift in Sources */,
 				9D170F0F246169AE0025088D /* OrientationalLockView.swift in Sources */,
 				9D0239152462EB360061D62D /* AzkarListView.swift in Sources */,
 				6CF1B4F9243BCC5D00C7321F /* ColorPalette.swift in Sources */,
+				F4CC2B2E25E3E36A005FFEDB /* Fadl.swift in Sources */,
 				6C1E531B243BB1360078F6FB /* AppDelegate.swift in Sources */,
 				6CC630BA243E6F3200906FD1 /* ProgressBar.swift in Sources */,
 				9D093388246358E9003DDCF4 /* Sequence.swift in Sources */,
 				9DA73703244300B400869FBB /* SwiftUI-Core.swift in Sources */,
 				9D8C3A112467317A00ACAAC9 /* Keys.swift in Sources */,
+				F43D9A0825D8117100655E82 /* AppIconPackInfoView.swift in Sources */,
 				6CF1B4FF243BCDE000C7321F /* Font.swift in Sources */,
 				9DE67ED9246416270041484D /* UIDevice.swift in Sources */,
 				9D129534245CB87A00C0F099 /* AppInfoView.swift in Sources */,
@@ -1095,6 +1199,7 @@
 				6C1E531D243BB1360078F6FB /* SceneDelegate.swift in Sources */,
 				9D03F226245D96360024A6BC /* AppInfoViewModel.swift in Sources */,
 				9D4DC090246FE9610061B501 /* HadithView.swift in Sources */,
+				F4354D1B25D9AABF0077AEC0 /* NavigationLink.swift in Sources */,
 				9D6DFA69245EBC910091CEF5 /* Preferences.swift in Sources */,
 				6CE1728E243D11CD007AC48B /* CircularProgressBar.swift in Sources */,
 			);
@@ -1160,6 +1265,14 @@
 				9DFF69B2245C8EE900FD8C4F /* ru */,
 			);
 			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		F4CC2B2B25E3E347005FFEDB /* fudul.json */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F4CC2B2A25E3E347005FFEDB /* ru */,
+			);
+			name = fudul.json;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -1292,7 +1405,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Mac Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 12;
+				CURRENT_PROJECT_VERSION = 17;
 				DEVELOPMENT_ASSET_PATHS = "\"Azkar/Preview Content\"";
 				DEVELOPMENT_TEAM = 486STKKP6Y;
 				ENABLE_PREVIEWS = YES;
@@ -1303,6 +1416,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "io.jawziyya.azkar-app";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "match Development io.jawziyya.azkar-app";
@@ -1323,7 +1437,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "3rd Party Mac Developer Application";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 12;
+				CURRENT_PROJECT_VERSION = 17;
 				DEVELOPMENT_ASSET_PATHS = "\"Azkar/Preview Content\"";
 				DEVELOPMENT_TEAM = 486STKKP6Y;
 				ENABLE_PREVIEWS = YES;
@@ -1334,11 +1448,13 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "io.jawziyya.azkar-app";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "match AppStore io.jawziyya.azkar-app";
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
 				SUPPORTS_MACCATALYST = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = SHOW_AZKAR_SOURCES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2,6";
 			};
@@ -1348,10 +1464,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 17;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 17;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = AudioPlayer/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -1375,10 +1491,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 17;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 17;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = AudioPlayer/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -1437,6 +1553,14 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 1.2.1;
+			};
+		};
+		F483E08525D969AE00210ABE /* XCRemoteSwiftPackageReference "SwiftyStoreKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/bizz84/SwiftyStoreKit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.16.3;
 			};
 		};
 		F4CC2B1F25E3AECF005FFEDB /* XCRemoteSwiftPackageReference "SwiftRichString" */ = {

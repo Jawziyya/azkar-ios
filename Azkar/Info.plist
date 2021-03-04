@@ -2,8 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>LSApplicationCategoryType</key>
-	<string>public.app-category.reference</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>ru</string>
 	<key>CFBundleExecutable</key>
@@ -30,9 +28,38 @@
 				<key>UIPrerenderedIcon</key>
 				<false/>
 			</dict>
+			<key>maccinz_day</key>
 			<dict>
 				<key>CFBundleIconFiles</key>
 				<array>
+					<string>ic_maccinz_day</string>
+				</array>
+				<key>UIPrerenderedIcon</key>
+				<false/>
+			</dict>
+			<key>maccinz_house</key>
+			<dict>
+				<key>CFBundleIconFiles</key>
+				<array>
+					<string>ic_maccinz_house</string>
+				</array>
+				<key>UIPrerenderedIcon</key>
+				<false/>
+			</dict>
+			<key>maccinz_mountains</key>
+			<dict>
+				<key>CFBundleIconFiles</key>
+				<array>
+					<string>ic_maccinz_mountains</string>
+				</array>
+				<key>UIPrerenderedIcon</key>
+				<false/>
+			</dict>
+			<key>maccinz_ramadan_night</key>
+			<dict>
+				<key>CFBundleIconFiles</key>
+				<array>
+					<string>ic_maccinz_ramadan_night</string>
 				</array>
 				<key>UIPrerenderedIcon</key>
 				<false/>
@@ -57,11 +84,13 @@
 	<key>CFBundlePackageType</key>
 	<string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0</string>
+	<string>2.0</string>
 	<key>CFBundleVersion</key>
-	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<string>17</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
+	<key>LSApplicationCategoryType</key>
+	<string>public.app-category.reference</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>UIAppFonts</key>

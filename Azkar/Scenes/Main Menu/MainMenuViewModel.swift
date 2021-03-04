@@ -44,6 +44,10 @@ final class MainMenuViewModel: ObservableObject {
     let preferences: Preferences
     let settingsViewModel: SettingsViewModel
 
+    var appIconPackListViewModel: AppIconPackListViewModel {
+        .init(preferences: preferences)
+    }
+
     private var cancellabels = Set<AnyCancellable>()
 
     private lazy var notificationsAccessMenuItem: AzkarMenuOtherItem = {
@@ -102,14 +106,6 @@ final class MainMenuViewModel: ObservableObject {
             }
         }
 
-        $selectedNotificationCategory
-            .map { [unowned self] category in
-                let sectionModels = self.dayNightSectionModels + self.otherAzkarModels
-                let targetModel = sectionModels.first(where: { $0.category.rawValue == category })
-                return targetModel
-            }
-            .assign(to: \.selectedMenuItem, on: self)
-            .store(in: &cancellabels)
     }
 
     func azkarForCategory(_ category: ZikrCategory) -> [ZikrViewModel] {

@@ -27,6 +27,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         notificationsHandler.removeDeliveredNotifications()
 
         application.beginReceivingRemoteControlEvents()
+        InAppPurchaseService.shared.completeTransactions()
         registerUserDefaults()
 
         UITableViewCell.appearance().selectionStyle = .none

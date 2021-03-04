@@ -13,6 +13,7 @@ import Combine
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
+    let deeplinker = Deeplinker()
 
     private var cancellabels = Set<AnyCancellable>()
 
@@ -29,8 +30,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let mainViewModel = MainMenuViewModel(preferences: preferences, player: Player(player: audioPlayer))
 
         notificationsHandler
-            .selectedNotificationId
-            .assign(to: \.selectedNotificationCategory, on: mainViewModel)
+            .selectedNotificationCategory
+            .map { id -> Deeplinker.Route? in
+                guard let category = ZikrCategory(rawValue: id) else {
+                    return nil
+                }
+                return Deeplinker.Route.azkar(category)
+            }
+            .removeDuplicates()
+            .assign(to: \.route, on: deeplinker)
             .store(in: &cancellabels)
 
         let mainView = MainMenuView(viewModel: mainViewModel)

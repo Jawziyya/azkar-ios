@@ -11,12 +11,13 @@
 "common.zikr" = "Зикр";
 "common.version" = "Версия";
 "common.share-app" = "Поделиться приложением";
+"common.restore" = "Восстановить";
 
 "root.pick-section" = "Выберите раздел";
 "root.about" = "О приложении";
 "root.settings" = "Настройки";
 
-"about.credits.sources-header" = "🗃 Перевод, транскрипция, аудиофайлы озвучки";
+"about.credits.sources-header" = "🗃 Материалы";
 "about.credits.graphics-header" = "🎨 Графические материалы и шрифты";
 "about.credits.open-source-libraries-header" = "🛠 Библиотеки с открытым кодом";
 
@@ -57,6 +58,11 @@
 "settings.icon.list.dark_night" = "Тёмная ночь";
 "settings.icon.list.ramadan" = "Рамадан";
 
+"settings.icon.list.maccinz_house" = "Праздничная атмосфера";
+"settings.icon.list.maccinz_mountains" = "Высоко в горах";
+"settings.icon.list.maccinz_ramadan_night" = "Ночь в рамадан";
+"settings.icon.list.maccinz_day" = "Солнечный день";
+
 "settings.notifications.title" = "Уведомления";
 "settings.notifications.switch-label" = "Напоминать об утренних и вечерних азкарах";
 "settings.notifications.morning-option-label" = "Напоминание об утренних азкарах";
@@ -67,9 +73,18 @@
 "settings.text.arabic-text-font" = "Шрифт арабского текста";
 "settings.text.font-size" = "Размер текста";
 "settings.text.standard-font-name" = "Стандартный iOS";
+"settings.text.show-tashkeel" = "Отображать огласовки";
 
 "read.translation" = "перевод";
 "read.transcription" = "транскрипция";
 "read.repeats" = "повторения";
 "read.source" = "источник";
 "read.narrated-by" = "привёл";
+
+"icon_pack.standard.title" = "Стандартный набор значков";
+"icon_pack.standard.description" = "";
+
+"icon_pack.info.purchased-message" = "Вы приобрели этот набор 🎉";
+"icon_pack.maccinz.title" = "Набор значков «Иллюстрации»";
+"icon_pack.maccinz.description" = "Мягкие тона, атмосфера домашнего уюта и спокойствия.";
+

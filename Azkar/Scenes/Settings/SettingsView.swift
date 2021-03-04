@@ -56,10 +56,7 @@ struct SettingsView: View {
     }
 
     var iconPicker: some View {
-        ItemPickerView(
-            selection: $viewModel.preferences.appIcon,
-            items: AppIcon.availableIcons
-        )
+        AppIconPackListView(viewModel: viewModel.appIconPackListViewModel)
     }
 
     // MARK: - Notifications

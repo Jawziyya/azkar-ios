@@ -18,6 +18,7 @@ enum Keys {
     static let morningNotificationsTime = "kMorningNotificationsTime"
     static let eveningNotificationsTime = "kEveningNotificationsTime"
     static let appIcon = "kAppIcon"
+    static let purchasedIconPacks = "kPurchasedIconPacks"
 
     static let useSystemFontSize = "kUseSystemFontSize"
     static let sizeCategory = "kSizeCategory"

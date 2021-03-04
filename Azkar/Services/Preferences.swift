@@ -52,6 +52,9 @@ final class Preferences {
     @Preference(Keys.useSystemFontSize, defaultValue: true)
     var useSystemFontSize
 
+    @Preference(Keys.purchasedIconPacks, defaultValue: [AppIconPack.standard])
+    var purchasedIconPacks
+
     @Preference(Keys.sizeCategory, defaultValue: ContentSizeCategory.medium)
     var sizeCategory
 
