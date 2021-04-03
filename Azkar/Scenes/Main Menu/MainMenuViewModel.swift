@@ -103,9 +103,7 @@ final class MainMenuViewModel: ObservableObject {
                 default:
                     break
                 }
-            }
-        }
-
+            })
     }
 
     func azkarForCategory(_ category: ZikrCategory) -> [ZikrViewModel] {
