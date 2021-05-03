@@ -29,10 +29,25 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         let mainViewModel = MainMenuViewModel(preferences: preferences, player: Player(player: audioPlayer))
 
-        notificationsHandler
+        let zikrCategory = notificationsHandler
             .selectedNotificationCategory
-            .map { id -> Deeplinker.Route? in
+            .map { id -> ZikrCategory? in
                 guard let category = ZikrCategory(rawValue: id) else {
+                    return nil
+                }
+                return category
+            }
+
+        zikrCategory
+            .removeDuplicates()
+            .receive(on: DispatchQueue.main)
+            .subscribe(on: DispatchQueue.main)
+            .assign(to: \.selectedAzkarItem, on: mainViewModel)
+            .store(in: &cancellabels)
+
+        zikrCategory
+            .map { category -> Deeplinker.Route? in
+                guard let category = category else {
                     return nil
                 }
                 return Deeplinker.Route.azkar(category)

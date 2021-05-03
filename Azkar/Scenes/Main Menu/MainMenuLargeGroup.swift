@@ -4,7 +4,7 @@ import SwiftUI
 
 struct MainMenuLargeGroup: View {
 
-	var item: AzkarMenuItem
+	var item: AzkarMenuType
 
 	var body: some View {
         VStack(alignment: .leading, spacing: 16) {

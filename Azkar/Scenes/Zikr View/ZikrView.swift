@@ -11,6 +11,7 @@ import SwiftUI
 struct ZikrView: View {
 
     @ObservedObject var viewModel: ZikrViewModel
+    var showTitle: Bool?
 
     @State private var textHeight: CGFloat = 0
     @State private var translationHeight: CGFloat = 0
@@ -25,7 +26,7 @@ struct ZikrView: View {
         ScrollView {
             self.getContent()
         }
-        .if(UIDevice.current.isIpad) { view in
+        .if(showTitle ?? UIDevice.current.isIpad) { view in
             view.navigationTitle(viewModel.title)
         }
         .background(Color.background.edgesIgnoringSafeArea(.all))

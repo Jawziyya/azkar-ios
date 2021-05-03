@@ -87,6 +87,22 @@ struct MainMenuView: View {
 
             // MARK: - Other Azkar
             VStack(spacing: 0) {
+                if Date().isRamadan {
+                    Button(action: {
+                        self.viewModel.selectedZikr = self.viewModel.fastingDua
+                    }, label: {
+                        HStack {
+                            MainMenuSmallGroup(item: AzkarMenuItem(category: ZikrCategory.other, imageName: "🌕", title: "Молитва разговения", color: Color.blue, count: nil, iconType: .emoji))
+                            Image(systemName: "chevron.right")
+                                .foregroundColor(Color.tertiaryText)
+                                .padding(.trailing)
+                        }
+                        .navigate(using: $viewModel.selectedZikr, destination: getZikrView(_:))
+                        .padding(10)
+                        .background(itemsBackgroundColor)
+                    })
+                }
+
                 ForEach(viewModel.otherAzkarModels) { item in
                     Button {
                         self.viewModel.selectedAzkarListItem = item.category
@@ -169,6 +185,12 @@ struct MainMenuView: View {
             alignment: .center
         )
         .edgesIgnoringSafeArea(.all)
+    }
+
+    @ViewBuilder
+    private func getZikrView(_ zikr: Zikr) -> some View {
+        ZikrView(viewModel: viewModel.getZikrViewModel(zikr))
+            .navigationBarTitleDisplayMode(.inline)
     }
 
     @ViewBuilder

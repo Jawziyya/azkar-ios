@@ -24,7 +24,8 @@ struct MainMenuSmallGroup: View {
                 Text(item.imageName)
                     .minimumScaleFactor(0.1)
                     .font(Font.largeTitle)
-                    .frame(maxWidth: 35, maxHeight: 35)
+                    .padding(4)
+                    .frame(width: 40, height: 40)
             }
 
             HStack {
@@ -65,7 +66,7 @@ struct GroupSmall_Previews: PreviewProvider {
             MainMenuSmallGroup(item: AzkarMenuItem.demo)
             MainMenuSmallGroup(item: AzkarMenuItem.noCountDemo)
             MainMenuSmallGroup(item: AzkarMenuItem.noCountDemo, flip: true)
-            MainMenuSmallGroup(item: AzkarMenuOtherItem(groupType: .notificationsAccess, imageName: "🌍", title: "Title", color: Color.red, iconType: .emoji), flip: true)
+            MainMenuSmallGroup(item: AzkarMenuOtherItem(groupType: .notificationsAccess, imageName: "🌍", title: "Title", color: Color.red, iconType: .emoji), flip: false)
             MainMenuSmallGroup(item: AzkarMenuOtherItem(groupType: .notificationsAccess, imageName: "🌗", title: "Священный месяц рамадан 1442 г.х. (2021 г.)", color: Color.red, iconType: .emoji), flip: true)
         }
         .previewLayout(.fixed(width: 300, height: 400))

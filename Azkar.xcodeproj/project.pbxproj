@@ -182,6 +182,7 @@
 		F481BE7825D91A9C0024519B /* ActivityIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F481BE7725D91A9C0024519B /* ActivityIndicatorView.swift */; };
 		F481BE7F25D920860024519B /* InAppPurchaseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F481BE7E25D920860024519B /* InAppPurchaseService.swift */; };
 		F481BE8325D92C550024519B /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F481BE8225D92C550024519B /* StoreKit.framework */; };
+		F482031626226BB00080F9AE /* other21.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = F482031526226BB00080F9AE /* other21.mp3 */; };
 		F483E08725D969AE00210ABE /* SwiftyStoreKit in Frameworks */ = {isa = PBXBuildFile; productRef = F483E08625D969AE00210ABE /* SwiftyStoreKit */; };
 		F483E08C25D9719700210ABE /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = F483E08B25D9719700210ABE /* Date.swift */; };
 		F4CC2AFF25E27D83005FFEDB /* ic_maccinz_ramadan_night.png in Resources */ = {isa = PBXBuildFile; fileRef = F4CC2AFC25E27D83005FFEDB /* ic_maccinz_ramadan_night.png */; };
@@ -193,6 +194,8 @@
 		F4CC2B2125E3AECF005FFEDB /* SwiftRichString in Frameworks */ = {isa = PBXBuildFile; productRef = F4CC2B2025E3AECF005FFEDB /* SwiftRichString */; };
 		F4CC2B2925E3E347005FFEDB /* fudul.json in Resources */ = {isa = PBXBuildFile; fileRef = F4CC2B2B25E3E347005FFEDB /* fudul.json */; };
 		F4CC2B2E25E3E36A005FFEDB /* Fadl.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4CC2B2D25E3E36A005FFEDB /* Fadl.swift */; };
+		F4E922A3261934470083716F /* AzkarTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E922A2261934470083716F /* AzkarTests.swift */; };
+		F4E922AE261934580083716F /* Date+Ramadan.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E922AD261934580083716F /* Date+Ramadan.swift */; };
 		F4F89ACF25DEFA7C005F6E03 /* Deeplinker.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F89ACE25DEFA7C005F6E03 /* Deeplinker.swift */; };
 /* End PBXBuildFile section */
 
@@ -203,6 +206,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 6CE17294243D128A007AC48B;
 			remoteInfo = AudioPlayer;
+		};
+		F4E922A5261934470083716F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6C1E530F243BB1360078F6FB /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 6C1E5316243BB1360078F6FB;
+			remoteInfo = Azkar;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -398,6 +408,7 @@
 		F481BE7725D91A9C0024519B /* ActivityIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityIndicatorView.swift; sourceTree = "<group>"; };
 		F481BE7E25D920860024519B /* InAppPurchaseService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InAppPurchaseService.swift; sourceTree = "<group>"; };
 		F481BE8225D92C550024519B /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		F482031526226BB00080F9AE /* other21.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = other21.mp3; sourceTree = "<group>"; };
 		F483E08B25D9719700210ABE /* Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
 		F4CC2AFC25E27D83005FFEDB /* ic_maccinz_ramadan_night.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ic_maccinz_ramadan_night.png; sourceTree = "<group>"; };
 		F4CC2AFD25E27D83005FFEDB /* ic_maccinz_ramadan_night@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_maccinz_ramadan_night@3x.png"; sourceTree = "<group>"; };
@@ -407,6 +418,10 @@
 		F4CC2B0525E2848B005FFEDB /* ic_maccinz_day@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_maccinz_day@2x.png"; sourceTree = "<group>"; };
 		F4CC2B2A25E3E347005FFEDB /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = ru; path = ru.lproj/fudul.json; sourceTree = "<group>"; };
 		F4CC2B2D25E3E36A005FFEDB /* Fadl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fadl.swift; sourceTree = "<group>"; };
+		F4E922A0261934470083716F /* AzkarTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AzkarTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		F4E922A2261934470083716F /* AzkarTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AzkarTests.swift; sourceTree = "<group>"; };
+		F4E922A4261934470083716F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F4E922AD261934580083716F /* Date+Ramadan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Ramadan.swift"; sourceTree = "<group>"; };
 		F4F89ACE25DEFA7C005F6E03 /* Deeplinker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Deeplinker.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -430,6 +445,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		F4E9229D261934470083716F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -438,6 +460,7 @@
 			children = (
 				6C1E5319243BB1360078F6FB /* Azkar */,
 				6CE17296243D128A007AC48B /* AudioPlayer */,
+				F4E922A1261934470083716F /* AzkarTests */,
 				6C1E5318243BB1360078F6FB /* Products */,
 				F481BE8125D92C550024519B /* Frameworks */,
 			);
@@ -448,6 +471,7 @@
 			children = (
 				6C1E5317243BB1360078F6FB /* Azkar.app */,
 				6CE17295243D128A007AC48B /* AudioPlayer.framework */,
+				F4E922A0261934470083716F /* AzkarTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -500,6 +524,7 @@
 				9D6DFA7C245ED1FB0091CEF5 /* other18.mp3 */,
 				9D6DFA7B245ED1FB0091CEF5 /* other19.mp3 */,
 				9D6DFA85245ED1FB0091CEF5 /* other20.mp3 */,
+				F482031526226BB00080F9AE /* other21.mp3 */,
 				6CC630C0243E762600906FD1 /* evening1.mp3 */,
 				6CC630BC243E762600906FD1 /* evening2.mp3 */,
 				6CC630C2243E762600906FD1 /* evening3.mp3 */,
@@ -930,6 +955,24 @@
 			path = Date;
 			sourceTree = "<group>";
 		};
+		F4E922A1261934470083716F /* AzkarTests */ = {
+			isa = PBXGroup;
+			children = (
+				F4E922AC2619344D0083716F /* Extensions */,
+				F4E922A2261934470083716F /* AzkarTests.swift */,
+				F4E922A4261934470083716F /* Info.plist */,
+			);
+			path = AzkarTests;
+			sourceTree = "<group>";
+		};
+		F4E922AC2619344D0083716F /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				F4E922AD261934580083716F /* Date+Ramadan.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -986,13 +1029,31 @@
 			productReference = 6CE17295243D128A007AC48B /* AudioPlayer.framework */;
 			productType = "com.apple.product-type.framework";
 		};
+		F4E9229F261934470083716F /* AzkarTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F4E922A9261934470083716F /* Build configuration list for PBXNativeTarget "AzkarTests" */;
+			buildPhases = (
+				F4E9229C261934470083716F /* Sources */,
+				F4E9229D261934470083716F /* Frameworks */,
+				F4E9229E261934470083716F /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F4E922A6261934470083716F /* PBXTargetDependency */,
+			);
+			name = AzkarTests;
+			productName = AzkarTests;
+			productReference = F4E922A0261934470083716F /* AzkarTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
 		6C1E530F243BB1360078F6FB /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1140;
+				LastSwiftUpdateCheck = 1240;
 				LastUpgradeCheck = 1230;
 				ORGANIZATIONNAME = "Al Jawziyya";
 				TargetAttributes = {
@@ -1001,6 +1062,10 @@
 					};
 					6CE17294243D128A007AC48B = {
 						CreatedOnToolsVersion = 11.4;
+					};
+					F4E9229F261934470083716F = {
+						CreatedOnToolsVersion = 12.4;
+						TestTargetID = 6C1E5316243BB1360078F6FB;
 					};
 				};
 			};
@@ -1024,6 +1089,7 @@
 			targets = (
 				6C1E5316243BB1360078F6FB /* Azkar */,
 				6CE17294243D128A007AC48B /* AudioPlayer */,
+				F4E9229F261934470083716F /* AzkarTests */,
 			);
 		};
 /* End PBXProject section */
@@ -1062,6 +1128,7 @@
 				6CC630C8243E762600906FD1 /* evening8.mp3 in Resources */,
 				9D6DFA74245EC0680091CEF5 /* after-salah6.mp3 in Resources */,
 				9D6DFA9B245ED1FC0091CEF5 /* other7.mp3 in Resources */,
+				F482031626226BB00080F9AE /* other21.mp3 in Resources */,
 				6CC630D0243E762600906FD1 /* evening6.mp3 in Resources */,
 				9D6DFA8C245ED1FC0091CEF5 /* other3.mp3 in Resources */,
 				6CC630AE243E69CF00906FD1 /* morning12.mp3 in Resources */,
@@ -1121,6 +1188,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		6CE17293243D128A007AC48B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F4E9229E261934470083716F /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1240,6 +1314,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		F4E9229C261934470083716F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F4E922AE261934580083716F /* Date+Ramadan.swift in Sources */,
+				F4E922A3261934470083716F /* AzkarTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -1247,6 +1330,11 @@
 			isa = PBXTargetDependency;
 			target = 6CE17294243D128A007AC48B /* AudioPlayer */;
 			targetProxy = 6CE1729A243D128A007AC48B /* PBXContainerItemProxy */;
+		};
+		F4E922A6261934470083716F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 6C1E5316243BB1360078F6FB /* Azkar */;
+			targetProxy = F4E922A5261934470083716F /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1405,7 +1493,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Mac Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 17;
+				CURRENT_PROJECT_VERSION = 19;
 				DEVELOPMENT_ASSET_PATHS = "\"Azkar/Preview Content\"";
 				DEVELOPMENT_TEAM = 486STKKP6Y;
 				ENABLE_PREVIEWS = YES;
@@ -1437,7 +1525,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "3rd Party Mac Developer Application";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 17;
+				CURRENT_PROJECT_VERSION = 19;
 				DEVELOPMENT_ASSET_PATHS = "\"Azkar/Preview Content\"";
 				DEVELOPMENT_TEAM = 486STKKP6Y;
 				ENABLE_PREVIEWS = YES;
@@ -1464,10 +1552,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 17;
+				CURRENT_PROJECT_VERSION = 19;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 17;
+				DYLIB_CURRENT_VERSION = 19;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = AudioPlayer/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -1491,10 +1579,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 17;
+				CURRENT_PROJECT_VERSION = 19;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 17;
+				DYLIB_CURRENT_VERSION = 19;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = AudioPlayer/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -1511,6 +1599,48 @@
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		F4E922A7261934470083716F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 486STKKP6Y;
+				INFOPLIST_FILE = AzkarTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = io.jawziyya.AzkarTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Azkar.app/Azkar";
+			};
+			name = Debug;
+		};
+		F4E922A8261934470083716F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 486STKKP6Y;
+				INFOPLIST_FILE = AzkarTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = io.jawziyya.AzkarTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Azkar.app/Azkar";
 			};
 			name = Release;
 		};
@@ -1540,6 +1670,15 @@
 			buildConfigurations = (
 				6CE1729F243D128A007AC48B /* Debug */,
 				6CE172A0243D128A007AC48B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F4E922A9261934470083716F /* Build configuration list for PBXNativeTarget "AzkarTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F4E922A7261934470083716F /* Debug */,
+				F4E922A8261934470083716F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

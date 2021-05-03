@@ -24,6 +24,8 @@ final class MainMenuViewModel: ObservableObject {
     let afterSalahAzkar: [ZikrViewModel]
     let otherAzkar: [ZikrViewModel]
 
+    let currentYear: String
+
     let dayNightSectionModels: [AzkarMenuItem]
     let otherAzkarModels: [AzkarMenuItem]
     let infoModels: [AzkarMenuOtherItem]
@@ -36,10 +38,11 @@ final class MainMenuViewModel: ObservableObject {
 
     @Published var selectedAzkarItem: ZikrCategory?
     @Published var selectedAzkarListItem: ZikrCategory?
-
+    @Published var selectedZikr: Zikr?
     @Published var selectedMenuItem: AzkarMenuOtherItem?
 
     let player: Player
+    let fastingDua: Zikr
 
     let preferences: Preferences
     let settingsViewModel: SettingsViewModel
@@ -67,7 +70,8 @@ final class MainMenuViewModel: ObservableObject {
 
     init(preferences: Preferences, player: Player) {
         self.settingsViewModel = .init(preferences: preferences)
-        let all = Zikr.data.map {
+        let azkar = Zikr.data
+        let all = azkar.map {
             ZikrViewModel(zikr: $0, preferences: preferences, player: player)
         }
         morningAzkar = all.filter { $0.zikr.category == .morning }
@@ -76,6 +80,8 @@ final class MainMenuViewModel: ObservableObject {
         otherAzkar = all.filter { $0.zikr.category == .other }
         self.preferences = preferences
         self.player = player
+
+        fastingDua = azkar.first(where: { $0.id == 51 })!
 
         let morning = MainMenuItem.morning
         let evening = MainMenuItem.evening
@@ -95,6 +101,15 @@ final class MainMenuViewModel: ObservableObject {
             AzkarMenuOtherItem(groupType: .settings, imageName: "gear", title: NSLocalizedString("root.settings", comment: "Settings app section."), color: Color.init(.systemGray)),
         ]
 
+        var year = "\(Date().hijriYear) г.х."
+        switch Calendar.current.identifier {
+        case .islamic, .islamicCivil, .islamicTabular, .islamicUmmAlQura:
+            break
+        default:
+            year += " (\(Date().year) г.)"
+        }
+        currentYear = year
+
         NotificationsHandler.shared
             .getNotificationsAuthorizationStatus(completion: { [unowned self] status in
                 switch status {
@@ -113,6 +128,10 @@ final class MainMenuViewModel: ObservableObject {
         case .afterSalah: return afterSalahAzkar
         case .other: return otherAzkar
         }
+    }
+
+    func getZikrViewModel(_ zikr: Zikr) -> ZikrViewModel {
+        ZikrViewModel(zikr: zikr, preferences: preferences, player: player)
     }
 
     func getZikrPagesViewModel(for category: ZikrCategory) -> ZikrPagesViewModel {

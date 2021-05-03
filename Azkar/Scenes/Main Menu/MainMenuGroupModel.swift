@@ -63,7 +63,7 @@ struct AzkarMenuOtherItem: Identifiable, AzkarMenuType {
     }
 
     enum GroupType {
-        case about, settings, notificationsAccess
+        case about, settings, notificationsAccess, fastingDua
     }
 
     var groupType: GroupType?
