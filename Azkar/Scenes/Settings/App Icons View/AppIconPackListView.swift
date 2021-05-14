@@ -40,7 +40,11 @@ final class AppIconPackListViewModel: ObservableObject {
     }
 
     func isPackPurchased(_ pack: AppIconPack) -> Bool {
-        return preferences.purchasedIconPacks.contains(pack)
+        if UIApplication.shared.isRanInSimulator {
+            return true
+        } else {
+            return preferences.purchasedIconPacks.contains(pack)
+        }
     }
 
 }
@@ -56,6 +60,7 @@ struct AppIconPackListView: View {
     @State private var selectedIconPack: AppIconPackInfoViewModel?
     @State private var modalOffset: CGFloat = 0
     @State private var selectedURL: URL?
+    @State private var safariViewURL: URL?
     @State private var moveEdge = Edge.bottom
 
     private var animation = Animation.spring().speed(1.25)
@@ -66,7 +71,7 @@ struct AppIconPackListView: View {
 
             if let pack = selectedIconPack {
                 Group {
-                    Color.black.opacity(0.3)
+                    Color.black.opacity(0.75)
                         .onTapGesture {
                             self.closeIconPackInfoWithAnimation()
                         }
@@ -96,13 +101,24 @@ struct AppIconPackListView: View {
                 )
             }
         }
-        .sheet(item: $selectedURL) { url in
+        .onChange(of: selectedURL) { url in
+            if let url = url {
+                UIApplication.shared.open(url, options: [.universalLinksOnly: true]) { flag in
+                    if !flag {
+                        self.safariViewURL = url
+                    }
+                }
+                self.selectedURL = nil
+            }
+        }
+        .sheet(item: $safariViewURL) { url in
             SafariView(url: url, entersReaderIfAvailable: false)
         }
     }
 
     private func closeIconPackInfoWithAnimation() {
-        withAnimation(animation) {            self.selectedIconPack = nil
+        withAnimation(animation) {
+            self.selectedIconPack = nil
             self.modalOffset = 0
         }
     }

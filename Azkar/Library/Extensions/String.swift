@@ -9,6 +9,10 @@
 import Foundation
 import SwiftUI
 
+var arabicVowelsPattern: String {
+    return "[\\u064B-\\u0650]|[\\u065D-\\u065E]|\\u0657|[\\u0618-\\u061A]"
+}
+
 extension String: Identifiable {
     public var id: String {
         return self

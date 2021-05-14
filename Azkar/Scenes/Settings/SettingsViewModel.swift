@@ -18,7 +18,7 @@ final class SettingsViewModel: ObservableObject {
     private let notificationsHandler: NotificationsHandler
 
     var canChangeIcon: Bool {
-        return !UIDevice.current.isIpad
+        return !UIDevice.current.isMac
     }
 
     var appIconPackListViewModel: AppIconPackListViewModel {

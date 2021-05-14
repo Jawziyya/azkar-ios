@@ -58,11 +58,6 @@
 "settings.icon.list.dark_night" = "Тёмная ночь";
 "settings.icon.list.ramadan" = "Рамадан";
 
-"settings.icon.list.maccinz_house" = "Праздничная атмосфера";
-"settings.icon.list.maccinz_mountains" = "Высоко в горах";
-"settings.icon.list.maccinz_ramadan_night" = "Ночь в рамадан";
-"settings.icon.list.maccinz_day" = "Солнечный день";
-
 "settings.notifications.title" = "Уведомления";
 "settings.notifications.switch-label" = "Напоминать об утренних и вечерних азкарах";
 "settings.notifications.morning-option-label" = "Напоминание об утренних азкарах";
@@ -85,6 +80,24 @@
 "icon_pack.standard.description" = "";
 
 "icon_pack.info.purchased-message" = "Вы приобрели этот набор 🎉";
+
 "icon_pack.maccinz.title" = "Набор значков «Иллюстрации»";
 "icon_pack.maccinz.description" = "Мягкие тона, атмосфера домашнего уюта и спокойствия.";
 
+"settings.icon.list.maccinz_house" = "Праздничная атмосфера";
+"settings.icon.list.maccinz_mountains" = "Высоко в горах";
+"settings.icon.list.maccinz_ramadan_night" = "Ночь в рамадан";
+"settings.icon.list.maccinz_day" = "Солнечный день";
+
+"icon_pack.darsigova.description" = "Закаты и рассветы как хранители нашей веры, в которых заложена милость от Господа.";
+"icon_pack.darsigova.title" = "Набор значков «Хранители веры»";
+"settings.icon.list.darsigova_1" = "Миг";
+"settings.icon.list.darsigova_2" = "Связующие нити";
+"settings.icon.list.darsigova_3" = "На краю времени";
+"settings.icon.list.darsigova_4" = "Свобода";
+"settings.icon.list.darsigova_5" = "Свет в городе";
+"settings.icon.list.darsigova_6" = "Воздушное мгновенье";
+"settings.icon.list.darsigova_7" = "Звёзды в небе горят";
+"settings.icon.list.darsigova_8" = "Полёт цвета";
+"settings.icon.list.darsigova_9" = "Нежность";
+"settings.icon.list.darsigova_10" = "В объятьях вечера";
