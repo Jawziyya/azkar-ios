@@ -9,6 +9,7 @@
 import Foundation
 
 enum Keys {
+    static let enableFunFeatures = "kEnableFunFeatures"
     static let expandTranslation = "kExpandTranslation"
     static let expandTransliteration = "kExpandTransliteration"
     static let arabicFont = "kArabicFont"
