@@ -39,24 +39,19 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             }
 
         zikrCategory
-            .removeDuplicates()
-            .receive(on: DispatchQueue.main)
-            .subscribe(on: DispatchQueue.main)
-            .assign(to: \.selectedAzkarItem, on: mainViewModel)
-            .store(in: &cancellabels)
-
-        zikrCategory
             .map { category -> Deeplinker.Route? in
                 guard let category = category else {
                     return nil
                 }
                 return Deeplinker.Route.azkar(category)
             }
+            .delay(for: .seconds(0.3), scheduler: RunLoop.main)
             .removeDuplicates()
             .assign(to: \.route, on: deeplinker)
             .store(in: &cancellabels)
 
         let mainView = MainMenuView(viewModel: mainViewModel)
+            .environmentObject(deeplinker)
 
         // Use a UIHostingController as window root view controller.
         if let windowScene = scene as? UIWindowScene {

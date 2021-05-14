@@ -17,6 +17,7 @@ extension URL: Identifiable {
 struct SettingsView: View {
 
     @ObservedObject var viewModel: SettingsViewModel
+    @State private var showFunFeaturesDescription = false
 
     var body: some View {
         Form {
@@ -36,6 +37,27 @@ struct SettingsView: View {
 
             if viewModel.canChangeIcon {
                 PickerView(label: NSLocalizedString("settings.icon.title", comment: "Icon settings section title."), titleDisplayMode: .inline, subtitle: viewModel.preferences.appIcon.title, destination: iconPicker)
+            }
+
+            Toggle(isOn: $viewModel.preferences.enableFunFeatures) {
+                HStack {
+                    Text("settings.fun_features", comment: "Turn on/off 'fun' features.")
+                    Spacer()
+                    Button { } label: {
+                        Image(systemName: "info.circle")
+                            .foregroundColor(Color.accent.opacity(0.75))
+                    }
+                    .onTapGesture {
+                        self.showFunFeaturesDescription = true
+                    }
+                    .alert(isPresented: $showFunFeaturesDescription) {
+                        Alert(
+                            title: Text(NSLocalizedString("settings.fun_features.description", comment: "")),
+                            dismissButton: .default(Text("OK"))
+                        )
+                    }
+                }
+                .padding(.vertical, 8)
             }
         }
     }

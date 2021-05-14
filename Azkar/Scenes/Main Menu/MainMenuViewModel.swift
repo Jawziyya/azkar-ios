@@ -12,6 +12,8 @@ import Combine
 
 final class MainMenuViewModel: ObservableObject {
 
+    let title: String
+
     enum Section: CaseIterable {
         case dayNight
         case afterSalah
@@ -34,24 +36,23 @@ final class MainMenuViewModel: ObservableObject {
 
     @Published var additionalMenuItems: [AzkarMenuOtherItem] = []
 
-    @Published var selectedNotificationCategory: String?
-
-    @Published var selectedAzkarItem: ZikrCategory?
-    @Published var selectedAzkarListItem: ZikrCategory?
-    @Published var selectedZikr: Zikr?
-    @Published var selectedMenuItem: AzkarMenuOtherItem?
-
     let player: Player
     let fastingDua: Zikr
 
     let preferences: Preferences
     let settingsViewModel: SettingsViewModel
 
-    var appIconPackListViewModel: AppIconPackListViewModel {
-        .init(preferences: preferences)
+    private var cancellabels = Set<AnyCancellable>()
+
+    private var router: Router {
+        Router.shared
     }
 
-    private var cancellabels = Set<AnyCancellable>()
+    private var isIpad: Bool {
+        UIDevice.current.isIpad
+    }
+
+    private let randomEmoji = ["🌕", "🌖", "🌗", "🌘", "🌒", "🌓", "🌔", "🌙", "🌸", "☘️", "🌳", "🌴", "🌱", "🌼", "💫", "🌎", "🌍", "🌏", "🪐", "✨", "❄️"].randomElement()!
 
     private lazy var notificationsAccessMenuItem: AzkarMenuOtherItem = {
         let title = NSLocalizedString("alerts.turn-on-notifications-alert", comment: "The alert presented to user before asking for notifications permission.")
@@ -80,6 +81,13 @@ final class MainMenuViewModel: ObservableObject {
         otherAzkar = all.filter { $0.zikr.category == .other }
         self.preferences = preferences
         self.player = player
+
+        let appName = NSLocalizedString("app-name", comment: "Name of the application.")
+        var title = "\(appName)"
+        if preferences.enableFunFeatures {
+            title += " \(randomEmoji)"
+        }
+        self.title = title
 
         fastingDua = azkar.first(where: { $0.id == 51 })!
 
@@ -130,11 +138,11 @@ final class MainMenuViewModel: ObservableObject {
         }
     }
 
-    func getZikrViewModel(_ zikr: Zikr) -> ZikrViewModel {
+    private func getZikrViewModel(_ zikr: Zikr) -> ZikrViewModel {
         ZikrViewModel(zikr: zikr, preferences: preferences, player: player)
     }
 
-    func getZikrPagesViewModel(for category: ZikrCategory) -> ZikrPagesViewModel {
+    private func getZikrPagesViewModel(for category: ZikrCategory) -> ZikrPagesViewModel {
         ZikrPagesViewModel(category: category, title: category.title, azkar: azkarForCategory(category), preferences: preferences)
     }
 
@@ -143,6 +151,50 @@ final class MainMenuViewModel: ObservableObject {
             if let index = self.additionalMenuItems.firstIndex(where: { $0 == self.notificationsAccessMenuItem }) {
                 self.additionalMenuItems.remove(at: index)
             }
+        }
+    }
+
+    func navigateToZikr(_ zikr: Zikr) {
+        let vm = self.getZikrViewModel(zikr)
+        router.navigateBack()
+        router.push(.zikr(viewModel: vm, showTitle: .none), isDetailLink: isIpad)
+    }
+
+    func navigateToCategory(_ category: ZikrCategory) {
+        let viewModel = getZikrPagesViewModel(for: category)
+        router.navigateBack()
+        router.push(.category(viewModel), isDetailLink: isIpad)
+    }
+
+    func navigateToAboutScreen() {
+        router.navigateBack()
+        router.push(.about(preferences: preferences))
+    }
+
+    func navigateToSettings() {
+        router.navigateBack()
+        router.push(.settings(settingsViewModel))
+    }
+
+    func navigateToMenuItem(_ item: AzkarMenuOtherItem) {
+        switch item.groupType {
+        case .about:
+            navigateToAboutScreen()
+        case .settings:
+            navigateToSettings()
+        default:
+            break
+        }
+    }
+
+    func handleDeeplink(_ route: Deeplinker.Route?) {
+        switch route {
+        case .settings:
+            navigateToSettings()
+        case .azkar(let category):
+            navigateToCategory(category)
+        default:
+            break
         }
     }
 

@@ -22,6 +22,9 @@ let defaultEveningNotificationTime: Date = {
 
 final class Preferences {
 
+    @Preference(Keys.enableFunFeatures, defaultValue: true)
+    var enableFunFeatures: Bool
+
     @Preference(Keys.expandTranslation, defaultValue: true)
     var expandTranslation: Bool
 

@@ -20,6 +20,7 @@ struct MainMenuView: View {
     typealias MenuSection = MainMenuViewModel.Section
 
     @ObservedObject var viewModel: MainMenuViewModel
+    @EnvironmentObject var deepLinker: Deeplinker
     @Environment(\.horizontalSizeClass) var hSizeClass
 
     private var isIpad: Bool {
@@ -30,23 +31,23 @@ struct MainMenuView: View {
         Color(.secondarySystemGroupedBackground)
     }
 
-    private let randomEmoji = ["🌕", "🌖", "🌗", "🌘", "🌒", "🌓", "🌔", "🌙", "🌸", "☘️", "🌳", "🌴", "🌱", "🌼", "💫", "🌎", "🌍", "🌏", "🪐", "✨", "❄️"].randomElement()!
-
     var body: some View {
         NavigationView {
             ZStack {
                 Color.dimmedBackground.edgesIgnoringSafeArea(.all)
-                    .if(Date().isEndOfRamadan) { view in
+                    .if(Date().isRamadanEidDays && viewModel.preferences.enableFunFeatures) { view in
                         view.overlay(
                             Image("eid_background")
                                 .resizable()
-                                .overlay(Color.text.opacity(0.2))
+                                .aspectRatio(contentMode: ContentMode.fill)
                                 .edgesIgnoringSafeArea(.all)
+                                .blendMode(.overlay)
                         )
                     }
                 scrollView
                     .navigationTitle("")
             }
+            .handleNavigation(Router.shared.navigationPublisher)
             .if(isIpad) {
                 $0.frame(minWidth: 300)
             }
@@ -55,6 +56,7 @@ struct MainMenuView: View {
         .padding(.leading, isIpad ? 0.5 : 0) // Hack for proper allVisible split view mode.
         .environment(\.horizontalSizeClass, isIpad ? .regular : .compact)
         .attachEnvironmentOverrides(viewModel: EnvironmentOverridesViewModel(preferences: viewModel.preferences))
+        .onReceive(deepLinker.$route, perform: viewModel.handleDeeplink)
     }
 
     private var scrollView: some View {
@@ -62,7 +64,7 @@ struct MainMenuView: View {
             menuContent
         }
         .fixingFlickering() // Fixes the glitch bug on iOS 14.4
-        .navigationBarTitle(Text("app-name", comment: "Name of the application.") + Text(" " + randomEmoji), displayMode: .automatic)
+        .navigationBarTitle(viewModel.title, displayMode: .automatic)
     }
 
     private var menuContent: some View {
@@ -74,11 +76,10 @@ struct MainMenuView: View {
             HStack(spacing: 16) {
                 ForEach(viewModel.dayNightSectionModels) { item in
                     Button {
-                        self.viewModel.selectedAzkarItem = item.category
+                        self.viewModel.navigateToCategory(item.category)
                     } label: {
                         MainMenuLargeGroup(item: item)
                     }
-                    .navigate(using: $viewModel.selectedAzkarItem, destination: azkarDestination(for:))
                 }
                 .foregroundColor(Color.text)
                 .background(itemsBackgroundColor)
@@ -89,7 +90,7 @@ struct MainMenuView: View {
             VStack(spacing: 0) {
                 if Date().isRamadan {
                     Button(action: {
-                        self.viewModel.selectedZikr = self.viewModel.fastingDua
+                        self.viewModel.navigateToZikr(self.viewModel.fastingDua)
                     }, label: {
                         HStack {
                             MainMenuSmallGroup(item: AzkarMenuItem(category: ZikrCategory.other, imageName: "🌕", title: "Молитва разговения", color: Color.blue, count: nil, iconType: .emoji))
@@ -97,7 +98,6 @@ struct MainMenuView: View {
                                 .foregroundColor(Color.tertiaryText)
                                 .padding(.trailing)
                         }
-                        .navigate(using: $viewModel.selectedZikr, destination: getZikrView(_:))
                         .padding(10)
                         .background(itemsBackgroundColor)
                     })
@@ -105,7 +105,7 @@ struct MainMenuView: View {
 
                 ForEach(viewModel.otherAzkarModels) { item in
                     Button {
-                        self.viewModel.selectedAzkarListItem = item.category
+                        self.viewModel.navigateToCategory(item.category)
                     } label: {
                         HStack {
                             MainMenuSmallGroup(item: item)
@@ -116,7 +116,6 @@ struct MainMenuView: View {
                         .padding(10)
                         .background(itemsBackgroundColor)
                     }
-                    .navigate(using: $viewModel.selectedAzkarListItem, destination: getZikrList)
                 }
             }
             .background(itemsBackgroundColor)
@@ -126,7 +125,7 @@ struct MainMenuView: View {
             VStack(spacing: 0) {
                 ForEach(viewModel.infoModels) { item in
                     Button {
-                        self.viewModel.selectedMenuItem = item
+                        self.viewModel.navigateToMenuItem(item)
                     } label: {
                         HStack {
                             MainMenuSmallGroup(item: item)
@@ -137,7 +136,6 @@ struct MainMenuView: View {
                         .padding(10)
                         .background(itemsBackgroundColor)
                     }
-                    .navigate(using: $viewModel.selectedMenuItem, destination: self.menuDestination(for:))
                 }
             }
             .background(itemsBackgroundColor)
@@ -185,55 +183,6 @@ struct MainMenuView: View {
             alignment: .center
         )
         .edgesIgnoringSafeArea(.all)
-    }
-
-    @ViewBuilder
-    private func getZikrView(_ zikr: Zikr) -> some View {
-        ZikrView(viewModel: viewModel.getZikrViewModel(zikr))
-            .navigationBarTitleDisplayMode(.inline)
-    }
-
-    @ViewBuilder
-    private func getZikrList(_ model: ZikrCategory) -> some View {
-        let viewModel = self.viewModel.getZikrPagesViewModel(for: model)
-
-        if isIpad {
-            AzkarListView(viewModel: viewModel)
-        } else {
-            ZStack {
-                if model == .afterSalah {
-                    ZikrPagesView(viewModel: viewModel)
-                        .navigationBarTitle("", displayMode: .inline)
-                } else {
-                    AzkarListView(viewModel: viewModel)
-                }
-            }
-        }
-    }
-
-    @ViewBuilder
-    private func azkarDestination(for model: ZikrCategory) -> some View {
-        let viewModel = self.viewModel.getZikrPagesViewModel(for: model)
-        ZStack {
-            if isIpad {
-                getZikrList(model)
-            } else {
-                ZikrPagesView(viewModel: viewModel)
-            }
-        }
-        .navigationBarTitle(viewModel.title, displayMode: .inline)
-    }
-
-    @ViewBuilder
-    private func menuDestination(for item: AzkarMenuOtherItem) -> some View {
-        switch item.groupType {
-        case .about:
-            AppInfoView(viewModel: AppInfoViewModel(prerences: viewModel.preferences))
-        case .settings:
-            SettingsView(viewModel: viewModel.settingsViewModel)
-        default:
-            EmptyView()
-        }
     }
 
 }

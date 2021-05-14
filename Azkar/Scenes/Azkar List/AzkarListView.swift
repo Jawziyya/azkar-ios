@@ -15,23 +15,31 @@ struct AzkarListView: View {
 
     let viewModel: AzkarListViewModel
 
-    @State private var selection: Set<ZikrViewModel>?
-
     var body: some View {
-        list
-            .navigationBarTitle(viewModel.title, displayMode: .inline)
+        ScrollView(.vertical, showsIndicators: true) {
+            list
+        }
+        .navigationBarTitle(viewModel.title, displayMode: .inline)
+        .background(Color.background.edgesIgnoringSafeArea(.all))
     }
 
     var list: some View {
-        List(viewModel.azkar.indexed(), id: \.1, selection: $selection) { index, vm in
-            NavigationLink(destination: self.pagesView(index)) {
-                Text(vm.title)
-                    .padding(.vertical)
+        LazyVStack(alignment: HorizontalAlignment.leading, spacing: 8) {
+            ForEach(viewModel.azkar.indexed(), id: \.1) { index, vm in
+                NavigationLink(destination: self.pagesView(index)) {
+                    HStack {
+                        Text(vm.title)
+                            .contentShape(Rectangle())
+                        Spacer(minLength: 8)
+                        Image(systemName: "chevron.right")
+                    }
+                    .padding()
                     .contentShape(Rectangle())
+                }
+                .isDetailLink(true)
+                .buttonStyle(PlainButtonStyle())
             }
-            .buttonStyle(PlainButtonStyle())
         }
-        .listStyle(PlainListStyle())
     }
 
     func pagesView(_ index: Int) -> some View {
