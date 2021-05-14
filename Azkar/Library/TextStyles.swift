@@ -18,6 +18,7 @@ enum TextStyles {
             $0.font = UIFont(name: fontName ?? ArabicFont.noto.fontName, size: size) ?? UIFont.systemFont(ofSize: size)
             $0.lineHeightMultiple = 1.1
             $0.alignment = alignment
+            $0.color = UIColor(Color.text)
         }
 
         if fontName == ArabicFont.KFGQP.fontName {
@@ -25,9 +26,8 @@ enum TextStyles {
                 $0.font = UIFont(name: ArabicFont.adobe.fontName, size: size)
             }
             return regexStyle ?? style
-        } else {
-            return style
         }
+        return style
     }
 
     static func bodyStyle(maxSize: CGFloat? = nil, type: UIFont.FontType = .regular, sizeCategory: ContentSizeCategory? = nil) -> StyleProtocol {

@@ -46,7 +46,6 @@ struct EnvironmentOverridesModifier: ViewModifier {
     func body(content: Content) -> some View {
         content
             .onAppear { self.copyDefaultSettings() }
-            .environment(\.sizeCategory, contentSizeCategory)
     }
 
     private var contentSizeCategory: ContentSizeCategory {

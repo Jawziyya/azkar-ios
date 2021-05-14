@@ -6,7 +6,8 @@
 //  Copyright © 2020 Al Jawziyya. All rights reserved.
 //
 
-import Foundation
+import UIKit
+import SwiftUI
 import Combine
 
 final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
@@ -60,6 +61,38 @@ final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
             preferences.$expandTranslation.assign(to: \.expandTranslation, on: self),
             preferences.$expandTransliteration.assign(to: \.expandTransliteration, on: self)
         ]
+    }
+
+    func getText() -> NSAttributedString {
+        let string = self.text
+        let fontName = preferences.arabicFont.fontName
+        let size = textSize(forTextStyle: .title1, contentSizeCategory: preferences.sizeCategory.uiContentSizeCategory)
+
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineHeightMultiple = 1.1
+        paragraphStyle.alignment = .center
+
+        let font = UIFont(name: fontName, size: size) ?? UIFont.systemFont(ofSize: size)
+
+        let text = NSMutableAttributedString(
+            string: string,
+            attributes: [
+                .font: font,
+                .foregroundColor: UIColor(Color.text),
+                .paragraphStyle: paragraphStyle
+            ]
+        )
+
+        if fontName == ArabicFont.KFGQP.fontName {
+            let regex = try! NSRegularExpression(pattern: "،", options: [])
+            regex.enumerateMatches(in: string, options: [], range: string.nsRange) { result, _, _ in
+                if let range = result?.range {
+                    text.addAttribute(.font, value: UIFont(name: ArabicFont.adobe.fontName, size: size)!, range: range)
+                }
+            }
+        }
+
+        return text
     }
 
 }

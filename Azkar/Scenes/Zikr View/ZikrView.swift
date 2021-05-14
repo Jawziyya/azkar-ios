@@ -16,7 +16,9 @@ struct ZikrView: View {
     @State private var textHeight: CGFloat = 0
     @State private var translationHeight: CGFloat = 0
     @State private var transliterationHeight: CGFloat = 0
-    @Environment(\.sizeCategory) var sizeCategory
+    var sizeCategory: ContentSizeCategory {
+        viewModel.preferences.sizeCategory
+    }
 
     private let tintColor = Color.accent
     private let dividerColor = Color.secondaryBackground
@@ -96,7 +98,7 @@ struct ZikrView: View {
     private var textView: some View {
         VStack(spacing: 10) {
             CollapsableSection(
-                text: viewModel.text.set(style: TextStyles.arabicTextStyle(fontName: self.viewModel.preferences.arabicFont.fontName, textStyle: .title1, alignment: .center, sizeCategory: sizeCategory)),
+                text: viewModel.getText(),
                 isExpanded: .constant(true),
                 textHeight: $textHeight
             )

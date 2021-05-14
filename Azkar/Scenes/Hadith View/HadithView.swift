@@ -14,7 +14,9 @@ struct HadithView: View {
 
     @State private var textHeight: CGFloat = 0
     @State private var translationHeight: CGFloat = 0
-    @Environment(\.sizeCategory) var sizeCategory
+    var sizeCategory: ContentSizeCategory {
+        return viewModel.preferences.sizeCategory
+    }
 
     private let dividerColor = Color.secondaryBackground
     private let dividerHeight: CGFloat = 1
