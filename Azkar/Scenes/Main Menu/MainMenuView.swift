@@ -47,10 +47,10 @@ struct MainMenuView: View {
                 scrollView
                     .navigationTitle("")
             }
-            .handleNavigation(Router.shared.navigationPublisher)
             .if(isIpad) {
                 $0.frame(minWidth: 300)
             }
+            .handleNavigation(Router.shared.navigationPublisher)
             isIpad ? self.ipadDetailView : nil
         }
         .padding(.leading, isIpad ? 0.5 : 0) // Hack for proper allVisible split view mode.

@@ -15,7 +15,7 @@ enum NavigationDirection {
 }
 
 enum NavigationDestination {
-    case zikr(viewModel: ZikrViewModel, showTitle: Bool?)
+    case zikr(viewModel: ZikrViewModel, showTitle: Bool? = .none)
     case category(ZikrPagesViewModel)
     case about(preferences: Preferences)
     case settings(SettingsViewModel)
@@ -115,6 +115,10 @@ struct NavigationHandler: ViewModifier {
                 .isDetailLink(linkIsDetail)
             )
             .onReceive(navigationPublisher) { direction in
+                guard presentation.wrappedValue.isPresented else {
+                    return
+                }
+
                 switch direction {
                 case .forward(let destination, let style):
                     self.destination = destination
@@ -122,8 +126,8 @@ struct NavigationHandler: ViewModifier {
                     case .present:
                         sheetActive = true
                     case .push(let isDetail):
-                        linkActive = true
                         linkIsDetail = isDetail
+                        linkActive = true
                     }
                 case .back:
                     linkActive = false

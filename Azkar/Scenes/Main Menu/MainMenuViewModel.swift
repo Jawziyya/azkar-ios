@@ -163,7 +163,7 @@ final class MainMenuViewModel: ObservableObject {
     func navigateToCategory(_ category: ZikrCategory) {
         let viewModel = getZikrPagesViewModel(for: category)
         router.navigateBack()
-        router.push(.category(viewModel), isDetailLink: isIpad)
+        router.push(.category(viewModel), isDetailLink: !isIpad)
     }
 
     func navigateToAboutScreen() {

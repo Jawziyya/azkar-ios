@@ -6,7 +6,7 @@
 //  Copyright © 2020 Al Jawziyya. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 struct ZikrPagesViewModel {
 
@@ -20,6 +20,10 @@ struct ZikrPagesViewModel {
         self.title = title
         self.preferences = preferences
         self.azkar = azkar
+    }
+
+    func navigateToZikr(_ zikr: ZikrViewModel) {
+        Router.shared.push(.zikr(viewModel: zikr), isDetailLink: true)
     }
 
 }

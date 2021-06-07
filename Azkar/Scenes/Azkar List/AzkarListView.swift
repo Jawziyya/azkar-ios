@@ -26,7 +26,9 @@ struct AzkarListView: View {
     var list: some View {
         LazyVStack(alignment: HorizontalAlignment.leading, spacing: 8) {
             ForEach(viewModel.azkar.indexed(), id: \.1) { index, vm in
-                NavigationLink(destination: self.pagesView(index)) {
+                Button {
+                    self.viewModel.navigateToZikr(vm)
+                } label: {
                     HStack {
                         Text(vm.title)
                             .contentShape(Rectangle())
@@ -36,8 +38,8 @@ struct AzkarListView: View {
                     .padding()
                     .contentShape(Rectangle())
                 }
-                .isDetailLink(true)
                 .buttonStyle(PlainButtonStyle())
+                .handleNavigation(Router.shared.navigationPublisher)
             }
         }
     }
