@@ -35,7 +35,7 @@ struct MainMenuView: View {
         NavigationView {
             ZStack {
                 Color.dimmedBackground.edgesIgnoringSafeArea(.all)
-                    .if(Date().isRamadanEidDays && viewModel.preferences.enableFunFeatures) { view in
+                    .if(viewModel.enableEidBackground) { view in
                         view.overlay(
                             Image("eid_background")
                                 .resizable()
@@ -176,7 +176,7 @@ struct MainMenuView: View {
     private var ipadDetailView: some View {
         Color.secondaryBackground
         .overlay(
-            Text("root.pick-section", comment: "Pick section label.")
+            Text("← ") + Text("root.pick-section", comment: "Pick section label.")
                 .font(Font.title.smallCaps())
                 .foregroundColor(Color.secondary)
             ,

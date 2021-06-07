@@ -12,7 +12,7 @@ import Combine
 
 final class MainMenuViewModel: ObservableObject {
 
-    let title: String
+    @Published var title = ""
 
     enum Section: CaseIterable {
         case dayNight
@@ -35,6 +35,7 @@ final class MainMenuViewModel: ObservableObject {
     let fadl = Fadl.all.randomElement()!
 
     @Published var additionalMenuItems: [AzkarMenuOtherItem] = []
+    @Published var enableEidBackground = false
 
     let player: Player
     let fastingDua: Zikr
@@ -52,7 +53,9 @@ final class MainMenuViewModel: ObservableObject {
         UIDevice.current.isIpad
     }
 
-    private let randomEmoji = ["🌕", "🌖", "🌗", "🌘", "🌒", "🌓", "🌔", "🌙", "🌸", "☘️", "🌳", "🌴", "🌱", "🌼", "💫", "🌎", "🌍", "🌏", "🪐", "✨", "❄️"].randomElement()!
+    private func getRandomEmoji() -> String {
+        ["🌕", "🌖", "🌗", "🌘", "🌒", "🌓", "🌔", "🌙", "🌸", "☘️", "🌳", "🌴", "🌱", "🌼", "💫", "🌎", "🌍", "🌏", "🪐", "✨", "❄️"].randomElement()!
+    }
 
     private lazy var notificationsAccessMenuItem: AzkarMenuOtherItem = {
         let title = NSLocalizedString("alerts.turn-on-notifications-alert", comment: "The alert presented to user before asking for notifications permission.")
@@ -81,13 +84,6 @@ final class MainMenuViewModel: ObservableObject {
         otherAzkar = all.filter { $0.zikr.category == .other }
         self.preferences = preferences
         self.player = player
-
-        let appName = NSLocalizedString("app-name", comment: "Name of the application.")
-        var title = "\(appName)"
-        if preferences.enableFunFeatures {
-            title += " \(randomEmoji)"
-        }
-        self.title = title
 
         fastingDua = azkar.first(where: { $0.id == 51 })!
 
@@ -127,6 +123,24 @@ final class MainMenuViewModel: ObservableObject {
                     break
                 }
             })
+
+        let appName = NSLocalizedString("app-name", comment: "Name of the application.")
+        let title = "\(appName)"
+        preferences.$enableFunFeatures
+            .map { [unowned self] flag in
+                if flag {
+                    return title + " \(self.getRandomEmoji())"
+                } else {
+                    return title
+                }
+            }
+            .assign(to: \.title, on: self)
+            .store(in: &cancellabels)
+
+        preferences.$enableFunFeatures
+            .map { flag in flag && Date().isRamadanEidDays }
+            .assign(to: \.enableEidBackground, on: self)
+            .store(in: &cancellabels)
     }
 
     func azkarForCategory(_ category: ZikrCategory) -> [ZikrViewModel] {
