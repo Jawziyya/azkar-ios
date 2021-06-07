@@ -11,12 +11,13 @@ import Combine
 import StoreKit
 import SwiftyStoreKit
 
-private func localizedPrice(value: Decimal) -> String {
-  let formatter = NumberFormatter()
-  formatter.numberStyle = .currency
-  formatter.generatesDecimalNumbers = false
-  formatter.maximumFractionDigits = 0
-  return formatter.string(for: value)!
+private func localizedPrice(value: Decimal, locale: Locale) -> String {
+    let formatter = NumberFormatter()
+    formatter.numberStyle = .currency
+    formatter.maximumFractionDigits = 2
+    formatter.minimumFractionDigits = 0
+    formatter.locale = locale
+    return formatter.string(for: value) ?? ""
 }
 
 struct ProductInfo {
@@ -58,7 +59,7 @@ final class InAppPurchaseService {
 
     func requestProductInformation(_ id: String) -> AnyPublisher<ProductInfo, Error> {
         if let product = cachedProducts[id] {
-            return Just.init(product)
+            return Just(product)
                 .setFailureType(to: Error.self)
                 .eraseToAnyPublisher()
         }
@@ -69,7 +70,7 @@ final class InAppPurchaseService {
                     promise(.failure(error))
                 } else {
                     let product = results.retrievedProducts.first!
-                    let info = ProductInfo(title: product.localizedTitle, description: product.localizedDescription, price: localizedPrice(value: product.price.decimalValue))
+                    let info = ProductInfo(title: product.localizedTitle, description: product.localizedDescription, price: localizedPrice(value: product.price.decimalValue, locale: product.priceLocale))
                     self.cachedProducts[id] = info
                     promise(.success(info))
                 }
