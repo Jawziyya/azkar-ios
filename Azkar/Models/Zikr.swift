@@ -29,9 +29,14 @@ struct Zikr: Identifiable, Hashable, Equatable, Codable {
     let notes: String?
     let benefit: String?
     let category: ZikrCategory
+    let audioFileName: String?
 
     var audioURL: URL? {
-        return Bundle.main.url(forResource: "\(category.rawValue)\(rowInCategory)", withExtension: "mp3")
+        if let name = audioFileName {
+            return Bundle.main.url(forAuxiliaryExecutable: name)
+        } else {
+            return Bundle.main.url(forResource: "\(category.rawValue)\(rowInCategory)", withExtension: "mp3")
+        }
     }
     
     let repeats: Int

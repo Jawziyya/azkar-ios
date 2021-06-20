@@ -195,6 +195,10 @@
 		F4CC2B2125E3AECF005FFEDB /* SwiftRichString in Frameworks */ = {isa = PBXBuildFile; productRef = F4CC2B2025E3AECF005FFEDB /* SwiftRichString */; };
 		F4CC2B2925E3E347005FFEDB /* fudul.json in Resources */ = {isa = PBXBuildFile; fileRef = F4CC2B2B25E3E347005FFEDB /* fudul.json */; };
 		F4CC2B2E25E3E36A005FFEDB /* Fadl.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4CC2B2D25E3E36A005FFEDB /* Fadl.swift */; };
+		F4D0E5C0267FEF0D009424A3 /* 112.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = F4D0E5BC267FEF0D009424A3 /* 112.mp3 */; };
+		F4D0E5C1267FEF0D009424A3 /* 113.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = F4D0E5BD267FEF0D009424A3 /* 113.mp3 */; };
+		F4D0E5C2267FEF0D009424A3 /* 114.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = F4D0E5BE267FEF0D009424A3 /* 114.mp3 */; };
+		F4D0E5C3267FEF0D009424A3 /* baqara_285-286.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = F4D0E5BF267FEF0D009424A3 /* baqara_285-286.mp3 */; };
 		F4E922A3261934470083716F /* AzkarTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E922A2261934470083716F /* AzkarTests.swift */; };
 		F4E922AE261934580083716F /* Date+Ramadan.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E922AD261934580083716F /* Date+Ramadan.swift */; };
 		F4ED73E1264218530073CA75 /* ic_darsigova_5@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F4ED73C3264218520073CA75 /* ic_darsigova_5@2x.png */; };
@@ -451,6 +455,10 @@
 		F4CC2B0525E2848B005FFEDB /* ic_maccinz_day@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_maccinz_day@2x.png"; sourceTree = "<group>"; };
 		F4CC2B2A25E3E347005FFEDB /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = ru; path = ru.lproj/fudul.json; sourceTree = "<group>"; };
 		F4CC2B2D25E3E36A005FFEDB /* Fadl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fadl.swift; sourceTree = "<group>"; };
+		F4D0E5BC267FEF0D009424A3 /* 112.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = 112.mp3; sourceTree = "<group>"; };
+		F4D0E5BD267FEF0D009424A3 /* 113.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = 113.mp3; sourceTree = "<group>"; };
+		F4D0E5BE267FEF0D009424A3 /* 114.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = 114.mp3; sourceTree = "<group>"; };
+		F4D0E5BF267FEF0D009424A3 /* baqara_285-286.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "baqara_285-286.mp3"; sourceTree = "<group>"; };
 		F4E922A0261934470083716F /* AzkarTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AzkarTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F4E922A2261934470083716F /* AzkarTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AzkarTests.swift; sourceTree = "<group>"; };
 		F4E922A4261934470083716F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -619,6 +627,10 @@
 				9D6DFA6B245EC0680091CEF5 /* after-salah4.mp3 */,
 				9D6DFA6F245EC0680091CEF5 /* after-salah5.mp3 */,
 				9D6DFA6E245EC0680091CEF5 /* after-salah6.mp3 */,
+				F4D0E5BC267FEF0D009424A3 /* 112.mp3 */,
+				F4D0E5BD267FEF0D009424A3 /* 113.mp3 */,
+				F4D0E5BE267FEF0D009424A3 /* 114.mp3 */,
+				F4D0E5BF267FEF0D009424A3 /* baqara_285-286.mp3 */,
 			);
 			path = Audios;
 			sourceTree = "<group>";
@@ -1218,6 +1230,7 @@
 				6CC630C6243E762600906FD1 /* evening11.mp3 in Resources */,
 				F4ED73E6264218530073CA75 /* ic_darsigova_7@2x.png in Resources */,
 				9D6DFA75245EC0680091CEF5 /* after-salah5.mp3 in Resources */,
+				F4D0E5C1267FEF0D009424A3 /* 113.mp3 in Resources */,
 				9D6DFA99245ED1FC0091CEF5 /* other20.mp3 in Resources */,
 				9DC9439A245B84A800DD0065 /* Scheherazade.ttf in Resources */,
 				F4ED73E5264218530073CA75 /* ic_darsigova_4@3x.png in Resources */,
@@ -1225,6 +1238,7 @@
 				F4ED73E3264218530073CA75 /* ic_darsigova_7.png in Resources */,
 				6CC630B5243E69CF00906FD1 /* morning6.mp3 in Resources */,
 				6CC630CB243E762600906FD1 /* evening1.mp3 in Resources */,
+				F4D0E5C2267FEF0D009424A3 /* 114.mp3 in Resources */,
 				F4ED73FE264218530073CA75 /* ic_darsigova_6.png in Resources */,
 				F4ED73FB264218530073CA75 /* ic_darsigova_9@3x.png in Resources */,
 				F4ED73F5264218530073CA75 /* ic_darsigova_2@2x.png in Resources */,
@@ -1286,6 +1300,7 @@
 				F4ED73FC264218530073CA75 /* ic_darsigova_7@3x.png in Resources */,
 				9D6DFA97245ED1FC0091CEF5 /* other11.mp3 in Resources */,
 				6CC630C7243E762600906FD1 /* evening2.mp3 in Resources */,
+				F4D0E5C3267FEF0D009424A3 /* baqara_285-286.mp3 in Resources */,
 				9DD1222D245C699C00BC0AE7 /* Localizable.stringsdict in Resources */,
 				F4CC2B0725E2848B005FFEDB /* ic_maccinz_day@1x.png in Resources */,
 				F4ED73E1264218530073CA75 /* ic_darsigova_5@2x.png in Resources */,
@@ -1304,6 +1319,7 @@
 				9D6DFA8A245ED1FC0091CEF5 /* other1.mp3 in Resources */,
 				6CC630C9243E762600906FD1 /* evening5.mp3 in Resources */,
 				F4ED73EF264218530073CA75 /* ic_darsigova_4.png in Resources */,
+				F4D0E5C0267FEF0D009424A3 /* 112.mp3 in Resources */,
 				9DC9439D245B853300DD0065 /* KFGQPCUthmanicScriptHAFS.otf in Resources */,
 				9D2CE86A24608C8600AEF730 /* ic_dark_night@3x.png in Resources */,
 				9D6DFA96245ED1FC0091CEF5 /* other2.mp3 in Resources */,

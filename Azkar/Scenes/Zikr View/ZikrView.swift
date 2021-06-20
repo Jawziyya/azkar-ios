@@ -44,9 +44,10 @@ struct ZikrView: View {
 
             getDivider()
 
-            transliterationView
-
-            getDivider()
+            if viewModel.hasTransliteration {
+                transliterationView
+                getDivider()
+            }
 
             infoView
             

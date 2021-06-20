@@ -35,6 +35,8 @@ final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
     var hadithViewModel: HadithViewModel?
 
     @Published var expandTranslation: Bool
+
+    let hasTransliteration: Bool
     @Published var expandTransliteration: Bool
 
     private var cancellabels: [AnyCancellable] = []
@@ -46,6 +48,7 @@ final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
 
         expandTranslation = preferences.expandTranslation
         expandTransliteration = preferences.expandTransliteration
+        hasTransliteration = zikr.transliteration.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty == false
 
         if let url = zikr.audioURL {
             playerViewModel = PlayerViewModel(title: title, subtitle: zikr.category.title, audioURL: url, player: player)
