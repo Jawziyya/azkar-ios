@@ -232,6 +232,7 @@
 		F4ED73FD264218530073CA75 /* ic_darsigova_2.png in Resources */ = {isa = PBXBuildFile; fileRef = F4ED73DF264218530073CA75 /* ic_darsigova_2.png */; };
 		F4ED73FE264218530073CA75 /* ic_darsigova_6.png in Resources */ = {isa = PBXBuildFile; fileRef = F4ED73E0264218530073CA75 /* ic_darsigova_6.png */; };
 		F4ED7400264471580073CA75 /* UIApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4ED73FF264471580073CA75 /* UIApplication.swift */; };
+		F4F6974826912155008A07D9 /* baqara_255.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = F4F6974726912155008A07D9 /* baqara_255.mp3 */; };
 		F4F89ACF25DEFA7C005F6E03 /* Deeplinker.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F89ACE25DEFA7C005F6E03 /* Deeplinker.swift */; };
 /* End PBXBuildFile section */
 
@@ -494,6 +495,7 @@
 		F4ED73DF264218530073CA75 /* ic_darsigova_2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ic_darsigova_2.png; sourceTree = "<group>"; };
 		F4ED73E0264218530073CA75 /* ic_darsigova_6.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ic_darsigova_6.png; sourceTree = "<group>"; };
 		F4ED73FF264471580073CA75 /* UIApplication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIApplication.swift; sourceTree = "<group>"; };
+		F4F6974726912155008A07D9 /* baqara_255.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = baqara_255.mp3; sourceTree = "<group>"; };
 		F4F89ACE25DEFA7C005F6E03 /* Deeplinker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Deeplinker.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -576,6 +578,7 @@
 		6CC6309C243E69C700906FD1 /* Audios */ = {
 			isa = PBXGroup;
 			children = (
+				F4F6974726912155008A07D9 /* baqara_255.mp3 */,
 				9D6DFA76245ED1FA0091CEF5 /* other1.mp3 */,
 				9D6DFA82245ED1FB0091CEF5 /* other2.mp3 */,
 				9D6DFA78245ED1FB0091CEF5 /* other3.mp3 */,
@@ -1270,6 +1273,7 @@
 				F4CC2AFF25E27D83005FFEDB /* ic_maccinz_ramadan_night.png in Resources */,
 				F4ED73F9264218530073CA75 /* ic_darsigova_5@3x.png in Resources */,
 				F4ED73FA264218530073CA75 /* ic_darsigova_3.png in Resources */,
+				F4F6974826912155008A07D9 /* baqara_255.mp3 in Resources */,
 				F475B31C25E055B8004B2BAB /* ic_maccinz_house@2x.png in Resources */,
 				6CC630AA243E69CF00906FD1 /* morning9.mp3 in Resources */,
 				6CC630CE243E762600906FD1 /* evening7.mp3 in Resources */,
