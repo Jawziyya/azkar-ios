@@ -75,9 +75,11 @@ final class MainMenuViewModel: ObservableObject {
     init(preferences: Preferences, player: Player) {
         self.settingsViewModel = .init(preferences: preferences)
         let azkar = Zikr.data
-        let all = azkar.map {
-            ZikrViewModel(zikr: $0, preferences: preferences, player: player)
-        }
+        let all = azkar
+            .sorted(by: { $0.rowInCategory < $1.rowInCategory })
+            .map {
+                ZikrViewModel(zikr: $0, preferences: preferences, player: player)
+            }
         morningAzkar = all.filter { $0.zikr.category == .morning }
         eveningAzkar = all.filter { $0.zikr.category == .evening }
         afterSalahAzkar = all.filter { $0.zikr.category == .afterSalah }
