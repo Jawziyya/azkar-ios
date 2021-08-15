@@ -47,3 +47,4 @@ fastlane/metadata/trade_representative_contact_information
 fastlane/README.md
 *.app.dSYM
 *xcshareddata
+fastlane/Preview.html
