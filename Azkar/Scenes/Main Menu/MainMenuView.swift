@@ -20,7 +20,6 @@ struct MainMenuView: View {
     typealias MenuSection = MainMenuViewModel.Section
 
     @ObservedObject var viewModel: MainMenuViewModel
-    @EnvironmentObject var deepLinker: Deeplinker
     @Environment(\.horizontalSizeClass) var hSizeClass
 
     private var isIpad: Bool {
@@ -32,7 +31,7 @@ struct MainMenuView: View {
     }
 
     var body: some View {
-        NavigationView {
+        Group {
             ZStack {
                 Color.dimmedBackground.edgesIgnoringSafeArea(.all)
                     .if(viewModel.enableEidBackground) { view in
@@ -50,21 +49,19 @@ struct MainMenuView: View {
             .if(isIpad) {
                 $0.frame(minWidth: 300)
             }
-            .handleNavigation(Router.shared.navigationPublisher)
-            isIpad ? self.ipadDetailView : nil
+//            .handleNavigation(Router.shared.navigationPublisher)
         }
         .padding(.leading, isIpad ? 0.5 : 0) // Hack for proper allVisible split view mode.
         .environment(\.horizontalSizeClass, isIpad ? .regular : .compact)
         .attachEnvironmentOverrides(viewModel: EnvironmentOverridesViewModel(preferences: viewModel.preferences))
-        .onReceive(deepLinker.$route, perform: viewModel.handleDeeplink)
     }
 
     private var scrollView: some View {
-        ScrollView {
+        ScrollView(showsIndicators: false) {
             menuContent
         }
-        .fixingFlickering() // Fixes the glitch bug on iOS 14.4
-        .navigationBarTitle(viewModel.title, displayMode: .automatic)
+        .fixFlickering()
+        .navigationBarTitle(viewModel.title)
     }
 
     private var menuContent: some View {
@@ -173,23 +170,11 @@ struct MainMenuView: View {
         .padding(.horizontal)
     }
 
-    private var ipadDetailView: some View {
-        Color.secondaryBackground
-        .overlay(
-            Text("← ") + Text("root.pick-section", comment: "Pick section label.")
-                .font(Font.title.smallCaps())
-                .foregroundColor(Color.secondary)
-            ,
-            alignment: .center
-        )
-        .edgesIgnoringSafeArea(.all)
-    }
-
 }
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        MainMenuView(viewModel: MainMenuViewModel(preferences: Preferences(), player: .test))
+        MainMenuView(viewModel: MainMenuViewModel(router: RootCoordinator(preferences: Preferences(), deeplinker: Deeplinker(), player: Player.init(player: AudioPlayer())), preferences: Preferences(), player: .test))
             .environment(\.colorScheme, .dark)
     }
 }

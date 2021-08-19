@@ -108,7 +108,7 @@ struct AppInfoView: View {
 
 struct LegalInfoView_Previews: PreviewProvider {
     static var previews: some View {
-        AppInfoView(viewModel: AppInfoViewModel(prerences: Preferences()))
+        AppInfoView(viewModel: AppInfoViewModel(preferences: Preferences()))
             .colorScheme(.dark)
     }
 }

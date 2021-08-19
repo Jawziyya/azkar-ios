@@ -10,20 +10,22 @@ import UIKit
 
 struct ZikrPagesViewModel {
 
+    unowned let router: RootRouter
     let category: ZikrCategory
     let title: String
     let azkar: [ZikrViewModel]
     let preferences: Preferences
 
-    init(category: ZikrCategory, title: String, azkar: [ZikrViewModel], preferences: Preferences) {
+    init(router: RootRouter, category: ZikrCategory, title: String, azkar: [ZikrViewModel], preferences: Preferences) {
+        self.router = router
         self.category = category
         self.title = title
         self.preferences = preferences
         self.azkar = azkar
     }
 
-    func navigateToZikr(_ zikr: ZikrViewModel) {
-        Router.shared.push(.zikr(viewModel: zikr), isDetailLink: true)
+    func navigateToZikr(_ vm: ZikrViewModel) {
+        router.trigger(.zikr(vm.zikr))
     }
 
 }

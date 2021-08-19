@@ -10,28 +10,12 @@ import SwiftUI
 
 extension ScrollView {
 
-    public func fixingFlickering() -> some View {
-        return self.fixingFlickering { (scrollView) in
-            return scrollView
-        }
-    }
+    private typealias PaddedContent = ModifiedContent<Content, _PaddingLayout>
 
-    public func fixingFlickering<T: View>(@ViewBuilder configurator: @escaping (ScrollView<AnyView>) -> T) -> some View {
-        GeometryReader { geometryWithSafeArea in
-            GeometryReader { geometry in
-                configurator(
-                ScrollView<AnyView>(self.axes, showsIndicators: self.showsIndicators) {
-                    AnyView(
-                    VStack {
-                        self.content
-                    }
-                    .padding(.top, geometryWithSafeArea.safeAreaInsets.top)
-                    .padding(.bottom, geometryWithSafeArea.safeAreaInsets.bottom)
-                    .padding(.leading, geometryWithSafeArea.safeAreaInsets.leading)
-                    .padding(.trailing, geometryWithSafeArea.safeAreaInsets.trailing)
-                    )
-                }
-                )
+    func fixFlickering() -> some View {
+        GeometryReader { geo in
+            ScrollView<PaddedContent>(axes, showsIndicators: showsIndicators) {
+                content.padding(geo.safeAreaInsets) as! PaddedContent
             }
             .edgesIgnoringSafeArea(.all)
         }

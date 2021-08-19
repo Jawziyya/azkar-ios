@@ -25,7 +25,6 @@ struct SettingsView: View {
             self.fontsSection
             self.notificationsSection
         }
-        .navigationTitle(Text("settings.title"))
         .toggleStyle(SwitchToggleStyle(tint: Color.accent))
         .background(Color.dimmedBackground.edgesIgnoringSafeArea(.all))
     }

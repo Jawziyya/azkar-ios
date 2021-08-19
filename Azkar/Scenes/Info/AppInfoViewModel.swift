@@ -65,8 +65,8 @@ struct AppInfoViewModel {
         SourceInfo(title: NSLocalizedString("about.support.jawziyya-apps", comment: "Jawziyya apps button."), url: URL(string: "https://apps.apple.com/ru/developer/al-jawziyya/id1165327318")!, openUrlInApp: false)
     ]
 
-    init(prerences: Preferences) {
-        iconImageName = prerences.appIcon.imageName
+    init(preferences: Preferences) {
+        iconImageName = preferences.appIcon.imageName
 
         let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString")!
         let build = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion")!

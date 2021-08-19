@@ -19,16 +19,16 @@ extension UIDevice {
         }
     }
 
+    var isIpadInterface: Bool {
+        userInterfaceIdiom == .pad || userInterfaceIdiom == .mac || isMac
+    }
+
     var isIpad: Bool {
         userInterfaceIdiom == .pad
     }
 
     var isMac: Bool {
-        #if targetEnvironment(macCatalyst)
-        return true
-        #else
-        return false
-        #endif
+        return ProcessInfo.processInfo.isiOSAppOnMac
     }
 
 }

@@ -19,7 +19,9 @@ struct AzkarListView: View {
         ScrollView(.vertical, showsIndicators: true) {
             list
         }
-        .navigationBarTitle(viewModel.title, displayMode: .inline)
+        .if(UIDevice.current.isIpadInterface) { v in
+            v.fixFlickering()
+        }
         .background(Color.background.edgesIgnoringSafeArea(.all))
     }
 
@@ -39,7 +41,6 @@ struct AzkarListView: View {
                     .contentShape(Rectangle())
                 }
                 .buttonStyle(PlainButtonStyle())
-                .handleNavigation(Router.shared.navigationPublisher)
             }
         }
     }
@@ -60,6 +61,6 @@ struct AzkarListView: View {
 
 struct AzkarListView_Previews: PreviewProvider {
     static var previews: some View {
-        AzkarListView(viewModel: AzkarListViewModel(category: .other, title: ZikrCategory.morning.title, azkar: [], preferences: Preferences()))
+        AzkarListView(viewModel: AzkarListViewModel(router: RootCoordinator(preferences: Preferences(), deeplinker: Deeplinker(), player: Player(player: AppDelegate.shared.player)), category: .other, title: ZikrCategory.morning.title, azkar: [], preferences: Preferences()))
     }
 }

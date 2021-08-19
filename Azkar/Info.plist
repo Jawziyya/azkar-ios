@@ -10,83 +10,11 @@
 	<dict>
 		<key>CFBundleAlternateIcons</key>
 		<dict>
-			<key>darsigova_10</key>
+			<key>dark_night</key>
 			<dict>
 				<key>CFBundleIconFiles</key>
 				<array>
-					<string>ic_darsigova_10</string>
-				</array>
-				<key>UIPrerenderedIcon</key>
-				<false/>
-			</dict>
-			<key>darsigova_9</key>
-			<dict>
-				<key>CFBundleIconFiles</key>
-				<array>
-					<string>ic_darsigova_9</string>
-				</array>
-				<key>UIPrerenderedIcon</key>
-				<false/>
-			</dict>
-			<key>darsigova_8</key>
-			<dict>
-				<key>CFBundleIconFiles</key>
-				<array>
-					<string>ic_darsigova_8</string>
-				</array>
-				<key>UIPrerenderedIcon</key>
-				<false/>
-			</dict>
-			<key>darsigova_7</key>
-			<dict>
-				<key>CFBundleIconFiles</key>
-				<array>
-					<string>ic_darsigova_7</string>
-				</array>
-				<key>UIPrerenderedIcon</key>
-				<false/>
-			</dict>
-			<key>darsigova_6</key>
-			<dict>
-				<key>CFBundleIconFiles</key>
-				<array>
-					<string>ic_darsigova_6</string>
-				</array>
-				<key>UIPrerenderedIcon</key>
-				<false/>
-			</dict>
-			<key>darsigova_5</key>
-			<dict>
-				<key>CFBundleIconFiles</key>
-				<array>
-					<string>ic_darsigova_5</string>
-				</array>
-				<key>UIPrerenderedIcon</key>
-				<false/>
-			</dict>
-			<key>darsigova_4</key>
-			<dict>
-				<key>CFBundleIconFiles</key>
-				<array>
-					<string>ic_darsigova_4</string>
-				</array>
-				<key>UIPrerenderedIcon</key>
-				<false/>
-			</dict>
-			<key>darsigova_3</key>
-			<dict>
-				<key>CFBundleIconFiles</key>
-				<array>
-					<string>ic_darsigova_3</string>
-				</array>
-				<key>UIPrerenderedIcon</key>
-				<false/>
-			</dict>
-			<key>darsigova_2</key>
-			<dict>
-				<key>CFBundleIconFiles</key>
-				<array>
-					<string>ic_darsigova_2</string>
+					<string>ic_dark_night</string>
 				</array>
 				<key>UIPrerenderedIcon</key>
 				<false/>
@@ -100,11 +28,83 @@
 				<key>UIPrerenderedIcon</key>
 				<false/>
 			</dict>
-			<key>dark_night</key>
+			<key>darsigova_10</key>
 			<dict>
 				<key>CFBundleIconFiles</key>
 				<array>
-					<string>ic_dark_night</string>
+					<string>ic_darsigova_10</string>
+				</array>
+				<key>UIPrerenderedIcon</key>
+				<false/>
+			</dict>
+			<key>darsigova_2</key>
+			<dict>
+				<key>CFBundleIconFiles</key>
+				<array>
+					<string>ic_darsigova_2</string>
+				</array>
+				<key>UIPrerenderedIcon</key>
+				<false/>
+			</dict>
+			<key>darsigova_3</key>
+			<dict>
+				<key>CFBundleIconFiles</key>
+				<array>
+					<string>ic_darsigova_3</string>
+				</array>
+				<key>UIPrerenderedIcon</key>
+				<false/>
+			</dict>
+			<key>darsigova_4</key>
+			<dict>
+				<key>CFBundleIconFiles</key>
+				<array>
+					<string>ic_darsigova_4</string>
+				</array>
+				<key>UIPrerenderedIcon</key>
+				<false/>
+			</dict>
+			<key>darsigova_5</key>
+			<dict>
+				<key>CFBundleIconFiles</key>
+				<array>
+					<string>ic_darsigova_5</string>
+				</array>
+				<key>UIPrerenderedIcon</key>
+				<false/>
+			</dict>
+			<key>darsigova_6</key>
+			<dict>
+				<key>CFBundleIconFiles</key>
+				<array>
+					<string>ic_darsigova_6</string>
+				</array>
+				<key>UIPrerenderedIcon</key>
+				<false/>
+			</dict>
+			<key>darsigova_7</key>
+			<dict>
+				<key>CFBundleIconFiles</key>
+				<array>
+					<string>ic_darsigova_7</string>
+				</array>
+				<key>UIPrerenderedIcon</key>
+				<false/>
+			</dict>
+			<key>darsigova_8</key>
+			<dict>
+				<key>CFBundleIconFiles</key>
+				<array>
+					<string>ic_darsigova_8</string>
+				</array>
+				<key>UIPrerenderedIcon</key>
+				<false/>
+			</dict>
+			<key>darsigova_9</key>
+			<dict>
+				<key>CFBundleIconFiles</key>
+				<array>
+					<string>ic_darsigova_9</string>
 				</array>
 				<key>UIPrerenderedIcon</key>
 				<false/>
@@ -169,83 +169,11 @@
 	<dict>
 		<key>CFBundleAlternateIcons</key>
 		<dict>
-			<key>darsigova_10</key>
+			<key>dark_night</key>
 			<dict>
 				<key>CFBundleIconFiles</key>
 				<array>
-					<string>ic_darsigova_10</string>
-				</array>
-				<key>UIPrerenderedIcon</key>
-				<false/>
-			</dict>
-			<key>darsigova_9</key>
-			<dict>
-				<key>CFBundleIconFiles</key>
-				<array>
-					<string>ic_darsigova_9</string>
-				</array>
-				<key>UIPrerenderedIcon</key>
-				<false/>
-			</dict>
-			<key>darsigova_8</key>
-			<dict>
-				<key>CFBundleIconFiles</key>
-				<array>
-					<string>ic_darsigova_8</string>
-				</array>
-				<key>UIPrerenderedIcon</key>
-				<false/>
-			</dict>
-			<key>darsigova_7</key>
-			<dict>
-				<key>CFBundleIconFiles</key>
-				<array>
-					<string>ic_darsigova_7</string>
-				</array>
-				<key>UIPrerenderedIcon</key>
-				<false/>
-			</dict>
-			<key>darsigova_6</key>
-			<dict>
-				<key>CFBundleIconFiles</key>
-				<array>
-					<string>ic_darsigova_6</string>
-				</array>
-				<key>UIPrerenderedIcon</key>
-				<false/>
-			</dict>
-			<key>darsigova_5</key>
-			<dict>
-				<key>CFBundleIconFiles</key>
-				<array>
-					<string>ic_darsigova_5</string>
-				</array>
-				<key>UIPrerenderedIcon</key>
-				<false/>
-			</dict>
-			<key>darsigova_4</key>
-			<dict>
-				<key>CFBundleIconFiles</key>
-				<array>
-					<string>ic_darsigova_4</string>
-				</array>
-				<key>UIPrerenderedIcon</key>
-				<false/>
-			</dict>
-			<key>darsigova_3</key>
-			<dict>
-				<key>CFBundleIconFiles</key>
-				<array>
-					<string>ic_darsigova_3</string>
-				</array>
-				<key>UIPrerenderedIcon</key>
-				<false/>
-			</dict>
-			<key>darsigova_2</key>
-			<dict>
-				<key>CFBundleIconFiles</key>
-				<array>
-					<string>ic_darsigova_2</string>
+					<string>ic_dark_night</string>
 				</array>
 				<key>UIPrerenderedIcon</key>
 				<false/>
@@ -259,11 +187,83 @@
 				<key>UIPrerenderedIcon</key>
 				<false/>
 			</dict>
-			<key>dark_night</key>
+			<key>darsigova_10</key>
 			<dict>
 				<key>CFBundleIconFiles</key>
 				<array>
-					<string>ic_dark_night</string>
+					<string>ic_darsigova_10</string>
+				</array>
+				<key>UIPrerenderedIcon</key>
+				<false/>
+			</dict>
+			<key>darsigova_2</key>
+			<dict>
+				<key>CFBundleIconFiles</key>
+				<array>
+					<string>ic_darsigova_2</string>
+				</array>
+				<key>UIPrerenderedIcon</key>
+				<false/>
+			</dict>
+			<key>darsigova_3</key>
+			<dict>
+				<key>CFBundleIconFiles</key>
+				<array>
+					<string>ic_darsigova_3</string>
+				</array>
+				<key>UIPrerenderedIcon</key>
+				<false/>
+			</dict>
+			<key>darsigova_4</key>
+			<dict>
+				<key>CFBundleIconFiles</key>
+				<array>
+					<string>ic_darsigova_4</string>
+				</array>
+				<key>UIPrerenderedIcon</key>
+				<false/>
+			</dict>
+			<key>darsigova_5</key>
+			<dict>
+				<key>CFBundleIconFiles</key>
+				<array>
+					<string>ic_darsigova_5</string>
+				</array>
+				<key>UIPrerenderedIcon</key>
+				<false/>
+			</dict>
+			<key>darsigova_6</key>
+			<dict>
+				<key>CFBundleIconFiles</key>
+				<array>
+					<string>ic_darsigova_6</string>
+				</array>
+				<key>UIPrerenderedIcon</key>
+				<false/>
+			</dict>
+			<key>darsigova_7</key>
+			<dict>
+				<key>CFBundleIconFiles</key>
+				<array>
+					<string>ic_darsigova_7</string>
+				</array>
+				<key>UIPrerenderedIcon</key>
+				<false/>
+			</dict>
+			<key>darsigova_8</key>
+			<dict>
+				<key>CFBundleIconFiles</key>
+				<array>
+					<string>ic_darsigova_8</string>
+				</array>
+				<key>UIPrerenderedIcon</key>
+				<false/>
+			</dict>
+			<key>darsigova_9</key>
+			<dict>
+				<key>CFBundleIconFiles</key>
+				<array>
+					<string>ic_darsigova_9</string>
 				</array>
 				<key>UIPrerenderedIcon</key>
 				<false/>

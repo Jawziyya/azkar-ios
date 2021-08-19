@@ -43,7 +43,7 @@ struct ZikrPagesView: View, Equatable {
 struct ZikrPagesView_Previews: PreviewProvider {
 
     static var previews: some View {
-        ZikrPagesView(viewModel: ZikrPagesViewModel(category: .other, title: ZikrCategory.morning.title, azkar: [], preferences: Preferences()))
+        ZikrPagesView(viewModel: ZikrPagesViewModel(router: RootCoordinator(preferences: Preferences(), deeplinker: Deeplinker(), player: Player(player: AppDelegate.shared.player)), category: .other, title: ZikrCategory.morning.title, azkar: [], preferences: Preferences()))
     }
 
 }

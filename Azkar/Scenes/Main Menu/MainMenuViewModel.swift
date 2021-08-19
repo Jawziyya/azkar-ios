@@ -14,6 +14,8 @@ final class MainMenuViewModel: ObservableObject {
 
     @Published var title = ""
 
+    unowned let router: RootRouter
+
     enum Section: CaseIterable {
         case dayNight
         case afterSalah
@@ -41,13 +43,8 @@ final class MainMenuViewModel: ObservableObject {
     let fastingDua: Zikr
 
     let preferences: Preferences
-    let settingsViewModel: SettingsViewModel
 
     private var cancellabels = Set<AnyCancellable>()
-
-    private var router: Router {
-        Router.shared
-    }
 
     private var isIpad: Bool {
         UIDevice.current.isIpad
@@ -72,8 +69,8 @@ final class MainMenuViewModel: ObservableObject {
         return item
     }()
 
-    init(preferences: Preferences, player: Player) {
-        self.settingsViewModel = .init(preferences: preferences)
+    init(router: RootRouter, preferences: Preferences, player: Player) {
+        self.router = router
         let azkar = Zikr.data
         let all = azkar
             .sorted(by: { $0.rowInCategory < $1.rowInCategory })
@@ -145,23 +142,6 @@ final class MainMenuViewModel: ObservableObject {
             .store(in: &cancellabels)
     }
 
-    func azkarForCategory(_ category: ZikrCategory) -> [ZikrViewModel] {
-        switch category {
-        case .morning: return morningAzkar
-        case .evening: return eveningAzkar
-        case .afterSalah: return afterSalahAzkar
-        case .other: return otherAzkar
-        }
-    }
-
-    private func getZikrViewModel(_ zikr: Zikr) -> ZikrViewModel {
-        ZikrViewModel(zikr: zikr, preferences: preferences, player: player)
-    }
-
-    private func getZikrPagesViewModel(for category: ZikrCategory) -> ZikrPagesViewModel {
-        ZikrPagesViewModel(category: category, title: category.title, azkar: azkarForCategory(category), preferences: preferences)
-    }
-
     func hideNotificationsAccessMessage() {
         DispatchQueue.main.async {
             if let index = self.additionalMenuItems.firstIndex(where: { $0 == self.notificationsAccessMenuItem }) {
@@ -171,25 +151,19 @@ final class MainMenuViewModel: ObservableObject {
     }
 
     func navigateToZikr(_ zikr: Zikr) {
-        let vm = self.getZikrViewModel(zikr)
-        router.navigateBack()
-        router.push(.zikr(viewModel: vm, showTitle: .none), isDetailLink: isIpad)
+        router.trigger(.zikr(zikr))
     }
 
     func navigateToCategory(_ category: ZikrCategory) {
-        let viewModel = getZikrPagesViewModel(for: category)
-        router.navigateBack()
-        router.push(.category(viewModel), isDetailLink: !isIpad)
+        router.trigger(.azkar(category))
     }
 
     func navigateToAboutScreen() {
-        router.navigateBack()
-        router.push(.about(preferences: preferences))
+        router.trigger(.aboutApp)
     }
 
     func navigateToSettings() {
-        router.navigateBack()
-        router.push(.settings(settingsViewModel))
+        router.trigger(.settings)
     }
 
     func navigateToMenuItem(_ item: AzkarMenuOtherItem) {
@@ -198,17 +172,6 @@ final class MainMenuViewModel: ObservableObject {
             navigateToAboutScreen()
         case .settings:
             navigateToSettings()
-        default:
-            break
-        }
-    }
-
-    func handleDeeplink(_ route: Deeplinker.Route?) {
-        switch route {
-        case .settings:
-            navigateToSettings()
-        case .azkar(let category):
-            navigateToCategory(category)
         default:
             break
         }
