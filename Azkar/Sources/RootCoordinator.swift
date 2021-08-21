@@ -11,6 +11,14 @@ import SwiftUI
 import Coordinator
 import Combine
 
+extension View {
+
+    var wrapped: UIHostingController<Self> {
+        UIHostingController(rootView: self)
+    }
+
+}
+
 extension UIViewController {
 
     var isPadInterface: Bool {
@@ -28,11 +36,11 @@ extension UIViewController {
 
 }
 
-enum RootSection {
+enum RootSection: Equatable {
     case root
     case azkar(ZikrCategory)
     case zikr(Zikr)
-    case settings
+    case settings(SettingsSection)
     case aboutApp
 }
 
@@ -80,8 +88,8 @@ final class RootCoordinator: NavigationCoordinator, RootRouter {
             .sink(receiveValue: { [unowned self] route in
                 switch route {
 
-                case .settings:
-                    self.trigger(.settings)
+                case .settings(let section):
+                    self.trigger(.settings(section))
 
                 case .azkar(let category):
                     self.trigger(.azkar(category))
@@ -107,7 +115,7 @@ final class RootCoordinator: NavigationCoordinator, RootRouter {
         section = route
     }
 
-    private var section = RootSection.settings {
+    private var section = RootSection.root {
         didSet {
             handleSelection(section)
         }
@@ -119,7 +127,7 @@ final class RootCoordinator: NavigationCoordinator, RootRouter {
     }
 
     func goToSettings() {
-        section = .settings
+        section = .settings(.root)
     }
 
 }
@@ -181,16 +189,32 @@ private extension RootCoordinator {
                 show(viewController)
             }
 
-        case .settings:
+        case .settings(let section):
             let viewModel = SettingsViewModel(preferences: preferences, notificationsHandler: NotificationsHandler.shared)
             let view = SettingsView(viewModel: viewModel)
-            let viewController = UIHostingController(rootView: view)
-            viewController.title = NSLocalizedString("settings.title", comment: "Settings title")
-            viewController.navigationItem.largeTitleDisplayMode = .always
-            if rootViewController.isPadInterface {
-                rootViewController.replaceDetailViewController(with: viewController)
-            } else {
-                show(viewController)
+
+            switch section {
+
+            case .root:
+                let viewController = view.wrapped
+                viewController.title = L10n.Settings.title
+                viewController.navigationItem.largeTitleDisplayMode = .always
+                showDetailViewController(viewController)
+
+            case .icons:
+                let viewController = view.iconPicker.wrapped
+                viewController.title = L10n.Settings.Icon.title
+                showDetailViewController(viewController)
+
+            case .themes:
+                let viewController = view.themePicker.wrapped
+                viewController.title = L10n.Settings.Theme.title
+                showDetailViewController(viewController)
+
+            case .fonts:
+                let viewController = view.fontsSection.wrapped
+                showDetailViewController(viewController)
+
             }
 
         case .aboutApp:
@@ -200,6 +224,20 @@ private extension RootCoordinator {
             viewController.title = L10n.About.title
             show(viewController)
 
+        }
+    }
+
+    private func showDetailViewController(_ viewController: UIViewController, animated: Bool = true) {
+        if rootViewController.isPadInterface {
+            rootViewController.replaceDetailViewController(with: viewController)
+        } else {
+            if animated {
+                show(viewController)
+            } else {
+                UIView.performWithoutAnimation {
+                    self.show(viewController)
+                }
+            }
         }
     }
 

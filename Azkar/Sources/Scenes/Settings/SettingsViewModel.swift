@@ -13,8 +13,6 @@ import UserNotifications
 
 final class SettingsViewModel: ObservableObject {
 
-    let objectWillChange = PassthroughSubject<Void, Never>()
-
     private let notificationsHandler: NotificationsHandler
 
     var canChangeIcon: Bool {
@@ -65,7 +63,9 @@ final class SettingsViewModel: ObservableObject {
         preferences
             .storageChangesPublisher()
             .receive(on: RunLoop.main)
-            .subscribe(objectWillChange)
+            .sink(receiveValue: { [unowned self] in
+                self.objectWillChange.send()
+            })
             .store(in: &cancellabels)
 
         $morningTime

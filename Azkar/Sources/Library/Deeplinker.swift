@@ -14,7 +14,7 @@ final class Deeplinker: ObservableObject {
     @Published var route: Route?
 
     enum Route: Equatable, Hashable {
-        case settings
+        case settings(SettingsSection)
         case azkar(ZikrCategory)
     }
 }

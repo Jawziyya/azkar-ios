@@ -8,6 +8,10 @@
 
 import SwiftUI
 
+enum SettingsSection: Equatable {
+    case root, themes, fonts, icons
+}
+
 extension URL: Identifiable {
     public var id: String {
         absoluteString
