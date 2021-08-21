@@ -16,6 +16,7 @@ struct MainMenuSmallGroup: View {
                     image
                         .resizable()
                         .scaledToFit()
+                        .cornerRadius(item.imageCornerRadius)
                         .padding(8)
                         .frame(width: 40, height: 40)
                         .foregroundColor(item.color)
@@ -28,23 +29,7 @@ struct MainMenuSmallGroup: View {
                     .frame(width: 40, height: 40)
             }
 
-            HStack {
-                if item.count == nil {
-                    Spacer()
-                }
-
-                title
-
-                if item.count != nil {
-                    Spacer()
-                }
-
-                item.count.flatMap { count in
-                    Text("\(count)")
-                        .font(Font.subheadline)
-                        .foregroundColor(Color.secondaryText)
-                }
-            }
+            title
 
         }
         .environment(\.layoutDirection, flip ? .rightToLeft : .leftToRight)

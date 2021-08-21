@@ -2,35 +2,36 @@
 
 import SwiftUI
 
+struct MainMenuLargeGroupViewModel: Equatable, Identifiable {
+    var id: String { category.title }
+    let category: ZikrCategory
+    let title: String
+    let animationName: String
+    let animationSpeed: Double
+}
+
 struct MainMenuLargeGroup: View {
 
-	var item: AzkarMenuType
+    let viewModel: MainMenuLargeGroupViewModel
 
 	var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
-			HStack(alignment: .center) {
-                Image(systemName: item.imageName)
-                    .resizable()
-                    .frame(width: 25, height: 25)
-                    .aspectRatio(contentMode: .fill)
-                    .padding(10)
-					.foregroundColor(Color.white)
-                    .background(
-                        Circle().fill(item.color)
-                    )
-				Spacer()
+        VStack(alignment: .center, spacing: 0) {
+            LottieView(
+                name: viewModel.animationName,
+                loopMode: .loop,
+                contentMode: .scaleAspectFit,
+                speed: CGFloat(viewModel.animationSpeed)
+            )
+            .frame(width: 60, height: 60)
+            .padding(8)
 
-                item.count.flatMap {
-                    Text("\($0)")
-                        .font(Font.title)
-                        .bold()
-                }
-			}
             Text(viewModel.title)
                 .font(Font.system(.body, design: .rounded))
 				.bold()
 				.multilineTextAlignment(.leading)
 				.foregroundColor(Color.secondaryText)
+                .padding(8)
+                .layoutPriority(1)
 		}
 		.padding()
 	}
@@ -39,8 +40,15 @@ struct MainMenuLargeGroup: View {
 struct GroupLarge_Previews: PreviewProvider {
 	static var previews: some View {
 		ZStack {
-			Color(.secondarySystemBackground)
-            MainMenuLargeGroup(item: AzkarMenuItem(category: .evening, imageName: "sun.max", title: "Test", color: Color.accent, count: Int.random(in: 5...20)))
+            MainMenuLargeGroup(
+                viewModel: MainMenuLargeGroupViewModel(
+                    category: .morning,
+                    title: "Test",
+                    animationName: "sun",
+                    animationSpeed: 1
+                )
+            )
 		}
+        .previewLayout(.fixed(width: 200, height: 150))
 	}
 }

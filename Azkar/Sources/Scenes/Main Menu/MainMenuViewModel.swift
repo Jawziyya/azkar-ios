@@ -30,7 +30,13 @@ final class MainMenuViewModel: ObservableObject {
 
     let currentYear: String
 
-    let dayNightSectionModels: [AzkarMenuItem]
+    func getDayNightSectionModels(isDarkModeEnabled: Bool) -> [MainMenuLargeGroupViewModel] {
+        [
+            MainMenuLargeGroupViewModel(category: .morning, title: MainMenuItem.morning.localizedTitle, animationName: "sun", animationSpeed: 0.5),
+            MainMenuLargeGroupViewModel(category: .evening, title: MainMenuItem.evening.localizedTitle, animationName: isDarkModeEnabled ? "moon" : "moon2", animationSpeed: 0.5),
+        ]
+    }
+
     let otherAzkarModels: [AzkarMenuItem]
     let infoModels: [AzkarMenuOtherItem]
 
@@ -38,6 +44,9 @@ final class MainMenuViewModel: ObservableObject {
 
     @Published var additionalMenuItems: [AzkarMenuOtherItem] = []
     @Published var enableEidBackground = false
+
+    @Preference("kDidDisplayIconPacksMessage", defaultValue: false)
+    var kDidDisplayIconPacksMessage
 
     let player: Player
     let fastingDua: Zikr
@@ -51,7 +60,7 @@ final class MainMenuViewModel: ObservableObject {
     }
 
     private func getRandomEmoji() -> String {
-        ["🌕", "🌖", "🌗", "🌘", "🌒", "🌓", "🌔", "🌙", "🌸", "☘️", "🌳", "🌴", "🌱", "🌼", "💫", "🌎", "🌍", "🌏", "🪐", "✨", "❄️"].randomElement()!
+        ["🌙", "🌸", "☘️", "🌳", "🌴", "🌱", "🌼", "💫", "🌎", "🌍", "🌏", "🪐", "✨", "❄️"].randomElement()!
     }
 
     private lazy var notificationsAccessMenuItem: AzkarMenuOtherItem = {
@@ -65,6 +74,17 @@ final class MainMenuViewModel: ObservableObject {
                 case .failure: break
                 }
             }
+        }
+        return item
+    }()
+
+    private lazy var iconsPackMessage: AzkarMenuOtherItem = {
+        let title = L10n.Alerts.checkoutIconPacks
+        var item = AzkarMenuOtherItem(imageName: AppIconPack.maccinz.icons.randomElement()!.imageName, title: title, color: Color.red, iconType: .bundled, imageCornerRadius: 4)
+        item.action = { [unowned self] in
+            self.kDidDisplayIconPacksMessage = true
+            self.hideIconPacksMessage()
+            self.navigateToIconPacksList()
         }
         return item
     }()
@@ -86,22 +106,14 @@ final class MainMenuViewModel: ObservableObject {
 
         fastingDua = azkar.first(where: { $0.id == 51 })!
 
-        let morning = MainMenuItem.morning
-        let evening = MainMenuItem.evening
-
-        dayNightSectionModels = [
-            AzkarMenuItem(category: .morning, imageName: morning.imageName, title: morning.localizedTitle, color: Color(.systemBlue), count: morningAzkar.count),
-            AzkarMenuItem(category: .evening, imageName: evening.imageName, title: evening.localizedTitle, color: Color(.systemIndigo), count: eveningAzkar.count)
-        ]
-
         otherAzkarModels = [
-            AzkarMenuItem(category: .afterSalah, imageName: "mosque", title: "Азкары после молитвы", color: Color.init(.systemBlue), count: afterSalahAzkar.count, iconType: .bundled),
-            AzkarMenuItem(category: .other, imageName: "square.stack.3d.down.right.fill", title: "Важные азкары", color: Color.init(.systemTeal), count: otherAzkar.count),
+            AzkarMenuItem(category: .afterSalah, imageName: "mosque", title: L10n.Category.afterSalah, color: Color.init(.systemBlue), count: afterSalahAzkar.count, iconType: .bundled),
+            AzkarMenuItem(category: .other, imageName: "square.stack.3d.down.right.fill", title: L10n.Category.other, color: Color.init(.systemTeal), count: otherAzkar.count),
         ]
 
         infoModels = [
-            AzkarMenuOtherItem(groupType: .about, imageName: "checkmark.seal.fill", title: NSLocalizedString("root.about", comment: "About app section."), color: Color.green),
-            AzkarMenuOtherItem(groupType: .settings, imageName: "gear", title: NSLocalizedString("root.settings", comment: "Settings app section."), color: Color.init(.systemGray)),
+            AzkarMenuOtherItem(groupType: .about, imageName: "info.circle", title: L10n.Root.about, color: Color.secondaryText),
+            AzkarMenuOtherItem(groupType: .settings, imageName: "gear", title: L10n.Root.settings, color: Color.init(.systemGray)),
         ]
 
         var year = "\(Date().hijriYear) г.х."
@@ -112,6 +124,10 @@ final class MainMenuViewModel: ObservableObject {
             year += " (\(Date().year) г.)"
         }
         currentYear = year
+
+        if !kDidDisplayIconPacksMessage {
+            additionalMenuItems.append(iconsPackMessage)
+        }
 
         NotificationsHandler.shared
             .getNotificationsAuthorizationStatus(completion: { [unowned self] status in
@@ -142,9 +158,17 @@ final class MainMenuViewModel: ObservableObject {
             .store(in: &cancellabels)
     }
 
-    func hideNotificationsAccessMessage() {
+    private func hideNotificationsAccessMessage() {
         DispatchQueue.main.async {
             if let index = self.additionalMenuItems.firstIndex(where: { $0 == self.notificationsAccessMenuItem }) {
+                self.additionalMenuItems.remove(at: index)
+            }
+        }
+    }
+
+    private func hideIconPacksMessage() {
+        DispatchQueue.main.async {
+            if let index = self.additionalMenuItems.firstIndex(where: { $0 == self.iconsPackMessage }) {
                 self.additionalMenuItems.remove(at: index)
             }
         }
@@ -163,7 +187,11 @@ final class MainMenuViewModel: ObservableObject {
     }
 
     func navigateToSettings() {
-        router.trigger(.settings)
+        router.trigger(.settings(.root))
+    }
+
+    func navigateToIconPacksList() {
+        router.trigger(.settings(.icons))
     }
 
     func navigateToMenuItem(_ item: AzkarMenuOtherItem) {

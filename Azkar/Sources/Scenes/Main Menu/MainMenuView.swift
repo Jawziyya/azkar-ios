@@ -21,6 +21,7 @@ struct MainMenuView: View {
 
     @ObservedObject var viewModel: MainMenuViewModel
     @Environment(\.horizontalSizeClass) var hSizeClass
+    @Environment(\.colorScheme) var colorScheme
 
     private var isIpad: Bool {
         UIDevice.current.isIpad
@@ -49,9 +50,7 @@ struct MainMenuView: View {
             .if(isIpad) {
                 $0.frame(minWidth: 300)
             }
-//            .handleNavigation(Router.shared.navigationPublisher)
         }
-        .padding(.leading, isIpad ? 0.5 : 0) // Hack for proper allVisible split view mode.
         .environment(\.horizontalSizeClass, isIpad ? .regular : .compact)
         .attachEnvironmentOverrides(viewModel: EnvironmentOverridesViewModel(preferences: viewModel.preferences))
     }
@@ -70,18 +69,23 @@ struct MainMenuView: View {
             Spacer(minLength: 16)
 
             // MARK: - Day & Night Azkar
-            HStack(spacing: 16) {
-                ForEach(viewModel.dayNightSectionModels) { item in
-                    Button {
-                        self.viewModel.navigateToCategory(item.category)
-                    } label: {
-                        MainMenuLargeGroup(item: item)
+            GeometryReader { proxy in
+                HStack(spacing: 16) {
+                    ForEach(viewModel.getDayNightSectionModels(isDarkModeEnabled: colorScheme == .dark)) { item in
+                        Button {
+                            self.viewModel.navigateToCategory(item.category)
+                        } label: {
+                            MainMenuLargeGroup(viewModel: item)
+                        }
+                        .frame(width: (proxy.size.width - 16)/2)
+                        .frame(height: 120)
                     }
+                    .foregroundColor(Color.text)
+                    .background(itemsBackgroundColor)
+                    .clipShape(RoundedRectangle(cornerRadius: Constants.cornerRadius))
                 }
-                .foregroundColor(Color.text)
-                .background(itemsBackgroundColor)
-                .clipShape(RoundedRectangle(cornerRadius: Constants.cornerRadius))
             }
+            .frame(height: 120)
 
             // MARK: - Other Azkar
             VStack(spacing: 0) {

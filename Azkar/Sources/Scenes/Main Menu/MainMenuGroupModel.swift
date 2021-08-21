@@ -16,10 +16,12 @@ protocol AzkarMenuType {
     var image: Image? { get }
     var iconType: IconType { get }
     var imageName: String { get }
+    var imageCornerRadius: CGFloat { get }
 }
 
 extension AzkarMenuType {
     var count: Int? { nil }
+    var imageCornerRadius: CGFloat { 0 }
 }
 
 struct AzkarMenuItem: Identifiable, AzkarMenuType, Hashable {
@@ -72,13 +74,18 @@ struct AzkarMenuOtherItem: Identifiable, AzkarMenuType {
 	let color: Color
     var iconType = IconType.system
     var action: (() -> Void)?
+    var imageCornerRadius: CGFloat = 0
 
     static var demo = AzkarMenuOtherItem(groupType: .settings, imageName: "paperplane", title: "Test category", color: Color.init(.systemTeal))
 
     var image: Image? {
         switch iconType {
         case .bundled:
-            return Image(imageName).renderingMode(.original)
+            if let image = UIImage(named: imageName) {
+                return Image(uiImage: image).renderingMode(.original)
+            } else {
+                return Image(imageName).renderingMode(.original)
+            }
         case .system: 
             return Image(systemName: imageName).renderingMode(.template)
         case .emoji:
