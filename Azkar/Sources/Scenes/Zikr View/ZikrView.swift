@@ -11,7 +11,6 @@ import SwiftUI
 struct ZikrView: View {
 
     @ObservedObject var viewModel: ZikrViewModel
-    var showTitle: Bool?
 
     @State private var textHeight: CGFloat = 0
     @State private var translationHeight: CGFloat = 0
@@ -28,17 +27,12 @@ struct ZikrView: View {
         ScrollView {
             self.getContent()
         }
-        .if(showTitle ?? UIDevice.current.isIpad) { view in
-            view.navigationTitle(viewModel.title)
-        }
         .background(Color.background.edgesIgnoringSafeArea(.all))
     }
 
     private func getContent() -> some View {
         VStack(alignment: .leading, spacing: 0) {
-            if !UIDevice.current.isIpad {
-                titleView
-            }
+            titleView
             textView
             translationView
 
@@ -61,7 +55,6 @@ struct ZikrView: View {
                     self.getNoteView(notes)
                 }
 
-                #if SHOW_BENEFITS
                 viewModel.zikr.benefit.flatMap { text in
                     HStack(alignment: .top, spacing: 8) {
                         Text("💎")
@@ -74,7 +67,6 @@ struct ZikrView: View {
                     }
                     .padding()
                 }
-                #endif
             }
 
             Spacer(minLength: 20)
@@ -114,7 +106,7 @@ struct ZikrView: View {
 
     // MARK: - Translation
     private var translationView: some View {
-        CollapsableSection(title: NSLocalizedString("read.translation", comment: "Zikr translation label."), text: viewModel.zikr.translation.set(style: TextStyles.bodyStyle(sizeCategory: sizeCategory)), isExpanded: $viewModel.expandTranslation, textHeight: $translationHeight, tintColor: tintColor) {
+        CollapsableSection(title: L10n.Read.translation, text: viewModel.zikr.translation.set(style: TextStyles.bodyStyle(sizeCategory: sizeCategory)), isExpanded: $viewModel.expandTranslation, textHeight: $translationHeight, tintColor: tintColor) {
             withAnimation(Animation.easeInOut(duration: 0.2)) {
                 self.viewModel.preferences.expandTranslation.toggle()
             }
@@ -125,7 +117,7 @@ struct ZikrView: View {
 
     // MARK: - Transliteration
     private var transliterationView: some View {
-        CollapsableSection(title: NSLocalizedString("read.transcription", comment: "Zikr transcription label."), text: viewModel.zikr.transliteration.set(style: TextStyles.bodyStyle(sizeCategory: sizeCategory)), isExpanded: $viewModel.expandTransliteration, textHeight: $transliterationHeight, tintColor: tintColor) {
+        CollapsableSection(title: L10n.Read.transcription, text: viewModel.zikr.transliteration.set(style: TextStyles.bodyStyle(sizeCategory: sizeCategory)), isExpanded: $viewModel.expandTransliteration, textHeight: $transliterationHeight, tintColor: tintColor) {
             withAnimation(Animation.easeInOut(duration: 0.2)) {
                 self.viewModel.preferences.expandTransliteration.toggle()
             }
@@ -138,12 +130,12 @@ struct ZikrView: View {
     private var infoView: some View {
         HStack(alignment: .center, spacing: 20) {
             if viewModel.zikr.repeats > 0 {
-                getInfoStack(label: NSLocalizedString("read.repeats", comment: "Zikr repeats label."), text: String.localizedStringWithFormat(NSLocalizedString("repeats", comment: ""), viewModel.zikr.repeats))
+                getInfoStack(label: L10n.Read.repeats, text: L10n.repeats(viewModel.zikr.repeats))
             }
 
             viewModel.zikr.source.textOrNil.flatMap { text in
                 NavigationLink.init(destination: hadithView, label: {
-                    getInfoStack(label: NSLocalizedString("read.source", comment: "Zikr source label."), text: text, underline: viewModel.hadithViewModel != nil)
+                    getInfoStack(label: L10n.Read.source, text: text, underline: viewModel.hadithViewModel != nil)
                         .hoverEffect(.highlight)
                 })
                 .disabled(viewModel.hadithViewModel == nil)

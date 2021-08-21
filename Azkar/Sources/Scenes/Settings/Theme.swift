@@ -18,11 +18,11 @@ enum Theme: Int, Codable, CaseIterable, Identifiable, PickableItem, Hashable {
     var title: String {
         switch self {
         case .automatic:
-            return NSLocalizedString("settings.theme.auto", comment: "")
+            return L10n.Settings.Theme.auto
         case .light:
-            return NSLocalizedString("settings.theme.light", comment: "")
+            return L10n.Settings.Theme.light
         case .dark:
-            return NSLocalizedString("settings.theme.dark", comment: "")
+            return L10n.Settings.Theme.dark
         }
     }
 

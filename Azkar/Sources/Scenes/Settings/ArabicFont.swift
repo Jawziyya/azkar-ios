@@ -33,7 +33,7 @@ enum ArabicFont: String, CaseIterable, Identifiable, Codable, Hashable, Pickable
     var title: String {
         switch self {
         case .standard:
-            return NSLocalizedString("settings.text.standard-font-name", comment: "")
+            return L10n.Settings.Text.standardFontName
         case .adobe:
             return rawValue.capitalized
         case .KFGQP:

@@ -55,7 +55,7 @@ final class MainMenuViewModel: ObservableObject {
     }
 
     private lazy var notificationsAccessMenuItem: AzkarMenuOtherItem = {
-        let title = NSLocalizedString("alerts.turn-on-notifications-alert", comment: "The alert presented to user before asking for notifications permission.")
+        let title = L10n.Alerts.turnOnNotificationsAlert
         var item = AzkarMenuOtherItem(imageName: "app.badge", title: title, color: Color.blue)
         item.action = {
             NotificationsHandler.shared.requestNotificationsPermission { result in
@@ -123,7 +123,7 @@ final class MainMenuViewModel: ObservableObject {
                 }
             })
 
-        let appName = NSLocalizedString("app-name", comment: "Name of the application.")
+        let appName = L10n.appName
         let title = "\(appName)"
         preferences.$enableFunFeatures
             .map { [unowned self] flag in

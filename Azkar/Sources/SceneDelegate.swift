@@ -78,7 +78,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         Color.secondaryBackground
         .overlay(
             Text("← ") + Text("root.pick-section", comment: "Pick section label.")
-                .font(Font.title.smallCaps())
+                .font(Font.system(.title, design: .rounded).smallCaps())
                 .foregroundColor(Color.secondary)
             ,
             alignment: .center

@@ -44,7 +44,7 @@ final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
     init(zikr: Zikr, preferences: Preferences, player: Player) {
         self.zikr = zikr
         self.preferences = preferences
-        title = zikr.title ?? "\(NSLocalizedString("common.zikr", comment: "")) №\(zikr.rowInCategory)"
+        title = zikr.title ?? "\(L10n.Common.zikr) №\(zikr.rowInCategory)"
 
         expandTranslation = preferences.expandTranslation
         expandTransliteration = preferences.expandTransliteration
@@ -54,11 +54,9 @@ final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
             playerViewModel = PlayerViewModel(title: title, subtitle: zikr.category.title, audioURL: url, player: player)
         }
 
-        #if SHOW_AZKAR_SOURCES
         if zikr.hadith != nil {
             hadithViewModel = HadithViewModel(zikrViewModel: self, preferences: preferences)
         }
-        #endif
 
         cancellabels = [
             preferences.$expandTranslation.assign(to: \.expandTranslation, on: self),

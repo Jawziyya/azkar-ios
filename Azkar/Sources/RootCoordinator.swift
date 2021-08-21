@@ -155,7 +155,7 @@ private extension RootCoordinator {
                 if rootViewController.isPadInterface {
                     let view = ZikrPagesView(viewModel: viewModel)
                     let viewController = UIHostingController(rootView: view)
-                    viewController.title = viewModel.azkar[0].title
+                    viewController.title = viewModel.title
                     show(listViewController)
                     rootViewController.replaceDetailViewController(with: viewController)
                 } else {
@@ -173,7 +173,7 @@ private extension RootCoordinator {
 
         case .zikr(let zikr):
             let viewModel = ZikrViewModel(zikr: zikr, preferences: preferences, player: player)
-            let view = ZikrView(viewModel: viewModel, showTitle: nil)
+            let view = ZikrView(viewModel: viewModel)
             let viewController = UIHostingController(rootView: view)
             if rootViewController.isPadInterface {
                 rootViewController.replaceDetailViewController(with: viewController)
@@ -197,7 +197,7 @@ private extension RootCoordinator {
             let viewModel = AppInfoViewModel(preferences: preferences)
             let view = AppInfoView(viewModel: viewModel)
             let viewController = UIHostingController(rootView: view)
-            viewController.title = "О приложении"
+            viewController.title = L10n.About.title
             show(viewController)
 
         }

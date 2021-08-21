@@ -35,34 +35,44 @@ struct AppInfoViewModel {
     let iconImageName: String
 
     private let materialsCredits: [SourceInfo] = [
-        SourceInfo(title: "Перевод, транскрипция, аудиофайлы озвучки (azkar.ru)", url: URL(string: "https://azkar.ru")!),
-        SourceInfo(title: "Исходный код приложения Azkar (github.com)", url: URL(string: "https://github.com/Jawziyya/azkar-ios")!),
+        SourceInfo(title: L10n.About.azkarRU, url: URL(string: "https://azkar.ru")!),
+        SourceInfo(title: L10n.About.sourceCode, url: URL(string: "https://github.com/Jawziyya/azkar-ios")!),
     ]
 
     private let graphicMaterialsCredits: [SourceInfo] = [
-        SourceInfo(title: NSLocalizedString("about.credits.icon", comment: "App icon credit button."), url: URL(string: "https://flaticon.com/free-icon/moon_414942?term=moon&page=1&position=17")!, imageName: nil),
-        SourceInfo(title: NSLocalizedString("about.credits.adobe-arabic-font", comment: "Adobe font credit button."), url: URL(string: "https://fonts.adobe.com/fonts/adobe-arabic")!, imageName: nil),
-        SourceInfo(title: NSLocalizedString("about.credits.quran-complex-font", comment: "Quran complex link."), url: URL(string: "https://qurancomplex.gov.sa/en/")!, imageName: nil),
-        SourceInfo(title: NSLocalizedString("about.credits.naskh-font", comment: "Google Noto Naskh font."), url: URL(string: "https://www.google.com/get/noto/#naskh-arab")!, imageName: nil),
-        SourceInfo(title: NSLocalizedString("about.credits.scheherazade-font", comment: "Scheherazade font credit."), url: URL(string: "https://software.sil.org/scheherazade/")!, imageName: nil),
+        SourceInfo(title: L10n.About.Credits.image("Moon"), url: URL(string: "https://flaticon.com/free-icon/moon_414942?term=moon&page=1&position=17")!, imageName: nil),
+        SourceInfo(title: L10n.About.Credits.font("Abode Arabic"), url: URL(string: "https://fonts.adobe.com/fonts/adobe-arabic")!),
+        SourceInfo(title: L10n.About.Credits.quranComplexFont, url: URL(string: "https://qurancomplex.gov.sa/en/")!),
+        SourceInfo(title: L10n.About.Credits.font("Google Noto Naskh"), url: URL(string: "https://www.google.com/get/noto/#naskh-arab")!),
+        SourceInfo(title: L10n.About.Credits.font("Scheherazade"), url: URL(string: "https://software.sil.org/scheherazade/")!),
+        SourceInfo(title: L10n.About.Credits.animation("Sunny"), url: URL(string: "https://lottiefiles.com/50649-sunny")!),
+        SourceInfo(title: L10n.About.Credits.animation("Moon & Stars"), url: URL(string: "https://lottiefiles.com/12572-moon-stars")!),
+        SourceInfo(title: L10n.About.Credits.animation("Weather Night"), url: URL(string: "https://lottiefiles.com/4799-weather-night")!),
     ]
 
     private let openSourceLibraries: [SourceInfo] = [
+        SourceInfo(title: "Lottie", url: URL(string: "https://github.com/airbnb/lottie-ios")!),
+        SourceInfo(title: "Coordinator", url: URL(string: "https://github.com/radianttap/Coordinator")),
+        SourceInfo(title: "SwiftGen", url: URL(string: "https://github.com/SwiftGen/SwiftGen")),
         SourceInfo(title: "SwiftRichString", url: URL(string: "https://github.com/malcommac/SwiftRichString")),
         SourceInfo(title: "SwiftyMarkdown", url: URL(string: "https://github.com/SimonFairbairn/SwiftyMarkdown")),
-        SourceInfo(title: "SwiftyStoreKit", url: URL(string: "https://github.com/bizz84/SwiftyStoreKit"))
+        SourceInfo(title: "SwiftyStoreKit", url: URL(string: "https://github.com/bizz84/SwiftyStoreKit")),
     ]
 
-    private let supportModels: [SourceInfo] = [
-        SourceInfo(title: NSLocalizedString("about.support.write-to-email", comment: "Write email button."), url: URL(string: "mailto:azkar.app@pm.me")!, openUrlInApp: false),
-        SourceInfo(title: NSLocalizedString("common.share-app", comment: "Share the app button."), openUrlInApp: false, action: {
+    private let appModels: [SourceInfo] = [
+        SourceInfo(title: L10n.About.Support.writeToEmail, url: URL(string: "mailto:azkar.app@pm.me")!, openUrlInApp: false),
+        SourceInfo(title: L10n.Common.shareApp, openUrlInApp: false, action: {
             let url = URL(string: "https://itunes.apple.com/app/id1511423586")!
             let activity = UIActivityViewController(activityItems: [url], applicationActivities: nil)
             UIApplication.shared.windows.first?.rootViewController?.present(activity, animated: true, completion: nil)
         }),
-        SourceInfo(title: NSLocalizedString("about.support.leave-review", comment: "Write review button."), url: URL(string: "https://itunes.apple.com/app/id1511423586?action=write-review&mt=8")!, openUrlInApp: false),
-        SourceInfo(title: NSLocalizedString("about.support.telegram-channel", comment: "Telegram channel link."), url: URL(string: "https://telegram.me/jawziyya")!, openUrlInApp: false),
-        SourceInfo(title: NSLocalizedString("about.support.jawziyya-apps", comment: "Jawziyya apps button."), url: URL(string: "https://apps.apple.com/ru/developer/al-jawziyya/id1165327318")!, openUrlInApp: false)
+        SourceInfo(title: L10n.About.Support.leaveReview, url: URL(string: "https://itunes.apple.com/app/id1511423586?action=write-review&mt=8")!, openUrlInApp: false),
+    ]
+
+    private let studioModels: [SourceInfo] = [
+        SourceInfo(title: L10n.About.Studio.telegramChannel, url: URL(string: "https://telegram.me/jawziyya")!, openUrlInApp: false),
+        SourceInfo(title: L10n.About.Studio.instagramPage, url: URL(string: "https://instagram.com/jawziyya.studio"), openUrlInApp: false),
+        SourceInfo(title: L10n.About.Studio.jawziyyaApps, url: URL(string: "https://apps.apple.com/ru/developer/al-jawziyya/id1165327318")!, openUrlInApp: false)
     ]
 
     init(preferences: Preferences) {
@@ -71,32 +81,38 @@ struct AppInfoViewModel {
         let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString")!
         let build = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion")!
 
-        appVersion = "\(NSLocalizedString("common.version", comment: "App version label.")) \(version) (\(build))"
+        appVersion = "\(L10n.Common.version) \(version) (\(build))"
 
         let materialsCreditsSection = Section(
-            header: NSLocalizedString("about.credits.sources-header", comment: "Legal information section header."),
+            header: L10n.About.Credits.sourcesHeader,
             items: materialsCredits)
 
         let graphicMaterialsSection = Section(
-            header: NSLocalizedString("about.credits.graphics-header", comment: "Credits section header."),
+            header: L10n.About.Credits.graphicsHeader,
             items: graphicMaterialsCredits
         )
 
         let openSourceLibrariesSection = Section(
-            header: NSLocalizedString("about.credits.open-source-libraries-header", comment: "Open-source libraries section title."),
+            header: L10n.About.Credits.openSourceLibrariesHeader,
             items: openSourceLibraries
         )
 
         let supportAndFeedbackSection = Section(
-            header: NSLocalizedString("about.support.header", comment: "Support section header."),
-            items: supportModels
+            header: L10n.About.Support.header,
+            items: appModels
+        )
+
+        let studioSection = Section(
+            header: L10n.About.Studio.header,
+            items: studioModels
         )
 
         sections = [
             materialsCreditsSection,
+            supportAndFeedbackSection,
+            studioSection,
             graphicMaterialsSection,
             openSourceLibrariesSection,
-            supportAndFeedbackSection,
         ]
     }
 

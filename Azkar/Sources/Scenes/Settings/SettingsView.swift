@@ -32,10 +32,10 @@ struct SettingsView: View {
     // MARK: - Appearance
     var appearanceSection: some View {
         Section {
-            PickerView(label: NSLocalizedString("settings.theme.title", comment: "Theme settings section title."), titleDisplayMode: .inline, subtitle: viewModel.preferences.theme.title, destination: themePicker)
+            PickerView(label: L10n.Settings.Theme.title, titleDisplayMode: .inline, subtitle: viewModel.preferences.theme.title, destination: themePicker)
 
             if viewModel.canChangeIcon {
-                PickerView(label: NSLocalizedString("settings.icon.title", comment: "Icon settings section title."), titleDisplayMode: .inline, subtitle: viewModel.preferences.appIcon.title, destination: iconPicker)
+                PickerView(label: L10n.Settings.Icon.title, titleDisplayMode: .inline, subtitle: viewModel.preferences.appIcon.title, destination: iconPicker)
             }
 
             Toggle(isOn: $viewModel.preferences.enableFunFeatures) {
@@ -52,7 +52,7 @@ struct SettingsView: View {
                     }
                     .alert(isPresented: $showFunFeaturesDescription) {
                         Alert(
-                            title: Text(NSLocalizedString("settings.fun_features.description", comment: "")),
+                            title: Text(L10n.Settings.FunFeatures.description),
                             dismissButton: .default(Text("OK"))
                         )
                     }
@@ -91,9 +91,9 @@ struct SettingsView: View {
             })
 
             if viewModel.preferences.enableNotifications {
-                PickerView(label: NSLocalizedString("settings.notifications.morning-option-label", comment: "Morning notifications option picker title."), titleDisplayMode: .inline, subtitle: viewModel.morningTime, destination: morningTimePicker)
+                PickerView(label: L10n.Settings.Notifications.morningOptionLabel, titleDisplayMode: .inline, subtitle: viewModel.morningTime, destination: morningTimePicker)
 
-                PickerView(label: NSLocalizedString("settings.notifications.evening-option-label", comment: "Evening notification option picker title."), titleDisplayMode: .inline, subtitle: viewModel.eveningTime, destination: eveningTimePicker)
+                PickerView(label: L10n.Settings.Notifications.eveningOptionLabel, titleDisplayMode: .inline, subtitle: viewModel.eveningTime, destination: eveningTimePicker)
             }
         }
     }

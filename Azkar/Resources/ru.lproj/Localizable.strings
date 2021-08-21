@@ -19,19 +19,24 @@
 
 "about.credits.sources-header" = "🗃 Материалы";
 "about.credits.graphics-header" = "🎨 Графические материалы и шрифты";
-"about.credits.open-source-libraries-header" = "🛠 Библиотеки с открытым кодом";
+"about.credits.open-source-libraries-header" = "🧱 Библиотеки с открытым кодом";
 
-"about.credits.icon" = "Изображение значка (flaticon.com)";
-"about.credits.adobe-arabic-font" = "Шрифт Adobe Arabic";
+"about.azkarRU" = "Перевод, транскрипция, аудиофайлы озвучки (azkar.ru)";
+"about.sourceCode" = "Исходный код приложения Azkar (github.com)";
+
+"about.credits.font" = "Шрифт %@";
+"about.credits.image" = "Изображение %@";
+"about.credits.animation" = "Анимация %@";
 "about.credits.quran-complex-font" = "Шрифт Комплекса имени Короля Фахда по изданию Священного Корана";
-"about.credits.naskh-font" = "Шрифт Google Noto Naskh";
-"about.credits.scheherazade-font" = "Шрифт Scheherazade";
 
-"about.support.header" = "🥜 Студия Jawziyya";
+"about.support.header" = "⚒ Обратная связь";
 "about.support.write-to-email" = "Написать на эл. почту";
 "about.support.leave-review" = "Оставить отзыв";
-"about.support.telegram-channel" = "Канал в Telegram";
-"about.support.jawziyya-apps" = "Наши приложения";
+
+"about.studio.header" = "🥜 Студия Jawziyya";
+"about.studio.telegram-channel" = "Канал в Telegram";
+"about.studio.instagram-page" = "Страница в Instagram";
+"about.studio.jawziyya-apps" = "Наши приложения";
 
 "category.morning" = "Утренние";
 "category.evening" = "Вечерние";
@@ -39,6 +44,7 @@
 "category.other" = "Важные азкары";
 
 "alerts.turn-on-notifications-alert" = "Включите уведомления, чтобы приложение напоминало о времени утренних и вечерних азкаров";
+"alerts.checkout-icon-packs" = "Выберите значок для приложения Azkar";
 
 "notifications.morning-notification-title" = "Утренние азкары 🌅";
 "notifications.evening-notification-title" = "Вечерние азкары 🌄";

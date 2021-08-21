@@ -102,8 +102,18 @@ final class SettingsViewModel: ObservableObject {
     }
 
     private func scheduleNotifications() {
-        notificationsHandler.scheduleNotification(id: Keys.morningNotificationId, date: preferences.morningNotificationTime, title: NSLocalizedString("notifications.morning-notification-title", comment: "Morning notification title."), categoryId: ZikrCategory.morning.rawValue)
-        notificationsHandler.scheduleNotification(id: Keys.eveningNotificationId, date: preferences.eveningNotificationTime, title: NSLocalizedString("notifications.evening-notification-title", comment: "Evening notification title."), categoryId: ZikrCategory.evening.rawValue)
+        notificationsHandler.scheduleNotification(
+            id: Keys.morningNotificationId,
+            date: preferences.morningNotificationTime,
+            title: L10n.Notifications.morningNotificationTitle,
+            categoryId: ZikrCategory.morning.rawValue
+        )
+        notificationsHandler.scheduleNotification(
+            id: Keys.eveningNotificationId,
+            date: preferences.eveningNotificationTime,
+            title: L10n.Notifications.eveningNotificationTitle,
+            categoryId: ZikrCategory.evening.rawValue
+        )
     }
 
 }
