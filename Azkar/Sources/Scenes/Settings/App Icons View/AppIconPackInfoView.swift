@@ -16,6 +16,8 @@ final class AppIconPackInfoViewModel: ObservableObject {
     /// Icon to display.
     let icon: AppIcon
 
+    var iconsToDisplay: [AppIcon]
+
     @Published var processing = false
     @Published var purchased: Bool
     @Published var price: String?
@@ -31,6 +33,12 @@ final class AppIconPackInfoViewModel: ObservableObject {
         self.icon = icon
         self.closeAction = closeAction
         self.successAction = successAction
+
+        var icons = pack.icons
+        icons.removeAll(where: { $0.id == icon.id })
+        var evenCount = icons.count % 2 == 0 ? icons.count : icons.count - 1
+        evenCount = min(4, evenCount)
+        iconsToDisplay = Array(icons.shuffled().prefix(evenCount))
 
         purchased = preferences.purchasedIconPacks.contains(pack)
     }
@@ -103,22 +111,61 @@ struct AppIconPackInfoView: View {
 
     @ObservedObject var viewModel: AppIconPackInfoViewModel
 
-    private let closeButtonSize: CGFloat = 60
-    private var cornerRadius: CGFloat { closeButtonSize * 0.2 }
+    private let sampleIconSize: CGFloat = 60
+    private var cornerRadius: CGFloat { sampleIconSize * 0.2 }
+
+    @State private var rotate = false
+
+    func getSampleIcon(with name: String) -> some View {
+        Image(uiImage: UIImage(named: name)!)
+            .resizable()
+            .frame(width: sampleIconSize, height: sampleIconSize)
+            .clipShape(RoundedRectangle(cornerRadius: cornerRadius))
+            .overlay(
+                RoundedRectangle(cornerRadius: cornerRadius)
+                    .stroke(Color.black.opacity(0.3), lineWidth: 0.3)
+            )
+            .offset(x: 0, y: -(sampleIconSize * 0.8))
+    }
+
+    private let rotationAngle: Double = 2.5
+    private let yOffset: CGFloat = 2.5
+    private var xOffset: CGFloat { sampleIconSize * 0.85 }
+
+    private func offsetForIndex(_ index: Int) -> CGFloat {
+        let idx = Int((CGFloat(index) / 2).rounded())
+        let offset = xOffset * CGFloat(idx)
+        return index % 2 == 0 ? -offset : offset
+    }
+
+    private func iconRotationAngle(_ index: Int) -> Double {
+        let idx = Int((CGFloat(index) / 2).rounded())
+        let offset = rotationAngle * Double(idx)
+        return index % 2 == 0 ? offset : -offset
+    }
 
     var body: some View {
         ZStack(alignment: .top) {
             content
-            Image(uiImage: UIImage(named: viewModel.icon.imageName)!)
-                .resizable()
-                .frame(width: closeButtonSize, height: closeButtonSize)
-                .clipShape(RoundedRectangle(cornerRadius: cornerRadius))
-                .overlay(
-                    RoundedRectangle(cornerRadius: cornerRadius)
-                        .stroke(Color.black.opacity(0.3), lineWidth: 0.3)
-                )
-                .shadow(color: Color.black.opacity(0.4), radius: 15, x: 0.0, y: 0.3)
-                .offset(x: 0, y: -(closeButtonSize * 0.8))
+            ZStack {
+                ForEach(Array(viewModel.iconsToDisplay.enumerated()), id: \.0) { index, item in
+                    getSampleIcon(with: item.imageName)
+                        .offset(x: rotate ? offsetForIndex(index + 1) : 0)
+                        .rotationEffect(rotate ? Angle(degrees: iconRotationAngle(index)) : .zero)
+                }
+                getSampleIcon(with: viewModel.icon.imageName)
+            }
+            .onAppear {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    withAnimation(Animation.easeInOut.speed(0.5)) {
+                        self.rotate.toggle()
+                    }
+                }
+            }
+            .onDisappear {
+                self.rotate.toggle()
+            }
+            .shadow(color: Color.black.opacity(0.25), radius: 10, x: 0.0, y: 0.3)
         }
         .onAppear {
             DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: viewModel.requestPrice)
@@ -174,14 +221,14 @@ struct AppIconPackInfoView: View {
                         Text(price)
                             .font(Font.system(.title3, design: .rounded).bold())
                             .foregroundColor(Color.white)
-                            .frame(height: 40)
+                            .frame(minHeight: 40, maxHeight: 40)
                             .padding(.horizontal, 60)
                             .background(Color.blue)
                             .clipShape(RoundedRectangle(cornerRadius: 8))
                     }
                 } else {
                     ActivityIndicator(style: .medium, color: .accent)
-                        .frame(height: 40)
+                        .frame(minHeight: 40, maxHeight: 40)
                 }
             }
 
@@ -204,7 +251,7 @@ struct AppIconPackInfoView: View {
 
 struct AppIconPackInfoView_Previews: PreviewProvider {
     static var previews: some View {
-        let vm = AppIconPackInfoViewModel(preferences: Preferences(), pack: .maccinz, icon: AppIcon.gold)
+        let vm = AppIconPackInfoViewModel(preferences: Preferences(), pack: .darsigova, icon: AppIcon.darsigova_1)
         return AppIconPackInfoView(viewModel: vm)
             .previewDevice("iPhone 12 mini")
             .padding()

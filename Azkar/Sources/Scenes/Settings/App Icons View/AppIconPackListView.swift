@@ -82,6 +82,7 @@ struct AppIconPackListView: View {
                         .offset(y: modalOffset)
                         .transition(AnyTransition.move(edge: moveEdge).combined(with: .opacity))
                         .zIndex(1)
+                        .frame(maxWidth: 400)
                 }
                 .gesture(
                     DragGesture().onChanged { action in
@@ -95,6 +96,7 @@ struct AppIconPackListView: View {
                         withAnimation(self.animation) {
                             if abs(action.translation.height) <= 200 {
                                 self.modalOffset = 0
+                                self.selectedIconPack = nil
                             }
                         }
                     }
