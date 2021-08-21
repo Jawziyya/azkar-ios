@@ -67,6 +67,9 @@ enum AzkarTarget: String, CaseIterable {
                 infoPlist: .file(path: "\(rawValue)/Info.plist"),
                 sources: "Azkar/Sources/**",
                 resources: "Azkar/Resources/**",
+                actions: [
+                    TargetAction.pre(script: "run-swiftgen.sh", name: "Run Swiftgen")
+                ],
                 dependencies: [
                     .sdk(name: "SwiftUI.framework"),
                     .target(name: AzkarTarget.audioPlayer.rawValue),
@@ -74,6 +77,7 @@ enum AzkarTarget: String, CaseIterable {
                     .package(product: "SwiftRichString"),
                     .package(product: "SwiftyStoreKit"),
                     .package(product: "Coordinator"),
+                    .package(product: "Lottie"),
                 ],
                 settings: Settings(
                     base: baseSettingsDictionary
@@ -144,6 +148,7 @@ let packages: [Package] = [
     .remote(url: "https://github.com/bizz84/SwiftyStoreKit", requirement: .upToNextMajor(from: "0.16.3")),
     .remote(url: "https://github.com/malcommac/SwiftRichString", requirement: .upToNextMajor(from: "3.7.2")),
     .remote(url: "https://github.com/radianttap/Coordinator", requirement: .upToNextMajor(from: "6.4.2")),
+    .remote(url: "https://github.com/airbnb/lottie-ios", requirement: .upToNextMajor(from: "3.0.0")),
 ]
 
 let project = Project(

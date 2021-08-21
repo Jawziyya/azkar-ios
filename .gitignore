@@ -49,3 +49,4 @@ fastlane/README.md
 *.app.dSYM
 *xcshareddata
 fastlane/Preview.html
+*.xcworkspace
