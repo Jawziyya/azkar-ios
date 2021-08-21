@@ -26,8 +26,8 @@ struct MainMenuLargeGroup: View {
                         .bold()
                 }
 			}
-			Text(item.title)
-                .font(Font.body)
+            Text(viewModel.title)
+                .font(Font.system(.body, design: .rounded))
 				.bold()
 				.multilineTextAlignment(.leading)
 				.foregroundColor(Color.secondaryText)

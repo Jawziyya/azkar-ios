@@ -141,6 +141,7 @@ struct AppIconPackListView: View {
                     Spacer(minLength: 8)
                     HStack {
                         Text(iconPack.title)
+                            .font(Font.system(.caption, design: .rounded))
                         Spacer()
 
                         iconPack.link.flatMap { link in
@@ -169,6 +170,7 @@ struct AppIconPackListView: View {
                     .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 1)
 
                 Text(icon.title)
+                    .font(Font.system(.body, design: .rounded))
                 Spacer()
                 CheckboxView(isCheked:  .constant(self.viewModel.icon.referenceName == icon.referenceName))
                     .frame(width: 20, height: 20)

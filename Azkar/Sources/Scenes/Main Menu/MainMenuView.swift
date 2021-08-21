@@ -155,12 +155,12 @@ struct MainMenuView: View {
 
             VStack(spacing: 8) {
                 Text(viewModel.fadl.text)
-                    .font(Font.textFont(.headline))
+                    .font(Font.system(.body, design: .rounded).weight(.regular))
                     .tracking(1.2)
                     .foregroundColor(Color.text.opacity(0.7))
 
                 Text(viewModel.fadl.source)
-                    .font(Font.caption2.smallCaps())
+                    .font(Font.system(.caption2, design: .rounded).smallCaps())
                     .foregroundColor(Color.secondaryText.opacity(0.5))
             }
             .shadow(color: Color.text.opacity(0.5), radius: 0.5, x: 0.0, y: 0.05)

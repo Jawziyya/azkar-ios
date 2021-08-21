@@ -70,7 +70,7 @@ struct ZikrView: View {
                             .frame(maxWidth: 20, maxHeight: 15)
                             .foregroundColor(Color.accent)
                         Text(text)
-                            .font(Font.footnote)
+                            .font(Font.system(.footnote, design: .rounded))
                     }
                     .padding()
                 }
@@ -87,7 +87,7 @@ struct ZikrView: View {
             Spacer()
             Text(viewModel.title)
                 .equatable()
-                .font(Font.headline)
+                .font(Font.system(.headline, design: .rounded))
                 .foregroundColor(Color.secondaryText)
                 .multilineTextAlignment(.center)
                 .padding()
@@ -168,11 +168,11 @@ struct ZikrView: View {
         VStack(alignment: .leading, spacing: 0) {
             self.getCaption(label)
             Text(text.firstWord())
-                .font(Font.caption.weight(.medium).smallCaps())
                 .if(underline, transform: { text in
                     text.underline()
                 })
                 .foregroundColor(.text)
+                .font(Font.system(.caption, design: .rounded).weight(.medium).smallCaps())
         }
     }
 
@@ -182,7 +182,7 @@ struct ZikrView: View {
 
     private func getCaption(_ text: String) -> some View {
         Text(text)
-            .font(Font.caption2.smallCaps())
+            .font(Font.system(.caption2, design: .rounded).smallCaps())
             .foregroundColor(Color.tertiaryText)
     }
 
@@ -194,7 +194,7 @@ struct ZikrView: View {
                 .frame(width: 15, height: 15)
                 .foregroundColor(Color.accent)
             Text(text)
-                .font(Font.footnote)
+                .font(Font.system(.footnote, design: .rounded))
         }
         .padding()
     }

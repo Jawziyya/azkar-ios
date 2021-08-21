@@ -38,10 +38,10 @@ struct HadithView: View {
 
             VStack(alignment: .leading, spacing: 0) {
                 Text("read.narrated-by", comment: "Hadith narrater name label.")
-                    .font(Font.caption2.smallCaps())
+                    .font(Font.system(.caption2, design: .rounded).smallCaps())
                     .foregroundColor(Color.tertiaryText)
                 Text(viewModel.source)
-                    .font(Font.caption.weight(.medium).smallCaps())
+                    .font(Font.system(.caption, design: .rounded).weight(.medium).smallCaps())
                     .foregroundColor(.text)
             }
         }

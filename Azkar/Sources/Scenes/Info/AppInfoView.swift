@@ -59,7 +59,7 @@ struct AppInfoView: View {
                 Spacer()
                 VStack(spacing: 0) {
                     Text("app-name", comment: "App name.")
-                        .font(Font.headline.smallCaps().weight(.heavy))
+                        .font(Font.system(.headline, design: .rounded).smallCaps().weight(.heavy))
                         .frame(alignment: .center)
                         .foregroundColor(Color.accent)
                     Text(viewModel.appVersion)

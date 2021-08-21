@@ -149,7 +149,7 @@ struct AppIconPackInfoView: View {
                 .frame(height: 0)
 
             Text(viewModel.pack.title)
-                .font(Font.title2.smallCaps())
+                .font(Font.system(.title2, design: .rounded).smallCaps())
                 .kerning(1.5)
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 40)
@@ -164,7 +164,7 @@ struct AppIconPackInfoView: View {
             } else {
                 if viewModel.purchased {
                     Text("icon_pack.info.purchased-message", comment: "Item purchased label.")
-                        .font(Font.body.smallCaps())
+                        .font(Font.system(.body, design: .rounded).smallCaps())
                         .foregroundColor(Color.accent)
                         .frame(height: 60)
                 } else if let price = viewModel.price {
@@ -172,7 +172,7 @@ struct AppIconPackInfoView: View {
                         self.viewModel.purchase()
                     } label: {
                         Text(price)
-                            .font(Font.title3.bold())
+                            .font(Font.system(.title3, design: .rounded).bold())
                             .foregroundColor(Color.white)
                             .frame(height: 40)
                             .padding(.horizontal, 60)
@@ -191,7 +191,7 @@ struct AppIconPackInfoView: View {
                 } label: {
                     Text("common.restore", comment: "Restore buton label.")
                         .minimumScaleFactor(0.3)
-                        .font(Font.caption.smallCaps())
+                        .font(Font.system(.caption, design: .rounded).smallCaps())
                         .frame(height: 20)
                 }
                 .disabled(viewModel.processing || viewModel.purchased)

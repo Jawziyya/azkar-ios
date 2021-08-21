@@ -52,6 +52,7 @@ struct MainMenuSmallGroup: View {
 
     var title: some View {
         Text(item.title)
+            .font(Font.system(.body, design: .rounded))
             .frame(maxWidth: .infinity, alignment: flip ? .trailing : .leading)
             .foregroundColor(Color.text)
             .multilineTextAlignment(flip ? .trailing : .leading)

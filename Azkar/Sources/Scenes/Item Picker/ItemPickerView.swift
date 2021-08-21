@@ -49,6 +49,7 @@ struct ItemPickerView<SelectionValue>: View where SelectionValue: Hashable & Pic
                     }
 
                     Text(item.title)
+                        .font(Font.system(.body, design: .rounded))
                     Spacer()
                     item.subtitle.flatMap { text in
                         Text(text)

@@ -32,7 +32,7 @@ struct PlayerView: View, Equatable {
         HStack(alignment: .center) {
             Text(viewModel.timeElapsed)
                 .foregroundColor(.tertiaryText)
-                .font(Font.caption.monospacedDigit())
+                .font(Font.system(.caption, design: .monospaced))
             Spacer()
             Button(action: {
                 self.viewModel.play()
@@ -60,13 +60,13 @@ struct PlayerView: View, Equatable {
                     .minimumScaleFactor(0.2)
                     .frame(width: 30, height: 30)
                     .foregroundColor(tintColor)
-                    .font(Font.body.monospacedDigit())
+                    .font(Font.system(.body, design: .monospaced))
                     .minimumScaleFactor(0.5)
             }
             Spacer()
             Text(viewModel.timeRemaining)
                 .foregroundColor(.tertiaryText)
-                .font(Font.caption.monospacedDigit())
+                .font(Font.system(.caption, design: .monospaced))
         }
         .padding(.horizontal)
     }

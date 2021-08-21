@@ -40,7 +40,8 @@ struct SettingsView: View {
 
             Toggle(isOn: $viewModel.preferences.enableFunFeatures) {
                 HStack {
-                    Text("settings.fun_features", comment: "Turn on/off 'fun' features.")
+                    Text(L10n.Settings.funFeatures)
+                        .font(Font.system(.body, design: .rounded))
                     Spacer()
                     Button { } label: {
                         Image(systemName: "info.circle")
@@ -82,9 +83,11 @@ struct SettingsView: View {
 
     // MARK: - Notifications
     var notificationsSection: some View {
-        Section(header: Text("settings.notifications.title", comment: "Notifications screen title.")) {
+        Section(header: Text(L10n.Settings.Notifications.title).font(Font.system(.caption, design: .rounded))) {
             Toggle(isOn: $viewModel.preferences.enableNotifications, label: {
-                Text("settings.notifications.switch-label", comment: "Notification turn on/off switch label.").padding(.vertical, 8)
+                Text(L10n.Settings.Notifications.switchLabel)
+                    .padding(.vertical, 8)
+                    .font(Font.system(.body, design: .rounded))
             })
 
             if viewModel.preferences.enableNotifications {
@@ -113,15 +116,19 @@ struct SettingsView: View {
 
     // MARK: - Content Size
     var fontsSection: some View {
-        Section(header: Text("settings.text.title", comment: "Text settings section header.")) {
-            PickerView(label: NSLocalizedString("settings.text.arabic-text-font", comment: "Arabic font picker label."), titleDisplayMode: .inline, subtitle: viewModel.preferences.arabicFont.title, destination: arabicFontPicker)
+        Section(header: Text(L10n.Settings.Text.title).font(Font.system(.caption, design: .rounded))) {
+            PickerView(label: L10n.Settings.Text.arabicTextFont, titleDisplayMode: .inline, subtitle: viewModel.preferences.arabicFont.title, destination: arabicFontPicker)
 
             Toggle(isOn: $viewModel.preferences.showTashkeel) {
-                Text("settings.text.show-tashkeel", comment: "Enable/disable tashkeel in arabic text.").padding(.vertical, 8)
+                Text(L10n.Settings.Text.showTashkeel)
+                    .padding(.vertical, 8)
+                    .font(Font.system(.body, design: .rounded))
             }
 
             Toggle(isOn: $viewModel.preferences.useSystemFontSize, label: {
-                Text("settings.text.use-system-font-size", comment: "Enable/disable system font size usage option label.").padding(.vertical, 8)
+                Text(L10n.Settings.Text.useSystemFontSize)
+                    .padding(.vertical, 8)
+                    .font(Font.system(.body, design: .rounded))
             })
 
             if viewModel.preferences.useSystemFontSize == false {
@@ -131,9 +138,16 @@ struct SettingsView: View {
     }
 
     var sizePicker: some View {
-        Picker(selection: $viewModel.preferences.sizeCategory, label: Text("settings.text.font-size", comment: "Font size settings section.").padding(.vertical, 8)) {
+        Picker(
+            selection: $viewModel.preferences.sizeCategory,
+            label: Text(L10n.Settings.Text.fontSize)
+                .font(Font.system(.body, design: .rounded))
+                .padding(.vertical, 8)
+        )
+        {
             ForEach(ContentSizeCategory.availableCases, id: \.title) { size in
                 Text(size.name)
+                    .font(Font.system(.body, design: .rounded))
                     .environment(\.sizeCategory, size)
                     .tag(size)
             }
@@ -158,10 +172,12 @@ private struct PickerView<T: View>: View {
         {
             HStack(spacing: 8) {
                 Text(label)
+                    .font(Font.system(.body, design: .rounded))
+                    .foregroundColor(Color.text)
                 Spacer()
                 Text(subtitle)
                     .multilineTextAlignment(.trailing)
-                    .font(Font.body)
+                    .font(Font.system(.body, design: .rounded))
                     .foregroundColor(Color.secondary)
             }
             .padding(.vertical, 10)
