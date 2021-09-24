@@ -37,13 +37,18 @@ struct ZikrView: View {
                 titleView
             }
             textView
-            translationView
+            
+            if viewModel.showTranslation {
+                translationView
+                
+                getDivider()
+            }
 
-            getDivider()
-
-            transliterationView
-
-            getDivider()
+            if viewModel.showTransliteration {
+                transliterationView
+                
+                getDivider()
+            }
 
             infoView
             

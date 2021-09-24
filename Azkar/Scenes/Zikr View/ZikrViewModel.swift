@@ -8,6 +8,7 @@
 
 import Foundation
 import Combine
+import UIKit
 
 final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
 
@@ -30,6 +31,9 @@ final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
     }
     let preferences: Preferences
 
+    let showTransliteration: Bool
+    let showTranslation: Bool
+
     var playerViewModel: PlayerViewModel?
     var hadithViewModel: HadithViewModel?
 
@@ -42,6 +46,11 @@ final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
         self.zikr = zikr
         self.preferences = preferences
         title = zikr.title ?? "\(NSLocalizedString("common.zikr", comment: "")) №\(zikr.rowInCategory)"
+        
+        let isUsingArabicLanguage = Locale.preferredLanguages[0].lowercased().contains("ar")
+        
+        showTransliteration = !isUsingArabicLanguage
+        showTranslation = !isUsingArabicLanguage
 
         expandTranslation = preferences.expandTranslation
         expandTransliteration = preferences.expandTransliteration
