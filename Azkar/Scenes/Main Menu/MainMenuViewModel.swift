@@ -104,7 +104,7 @@ final class MainMenuViewModel: ObservableObject {
                     break
                 }
             }
-        }
+        )
 
     }
 
