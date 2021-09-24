@@ -2,6 +2,7 @@ Project Resources/*
 
 # Created by http://www.gitignore.io
 
+.DS_Store
 *.dSYM.zip
 
 fastlane/report.xml
@@ -14,12 +15,9 @@ build
 *.xcodeproj/*
 !*.xcodeproj/project.pbxproj
 !*.xcworkspace/contents.xcworkspacedata
-
-### Objective-C ###
-# OS X
-.DS_Store
-
-# Xcode
+*.dSYM
+*.xcworkspace
+*.xcodeproj
 build/
 *.pbxuser
 !default.pbxuser
@@ -45,3 +43,4 @@ fastlane/metadata/review_information
 fastlane/metadata/ru/keywords.txt
 fastlane/metadata/trade_representative_contact_information
 fastlane/README.md
+fastlane/Preview.html
