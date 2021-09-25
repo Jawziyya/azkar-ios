@@ -12,6 +12,7 @@ fastlane/AuthKey.json
 
 ### Xcode ###
 build
+*.xcodeproj/
 *.xcodeproj/*
 !*.xcodeproj/project.pbxproj
 !*.xcworkspace/contents.xcworkspacedata

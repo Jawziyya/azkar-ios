@@ -19,19 +19,24 @@
 
 "about.credits.sources-header" = "🗃 Материалы";
 "about.credits.graphics-header" = "🎨 Графические материалы и шрифты";
-"about.credits.open-source-libraries-header" = "🛠 Библиотеки с открытым кодом";
+"about.credits.open-source-libraries-header" = "🧱 Библиотеки с открытым кодом";
 
-"about.credits.icon" = "Изображение значка (flaticon.com)";
-"about.credits.adobe-arabic-font" = "Шрифт Adobe Arabic";
+"about.azkarRU" = "Перевод, транскрипция, аудиофайлы озвучки (azkar.ru)";
+"about.sourceCode" = "Исходный код приложения Azkar (github.com)";
+
+"about.credits.font" = "Шрифт %@";
+"about.credits.image" = "Изображение %@";
+"about.credits.animation" = "Анимация %@";
 "about.credits.quran-complex-font" = "Шрифт Комплекса имени Короля Фахда по изданию Священного Корана";
-"about.credits.naskh-font" = "Шрифт Google Noto Naskh";
-"about.credits.scheherazade-font" = "Шрифт Scheherazade";
 
-"about.support.header" = "🥜 Студия Jawziyya";
+"about.support.header" = "⚒ Обратная связь";
 "about.support.write-to-email" = "Написать на эл. почту";
 "about.support.leave-review" = "Оставить отзыв";
-"about.support.telegram-channel" = "Канал в Telegram";
-"about.support.jawziyya-apps" = "Наши приложения";
+
+"about.studio.header" = "🥜 Студия Jawziyya";
+"about.studio.telegram-channel" = "Канал в Telegram";
+"about.studio.instagram-page" = "Страница в Instagram";
+"about.studio.jawziyya-apps" = "Наши приложения";
 
 "category.morning" = "Утренние";
 "category.evening" = "Вечерние";
@@ -39,6 +44,7 @@
 "category.other" = "Важные азкары";
 
 "alerts.turn-on-notifications-alert" = "Включите уведомления, чтобы приложение напоминало о времени утренних и вечерних азкаров";
+"alerts.checkout-icon-packs" = "Выберите значок для приложения Azkar";
 
 "notifications.morning-notification-title" = "Утренние азкары 🌅";
 "notifications.evening-notification-title" = "Вечерние азкары 🌄";
@@ -46,6 +52,8 @@
 "about.title" = "О приложении";
 
 "settings.title" = "Настройки";
+"settings.fun_features" = "Украшения";
+"settings.fun_features.description" = "Это функции, которые делают приложение более красочным, но по мнению некоторых людей являются лишними, и они были бы рады их отключить.\nТеперь у таких людей есть своя кнопка. :-)";
 
 "settings.theme.title" = "Тема";
 "settings.theme.auto" = "Авто";
@@ -57,11 +65,6 @@
 "settings.icon.list.ink" = "Чернила";
 "settings.icon.list.dark_night" = "Тёмная ночь";
 "settings.icon.list.ramadan" = "Рамадан";
-
-"settings.icon.list.maccinz_house" = "Праздничная атмосфера";
-"settings.icon.list.maccinz_mountains" = "Высоко в горах";
-"settings.icon.list.maccinz_ramadan_night" = "Ночь в рамадан";
-"settings.icon.list.maccinz_day" = "Солнечный день";
 
 "settings.notifications.title" = "Уведомления";
 "settings.notifications.switch-label" = "Напоминать об утренних и вечерних азкарах";
@@ -85,6 +88,24 @@
 "icon_pack.standard.description" = "";
 
 "icon_pack.info.purchased-message" = "Вы приобрели этот набор 🎉";
+
 "icon_pack.maccinz.title" = "Набор значков «Иллюстрации»";
 "icon_pack.maccinz.description" = "Мягкие тона, атмосфера домашнего уюта и спокойствия.";
 
+"settings.icon.list.maccinz_house" = "Праздничная атмосфера";
+"settings.icon.list.maccinz_mountains" = "Высоко в горах";
+"settings.icon.list.maccinz_ramadan_night" = "Ночь в рамадан";
+"settings.icon.list.maccinz_day" = "Солнечный день";
+
+"icon_pack.darsigova.description" = "Закаты и рассветы как хранители нашей веры, в которых заложена милость от Господа.";
+"icon_pack.darsigova.title" = "Набор значков «Хранители веры»";
+"settings.icon.list.darsigova_1" = "Миг";
+"settings.icon.list.darsigova_2" = "Связующие нити";
+"settings.icon.list.darsigova_3" = "На краю времени";
+"settings.icon.list.darsigova_4" = "Свобода";
+"settings.icon.list.darsigova_5" = "Свет в городе";
+"settings.icon.list.darsigova_6" = "Воздушное мгновенье";
+"settings.icon.list.darsigova_7" = "Звёзды в небе горят";
+"settings.icon.list.darsigova_8" = "Полёт цвета";
+"settings.icon.list.darsigova_9" = "Нежность";
+"settings.icon.list.darsigova_10" = "В объятьях вечера";
