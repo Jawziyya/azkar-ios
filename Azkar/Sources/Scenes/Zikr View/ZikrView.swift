@@ -35,14 +35,14 @@ struct ZikrView: View {
             titleView
             textView
             
-            if viewModel.showTranslation {
-                translationView
+            if let text = viewModel.translation {
+                getTranslationView(text: text)
                 
                 getDivider()
             }
-
-            if viewModel.showTransliteration {
-                transliterationView
+            
+            if let text = viewModel.transliteration {
+                getTransliterationView(text: text)
                 
                 getDivider()
             }
@@ -109,8 +109,8 @@ struct ZikrView: View {
     }
 
     // MARK: - Translation
-    private var translationView: some View {
-        CollapsableSection(title: L10n.Read.translation, text: viewModel.zikr.translation.set(style: TextStyles.bodyStyle(sizeCategory: sizeCategory)), isExpanded: $viewModel.expandTranslation, textHeight: $translationHeight, tintColor: tintColor) {
+    private func getTranslationView(text: String) -> some View {
+        CollapsableSection(title: L10n.Read.translation, text: text.set(style: TextStyles.bodyStyle(sizeCategory: sizeCategory)), isExpanded: $viewModel.expandTranslation, textHeight: $translationHeight, tintColor: tintColor) {
             withAnimation(Animation.easeInOut(duration: 0.2)) {
                 self.viewModel.preferences.expandTranslation.toggle()
             }
@@ -120,8 +120,8 @@ struct ZikrView: View {
     }
 
     // MARK: - Transliteration
-    private var transliterationView: some View {
-        CollapsableSection(title: L10n.Read.transcription, text: viewModel.zikr.transliteration.set(style: TextStyles.bodyStyle(sizeCategory: sizeCategory)), isExpanded: $viewModel.expandTransliteration, textHeight: $transliterationHeight, tintColor: tintColor) {
+    private func getTransliterationView(text: String) -> some View {
+        CollapsableSection(title: L10n.Read.transcription, text: text.set(style: TextStyles.bodyStyle(sizeCategory: sizeCategory)), isExpanded: $viewModel.expandTransliteration, textHeight: $transliterationHeight, tintColor: tintColor) {
             withAnimation(Animation.easeInOut(duration: 0.2)) {
                 self.viewModel.preferences.expandTransliteration.toggle()
             }
@@ -137,7 +137,7 @@ struct ZikrView: View {
                 getInfoStack(label: L10n.Read.repeats, text: L10n.repeats(viewModel.zikr.repeats))
             }
 
-            viewModel.zikr.source.textOrNil.flatMap { text in
+            viewModel.source.textOrNil.flatMap { text in
                 NavigationLink.init(destination: hadithView, label: {
                     getInfoStack(label: L10n.Read.source, text: text, underline: viewModel.hadithViewModel != nil)
                         .hoverEffect(.highlight)

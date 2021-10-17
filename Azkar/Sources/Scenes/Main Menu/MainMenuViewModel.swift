@@ -32,15 +32,16 @@ final class MainMenuViewModel: ObservableObject {
 
     func getDayNightSectionModels(isDarkModeEnabled: Bool) -> [MainMenuLargeGroupViewModel] {
         [
-            MainMenuLargeGroupViewModel(category: .morning, title: MainMenuItem.morning.localizedTitle, animationName: "sun", animationSpeed: 0.5),
+            MainMenuLargeGroupViewModel(category: .morning, title: MainMenuItem.morning.localizedTitle, animationName: "sun", animationSpeed: 0.3),
             MainMenuLargeGroupViewModel(category: .evening, title: MainMenuItem.evening.localizedTitle, animationName: isDarkModeEnabled ? "moon" : "moon2", animationSpeed: 0.2),
         ]
     }
 
     let otherAzkarModels: [AzkarMenuItem]
     let infoModels: [AzkarMenuOtherItem]
-
-    let fadl = Fadl.all.randomElement()!
+    
+    let fadlText: String
+    let fadlSource: String
 
     @Published var additionalMenuItems: [AzkarMenuOtherItem] = []
     @Published var enableEidBackground = false
@@ -115,6 +116,10 @@ final class MainMenuViewModel: ObservableObject {
             AzkarMenuOtherItem(groupType: .about, imageName: "info.circle", title: L10n.Root.about, color: Color.init(.systemGray)),
             AzkarMenuOtherItem(groupType: .settings, imageName: "gear", title: L10n.Root.settings, color: Color.init(.systemGray)),
         ]
+        
+        let fadl = Fadl.all.randomElement()!
+        fadlText = fadl.text
+        fadlSource = fadl.source
 
         var year = "\(Date().hijriYear) г.х."
         switch Calendar.current.identifier {

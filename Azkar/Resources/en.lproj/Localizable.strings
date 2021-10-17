@@ -1,0 +1,249 @@
+"app-name" = "Azkar";
+
+/*Зикр №1, зикр №2 и тд*/
+"common.zikr" = "Dhikr";
+
+/*Надпись «Версия» обозначающая версию приложения.*/
+"common.version" = "Version";
+
+/*Кнопка «поделиться приложением»*/
+"common.share-app" = "Share Azkar App";
+
+/*Кнопка «восстановить» для покупки
+*/
+"common.restore" = "Restore";
+
+/*Фраза «выберите раздел» для открытия раздела*/
+"root.pick-section" = "Please select section";
+
+/*Название раздела "о приложении" в корневом экране*/
+"root.about" = "About";
+
+/*Название раздела "настройки" в корневом экране*/
+"root.settings" = "Settings";
+
+/*Секция: материалы*/
+"about.credits.sources-header" = "🗃 Reference";
+
+/*Секция: графические материалы*/
+"about.credits.graphics-header" = "🎨 Graphic materials and fonts";
+
+/*Секция: Использованные библиотеки с открытым исходным кодом*/
+"about.credits.open-source-libraries-header" = "🧱 Open source libraries";
+
+/*Ссылка на azkar.ru*/
+"about.azkarRU" = "Russian translation, transcription, audiofiles (azkar.ru)";
+
+/*Исходный код*/
+"about.sourceCode" = "Source code of the app (github.com)";
+
+/*Просто слофо "шрифт"*/
+"about.credits.font" = "Font %@";
+
+/*Просто слово "изображение/рисунок"*/
+"about.credits.image" = "Image %@";
+
+/*Просто слово "анимация"*/
+"about.credits.animation" = "Animation %@";
+
+/*Ссылка на Комплекс. Можно оставить без перевода.*/
+"about.credits.quran-complex-font" = "Font of «King Fahd Complex for the Printing of the Holy Quran»";
+
+/*Секция: поддержка*/
+"about.support.header" = "⚒ Feedback";
+
+/*Кнопка: Написать на email*/
+"about.support.write-to-email" = "Write email";
+
+/*Название кнопки «Оставить отзыв о приложении в App Store»*/
+"about.support.leave-review" = "Leave a review";
+
+/*Студия разработки*/
+"about.studio.header" = "🥜 Jawziyya Studio";
+
+/*Канал в Telegram*/
+"about.studio.telegram-channel" = "Telegram channel";
+
+/*Страница в Instagram*/
+"about.studio.instagram-page" = "Instagram page";
+
+/*Наши приложения*/
+"about.studio.jawziyya-apps" = "Our Apps";
+
+/*Утренние азкары*/
+"category.morning" = "Morning";
+
+/*Вечерние азкары*/
+"category.evening" = "Evening";
+
+/*Азкары после молитвы*/
+"category.after-salah" = "Adhkar after salah";
+
+/*Важные азкары*/
+"category.other" = "Important adhkar";
+
+/*Текст напоминания о включении уведомлений об азкарах*/
+"alerts.turn-on-notifications-alert" = "Turn on notifications to receive reminders about morning and evening adhkar";
+
+/*Текст уведомления о выборе значка приложения*/
+"alerts.checkout-icon-packs" = "Select your favorite app icon";
+
+/*Текст уведомления об утренних азкарах*/
+"notifications.morning-notification-title" = "Morning adhkar 🌅";
+
+/*Текст уведомления о вечерних азкарах*/
+"notifications.evening-notification-title" = "Evening adhkar 🌄";
+
+/*Заголовок экрана «О приложении»*/
+"about.title" = "About";
+
+/*Заголовок экрана Настройки*/
+"settings.title" = "Settings";
+
+/*Настройка, переключающая различные "несерьезные" функции типа конфетти и т.п.*/
+"settings.fun_features" = "Fun Features";
+
+/*Описание настройки, переключающая различные "несерьезные" функции типа конфетти и т.п. Можно что-нибудь вкратце или даже пропустить.*/
+"settings.fun_features.description" = "These are features which make Azkar app a bit beautiful but some people find useless and annoying.";
+
+/*Тема приложения*/
+"settings.theme.title" = "Theme";
+
+/*Автоматическая тема (зависит от настроек устройства)*/
+"settings.theme.auto" = "System";
+
+/*Светлая тема приложения*/
+"settings.theme.light" = "Light";
+
+/*Темная тема приложения*/
+"settings.theme.dark" = "Dark";
+
+/*Слово, обозначающее один значок/иконку приложения*/
+"settings.icon.title" = "Icon";
+
+/*Название значка*/
+"settings.icon.list.gold" = "Gold";
+
+/*Название значка*/
+"settings.icon.list.ink" = "Inc";
+
+/*Название значка*/
+"settings.icon.list.dark_night" = "Dark night";
+"settings.icon.list.ramadan" = "Ramadan";
+
+/*Заголовок секции Уведомления (в настройках)*/
+"settings.notifications.title" = "Notifications";
+
+/*Настройка: включить/выключить напоминания об азкарах*/
+"settings.notifications.switch-label" = "Send morning & evening adhkar reminders";
+
+/*Настройка: напоминание об утренних азкарах (вкл/выкл)*/
+"settings.notifications.morning-option-label" = "Morning reminder";
+
+/*Настройка: напоминание о вечерних азкарах (вкл/выкл)*/
+"settings.notifications.evening-option-label" = "Evening reminder";
+
+/*Заголовок секции настроек текста*/
+"settings.text.title" = "Text";
+
+/*Настройка: использовать системный размер текста*/
+"settings.text.use-system-font-size" = "System text size";
+
+/*Настройка: размер арабского текста*/
+"settings.text.arabic-text-font" = "Arabic font";
+
+/*Настройка: размер текста*/
+"settings.text.font-size" = "Text size";
+
+/*Название стандартного арабского шрифта*/
+"settings.text.standard-font-name" = "Standard iOS";
+
+/*Настройка приложения: Показывать огласовки*/
+"settings.text.show-tashkeel" = "Show tashkeel";
+
+/*Перевод*/
+"read.translation" = "translation";
+
+/*Транскрипция*/
+"read.transcription" = "transliteration";
+
+/*Количество повторений*/
+"read.repeats" = "repeats";
+
+/*Источник зикра. Например: «Источник: аль-Бухари, 123»*/
+"read.source" = "source";
+
+/*Передатчик хадиса с зикром. Например: «Привёл: аль-Бухари»*/
+"read.narrated-by" = "narrated by";
+
+/*Название стандартного набора значков*/
+"icon_pack.standard.title" = "Standard icons pack";
+
+/*Не нужно переводить*/
+"icon_pack.standard.description" = " ";
+
+/*Сообщение, которое отображается пользователю после успешного завершения покупки*/
+"icon_pack.info.purchased-message" = "You have purchased this App Icon pack 🎉";
+
+/*Название набора значков*/
+"icon_pack.maccinz.title" = "App Icon Pack «Illustrations»";
+
+/*Описание набора значков*/
+"icon_pack.maccinz.description" = "Soft colors, at home feeling.";
+
+/*Название значка*/
+"settings.icon.list.maccinz_house" = "Eid vibes";
+
+/*Название значка*/
+"settings.icon.list.maccinz_mountains" = "In mountains";
+
+/*Название значка*/
+"settings.icon.list.maccinz_ramadan_night" = "Ramadan night";
+
+/*Название значка*/
+"settings.icon.list.maccinz_day" = "Sunny day";
+
+/*Описание набора значков*/
+"icon_pack.darsigova.description" = "Sunsets and sunrises as our faith keepers which has signs of the mercy of our Lord.";
+
+/*Название набора значков*/
+"icon_pack.darsigova.title" = "App Icon Pack «Faith keepers»";
+
+/*Название значка*/
+"settings.icon.list.darsigova_1" = "A moment";
+
+/*Название значка*/
+"settings.icon.list.darsigova_2" = "Binding threads";
+
+/*Название значка*/
+"settings.icon.list.darsigova_3" = "On the edge of time";
+
+/*Название значка*/
+"settings.icon.list.darsigova_4" = "Freedom";
+
+/*Название значка*/
+"settings.icon.list.darsigova_5" = "Light in a town";
+
+/*Название значка*/
+"settings.icon.list.darsigova_6" = "Aerial moment";
+
+/*Название значка*/
+"settings.icon.list.darsigova_7" = "Shining stars in the sky";
+
+/*Название значка*/
+"settings.icon.list.darsigova_8" = "Color's fly";
+
+/*Название значка*/
+"settings.icon.list.darsigova_9" = "Tender";
+
+/*Название значка*/
+"settings.icon.list.darsigova_10" = "In the arms of the evening";
+
+"text.source.Quran" = "Quran";
+"text.source.Bukhari" = "Sahih al-Bukhari";
+"text.source.Muslim" = "Sahih Muslim";
+"text.source.AbuDaud" = "Abu Daud";
+"text.source.Beyhaqi" = "al-Beyhaqi";
+"text.source.Tirmidhi" = "at-Tirmidhi";
+"text.source.Ahmad" = "Ahmad";
+"text.source.Nasai" = "an-Nasai";

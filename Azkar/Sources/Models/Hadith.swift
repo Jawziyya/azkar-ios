@@ -9,18 +9,45 @@
 import Foundation
 
 struct Hadith: Codable, Identifiable {
+    
+    enum CodingKeys: String, CodingKey {
+        case id, text
+        case _translation = "translation"
+        case translationEN = "translation_en"
+        case translationTR = "translation_tr"
+        case _source = "source"
+        case sourceExtension = "source_ext"
+    }
+    
     let id: Int
-    let number: String
     let text: String
-    let translation: String?
-    let source: String
+    private let _translation: String?
+    private let translationEN: String?
+    private let translationTR: String?
+    private let _source: String
+    private let sourceExtension: String?
+    
+    var translation: String? {
+        switch languageIdentifier {
+        case "ar": return nil
+        case "ru": return _translation
+        case "tr": return translationTR
+        default: return translationEN
+        }
+    }
+    
+    var source: String {
+        var source = NSLocalizedString("text.source." + _source, comment: "")
+        if let ext = sourceExtension {
+            source += ", " + ext
+        }
+        return source
+    }
 
     static var data: [Hadith] = {
         let url = Bundle.main.url(forResource: "ahadith", withExtension: "json")!
         let data = try! Data(contentsOf: url)
-        let decoder = JSONDecoder()
-        decoder.keyDecodingStrategy = .convertFromSnakeCase
-        let azkar = try! decoder.decode([Hadith].self, from: data)
+        let azkar = try! JSONDecoder().decode([Hadith].self, from: data)
         return azkar
     }()
 }
