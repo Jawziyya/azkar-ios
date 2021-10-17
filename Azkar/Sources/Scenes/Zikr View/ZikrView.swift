@@ -25,7 +25,8 @@ struct ZikrView: View {
 
     var body: some View {
         ScrollView {
-            self.getContent()
+            getContent()
+                .largeScreenPadding()
         }
         .background(Color.background.edgesIgnoringSafeArea(.all))
     }
@@ -207,9 +208,11 @@ struct ZikrView: View {
 
 }
 
+@available(iOS 15, *)
 struct ZikrView_Previews: PreviewProvider {
     static var previews: some View {
-        ZikrView(viewModel: ZikrViewModel(zikr: Zikr.data[39], preferences: Preferences(), player: .test))
-        .previewLayout(.fixed(width: 300, height: 500))
+        ZikrView(viewModel: ZikrViewModel(zikr: Zikr.data[3], preferences: Preferences(), player: .test))
+            .previewDevice("iPad Pro")
+            .previewInterfaceOrientation(.portrait)
     }
 }
