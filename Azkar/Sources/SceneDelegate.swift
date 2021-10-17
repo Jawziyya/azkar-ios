@@ -77,12 +77,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     private var ipadDetailView: some View {
         Color.secondaryBackground
         .overlay(
-            Text("← ") + Text("root.pick-section", comment: "Pick section label.")
-                .font(Font.system(.title, design: .rounded).smallCaps())
-                .foregroundColor(Color.secondary)
+            Text("←  ").font(Font.system(.body, design: .rounded).weight(.light).smallCaps()) + Text("root.pick-section", comment: "Pick section label.")
             ,
             alignment: .center
         )
+        .font(Font.system(.title2, design: .rounded).smallCaps())
+        .foregroundColor(Color.secondary)
         .edgesIgnoringSafeArea(.all)
     }
 
