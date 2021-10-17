@@ -23,7 +23,7 @@ struct HadithView: View {
 
     var body: some View {
         ScrollView {
-            self.getContent().padding()
+            getContent().largeScreenPadding(defaultPadding: 16).padding(.vertical)
         }
         .background(Color.background.edgesIgnoringSafeArea(.all))
     }
