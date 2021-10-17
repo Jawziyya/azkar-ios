@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import Introspect
 
 struct AppInfoView: View {
 
@@ -100,6 +101,9 @@ struct AppInfoView: View {
             .background(Color(.secondarySystemGroupedBackground))
             .clipShape(Rectangle())
         })
+        .introspectTableViewCell { cell in
+            viewModel.presentationSources[item.id] = cell
+        }
         .buttonStyle(PlainButtonStyle())
         .padding(.vertical, 8)
     }

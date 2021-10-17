@@ -19,7 +19,9 @@ struct SourceInfo: Identifiable {
     var id: String { title }
 }
 
-struct AppInfoViewModel {
+final class AppInfoViewModel {
+    
+    var presentationSources: [String: AnyObject] = [:]
 
     var sections: [Section] = []
 
@@ -59,16 +61,6 @@ struct AppInfoViewModel {
         SourceInfo(title: "SwiftyStoreKit", url: URL(string: "https://github.com/bizz84/SwiftyStoreKit")),
     ]
 
-    private let appModels: [SourceInfo] = [
-        SourceInfo(title: L10n.About.Support.writeToEmail, url: URL(string: "mailto:azkar.app@pm.me")!, openUrlInApp: false),
-        SourceInfo(title: L10n.Common.shareApp, openUrlInApp: false, action: {
-            let url = URL(string: "https://itunes.apple.com/app/id1511423586")!
-            let activity = UIActivityViewController(activityItems: [url], applicationActivities: nil)
-            UIApplication.shared.windows.first?.rootViewController?.present(activity, animated: true, completion: nil)
-        }),
-        SourceInfo(title: L10n.About.Support.leaveReview, url: URL(string: "https://itunes.apple.com/app/id1511423586?action=write-review&mt=8")!, openUrlInApp: false),
-    ]
-
     private let studioModels: [SourceInfo] = [
         SourceInfo(title: L10n.About.Studio.telegramChannel, url: URL(string: "https://telegram.me/jawziyya")!, openUrlInApp: false),
         SourceInfo(title: L10n.About.Studio.instagramPage, url: URL(string: "https://instagram.com/jawziyya.studio"), openUrlInApp: false),
@@ -96,6 +88,23 @@ struct AppInfoViewModel {
             header: L10n.About.Credits.openSourceLibrariesHeader,
             items: openSourceLibraries
         )
+        
+        let appModels = [
+            SourceInfo(title: L10n.About.Support.writeToEmail, url: URL(string: "mailto:azkar.app@pm.me")!, openUrlInApp: false),
+            SourceInfo(title: L10n.Common.shareApp, openUrlInApp: false, action: { [unowned self] in
+                guard let viewSource = presentationSources[L10n.Common.shareApp] as? UITableViewCell else {
+                    return
+                }
+                
+                let url = URL(string: "https://itunes.apple.com/app/id1511423586")!
+                let activity = UIActivityViewController(activityItems: [url], applicationActivities: nil)
+                if let popover = activity.popoverPresentationController {
+                    popover.sourceView = viewSource
+                }
+                UIApplication.shared.windows.first?.rootViewController?.present(activity, animated: true, completion: nil)
+            }),
+            SourceInfo(title: L10n.About.Support.leaveReview, url: URL(string: "https://itunes.apple.com/app/id1511423586?action=write-review&mt=8")!, openUrlInApp: false),
+        ]
 
         let supportAndFeedbackSection = Section(
             header: L10n.About.Support.header,
