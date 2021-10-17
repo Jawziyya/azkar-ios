@@ -141,7 +141,7 @@ struct ZikrView: View {
             viewModel.source.textOrNil.flatMap { text in
                 NavigationLink.init(destination: hadithView, label: {
                     getInfoStack(label: L10n.Read.source, text: text, underline: viewModel.hadithViewModel != nil)
-                        .hoverEffect(.highlight)
+                        .hoverEffect(HoverEffect.highlight)
                 })
                 .disabled(viewModel.hadithViewModel == nil)
             }

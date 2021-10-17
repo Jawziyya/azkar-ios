@@ -7,12 +7,14 @@
 //
 
 import SwiftUI
+import SwiftUIX
 import AudioPlayer
+import Combine
 
 struct ZikrPagesView: View, Equatable {
 
     static func == (lhs: ZikrPagesView, rhs: ZikrPagesView) -> Bool {
-        lhs.viewModel.title == rhs.viewModel.title
+        lhs.viewModel.title == rhs.viewModel.title && lhs.page == rhs.page
     }
 
     let viewModel: ZikrPagesViewModel
@@ -22,6 +24,9 @@ struct ZikrPagesView: View, Equatable {
     var body: some View {
         pagerView
             .background(Color.background.edgesIgnoringSafeArea(.all))
+            .onReceive(viewModel.selectedPage) { page in
+                self.page = page
+            }
     }
 
     var pagerView: some View {
@@ -43,7 +48,9 @@ struct ZikrPagesView: View, Equatable {
 struct ZikrPagesView_Previews: PreviewProvider {
 
     static var previews: some View {
-        ZikrPagesView(viewModel: ZikrPagesViewModel(router: RootCoordinator(preferences: Preferences(), deeplinker: Deeplinker(), player: Player(player: AppDelegate.shared.player)), category: .other, title: ZikrCategory.morning.title, azkar: [], preferences: Preferences()))
+        ZikrPagesView(
+            viewModel: .placeholder
+        )
     }
 
 }

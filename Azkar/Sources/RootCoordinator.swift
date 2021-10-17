@@ -13,8 +13,8 @@ import Combine
 
 enum RootSection: Equatable {
     case root
-    case azkar(ZikrCategory)
-    case zikr(Zikr)
+    case category(ZikrCategory)
+    case zikr(_ zikr: Zikr, index: Int? = nil)
     case settings(SettingsSection)
     case aboutApp
 }
@@ -33,6 +33,8 @@ final class RootCoordinator: NavigationCoordinator, RootRouter {
     let eveningAzkar: [ZikrViewModel]
     let afterSalahAzkar: [ZikrViewModel]
     let otherAzkar: [ZikrViewModel]
+
+    private let selectedZikrPageIndex = CurrentValueSubject<Int, Never>(0)
 
     private var cancellabels = Set<AnyCancellable>()
 
@@ -67,7 +69,7 @@ final class RootCoordinator: NavigationCoordinator, RootRouter {
                     self.trigger(.settings(section))
 
                 case .azkar(let category):
-                    self.trigger(.azkar(category))
+                    self.trigger(.category(category))
 
                 default:
                     break
@@ -92,7 +94,9 @@ final class RootCoordinator: NavigationCoordinator, RootRouter {
 
     private var section = RootSection.root {
         didSet {
-            handleSelection(section)
+            DispatchQueue.main.async {
+                self.handleSelection(self.section)
+            }
         }
     }
 
@@ -111,6 +115,13 @@ private extension RootCoordinator {
 
     func handleSelection(_ section: RootSection) {
         switch section {
+        case .aboutApp, .category, .root, .settings:
+            selectedZikrPageIndex.send(0)
+        case .zikr:
+            break
+        }
+        
+        switch section {
 
         case .root:
             let viewModel = MainMenuViewModel(
@@ -122,13 +133,14 @@ private extension RootCoordinator {
             let viewController = UIHostingController(rootView: view)
             root(viewController)
 
-        case .azkar(let category):
+        case .category(let category):
             let viewModel = ZikrPagesViewModel(
                 router: self,
                 category: category,
                 title: category.title,
                 azkar: azkarForCategory(category),
-                preferences: preferences
+                preferences: preferences,
+                selectedPage: selectedZikrPageIndex.eraseToAnyPublisher()
             )
 
             if rootViewController.isPadInterface || category == .other {
@@ -154,10 +166,17 @@ private extension RootCoordinator {
                 show(viewController)
             }
 
-        case .zikr(let zikr):
+        case .zikr(let zikr, let index):
+            assert(Thread.isMainThread)
+            if let index = index, rootViewController.isPadInterface {
+                self.selectedZikrPageIndex.send(index)
+                return
+            }
+            
             let viewModel = ZikrViewModel(zikr: zikr, preferences: preferences, player: player)
             let view = ZikrView(viewModel: viewModel)
             let viewController = UIHostingController(rootView: view)
+            
             if rootViewController.isPadInterface {
                 rootViewController.replaceDetailViewController(with: viewController)
             } else {

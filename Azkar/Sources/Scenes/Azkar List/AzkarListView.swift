@@ -14,6 +14,8 @@ typealias AzkarListViewModel = ZikrPagesViewModel
 struct AzkarListView: View {
 
     let viewModel: AzkarListViewModel
+    
+    @State var page = 0
 
     var body: some View {
         ScrollView(.vertical, showsIndicators: true) {
@@ -23,13 +25,16 @@ struct AzkarListView: View {
             v.fixFlickering()
         }
         .background(Color.background.edgesIgnoringSafeArea(.all))
+        .onReceive(viewModel.selectedPage) { page in
+            self.page = page
+        }
     }
 
     var list: some View {
         LazyVStack(alignment: HorizontalAlignment.leading, spacing: 8) {
             ForEach(viewModel.azkar.indexed(), id: \.1) { index, vm in
                 Button {
-                    self.viewModel.navigateToZikr(vm)
+                    self.viewModel.navigateToZikr(vm, index: index)
                 } label: {
                     HStack {
                         Text(vm.title)
@@ -41,18 +46,7 @@ struct AzkarListView: View {
                     .contentShape(Rectangle())
                 }
                 .buttonStyle(PlainButtonStyle())
-            }
-        }
-    }
-
-    func pagesView(_ index: Int) -> some View {
-        ZStack {
-            if UIDevice.current.isIpad {
-                ZikrView(viewModel: self.viewModel.azkar[index])
-            } else {
-                LazyView(
-                    ZikrPagesView(viewModel: self.viewModel, page: index)
-                )
+                .allowsHitTesting(page != index)
             }
         }
     }
@@ -61,6 +55,6 @@ struct AzkarListView: View {
 
 struct AzkarListView_Previews: PreviewProvider {
     static var previews: some View {
-        AzkarListView(viewModel: AzkarListViewModel(router: RootCoordinator(preferences: Preferences(), deeplinker: Deeplinker(), player: Player(player: AppDelegate.shared.player)), category: .other, title: ZikrCategory.morning.title, azkar: [], preferences: Preferences()))
+        AzkarListView(viewModel: .placeholder)
     }
 }

@@ -184,7 +184,7 @@ final class MainMenuViewModel: ObservableObject {
     }
 
     func navigateToCategory(_ category: ZikrCategory) {
-        router.trigger(.azkar(category))
+        router.trigger(.category(category))
     }
 
     func navigateToAboutScreen() {
