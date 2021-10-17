@@ -78,6 +78,7 @@ enum AzkarTarget: String, CaseIterable {
                     .package(product: "SwiftyStoreKit"),
                     .package(product: "Coordinator"),
                     .package(product: "Lottie"),
+                    .package(product: "Introspect"),
                 ],
                 settings: Settings(
                     base: baseSettingsDictionary
@@ -149,6 +150,7 @@ let packages: [Package] = [
     .remote(url: "https://github.com/malcommac/SwiftRichString", requirement: .upToNextMajor(from: "3.7.2")),
     .remote(url: "https://github.com/radianttap/Coordinator", requirement: .upToNextMajor(from: "6.4.2")),
     .remote(url: "https://github.com/airbnb/lottie-ios", requirement: .upToNextMajor(from: "3.0.0")),
+    .remote(url: "https://github.com/siteline/SwiftUI-Introspect", requirement: .upToNextMajor(from: "0.1.3")),
 ]
 
 let project = Project(
