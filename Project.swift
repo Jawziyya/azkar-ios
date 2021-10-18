@@ -44,13 +44,11 @@ extension SettingsDictionary {
 enum AzkarTarget: String, CaseIterable {
     case azkarApp = "Azkar"
     case azkarAppTests = "AzkarTests"
-    case audioPlayer = "AudioPlayer"
 
     var bundleId: String {
         switch self {
         case .azkarApp: return baseDomain + ".azkar-app"
         case .azkarAppTests: return baseDomain + ".azkar-app.tests"
-        case .audioPlayer: return baseDomain + ".azkar.audio-player"
         }
     }
 
@@ -68,11 +66,10 @@ enum AzkarTarget: String, CaseIterable {
                 sources: "Azkar/Sources/**",
                 resources: "Azkar/Resources/**",
                 actions: [
-                    TargetAction.pre(script: "run-swiftgen.sh", name: "Run Swiftgen")
                 ],
                 dependencies: [
                     .sdk(name: "SwiftUI.framework"),
-                    .target(name: AzkarTarget.audioPlayer.rawValue),
+                    .package(product: AzkarPackage.audioPlayer.name),
                     .package(product: "SwiftyMarkdown"),
                     .package(product: "SwiftRichString"),
                     .package(product: "SwiftyStoreKit"),
@@ -116,19 +113,6 @@ enum AzkarTarget: String, CaseIterable {
                 launchArguments: []
             )
 
-        case .audioPlayer:
-            return Target(
-                name: rawValue,
-                platform: .iOS,
-                product: .framework,
-                bundleId: bundleId,
-                deploymentTarget: deploymentTarget,
-                infoPlist: .file(path: "AudioPlayer/Info.plist"),
-                sources: [
-                    "AudioPlayer/Sources/**"
-                ]
-            )
-
         }
     }
 }
@@ -136,6 +120,7 @@ enum AzkarTarget: String, CaseIterable {
 enum AzkarPackage: String {
     case entities = "Entities"
     case databaseClient = "DatabaseClient"
+    case audioPlayer = "AudioPlayer"
 
     var name: String { rawValue }
 
@@ -145,6 +130,7 @@ enum AzkarPackage: String {
 }
 
 let packages: [Package] = [
+    .local(path: AzkarPackage.audioPlayer.path),
     .remote(url: "https://github.com/SimonFairbairn/SwiftyMarkdown", requirement: .upToNextMajor(from: "1.2.3")),
     .remote(url: "https://github.com/bizz84/SwiftyStoreKit", requirement: .upToNextMajor(from: "0.16.3")),
     .remote(url: "https://github.com/malcommac/SwiftRichString", requirement: .upToNextMajor(from: "3.7.2")),
