@@ -25,12 +25,16 @@ struct SettingsView: View {
 
     var body: some View {
         Form {
-            self.appearanceSection
-            self.fontsSection
-            self.notificationsSection
+            Group {
+                self.appearanceSection
+                self.fontsSection
+                self.notificationsSection
+            }
+            .listRowBackground(Color.contentBackground)
         }
+        .accentColor(Color.accent)
         .toggleStyle(SwitchToggleStyle(tint: Color.accent))
-        .background(Color.dimmedBackground.edgesIgnoringSafeArea(.all))
+        .background(Color.background.edgesIgnoringSafeArea(.all))
     }
 
     // MARK: - Appearance
@@ -74,11 +78,7 @@ struct SettingsView: View {
     }
 
     var themePicker: some View {
-        ItemPickerView(
-            selection: $viewModel.preferences.theme,
-            items: Theme.allCases,
-            dismissOnSelect: false
-        )
+        ColorSchemesView(viewModel: viewModel.colorSchemeViewModel)
     }
 
     var iconPicker: some View {

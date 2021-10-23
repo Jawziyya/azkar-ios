@@ -21,9 +21,6 @@ struct AzkarListView: View {
         ScrollView(.vertical, showsIndicators: true) {
             list
         }
-        .if(UIDevice.current.isIpadInterface) { v in
-            v.fixFlickering()
-        }
         .background(Color.background.edgesIgnoringSafeArea(.all))
         .onReceive(viewModel.selectedPage) { page in
             self.page = page
@@ -46,7 +43,6 @@ struct AzkarListView: View {
                     .contentShape(Rectangle())
                 }
                 .buttonStyle(PlainButtonStyle())
-                .allowsHitTesting(page != index)
             }
         }
     }

@@ -130,10 +130,11 @@ struct AppIconPackListView: View {
             ForEach(viewModel.iconPacks) { pack in
                 iconPicker(pack)
             }
+            .listRowBackground(Color.contentBackground)
         }
         .listStyle(InsetGroupedListStyle())
         .environment(\.horizontalSizeClass, .regular)
-        .background(Color.dimmedBackground.edgesIgnoringSafeArea(.all))
+        .background(Color.background.edgesIgnoringSafeArea(.all))
     }
 
     func iconPicker(_ iconPack: AppIconPack) -> some View {
@@ -178,7 +179,6 @@ struct AppIconPackListView: View {
                     .frame(width: 20, height: 20)
             }
             .padding(.vertical, 10)
-            .background(Color(.secondarySystemGroupedBackground))
             .onTapGesture {
                 DispatchQueue.main.async {
                     guard self.viewModel.isPackPurchased(pack) else {

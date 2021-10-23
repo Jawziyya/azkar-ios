@@ -185,7 +185,7 @@ struct AppIconPackInfoView: View {
             stack
         }
         .padding()
-        .background(Color.dimmedBackground)
+        .background(Color.background)
         .clipShape(RoundedRectangle(cornerRadius: 20))
     }
 

@@ -16,7 +16,7 @@ struct CheckboxView: View {
         Image(systemName: isCheked ? "checkmark.circle.fill" : "circle")
             .resizable()
             .scaledToFit()
-            .foregroundColor(isCheked ? Color.init(.systemBlue) : Color.gray)
+            .foregroundColor(isCheked ? Color.accent : Color.gray)
     }
 
 }

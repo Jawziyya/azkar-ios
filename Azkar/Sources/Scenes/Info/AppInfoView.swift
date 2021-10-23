@@ -20,7 +20,7 @@ struct AppInfoView: View {
     var body: some View {
         Form {
             self.iconAndVersion.background(
-                Color.dimmedBackground.padding(-20)
+                Color.background.padding(-20)
             )
 
             ForEach(viewModel.sections) { section in
@@ -30,7 +30,8 @@ struct AppInfoView: View {
                     }
                 }
             }
-
+            .listRowBackground(Color.contentBackground)
+            .saturation(viewModel.preferences.colorTheme == .ink ? 0 : 1)
         }
         .listStyle(GroupedListStyle())
         .environment(\.horizontalSizeClass, .regular)
@@ -40,7 +41,7 @@ struct AppInfoView: View {
         .sheet(item: $url) { url in
             SafariView(url: url, entersReaderIfAvailable: false)
         }
-        .background(Color.dimmedBackground.edgesIgnoringSafeArea(.all))
+        .background(Color.background.edgesIgnoringSafeArea(.all))
     }
 
     private var iconAndVersion: some View {
@@ -98,7 +99,7 @@ struct AppInfoView: View {
                 Image(systemName: "chevron.right")
                     .foregroundColor(Color.tertiaryText)
             }
-            .background(Color(.secondarySystemGroupedBackground))
+            .background(Color.contentBackground)
             .clipShape(Rectangle())
         })
         .introspectTableViewCell { cell in

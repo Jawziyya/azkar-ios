@@ -18,221 +18,252 @@ internal enum L10n {
   }
 
   internal enum About {
-    /// Перевод, транскрипция, аудиофайлы озвучки (azkar.ru)
+    /// Russian translation, transcription, audiofiles (azkar.ru)
     internal static let azkarRU = L10n.tr("Localizable", "about.azkarRU")
-    /// Исходный код приложения Azkar (github.com)
+    /// Source code of the app (github.com)
     internal static let sourceCode = L10n.tr("Localizable", "about.sourceCode")
-    /// О приложении
+    /// About
     internal static let title = L10n.tr("Localizable", "about.title")
     internal enum Credits {
-      /// Анимация %@
+      /// Animation %@
       internal static func animation(_ p1: Any) -> String {
         return L10n.tr("Localizable", "about.credits.animation", String(describing: p1))
       }
-      /// Шрифт %@
+      /// Font %@
       internal static func font(_ p1: Any) -> String {
         return L10n.tr("Localizable", "about.credits.font", String(describing: p1))
       }
-      /// 🎨 Графические материалы и шрифты
+      /// 🎨 Graphic materials and fonts
       internal static let graphicsHeader = L10n.tr("Localizable", "about.credits.graphics-header")
-      /// Изображение %@
+      /// Image %@
       internal static func image(_ p1: Any) -> String {
         return L10n.tr("Localizable", "about.credits.image", String(describing: p1))
       }
-      /// 🛠 Библиотеки с открытым кодом
+      /// 🧱 Open source libraries
       internal static let openSourceLibrariesHeader = L10n.tr("Localizable", "about.credits.open-source-libraries-header")
-      /// Шрифт Комплекса имени Короля Фахда по изданию Священного Корана
+      /// Font of «King Fahd Complex for the Printing of the Holy Quran»
       internal static let quranComplexFont = L10n.tr("Localizable", "about.credits.quran-complex-font")
-      /// 🗃 Материалы
+      /// 🗃 Reference
       internal static let sourcesHeader = L10n.tr("Localizable", "about.credits.sources-header")
     }
     internal enum Studio {
-      /// 🥜 Студия Jawziyya
+      /// 🥜 Jawziyya Studio
       internal static let header = L10n.tr("Localizable", "about.studio.header")
-      /// Страница в Instagram
+      /// Instagram page
       internal static let instagramPage = L10n.tr("Localizable", "about.studio.instagram-page")
-      /// Наши приложения
+      /// Our Apps
       internal static let jawziyyaApps = L10n.tr("Localizable", "about.studio.jawziyya-apps")
-      /// Канал в Telegram
+      /// Telegram channel
       internal static let telegramChannel = L10n.tr("Localizable", "about.studio.telegram-channel")
     }
     internal enum Support {
-      /// ⚒ Обратная связь
+      /// ⚒ Feedback
       internal static let header = L10n.tr("Localizable", "about.support.header")
-      /// Оставить отзыв
+      /// Leave a review
       internal static let leaveReview = L10n.tr("Localizable", "about.support.leave-review")
-      /// Написать на эл. почту
+      /// Write email
       internal static let writeToEmail = L10n.tr("Localizable", "about.support.write-to-email")
     }
   }
 
   internal enum Alerts {
-    /// Выберите значок для приложения Azkar
+    /// Select your favorite app icon
     internal static let checkoutIconPacks = L10n.tr("Localizable", "alerts.checkout-icon-packs")
-    /// Включите уведомления, чтобы приложение напоминало о времени утренних и вечерних азкаров
+    /// Turn on notifications to receive reminders about morning and evening adhkar
     internal static let turnOnNotificationsAlert = L10n.tr("Localizable", "alerts.turn-on-notifications-alert")
   }
 
   internal enum Category {
-    /// Азкары после молитвы
+    /// Adhkar after salah
     internal static let afterSalah = L10n.tr("Localizable", "category.after-salah")
-    /// Вечерние
+    /// Evening
     internal static let evening = L10n.tr("Localizable", "category.evening")
-    /// Утренние
+    /// Morning
     internal static let morning = L10n.tr("Localizable", "category.morning")
-    /// Важные азкары
+    /// Important adhkar
     internal static let other = L10n.tr("Localizable", "category.other")
   }
 
   internal enum Common {
-    /// Восстановить
+    /// Default
+    internal static let `default` = L10n.tr("Localizable", "common.default")
+    /// Restore
     internal static let restore = L10n.tr("Localizable", "common.restore")
-    /// Поделиться приложением
+    /// Share Azkar App
     internal static let shareApp = L10n.tr("Localizable", "common.share-app")
-    /// Версия
+    /// Version
     internal static let version = L10n.tr("Localizable", "common.version")
-    /// Зикр
+    /// Dhikr
     internal static let zikr = L10n.tr("Localizable", "common.zikr")
+  }
+
+  internal enum Fadl {
+    internal enum Source {
+      /// Abu Daud
+      internal static let abuDaud = L10n.tr("Localizable", "fadl.source.AbuDaud")
+      /// al-Beyhaqi
+      internal static let beyhaqi = L10n.tr("Localizable", "fadl.source.Beyhaqi")
+      /// Sahih al-Bukhari
+      internal static let bukhari = L10n.tr("Localizable", "fadl.source.Bukhari")
+      /// Sahih Muslim
+      internal static let muslim = L10n.tr("Localizable", "fadl.source.Muslim")
+      /// Quran
+      internal static let quran = L10n.tr("Localizable", "fadl.source.Quran")
+    }
   }
 
   internal enum IconPack {
     internal enum Darsigova {
-      /// Закаты и рассветы как хранители нашей веры, в которых заложена милость от Господа.
+      /// Sunsets and sunrises as our faith keepers which has signs of the mercy of our Lord.
       internal static let description = L10n.tr("Localizable", "icon_pack.darsigova.description")
-      /// Набор значков «Хранители веры»
+      /// App Icon Pack «Faith keepers»
       internal static let title = L10n.tr("Localizable", "icon_pack.darsigova.title")
     }
     internal enum Info {
-      /// Вы приобрели этот набор 🎉
+      /// You have purchased this App Icon pack 🎉
       internal static let purchasedMessage = L10n.tr("Localizable", "icon_pack.info.purchased-message")
     }
     internal enum Maccinz {
-      /// Мягкие тона, атмосфера домашнего уюта и спокойствия.
+      /// Soft colors, at home feeling.
       internal static let description = L10n.tr("Localizable", "icon_pack.maccinz.description")
-      /// Набор значков «Иллюстрации»
+      /// App Icon Pack «Illustrations»
       internal static let title = L10n.tr("Localizable", "icon_pack.maccinz.title")
     }
     internal enum Standard {
-      /// 
+      ///  
       internal static let description = L10n.tr("Localizable", "icon_pack.standard.description")
-      /// Стандартный набор значков
+      /// Standard icons pack
       internal static let title = L10n.tr("Localizable", "icon_pack.standard.title")
     }
   }
 
   internal enum Notifications {
-    /// Вечерние азкары 🌄
+    /// Evening adhkar 🌄
     internal static let eveningNotificationTitle = L10n.tr("Localizable", "notifications.evening-notification-title")
-    /// Утренние азкары 🌅
+    /// Morning adhkar 🌅
     internal static let morningNotificationTitle = L10n.tr("Localizable", "notifications.morning-notification-title")
   }
 
   internal enum Read {
-    /// привёл
+    /// narrated by
     internal static let narratedBy = L10n.tr("Localizable", "read.narrated-by")
-    /// повторения
+    /// repeats
     internal static let repeats = L10n.tr("Localizable", "read.repeats")
-    /// источник
+    /// source
     internal static let source = L10n.tr("Localizable", "read.source")
-    /// транскрипция
+    /// transliteration
     internal static let transcription = L10n.tr("Localizable", "read.transcription")
-    /// перевод
+    /// translation
     internal static let translation = L10n.tr("Localizable", "read.translation")
   }
 
   internal enum Root {
-    /// О приложении
+    /// About
     internal static let about = L10n.tr("Localizable", "root.about")
-    /// Выберите раздел
+    /// Please select section
     internal static let pickSection = L10n.tr("Localizable", "root.pick-section")
-    /// Настройки
+    /// Settings
     internal static let settings = L10n.tr("Localizable", "root.settings")
   }
 
   internal enum Settings {
-    /// Украшения
+    /// Fun Features
     internal static let funFeatures = L10n.tr("Localizable", "settings.fun_features")
-    /// Настройки
+    /// Settings
     internal static let title = L10n.tr("Localizable", "settings.title")
     internal enum FunFeatures {
-      /// Это функции, которые делают приложение более красочным, но по мнению некоторых людей являются лишними, и они были бы рады их отключить.\nТеперь у таких людей есть своя кнопка. :-)
+      /// These are features which make Azkar app a bit beautiful but some people find useless and annoying.
       internal static let description = L10n.tr("Localizable", "settings.fun_features.description")
     }
     internal enum Icon {
-      /// Значок
+      /// Icon
       internal static let title = L10n.tr("Localizable", "settings.icon.title")
       internal enum List {
-        /// Тёмная ночь
+        /// Dark night
         internal static let darkNight = L10n.tr("Localizable", "settings.icon.list.dark_night")
-        /// Миг
+        /// A moment
         internal static let darsigova1 = L10n.tr("Localizable", "settings.icon.list.darsigova_1")
-        /// В объятьях вечера
+        /// In the arms of the evening
         internal static let darsigova10 = L10n.tr("Localizable", "settings.icon.list.darsigova_10")
-        /// Связующие нити
+        /// Binding threads
         internal static let darsigova2 = L10n.tr("Localizable", "settings.icon.list.darsigova_2")
-        /// На краю времени
+        /// On the edge of time
         internal static let darsigova3 = L10n.tr("Localizable", "settings.icon.list.darsigova_3")
-        /// Свобода
+        /// Freedom
         internal static let darsigova4 = L10n.tr("Localizable", "settings.icon.list.darsigova_4")
-        /// Свет в городе
+        /// Light in a town
         internal static let darsigova5 = L10n.tr("Localizable", "settings.icon.list.darsigova_5")
-        /// Воздушное мгновенье
+        /// Aerial moment
         internal static let darsigova6 = L10n.tr("Localizable", "settings.icon.list.darsigova_6")
-        /// Звёзды в небе горят
+        /// Shining stars in the sky
         internal static let darsigova7 = L10n.tr("Localizable", "settings.icon.list.darsigova_7")
-        /// Полёт цвета
+        /// Color's fly
         internal static let darsigova8 = L10n.tr("Localizable", "settings.icon.list.darsigova_8")
-        /// Нежность
+        /// Tender
         internal static let darsigova9 = L10n.tr("Localizable", "settings.icon.list.darsigova_9")
-        /// Золото
+        /// Gold
         internal static let gold = L10n.tr("Localizable", "settings.icon.list.gold")
-        /// Чернила
+        /// Inc
         internal static let ink = L10n.tr("Localizable", "settings.icon.list.ink")
-        /// Солнечный день
+        /// Sunny day
         internal static let maccinzDay = L10n.tr("Localizable", "settings.icon.list.maccinz_day")
-        /// Праздничная атмосфера
+        /// Eid vibes
         internal static let maccinzHouse = L10n.tr("Localizable", "settings.icon.list.maccinz_house")
-        /// Высоко в горах
+        /// In mountains
         internal static let maccinzMountains = L10n.tr("Localizable", "settings.icon.list.maccinz_mountains")
-        /// Ночь в рамадан
+        /// Ramadan night
         internal static let maccinzRamadanNight = L10n.tr("Localizable", "settings.icon.list.maccinz_ramadan_night")
-        /// Рамадан
+        /// Ramadan
         internal static let ramadan = L10n.tr("Localizable", "settings.icon.list.ramadan")
       }
     }
     internal enum Notifications {
-      /// Напоминание о вечерних азкарах
+      /// Evening reminder
       internal static let eveningOptionLabel = L10n.tr("Localizable", "settings.notifications.evening-option-label")
-      /// Напоминание об утренних азкарах
+      /// Morning reminder
       internal static let morningOptionLabel = L10n.tr("Localizable", "settings.notifications.morning-option-label")
-      /// Напоминать об утренних и вечерних азкарах
+      /// Remind about morning & evening adhkar
       internal static let switchLabel = L10n.tr("Localizable", "settings.notifications.switch-label")
-      /// Уведомления
+      /// Notifications
       internal static let title = L10n.tr("Localizable", "settings.notifications.title")
     }
     internal enum Text {
-      /// Шрифт арабского текста
+      /// Arabic font size
       internal static let arabicTextFont = L10n.tr("Localizable", "settings.text.arabic-text-font")
-      /// Размер текста
+      /// Text size
       internal static let fontSize = L10n.tr("Localizable", "settings.text.font-size")
-      /// Отображать огласовки
+      /// Show tashkeel
       internal static let showTashkeel = L10n.tr("Localizable", "settings.text.show-tashkeel")
-      /// Стандартный iOS
+      /// Standard iOS
       internal static let standardFontName = L10n.tr("Localizable", "settings.text.standard-font-name")
-      /// Текст
+      /// Text
       internal static let title = L10n.tr("Localizable", "settings.text.title")
-      /// Системный размер текста
+      /// System text size
       internal static let useSystemFontSize = L10n.tr("Localizable", "settings.text.use-system-font-size")
     }
     internal enum Theme {
-      /// Авто
+      /// System
       internal static let auto = L10n.tr("Localizable", "settings.theme.auto")
-      /// Тёмная
+      /// Color scheme
+      internal static let colorScheme = L10n.tr("Localizable", "settings.theme.color-scheme")
+      /// Dark
       internal static let dark = L10n.tr("Localizable", "settings.theme.dark")
-      /// Светлая
+      /// Light
       internal static let light = L10n.tr("Localizable", "settings.theme.light")
-      /// Тема
+      /// Appearance
       internal static let title = L10n.tr("Localizable", "settings.theme.title")
+      internal enum ColorTheme {
+        /// Color theme
+        internal static let header = L10n.tr("Localizable", "settings.theme.color-theme.header")
+        /// Ink
+        internal static let ink = L10n.tr("Localizable", "settings.theme.color-theme.ink")
+        /// Purple Rose
+        internal static let purpleRose = L10n.tr("Localizable", "settings.theme.color-theme.purple-rose")
+        /// Rose Quartz
+        internal static let roseQuartz = L10n.tr("Localizable", "settings.theme.color-theme.rose-quartz")
+        /// Sea
+        internal static let sea = L10n.tr("Localizable", "settings.theme.color-theme.sea")
+      }
     }
   }
 }

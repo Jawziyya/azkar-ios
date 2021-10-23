@@ -161,6 +161,12 @@ final class MainMenuViewModel: ObservableObject {
             .map { flag in flag && Date().isRamadanEidDays }
             .assign(to: \.enableEidBackground, on: self)
             .store(in: &cancellabels)
+        
+        preferences.$colorTheme
+            .sink(receiveValue: { [unowned self] _ in
+                self.objectWillChange.send()
+            })
+            .store(in: &cancellabels)
     }
 
     private func hideNotificationsAccessMessage() {

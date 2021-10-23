@@ -15,6 +15,7 @@ enum Keys {
     static let arabicFont = "kArabicFont"
     static let showTashkeel = "kShowTashkeel"
     static let theme = "kTheme"
+    static let colorTheme = "kColorTheme"
     static let enableNotifications = "kEnableNotifications"
     static let morningNotificationsTime = "kMorningNotificationsTime"
     static let eveningNotificationsTime = "kEveningNotificationsTime"

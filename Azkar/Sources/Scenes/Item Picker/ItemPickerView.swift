@@ -12,17 +12,38 @@ struct ItemPickerView<SelectionValue>: View where SelectionValue: Hashable & Pic
 
     @Environment(\.presentationMode) var presentationMode
     @Binding var selection: SelectionValue
+    var header: String?
     let items: [SelectionValue]
+    var footer: String?
     var dismissOnSelect = false
     var enableHapticFeedback = true
 
     var body: some View {
-        List {
-            self.content
+        ScrollView(.vertical, showsIndicators: false) {
+            VStack(alignment: .leading, spacing: 16) {
+                if let header = header {
+                    Text(header)
+                        .font(Font.callout.smallCaps())
+                        .foregroundColor(Color.text)
+                }
+                
+                VStack {
+                    content
+                        .padding(16)
+                }
+                .background(Color.contentBackground)
+                .cornerRadius(10)
+                
+                if let footer = footer {
+                    Text(footer)
+                        .font(.caption)
+                        .foregroundColor(Color.secondaryText)
+                }
+            }
+            .padding()
         }
-        .listStyle(InsetGroupedListStyle())
         .environment(\.horizontalSizeClass, .regular)
-        .background(Color.dimmedBackground.edgesIgnoringSafeArea(.all))
+        .background(Color.background.edgesIgnoringSafeArea(.all))
     }
 
     var content: some View {
@@ -56,12 +77,10 @@ struct ItemPickerView<SelectionValue>: View where SelectionValue: Hashable & Pic
                             .font(item.subtitleFont)
                             .foregroundColor(Color.secondary)
                     }
-                    CheckboxView(isCheked:  .constant(self.selection.hashValue == item.hashValue))
+                    CheckboxView(isCheked: .constant(self.selection.hashValue == item.hashValue))
                         .frame(width: 20, height: 20)
                 }
-                .padding(.vertical, 10)
-                .background(Color(.secondarySystemGroupedBackground))
-                .clipShape(Rectangle())
+                .contentShape(Rectangle())
             }
             .buttonStyle(PlainButtonStyle())
             .foregroundColor(Color.text)
@@ -86,9 +105,14 @@ struct ItemPickerView_Previews: PreviewProvider {
 
     static var previews: some View {
         let items = TestItems.allCases
+        Preferences().colorTheme = .purpleRose
         return ItemPickerView(
             selection: .constant(items.randomElement()!),
-            items: items
+            header: "Header",
+            items: items,
+            footer: "Footer"
         )
+        .environment(\.colorScheme, .dark)
     }
+    
 }

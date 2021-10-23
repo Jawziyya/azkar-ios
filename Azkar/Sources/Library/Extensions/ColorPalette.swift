@@ -42,37 +42,49 @@ extension Color {
 }
 
 extension Color {
+    
+    private static func getColor(_ name: String = #function) -> Color {
+        if let color = UIColor(named: colorTheme.colorsNamespacePrefix + name) {
+            return Color(color)
+        } else {
+            return Color(name)
+        }
+    }
 
     static var accent: Color {
-        Color(#function)
+        getColor()
     }
 
     static var liteAccent: Color {
-        Color(#function)
+        getColor()
     }
     
     static var text: Color {
-        Color(#function)
+        getColor()
     }
     
     static var secondaryText: Color {
-        Color(#function)
+        getColor()
     }
 
     static var tertiaryText: Color {
-        Color(#function)
+        getColor()
     }
 
     static var background: Color {
-        Color(#function)
+        getColor()
+    }
+    
+    static var contentBackground: Color {
+        getColor()
     }
 
     static var secondaryBackground: Color {
-        Color(#function)
+        getColor()
     }
 
     static var dimmedBackground: Color {
-        Color(#function)
+        getColor()
     }
     
 }

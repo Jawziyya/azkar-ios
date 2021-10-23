@@ -39,6 +39,9 @@ final class Preferences {
 
     @Preference(Keys.theme, defaultValue: .automatic)
     var theme: Theme
+    
+    @Preference(Keys.colorTheme, defaultValue: ColorTheme.default)
+    var colorTheme: ColorTheme
 
     @Preference(Keys.enableNotifications, defaultValue: false)
     var enableNotifications: Bool

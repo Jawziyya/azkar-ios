@@ -22,6 +22,10 @@ final class SettingsViewModel: ObservableObject {
     var appIconPackListViewModel: AppIconPackListViewModel {
         .init(preferences: preferences)
     }
+    
+    var colorSchemeViewModel: ColorSchemesViewModel {
+        ColorSchemesViewModel(preferences: preferences)
+    }
 
     private let formatter: DateFormatter
 

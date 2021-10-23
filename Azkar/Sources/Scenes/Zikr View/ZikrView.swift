@@ -20,7 +20,7 @@ struct ZikrView: View {
     }
 
     private let tintColor = Color.accent
-    private let dividerColor = Color.secondaryBackground
+    private let dividerColor = Color.contentBackground
     private let dividerHeight: CGFloat = 1
 
     var body: some View {

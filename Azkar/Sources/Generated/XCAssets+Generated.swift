@@ -21,9 +21,29 @@ internal typealias AssetImageTypeAlias = ImageAsset.Image
 
 // swiftlint:disable identifier_name line_length nesting type_body_length type_name
 internal enum Asset {
+  internal enum Ink {
+    internal static let accent = ColorAsset(name: "Ink/accent")
+    internal static let background = ColorAsset(name: "Ink/background")
+    internal static let contentBackground = ColorAsset(name: "Ink/contentBackground")
+  }
+  internal enum PurpleRose {
+    internal static let accent = ColorAsset(name: "PurpleRose/accent")
+    internal static let background = ColorAsset(name: "PurpleRose/background")
+    internal static let contentBackground = ColorAsset(name: "PurpleRose/contentBackground")
+  }
+  internal enum RoseQuartz {
+    internal static let accent = ColorAsset(name: "RoseQuartz/accent")
+    internal static let background = ColorAsset(name: "RoseQuartz/background")
+    internal static let contentBackground = ColorAsset(name: "RoseQuartz/contentBackground")
+  }
+  internal enum Sea {
+    internal static let accent = ColorAsset(name: "Sea/accent")
+    internal static let background = ColorAsset(name: "Sea/background")
+    internal static let contentBackground = ColorAsset(name: "Sea/contentBackground")
+  }
   internal static let accent = ColorAsset(name: "accent")
   internal static let background = ColorAsset(name: "background")
-  internal static let dimmedBackground = ColorAsset(name: "dimmedBackground")
+  internal static let contentBackground = ColorAsset(name: "contentBackground")
   internal static let secondaryBackground = ColorAsset(name: "secondaryBackground")
   internal static let secondaryText = ColorAsset(name: "secondaryText")
   internal static let tertiaryText = ColorAsset(name: "tertiaryText")

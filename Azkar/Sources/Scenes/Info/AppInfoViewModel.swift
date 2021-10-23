@@ -32,8 +32,8 @@ final class AppInfoViewModel {
         let items: [SourceInfo]
     }
 
+    let preferences: Preferences
     let appVersion: String
-
     let iconImageName: String
 
     private let materialsCredits: [SourceInfo] = [
@@ -68,6 +68,7 @@ final class AppInfoViewModel {
     ]
 
     init(preferences: Preferences) {
+        self.preferences = preferences
         iconImageName = preferences.appIcon.imageName
 
         let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString")!

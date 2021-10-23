@@ -132,7 +132,7 @@ struct Zikr: Identifiable, Hashable, Equatable, Codable {
     
     var source: String {
         return _source.components(separatedBy: ",").map {
-            NSLocalizedString("text.source." + $0, comment: "")
+            NSLocalizedString("text.source." + $0.lowercased(), comment: "")
         }
         .joined(separator: ", ")
     }

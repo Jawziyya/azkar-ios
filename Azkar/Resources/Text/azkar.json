@@ -14,7 +14,8 @@
     "hadith": 1,
     "benefit_ru": "Кто произнесёт эти слова днём, будучи убеждённым в них, и умрёт в тот же день до наступления вечера, окажется среди обитателей Рая.",
     "audio_file_name": null,
-    "translation_en": "O Allah You are my Lord, there is none worthy of worship in truth except You, You created me and I am Your slave and I am abiding to Your covenant and promise as best as I can, I seek refuge in You from the evil that I have committed, I profess to you my sins and I acknowledge Your favour upon me, so forgive me verily no one forgives sins except you."
+    "translation_en": "O Allah You are my Lord, there is none worthy of worship in truth except You, You created me and I am Your slave and I am abiding to Your covenant and promise as best as I can, I seek refuge in You from the evil that I have committed, I profess to you my sins and I acknowledge Your favour upon me, so forgive me verily no one forgives sins except you.",
+    "title_en": null
   },
   {
     "id": 2,
@@ -31,7 +32,8 @@
     "hadith": 2,
     "benefit_ru": "Кто произнесёт эти слова десять раз, получит награду как за освобождение четырёх рабов.",
     "audio_file_name": null,
-    "translation_en": "There is no god but Allah, the One, having no partner with Him, His is the Sovereignty and all praise is due to Him and He is Potent over everything"
+    "translation_en": "There is no god but Allah, the One, having no partner with Him, His is the Sovereignty and all praise is due to Him and He is Potent over everything",
+    "title_en": null
   },
   {
     "id": 3,
@@ -48,7 +50,8 @@
     "hadith": 3,
     "benefit_ru": "Эти два слова легки для языка, тяжелы на весах в день суда и любимы Аллаху.",
     "audio_file_name": null,
-    "translation_en": "Hallowed be Allah and praise is due to Him; Hallowed be Allah, the Great."
+    "translation_en": "Hallowed be Allah and praise is due to Him; Hallowed be Allah, the Great.",
+    "title_en": null
   },
   {
     "id": 4,
@@ -65,7 +68,8 @@
     "hadith": 4,
     "benefit_ru": null,
     "audio_file_name": null,
-    "translation_en": "We entered upon morning and the whole Kingdom of Allah entered upon morning; praise is due to Allah, there is no god but Allah the One, and there is no partner with Him. O Allah, I beg of Thee the blessing of this night and the blessing of that which lies in it. I seek refuge in Thee from the evil of it and what lies in it. O Allah, I seek refuge in Thee from sloth, from decrepitude, from the evil of vanity, from trial of the world, and from torment of the grave."
+    "translation_en": "We entered upon morning and the whole Kingdom of Allah entered upon morning; praise is due to Allah, there is no god but Allah the One, and there is no partner with Him. O Allah, I beg of Thee the blessing of this night and the blessing of that which lies in it. I seek refuge in Thee from the evil of it and what lies in it. O Allah, I seek refuge in Thee from sloth, from decrepitude, from the evil of vanity, from trial of the world, and from torment of the grave.",
+    "title_en": null
   },
   {
     "id": 5,
@@ -82,7 +86,8 @@
     "hadith": 5,
     "benefit_ru": null,
     "audio_file_name": null,
-    "translation_en": "O Allah, by You we enter the morning, and by You we enter the evening, and by You we live, and by You we die, and to You is the Return."
+    "translation_en": "O Allah, by You we enter the morning, and by You we enter the evening, and by You we live, and by You we die, and to You is the Return.",
+    "title_en": null
   },
   {
     "id": 6,
@@ -99,7 +104,8 @@
     "hadith": 6,
     "benefit_ru": "Того, кто произнёс это утром или вечером, не постигнет какой-либо вред.",
     "audio_file_name": null,
-    "translation_en": "In the Name of Allah, who with His Name, nothing in the earth or the heavens can cause harm, and He is the Hearing, the Knowing."
+    "translation_en": "In the Name of Allah, who with His Name, nothing in the earth or the heavens can cause harm, and He is the Hearing, the Knowing.",
+    "title_en": null
   },
   {
     "id": 7,
@@ -116,7 +122,8 @@
     "hadith": 7,
     "benefit_ru": null,
     "audio_file_name": null,
-    "translation_en": ""
+    "translation_en": "",
+    "title_en": null
   },
   {
     "id": 8,
@@ -133,7 +140,8 @@
     "hadith": 8,
     "benefit_ru": null,
     "audio_file_name": null,
-    "translation_en": "O Allah, Creator of the heavens and the earth, Knower of the unseen and the seen, there is none worthy of worship except You, Lord of everything and its Owner, I seek refuge in You from the evil of my soul and from the evil of Shaitan and his Shirk, or that I should do some evil to myself or bring it upon a Muslim."
+    "translation_en": "O Allah, Creator of the heavens and the earth, Knower of the unseen and the seen, there is none worthy of worship except You, Lord of everything and its Owner, I seek refuge in You from the evil of my soul and from the evil of Shaitan and his Shirk, or that I should do some evil to myself or bring it upon a Muslim.",
+    "title_en": null
   },
   {
     "id": 9,
@@ -150,7 +158,8 @@
     "hadith": 14,
     "benefit_ru": null,
     "audio_file_name": null,
-    "translation_en": "We rose upon the fitrah of Islam, and upon the word of pure faith, and upon the religion of our Prophet Muhammad salla-llahu alaihi wa-sallam and upon the religion of our father Ibraheem alaihi-ssalam, who was a Muslim and of true faith and was not of the mushrik."
+    "translation_en": "We rose upon the fitrah of Islam, and upon the word of pure faith, and upon the religion of our Prophet Muhammad salla-llahu alaihi wa-sallam and upon the religion of our father Ibraheem alaihi-ssalam, who was a Muslim and of true faith and was not of the mushrik.",
+    "title_en": null
   },
   {
     "id": 10,
@@ -167,7 +176,8 @@
     "hadith": 9,
     "benefit_ru": "Обязательно войдёт в Рай тот, кто будет произносить эти слова, будучи убеждённым в них.",
     "audio_file_name": null,
-    "translation_en": "I am pleased with Allah as Lord, with Islam as religion and with Muhammad (ﷺ) as Apostle."
+    "translation_en": "I am pleased with Allah as Lord, with Islam as religion and with Muhammad (ﷺ) as Apostle.",
+    "title_en": null
   },
   {
     "id": 11,
@@ -184,7 +194,8 @@
     "hadith": 10,
     "benefit_ru": null,
     "audio_file_name": null,
-    "translation_en": null
+    "translation_en": null,
+    "title_en": null
   },
   {
     "id": 12,
@@ -201,7 +212,8 @@
     "hadith": 11,
     "benefit_ru": null,
     "audio_file_name": null,
-    "translation_en": "Hallowed be Allah and praise is due to Him according to the number of His creation and according to the pleasure of His Self and according to the weight of His Throne and according to the ink (used in recording) words (for His Praise)."
+    "translation_en": "Hallowed be Allah and praise is due to Him according to the number of His creation and according to the pleasure of His Self and according to the weight of His Throne and according to the ink (used in recording) words (for His Praise).",
+    "title_en": null
   },
   {
     "id": 13,
@@ -218,7 +230,8 @@
     "hadith": 13,
     "benefit_ru": "Аллах избавит от забот того, кто станет произносить эти слова, будучи убеждённым в них.",
     "audio_file_name": null,
-    "translation_en": "Allah sufficeth me: there is no god but He; on Him is my trust. He, the Lord of the Throne (of glory) Supreme."
+    "translation_en": "Allah sufficeth me: there is no god but He; on Him is my trust. He, the Lord of the Throne (of glory) Supreme.",
+    "title_en": null
   },
   {
     "id": 14,
@@ -235,7 +248,8 @@
     "hadith": 12,
     "benefit_ru": "Тому, кто произнесёт эти слова, остановившись в каком-либо месте, ничто не причинит вреда до тех пор, пока он не покинет его.",
     "audio_file_name": null,
-    "translation_en": "I seek refuge in the Perfect Word of Allah from the evil of what He has created."
+    "translation_en": "I seek refuge in the Perfect Word of Allah from the evil of what He has created.",
+    "title_en": null
   },
   {
     "id": 15,
@@ -252,7 +266,8 @@
     "hadith": 1,
     "benefit_ru": "Кто произнесёт эти слова днём, будучи убеждённым в них, и умрёт в тот же день до наступления вечера, окажется среди обитателей Рая.",
     "audio_file_name": null,
-    "translation_en": "O Allah You are my Lord, there is none worthy of worship in truth except You, You created me and I am Your slave and I am abiding to Your covenant and promise as best as I can, I seek refuge in You from the evil that I have committed, I profess to you my sins and I acknowledge Your favour upon me, so forgive me verily no one forgives sins except you."
+    "translation_en": "O Allah You are my Lord, there is none worthy of worship in truth except You, You created me and I am Your slave and I am abiding to Your covenant and promise as best as I can, I seek refuge in You from the evil that I have committed, I profess to you my sins and I acknowledge Your favour upon me, so forgive me verily no one forgives sins except you.",
+    "title_en": null
   },
   {
     "id": 16,
@@ -269,7 +284,8 @@
     "hadith": 2,
     "benefit_ru": "Кто произнесёт эти слова десять раз, получит награду как за освобождение четырёх рабов.",
     "audio_file_name": null,
-    "translation_en": "There is no god but Allah, the One, having no partner with Him, His is the Sovereignty and all praise is due to Him and He is Potent over everything"
+    "translation_en": "There is no god but Allah, the One, having no partner with Him, His is the Sovereignty and all praise is due to Him and He is Potent over everything",
+    "title_en": null
   },
   {
     "id": 17,
@@ -286,7 +302,8 @@
     "hadith": 3,
     "benefit_ru": "Эти два слова легки для языка, тяжелы на весах в день суда и любимы Аллаху.",
     "audio_file_name": null,
-    "translation_en": "Hallowed be Allah and praise is due to Him; Hallowed be Allah, the Great."
+    "translation_en": "Hallowed be Allah and praise is due to Him; Hallowed be Allah, the Great.",
+    "title_en": null
   },
   {
     "id": 18,
@@ -303,7 +320,8 @@
     "hadith": 4,
     "benefit_ru": null,
     "audio_file_name": null,
-    "translation_en": "We have entered upon evening and so has the Kingdom of Allah entered upon evening; praise is due to Allah, there is no god but Allah the One, and there is no partner with Him. O Allah, I beg of Thee the blessing of this night and the blessing of that which lies in it. I seek refuge in Thee from the evil of it and what lies in it. O Allah, I seek refuge in Thee from sloth, from decrepitude, from the evil of vanity, from trial of the world, and from torment of the grave."
+    "translation_en": "We have entered upon evening and so has the Kingdom of Allah entered upon evening; praise is due to Allah, there is no god but Allah the One, and there is no partner with Him. O Allah, I beg of Thee the blessing of this night and the blessing of that which lies in it. I seek refuge in Thee from the evil of it and what lies in it. O Allah, I seek refuge in Thee from sloth, from decrepitude, from the evil of vanity, from trial of the world, and from torment of the grave.",
+    "title_en": null
   },
   {
     "id": 19,
@@ -320,7 +338,8 @@
     "hadith": 5,
     "benefit_ru": null,
     "audio_file_name": null,
-    "translation_en": "O Allah, by You we enter the evening, and by You we live, and by You we die, and to You is the Resurrection."
+    "translation_en": "O Allah, by You we enter the evening, and by You we live, and by You we die, and to You is the Resurrection.",
+    "title_en": null
   },
   {
     "id": 20,
@@ -337,7 +356,8 @@
     "hadith": 7,
     "benefit_ru": null,
     "audio_file_name": null,
-    "translation_en": null
+    "translation_en": null,
+    "title_en": null
   },
   {
     "id": 21,
@@ -354,7 +374,8 @@
     "hadith": 8,
     "benefit_ru": null,
     "audio_file_name": null,
-    "translation_en": "O Allah, Creator of the heavens and the earth, Knower of the unseen and the seen, there is none worthy of worship except You, Lord of everything and its Owner, I seek refuge in You from the evil of my soul and from the evil of Shaitan and his Shirk, or that I should do some evil to myself or bring it upon a Muslim."
+    "translation_en": "O Allah, Creator of the heavens and the earth, Knower of the unseen and the seen, there is none worthy of worship except You, Lord of everything and its Owner, I seek refuge in You from the evil of my soul and from the evil of Shaitan and his Shirk, or that I should do some evil to myself or bring it upon a Muslim.",
+    "title_en": null
   },
   {
     "id": 22,
@@ -371,7 +392,8 @@
     "hadith": 9,
     "benefit_ru": "Обязательно войдёт в Рай тот, кто будет произносить эти слова, будучи убеждённым в них.",
     "audio_file_name": null,
-    "translation_en": "I am pleased with Allah as Lord, with Islam as religion and with Muhammad (ﷺ) as Apostle."
+    "translation_en": "I am pleased with Allah as Lord, with Islam as religion and with Muhammad (ﷺ) as Apostle.",
+    "title_en": null
   },
   {
     "id": 23,
@@ -388,7 +410,8 @@
     "hadith": 10,
     "benefit_ru": null,
     "audio_file_name": null,
-    "translation_en": null
+    "translation_en": null,
+    "title_en": null
   },
   {
     "id": 24,
@@ -405,7 +428,8 @@
     "hadith": 13,
     "benefit_ru": "Аллах избавит от забот того, кто станет произносить эти слова, будучи убеждённым в них.",
     "audio_file_name": null,
-    "translation_en": "Allah sufficeth me: there is no god but He; on Him is my trust. He, the Lord of the Throne (of glory) Supreme."
+    "translation_en": "Allah sufficeth me: there is no god but He; on Him is my trust. He, the Lord of the Throne (of glory) Supreme.",
+    "title_en": null
   },
   {
     "id": 25,
@@ -422,7 +446,8 @@
     "hadith": null,
     "benefit_ru": null,
     "audio_file_name": null,
-    "translation_en": null
+    "translation_en": null,
+    "title_en": "After salah"
   },
   {
     "id": 26,
@@ -439,7 +464,8 @@
     "hadith": null,
     "benefit_ru": null,
     "audio_file_name": null,
-    "translation_en": null
+    "translation_en": null,
+    "title_en": "After salah (2)"
   },
   {
     "id": 27,
@@ -456,7 +482,8 @@
     "hadith": null,
     "benefit_ru": null,
     "audio_file_name": null,
-    "translation_en": null
+    "translation_en": null,
+    "title_en": "After salah (3)"
   },
   {
     "id": 28,
@@ -473,7 +500,8 @@
     "hadith": null,
     "benefit_ru": null,
     "audio_file_name": null,
-    "translation_en": null
+    "translation_en": null,
+    "title_en": "After salah (4)"
   },
   {
     "id": 29,
@@ -490,7 +518,8 @@
     "hadith": null,
     "benefit_ru": null,
     "audio_file_name": null,
-    "translation_en": null
+    "translation_en": null,
+    "title_en": "After fajr and maghrib"
   },
   {
     "id": 30,
@@ -507,7 +536,8 @@
     "hadith": null,
     "benefit_ru": null,
     "audio_file_name": null,
-    "translation_en": null
+    "translation_en": null,
+    "title_en": "After salah (5)"
   },
   {
     "id": 31,
@@ -524,7 +554,8 @@
     "hadith": null,
     "benefit_ru": null,
     "audio_file_name": null,
-    "translation_en": null
+    "translation_en": null,
+    "title_en": null
   },
   {
     "id": 32,
@@ -541,7 +572,8 @@
     "hadith": null,
     "benefit_ru": null,
     "audio_file_name": null,
-    "translation_en": null
+    "translation_en": null,
+    "title_en": null
   },
   {
     "id": 33,
@@ -558,7 +590,8 @@
     "hadith": null,
     "benefit_ru": null,
     "audio_file_name": null,
-    "translation_en": null
+    "translation_en": null,
+    "title_en": null
   },
   {
     "id": 34,
@@ -575,7 +608,8 @@
     "hadith": null,
     "benefit_ru": null,
     "audio_file_name": null,
-    "translation_en": null
+    "translation_en": null,
+    "title_en": null
   },
   {
     "id": 35,
@@ -592,7 +626,8 @@
     "hadith": null,
     "benefit_ru": null,
     "audio_file_name": null,
-    "translation_en": null
+    "translation_en": null,
+    "title_en": "After performing an ablution"
   },
   {
     "id": 36,
@@ -609,7 +644,8 @@
     "hadith": null,
     "benefit_ru": null,
     "audio_file_name": null,
-    "translation_en": null
+    "translation_en": null,
+    "title_en": "Upon going out from the house"
   },
   {
     "id": 37,
@@ -626,7 +662,8 @@
     "hadith": null,
     "benefit_ru": null,
     "audio_file_name": null,
-    "translation_en": null
+    "translation_en": null,
+    "title_en": "Upon entering to the house"
   },
   {
     "id": 38,
@@ -643,7 +680,8 @@
     "hadith": null,
     "benefit_ru": null,
     "audio_file_name": null,
-    "translation_en": null
+    "translation_en": null,
+    "title_en": "Upon entering to the mosque"
   },
   {
     "id": 39,
@@ -660,7 +698,8 @@
     "hadith": null,
     "benefit_ru": null,
     "audio_file_name": null,
-    "translation_en": null
+    "translation_en": null,
+    "title_en": "Upon exiting from mosque"
   },
   {
     "id": 40,
@@ -677,7 +716,8 @@
     "hadith": null,
     "benefit_ru": null,
     "audio_file_name": null,
-    "translation_en": null
+    "translation_en": null,
+    "title_en": "During the adhan"
   },
   {
     "id": 41,
@@ -694,7 +734,8 @@
     "hadith": null,
     "benefit_ru": null,
     "audio_file_name": null,
-    "translation_en": null
+    "translation_en": null,
+    "title_en": "After the adhan"
   },
   {
     "id": 42,
@@ -711,7 +752,8 @@
     "hadith": null,
     "benefit_ru": null,
     "audio_file_name": null,
-    "translation_en": null
+    "translation_en": null,
+    "title_en": "After the adhan (2)"
   },
   {
     "id": 43,
@@ -728,7 +770,8 @@
     "hadith": null,
     "benefit_ru": null,
     "audio_file_name": null,
-    "translation_en": null
+    "translation_en": null,
+    "title_en": "Before eating"
   },
   {
     "id": 44,
@@ -745,7 +788,8 @@
     "hadith": null,
     "benefit_ru": null,
     "audio_file_name": null,
-    "translation_en": null
+    "translation_en": null,
+    "title_en": "If you forgot to say bismi-llah before eating"
   },
   {
     "id": 45,
@@ -762,7 +806,8 @@
     "hadith": null,
     "benefit_ru": null,
     "audio_file_name": null,
-    "translation_en": null
+    "translation_en": null,
+    "title_en": "After eating"
   },
   {
     "id": 46,
@@ -779,7 +824,8 @@
     "hadith": null,
     "benefit_ru": null,
     "audio_file_name": null,
-    "translation_en": null
+    "translation_en": null,
+    "title_en": "After eating (2)"
   },
   {
     "id": 47,
@@ -796,7 +842,8 @@
     "hadith": null,
     "benefit_ru": null,
     "audio_file_name": null,
-    "translation_en": null
+    "translation_en": null,
+    "title_en": "Dua of traveler"
   },
   {
     "id": 48,
@@ -813,7 +860,8 @@
     "hadith": null,
     "benefit_ru": null,
     "audio_file_name": null,
-    "translation_en": null
+    "translation_en": null,
+    "title_en": "Upon returning from travel"
   },
   {
     "id": 49,
@@ -830,7 +878,8 @@
     "hadith": null,
     "benefit_ru": null,
     "audio_file_name": null,
-    "translation_en": null
+    "translation_en": null,
+    "title_en": "Upon entering a town or village"
   },
   {
     "id": 50,
@@ -847,7 +896,8 @@
     "hadith": null,
     "benefit_ru": null,
     "audio_file_name": null,
-    "translation_en": null
+    "translation_en": "",
+    "title_en": "Before sexual intercourse"
   },
   {
     "id": 51,
@@ -864,7 +914,8 @@
     "hadith": 15,
     "benefit_ru": null,
     "audio_file_name": null,
-    "translation_en": "Thirst has gone, the arteries are moist, and the reward is sure, if Allah wills."
+    "translation_en": "Thirst has gone, the arteries are moist, and the reward is sure, if Allah wills.",
+    "title_en": "Before breaking the fast"
   },
   {
     "id": 52,
@@ -877,11 +928,12 @@
     "text": "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ\n\nقُلْ هُوَ ٱللَّهُ أَحَدٌ\nٱللَّهُ ٱلصَّمَدُ\nلَمْ يَلِدْ وَلَمْ يُولَدْ\nوَلَمْ يَكُن لَّهُۥ كُفُوًا أَحَدٌۢ",
     "title_ru": "Сура «Искренность»",
     "translation_ru": "С именем Аллаха, Милостивого, Милосердного!\n\nСкажи: «Он - Аллах Единый,\nАллах самодостаточен.\nОн не родил и не был рождён,\nи нет никого, равного Ему».",
-    "transliteration_ru": "Sura al-Ikhlas",
+    "transliteration_ru": "",
     "hadith": null,
     "benefit_ru": null,
     "audio_file_name": "112.mp3",
-    "translation_en": "In the name of Allah, the Entirely Merciful, the Especially Merciful.\n\nSay, \"He is Allah, [who is] One,\nAllah, the Eternal Refuge.\nHe neither begets nor is born,\nNor is there to Him any equivalent.\""
+    "translation_en": "In the name of Allah, the Entirely Merciful, the Especially Merciful.\n\nSay, \"He is Allah, [who is] One,\nAllah, the Eternal Refuge.\nHe neither begets nor is born,\nNor is there to Him any equivalent.\"",
+    "title_en": "Sura al-Ikhlas"
   },
   {
     "id": 53,
@@ -894,11 +946,12 @@
     "text": "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ\n\nقُلْ أَعُوذُ بِرَبِّ ٱلْفَلَقِ\nمِن شَرِّ مَا خَلَقَ\nوَمِن شَرِّ غَاسِقٍ إِذَا وَقَبَ\nوَمِن شَرِّ ٱلنَّفَّـٰثَـٰتِ فِى ٱلْعُقَدِ\nوَمِن شَرِّ حَاسِدٍ إِذَا حَسَدَ",
     "title_ru": "Сура «Рассвет»",
     "translation_ru": "С именем Аллаха, Милостивого, Милосердного!\n\nСкажи: «Прибегаю к защите Господа рассвета\nот зла того, что Он сотворил,\nот зла мрака, когда он наступает,\nот зла колдуний, поплевывающих на узлы,\nот зла завистника, когда он завидует».",
-    "transliteration_ru": "Sura al-Falaq",
+    "transliteration_ru": "",
     "hadith": null,
     "benefit_ru": null,
     "audio_file_name": "113.mp3",
-    "translation_en": "In the name of Allah, the Entirely Merciful, the Especially Merciful.\n\nSay, \"I seek refuge in the Lord of daybreak\nFrom the evil of that which He created\nAnd from the evil of darkness when it settles\nAnd from the evil of the blowers in knots\nAnd from the evil of an envier when he envies."
+    "translation_en": "In the name of Allah, the Entirely Merciful, the Especially Merciful.\n\nSay, \"I seek refuge in the Lord of daybreak\nFrom the evil of that which He created\nAnd from the evil of darkness when it settles\nAnd from the evil of the blowers in knots\nAnd from the evil of an envier when he envies.",
+    "title_en": "Sura al-Falaq"
   },
   {
     "id": 54,
@@ -911,11 +964,12 @@
     "text": "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ\n\nقُلْ أَعُوذُ بِرَبِّ ٱلنَّاسِ\nمَلِكِ ٱلنَّاسِ\nإِلَـٰهِ ٱلنَّاسِ\nمِن شَرِّ ٱلْوَسْوَاسِ ٱلْخَنَّاسِ\nٱلَّذِى يُوَسْوِسُ فِى صُدُورِ ٱلنَّاسِ\nمِنَ ٱلْجِنَّةِ وَٱلنَّاسِ",
     "title_ru": "Сура «Люди»",
     "translation_ru": "С именем Аллаха, Милостивого, Милосердного!\n\nСкажи: «Прибегаю к защите Господа людей,\nЦаря людей,\nБога людей,\nот зла искусителя отступающего при поминании Аллаха,\nкоторый наущает в груди людей\nи бывает из джиннов и людей».",
-    "transliteration_ru": "Sura an-Nas",
+    "transliteration_ru": "",
     "hadith": null,
     "benefit_ru": null,
     "audio_file_name": "114.mp3",
-    "translation_en": "In the name of Allah, the Entirely Merciful, the Especially Merciful.\n\nSay, \"I seek refuge in the Lord of mankind,\nThe Sovereign of mankind,\nThe God of mankind,\nFrom the evil of the retreating whisperer -\nWho whispers [evil] into the breasts of mankind -\nFrom among the jinn and mankind\"."
+    "translation_en": "In the name of Allah, the Entirely Merciful, the Especially Merciful.\n\nSay, \"I seek refuge in the Lord of mankind,\nThe Sovereign of mankind,\nThe God of mankind,\nFrom the evil of the retreating whisperer -\nWho whispers [evil] into the breasts of mankind -\nFrom among the jinn and mankind\".",
+    "title_en": "Sura an-Nas"
   },
   {
     "id": 55,
@@ -928,11 +982,12 @@
     "text": "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ\n\nقُلْ هُوَ ٱللَّهُ أَحَدٌ\nٱللَّهُ ٱلصَّمَدُ\nلَمْ يَلِدْ وَلَمْ يُولَدْ\nوَلَمْ يَكُن لَّهُۥ كُفُوًا أَحَدٌۢ",
     "title_ru": "Сура «Искренность»",
     "translation_ru": "С именем Аллаха, Милостивого, Милосердного!\n\nСкажи: «Он - Аллах Единый,\nАллах самодостаточен.\nОн не родил и не был рождён,\nи нет никого, равного Ему».",
-    "transliteration_ru": "Sura al-Ikhlas",
+    "transliteration_ru": "",
     "hadith": null,
     "benefit_ru": null,
     "audio_file_name": "112.mp3",
-    "translation_en": "In the name of Allah, the Entirely Merciful, the Especially Merciful.\n\nSay, \"He is Allah, [who is] One,\nAllah, the Eternal Refuge.\nHe neither begets nor is born,\nNor is there to Him any equivalent.\""
+    "translation_en": "In the name of Allah, the Entirely Merciful, the Especially Merciful.\n\nSay, \"He is Allah, [who is] One,\nAllah, the Eternal Refuge.\nHe neither begets nor is born,\nNor is there to Him any equivalent.\"",
+    "title_en": "Sura al-Ikhlas"
   },
   {
     "id": 56,
@@ -945,11 +1000,12 @@
     "text": "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ\n\nقُلْ أَعُوذُ بِرَبِّ ٱلْفَلَقِ\nمِن شَرِّ مَا خَلَقَ\nوَمِن شَرِّ غَاسِقٍ إِذَا وَقَبَ\nوَمِن شَرِّ ٱلنَّفَّـٰثَـٰتِ فِى ٱلْعُقَدِ\nوَمِن شَرِّ حَاسِدٍ إِذَا حَسَدَ",
     "title_ru": "Сура «Рассвет»",
     "translation_ru": "С именем Аллаха, Милостивого, Милосердного!\n\nСкажи: «Прибегаю к защите Господа рассвета\nот зла того, что Он сотворил,\nот зла мрака, когда он наступает,\nот зла колдуний, поплевывающих на узлы,\nот зла завистника, когда он завидует».",
-    "transliteration_ru": "Sura al-Falaq",
+    "transliteration_ru": "",
     "hadith": null,
     "benefit_ru": null,
     "audio_file_name": "113.mp3",
-    "translation_en": "In the name of Allah, the Entirely Merciful, the Especially Merciful.\n\nSay, \"I seek refuge in the Lord of daybreak\nFrom the evil of that which He created\nAnd from the evil of darkness when it settles\nAnd from the evil of the blowers in knots\nAnd from the evil of an envier when he envies."
+    "translation_en": "In the name of Allah, the Entirely Merciful, the Especially Merciful.\n\nSay, \"I seek refuge in the Lord of daybreak\nFrom the evil of that which He created\nAnd from the evil of darkness when it settles\nAnd from the evil of the blowers in knots\nAnd from the evil of an envier when he envies.",
+    "title_en": "Sura al-Falaq"
   },
   {
     "id": 57,
@@ -962,11 +1018,12 @@
     "text": "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ\n\nقُلْ أَعُوذُ بِرَبِّ ٱلنَّاسِ\nمَلِكِ ٱلنَّاسِ\nإِلَـٰهِ ٱلنَّاسِ\nمِن شَرِّ ٱلْوَسْوَاسِ ٱلْخَنَّاسِ\nٱلَّذِى يُوَسْوِسُ فِى صُدُورِ ٱلنَّاسِ\nمِنَ ٱلْجِنَّةِ وَٱلنَّاسِ",
     "title_ru": "Сура «Люди»",
     "translation_ru": "С именем Аллаха, Милостивого, Милосердного!\n\nСкажи: «Прибегаю к защите Господа людей,\nЦаря людей,\nБога людей,\nот зла искусителя отступающего при поминании Аллаха,\nкоторый наущает в груди людей\nи бывает из джиннов и людей».",
-    "transliteration_ru": "Sura an-Nas",
+    "transliteration_ru": "",
     "hadith": null,
     "benefit_ru": null,
     "audio_file_name": "114.mp3",
-    "translation_en": "In the name of Allah, the Entirely Merciful, the Especially Merciful.\n\nSay, \"I seek refuge in the Lord of mankind,\nThe Sovereign of mankind,\nThe God of mankind,\nFrom the evil of the retreating whisperer -\nWho whispers [evil] into the breasts of mankind -\nFrom among the jinn and mankind\"."
+    "translation_en": "In the name of Allah, the Entirely Merciful, the Especially Merciful.\n\nSay, \"I seek refuge in the Lord of mankind,\nThe Sovereign of mankind,\nThe God of mankind,\nFrom the evil of the retreating whisperer -\nWho whispers [evil] into the breasts of mankind -\nFrom among the jinn and mankind\".",
+    "title_en": "Sura an-Nas"
   },
   {
     "id": 58,
@@ -979,11 +1036,12 @@
     "text": "ءَامَنَ ٱلرَّسُولُ بِمَآ أُنزِلَ إِلَيْهِ مِن رَّبِّهِۦ وَٱلْمُؤْمِنُونَ ۚ كُلٌّ ءَامَنَ بِٱللَّهِ وَمَلَـٰٓئِكَتِهِۦ وَكُتُبِهِۦ وَرُسُلِهِۦ لَا نُفَرِّقُ بَيْنَ أَحَدٍ مِّن رُّسُلِهِۦ ۚ وَقَالُوا سَمِعْنَا وَأَطَعْنَا ۖ غُفْرَانَكَ رَبَّنَا وَإِلَيْكَ ٱلْمَصِيرُ\n\nلَا يُكَلِّفُ ٱللَّهُ نَفْسًا إِلَّا وُسْعَهَا ۚ لَهَا مَا كَسَبَتْ وَعَلَيْهَا مَا ٱكْتَسَبَتْ ۗ رَبَّنَا لَا تُؤَاخِذْنَآ إِن نَّسِينَآ أَوْ أَخْطَأْنَا ۚ رَبَّنَا وَلَا تَحْمِلْ عَلَيْنَآ إِصْرًا كَمَا حَمَلْتَهُۥ عَلَى ٱلَّذِينَ مِن قَبْلِنَا ۚ رَبَّنَا وَلَا تُحَمِّلْنَا مَا لَا طَاقَةَ لَنَا بِهِۦ ۖ وَٱعْفُ عَنَّا وَٱغْفِرْ لَنَا وَٱرْحَمْنَآ ۚ أَنتَ مَوْلَىٰنَا فَٱنصُرْنَا عَلَى ٱلْقَوْمِ ٱلْكَـٰفِرِينَ",
     "title_ru": "Последние два аята из суры «Корова»",
     "translation_ru": "Посланник и верующие уверовали в то, что ниспослано ему от Господа. Все они уверовали в Аллаха, Его ангелов, Его Писания и Его посланников. Они говорят: «Мы не делаем различий между Его посланниками». Они говорят: «Слушаем и повинуемся! Твоего прощения мы просим, Господь наш, и к Тебе предстоит прибытие».\n\nАллах не возлагает на человека сверх его возможностей. Ему достанется то, что он приобрел, и против него будет то, что он приобрел. Господь наш! Не наказывай нас, если мы позабыли или ошиблись. Господь наш! Не возлагай на нас бремя, которое Ты возложил на наших предшественников. Господь наш! Не обременяй нас тем, что нам не под силу. Извини нас, прости нас и помилуй! Ты - наш Покровитель. Помоги же нам одержать верх над неверующими людьми.",
-    "transliteration_ru": "Last two ayas of sura al-Baqara",
+    "transliteration_ru": "",
     "hadith": null,
     "benefit_ru": null,
     "audio_file_name": "baqara_285-286.mp3",
-    "translation_en": "The Messenger has believed in what was revealed to him from his Lord, and [so have] the believers. All of them have believed in Allah and His angels and His books and His messengers, [saying], \"We make no distinction between any of His messengers.\" And they say, \"We hear and we obey. [We seek] Your forgiveness, our Lord, and to You is the [final] destination.\"\n\nAllah does not charge a soul except [with that within] its capacity. It will have [the consequence of] what [good] it has gained, and it will bear [the consequence of] what [evil] it has earned. \"Our Lord, do not impose blame upon us if we have forgotten or erred. Our Lord, and lay not upon us a burden like that which You laid upon those before us. Our Lord, and burden us not with that which we have no ability to bear. And pardon us; and forgive us; and have mercy upon us. You are our protector, so give us victory over the disbelieving people.\""
+    "translation_en": "The Messenger has believed in what was revealed to him from his Lord, and [so have] the believers. All of them have believed in Allah and His angels and His books and His messengers, [saying], \"We make no distinction between any of His messengers.\" And they say, \"We hear and we obey. [We seek] Your forgiveness, our Lord, and to You is the [final] destination.\"\n\nAllah does not charge a soul except [with that within] its capacity. It will have [the consequence of] what [good] it has gained, and it will bear [the consequence of] what [evil] it has earned. \"Our Lord, do not impose blame upon us if we have forgotten or erred. Our Lord, and lay not upon us a burden like that which You laid upon those before us. Our Lord, and burden us not with that which we have no ability to bear. And pardon us; and forgive us; and have mercy upon us. You are our protector, so give us victory over the disbelieving people.\"",
+    "title_en": "Last two ayas of sura al-Baqara"
   },
   {
     "id": 59,
@@ -996,11 +1054,12 @@
     "text": "ٱللَّهُ لَآ إِلَـٰهَ إِلَّا هُوَ ٱلْحَىُّ ٱلْقَيُّومُ ۚ لَا تَأْخُذُهُۥ سِنَةٌ وَلَا نَوْمٌ ۚ لَّهُۥ مَا فِى ٱلسَّمَـٰوَٰتِ وَمَا فِى ٱلْأَرْضِ ۗ مَن ذَا ٱلَّذِى يَشْفَعُ عِندَهُۥٓ إِلَّا بِإِذْنِهِۦ ۚ يَعْلَمُ مَا بَيْنَ أَيْدِيهِمْ وَمَا خَلْفَهُمْ ۖ وَلَا يُحِيطُونَ بِشَىْءٍ مِّنْ عِلْمِهِۦٓ إِلَّا بِمَا شَآءَ ۚ وَسِعَ كُرْسِيُّهُ ٱلسَّمَـٰوَٰتِ وَٱلْأَرْضَ ۖ وَلَا يَـُٔودُهُۥ حِفْظُهُمَا ۚ وَهُوَ ٱلْعَلِىُّ ٱلْعَظِيمُ",
     "title_ru": "Аят «аль-Курси»",
     "translation_ru": "Аллах — нет божества, кроме Него, Живого, Вседержителя. Им не овладевают ни дремота, ни сон. Ему принадлежит то, что на небесах, и то, что на земле. Кто станет заступаться перед Ним без Его дозволения? Он знает их будущее и прошлое. Они постигают из Его знания только то, что Он пожелает. Его Престол (Подножие Трона) объемлет небеса и землю, и не тяготит Его оберегание их. Он — Возвышенный, Великий.",
-    "transliteration_ru": "Ayat al-Kursi",
+    "transliteration_ru": "",
     "hadith": null,
     "benefit_ru": null,
     "audio_file_name": "baqara_255.mp3",
-    "translation_en": "Allah — there is no deity except Him, the Ever-Living, the Self-Sustaining. Neither drowsiness overtakes Him nor sleep. To Him belongs whatever is in the heavens and whatever is on the earth. Who is it that can intercede with Him except by His permission? He knows what is [presently] before them and what will be after them, and they encompass not a thing of His knowledge except for what He wills. His Kursī extends over the heavens and the earth, and their preservation tires Him not. And He is the Most High, the Most Great."
+    "translation_en": "Allah — there is no deity except Him, the Ever-Living, the Self-Sustaining. Neither drowsiness overtakes Him nor sleep. To Him belongs whatever is in the heavens and whatever is on the earth. Who is it that can intercede with Him except by His permission? He knows what is [presently] before them and what will be after them, and they encompass not a thing of His knowledge except for what He wills. His Kursī extends over the heavens and the earth, and their preservation tires Him not. And He is the Most High, the Most Great.",
+    "title_en": "Ayat al-Kursi"
   },
   {
     "id": 60,
@@ -1013,10 +1072,11 @@
     "text": "ٱللَّهُ لَآ إِلَـٰهَ إِلَّا هُوَ ٱلْحَىُّ ٱلْقَيُّومُ ۚ لَا تَأْخُذُهُۥ سِنَةٌ وَلَا نَوْمٌ ۚ لَّهُۥ مَا فِى ٱلسَّمَـٰوَٰتِ وَمَا فِى ٱلْأَرْضِ ۗ مَن ذَا ٱلَّذِى يَشْفَعُ عِندَهُۥٓ إِلَّا بِإِذْنِهِۦ ۚ يَعْلَمُ مَا بَيْنَ أَيْدِيهِمْ وَمَا خَلْفَهُمْ ۖ وَلَا يُحِيطُونَ بِشَىْءٍ مِّنْ عِلْمِهِۦٓ إِلَّا بِمَا شَآءَ ۚ وَسِعَ كُرْسِيُّهُ ٱلسَّمَـٰوَٰتِ وَٱلْأَرْضَ ۖ وَلَا يَـُٔودُهُۥ حِفْظُهُمَا ۚ وَهُوَ ٱلْعَلِىُّ ٱلْعَظِيمُ",
     "title_ru": "Аят «аль-Курси»",
     "translation_ru": "Аллах — нет божества, кроме Него, Живого, Вседержителя. Им не овладевают ни дремота, ни сон. Ему принадлежит то, что на небесах, и то, что на земле. Кто станет заступаться перед Ним без Его дозволения? Он знает их будущее и прошлое. Они постигают из Его знания только то, что Он пожелает. Его Престол (Подножие Трона) объемлет небеса и землю, и не тяготит Его оберегание их. Он — Возвышенный, Великий.",
-    "transliteration_ru": "Ayat al-Kursi",
+    "transliteration_ru": "",
     "hadith": null,
     "benefit_ru": null,
     "audio_file_name": "baqara_255.mp3",
-    "translation_en": "Allah — there is no deity except Him, the Ever-Living, the Self-Sustaining. Neither drowsiness overtakes Him nor sleep. To Him belongs whatever is in the heavens and whatever is on the earth. Who is it that can intercede with Him except by His permission? He knows what is [presently] before them and what will be after them, and they encompass not a thing of His knowledge except for what He wills. His Kursī extends over the heavens and the earth, and their preservation tires Him not. And He is the Most High, the Most Great."
+    "translation_en": "Allah — there is no deity except Him, the Ever-Living, the Self-Sustaining. Neither drowsiness overtakes Him nor sleep. To Him belongs whatever is in the heavens and whatever is on the earth. Who is it that can intercede with Him except by His permission? He knows what is [presently] before them and what will be after them, and they encompass not a thing of His knowledge except for what He wills. His Kursī extends over the heavens and the earth, and their preservation tires Him not. And He is the Most High, the Most Great.",
+    "title_en": "Ayat al-Kursi"
   }
 ]

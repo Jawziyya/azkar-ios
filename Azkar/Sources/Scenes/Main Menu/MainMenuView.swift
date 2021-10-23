@@ -20,7 +20,6 @@ struct MainMenuView: View {
     typealias MenuSection = MainMenuViewModel.Section
 
     @ObservedObject var viewModel: MainMenuViewModel
-    @Environment(\.horizontalSizeClass) var hSizeClass
     @Environment(\.colorScheme) var colorScheme
 
     private var isIpad: Bool {
@@ -28,13 +27,13 @@ struct MainMenuView: View {
     }
 
     private var itemsBackgroundColor: SwiftUI.Color {
-        Color(.secondarySystemGroupedBackground)
+        Color.contentBackground
     }
 
     var body: some View {
         Group {
             ZStack {
-                Color.dimmedBackground.edgesIgnoringSafeArea(.all)
+                Color.background.edgesIgnoringSafeArea(.all)
                     .if(viewModel.enableEidBackground) { view in
                         view.overlay(
                             Image("eid_background")
@@ -52,6 +51,7 @@ struct MainMenuView: View {
             }
         }
         .environment(\.horizontalSizeClass, isIpad ? .regular : .compact)
+        .saturation(viewModel.preferences.colorTheme == .ink ? 0 : 1)
         .attachEnvironmentOverrides(viewModel: EnvironmentOverridesViewModel(preferences: viewModel.preferences))
     }
 

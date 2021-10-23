@@ -37,7 +37,7 @@ struct Hadith: Codable, Identifiable {
     }
     
     var source: String {
-        var source = NSLocalizedString("text.source." + _source, comment: "")
+        var source = NSLocalizedString("text.source." + _source.lowercased(), comment: "")
         if let ext = sourceExtension {
             source += ", " + ext
         }

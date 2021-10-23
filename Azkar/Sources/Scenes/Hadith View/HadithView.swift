@@ -18,7 +18,7 @@ struct HadithView: View {
         return viewModel.preferences.sizeCategory
     }
 
-    private let dividerColor = Color.secondaryBackground
+    private let dividerColor = Color.contentBackground
     private let dividerHeight: CGFloat = 1
 
     var body: some View {

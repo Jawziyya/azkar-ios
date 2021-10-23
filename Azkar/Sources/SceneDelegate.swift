@@ -75,7 +75,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 
     private var ipadDetailView: some View {
-        Color.secondaryBackground
+        Color.background
         .overlay(
             Text("←  ").font(Font.system(.body, design: .rounded).weight(.light).smallCaps()) + Text("root.pick-section", comment: "Pick section label.")
             ,
