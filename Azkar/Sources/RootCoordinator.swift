@@ -54,7 +54,7 @@ final class RootCoordinator: NavigationCoordinator, RootRouter {
         afterSalahAzkar = all.filter { $0.zikr.category == .afterSalah }
         otherAzkar = all.filter { $0.zikr.category == .other }
 
-        let navigationController = UINavigationController()
+        let navigationController = NavigationController()
         navigationController.navigationItem.largeTitleDisplayMode = .automatic
         navigationController.navigationBar.prefersLargeTitles = true
 
