@@ -1,0 +1,2 @@
+- English localization both app and content
+- Different color themes

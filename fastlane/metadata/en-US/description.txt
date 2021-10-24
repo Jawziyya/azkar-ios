@@ -1,0 +1,7 @@
+Azkar is an app which aims to help you to learn and recite daily adhkar more often.
+
+The app provides:
+- Daily reminders about morning and evening adhkar
+- Different fonts for both translation and original texts
+- Audio recording for each dhikr
+- Sources for all the adhkar listed
