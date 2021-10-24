@@ -68,6 +68,10 @@ final class Player: NSObject, ObservableObject {
     var currentItemURL: URL? {
         return audioPlayer.currentItem?.highestQualityURL.url
     }
+    
+    func adjustedTime(time: TimeInterval, speed: Speed) -> TimeInterval {
+        time - (time * (Double(speed.value) - 1))
+    }
 
     init(player: AudioPlayer) {
         self.audioPlayer = player
@@ -152,7 +156,7 @@ extension Player: AudioPlayerDelegate {
             
         case (.playing, .stopped):
             timeElapsed = 0
-            timeRemaining = (audioPlayer.currentItemDuration ?? 0)
+            timeRemaining = adjustedTime(time: (audioPlayer.currentItemDuration ?? 0), speed: speed)
             progress = 0
 
         default:
@@ -162,8 +166,8 @@ extension Player: AudioPlayerDelegate {
 
     func audioPlayer(_ audioPlayer: AudioPlayer, didUpdateProgressionTo time: TimeInterval, percentageRead: Float) {
         progress = Double(percentageRead/100)
-        timeElapsed = time
-        timeRemaining = (audioPlayer.currentItemDuration ?? 0) - time
+        timeElapsed = adjustedTime(time: time, speed: speed)
+        timeRemaining = adjustedTime(time: (audioPlayer.currentItemDuration ?? 0) - time, speed: speed)
     }
 
 }
