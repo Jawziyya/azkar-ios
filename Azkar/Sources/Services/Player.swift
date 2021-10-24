@@ -24,7 +24,7 @@ extension AudioPlayerState {
 final class Player: NSObject, ObservableObject {
 
     enum Speed {
-        case slow, normal, fast
+        case verySlow, slow, normal, fast, veryFast
 
         var label: String {
             return "\(value)x"
@@ -32,20 +32,36 @@ final class Player: NSObject, ObservableObject {
 
         static func fromRate(_ rate: Float) -> Speed {
             switch rate {
+            case 0..<0.5: return verySlow
             case ...0.99: return slow
             case 1.01...: return fast
+            case 1.501...: return .veryFast
             default: return normal
             }
         }
 
         var value: Float {
             switch self {
+            case .verySlow:
+                return 0.6
             case .slow:
                 return 0.8
             case .normal:
                 return 1
             case .fast:
-                return 1.4
+                return 1.3
+            case .veryFast:
+                return 1.5
+            }
+        }
+        
+        var next: Speed {
+            switch self {
+            case .verySlow: return .slow
+            case .slow: return .normal
+            case .normal: return .fast
+            case .fast: return .veryFast
+            case .veryFast: return .verySlow
             }
         }
     }

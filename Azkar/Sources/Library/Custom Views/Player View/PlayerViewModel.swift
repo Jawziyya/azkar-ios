@@ -108,14 +108,7 @@ final class PlayerViewModel: ObservableObject, Equatable {
     }
 
     func toggleSpeed() {
-        switch speed {
-        case .slow:
-            player.setPlayingSpeed(.normal)
-        case .normal:
-            player.setPlayingSpeed(.fast)
-        case .fast:
-            player.setPlayingSpeed(.slow)
-        }
+        player.setPlayingSpeed(speed.next)
     }
 
 }
