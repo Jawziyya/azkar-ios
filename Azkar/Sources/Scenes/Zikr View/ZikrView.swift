@@ -212,8 +212,9 @@ struct ZikrView: View {
 @available(iOS 15, *)
 struct ZikrView_Previews: PreviewProvider {
     static var previews: some View {
-        ZikrView(viewModel: ZikrViewModel(zikr: Zikr.data[3], preferences: Preferences(), player: .test))
-            .previewDevice("iPad Pro")
-            .previewInterfaceOrientation(.portrait)
+        let prefs = Preferences()
+        prefs.colorTheme = .roseQuartz
+        return ZikrView(viewModel: ZikrViewModel(zikr: Zikr.data[3], preferences: prefs, player: .test))
+            .environment(\.colorScheme, .dark)
     }
 }
