@@ -28,6 +28,7 @@ struct ZikrView: View {
             getContent()
                 .largeScreenPadding()
         }
+        .saturation(viewModel.preferences.colorTheme == .ink ? 0 : 1)
         .background(Color.background.edgesIgnoringSafeArea(.all))
     }
 
