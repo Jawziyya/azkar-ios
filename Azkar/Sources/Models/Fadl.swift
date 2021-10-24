@@ -8,8 +8,18 @@
 
 import Foundation
 
-var languageIdentifier: String {
-    Locale.preferredLanguages[0]
+var languageIdentifier: LangId {
+    let id = Locale.preferredLanguages[0]
+    switch id {
+    case _ where id.hasPrefix("ar"): return .ar
+    case _ where id.hasPrefix("tr"): return .tr
+    case _ where id.hasPrefix("ru"): return .ru
+    default: return .en
+    }
+}
+
+enum LangId {
+    case ar, tr, en, ru
 }
 
 struct Fadl: Codable, Identifiable {
@@ -29,8 +39,8 @@ struct Fadl: Codable, Identifiable {
     
     var text: String {
         switch languageIdentifier {
-        case "ru": return _text
-        case "ar": return textAr ?? _text
+        case .ru: return _text
+        case .ar: return textAr ?? _text
         default: return textEn ?? _text
         }
     }

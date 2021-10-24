@@ -29,9 +29,9 @@ struct Hadith: Codable, Identifiable {
     
     var translation: String? {
         switch languageIdentifier {
-        case "ar": return nil
-        case "ru": return _translation
-        case "tr": return translationTR
+        case .ar: return nil
+        case .ru: return _translation
+        case .tr: return translationTR
         default: return translationEN
         }
     }

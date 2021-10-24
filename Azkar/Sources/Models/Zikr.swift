@@ -87,45 +87,45 @@ struct Zikr: Identifiable, Hashable, Equatable, Codable {
     
     var title: String? {
         switch languageIdentifier {
-        case "ar": return _title
-        case "ru": return titleRU
-        case "tr": return titleTR
+        case .ar: return _title
+        case .ru: return titleRU
+        case .tr: return titleTR
         default: return titleEN
         }
     }
     
     var translation: String? {
         switch languageIdentifier {
-        case "ar": return nil
-        case "ru": return translationRU
-        case "tr": return translationTR
+        case .ar: return nil
+        case .ru: return translationRU
+        case .tr: return translationTR
         default: return translationEN
         }
     }
     
     var transliteration: String? {
         switch languageIdentifier {
-        case "ar": return nil
-        case "ru": return transliterationRU
-        case "tr": return transliterationTR
+        case .ar: return nil
+        case .ru: return transliterationRU
+        case .tr: return transliterationTR
         default: return transliterationEN
         }
     }
     
     var notes: String? {
         switch languageIdentifier {
-        case "ar": return nil
-        case "ru": return notesRU
-        case "tr": return notesTR
+        case .ar: return nil
+        case .ru: return notesRU
+        case .tr: return notesTR
         default: return notesEN
         }
     }
     
     var benefit: String? {
         switch languageIdentifier {
-        case "ar": return nil
-        case "ru": return benefitRU
-        case "tr": return benefitTR
+        case .ar: return nil
+        case .ru: return benefitRU
+        case .tr: return benefitTR
         default: return benefitEN
         }
     }
