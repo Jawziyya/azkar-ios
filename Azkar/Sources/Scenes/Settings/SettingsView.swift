@@ -40,7 +40,7 @@ struct SettingsView: View {
     // MARK: - Appearance
     var appearanceSection: some View {
         Section {
-            PickerView(label: L10n.Settings.Theme.title, titleDisplayMode: .inline, subtitle: viewModel.preferences.theme.title, destination: themePicker)
+            PickerView(label: L10n.Settings.Theme.title, titleDisplayMode: .inline, subtitle: viewModel.themeTitle, destination: themePicker)
 
             if viewModel.canChangeIcon {
                 PickerView(label: L10n.Settings.Icon.title, titleDisplayMode: .inline, subtitle: viewModel.preferences.appIcon.title, destination: iconPicker)

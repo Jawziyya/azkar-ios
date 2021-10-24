@@ -32,6 +32,10 @@ final class SettingsViewModel: ObservableObject {
     var preferences: Preferences
     @Published var morningTime: String
     @Published var eveningTime: String
+    
+    var themeTitle: String {
+        "\(preferences.theme.title), \(preferences.colorTheme.title)"
+    }
 
     func getDatesRange(fromHour hour: Int, hours: Int) -> [Date] {
         let now = DateComponents(calendar: Calendar.current, hour: hour, minute: 0).date ?? Date()
