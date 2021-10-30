@@ -130,7 +130,7 @@ final class MainMenuViewModel: ObservableObject {
         }
         currentYear = year
 
-        if !kDidDisplayIconPacksMessage {
+        if !kDidDisplayIconPacksMessage && !UIDevice.current.isMac {
             additionalMenuItems.append(iconsPackMessage)
         }
 
