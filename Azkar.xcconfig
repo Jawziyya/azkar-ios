@@ -22,8 +22,8 @@ LD_RUNPATH_SEARCH_PATHS[config=Debug]=["$(inherited)", "@executable_path/Framewo
 LD_RUNPATH_SEARCH_PATHS[config=Release]=["$(inherited)", "@executable_path/Frameworks"]
 PROVISIONING_PROFILE_SPECIFIER[config=Debug]=match Development io.jawziyya.azkar-app
 PROVISIONING_PROFILE_SPECIFIER[config=Release]=match AppStore io.jawziyya.azkar-app
-PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*][config=Debug]=match Development io.jawziyya.azkar-app macos
-PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*][config=Release]=match AppStore io.jawziyya.azkar-app macos
+PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*][config=Debug]=match Development io.jawziyya.azkar-app catalyst
+PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*][config=Release]=match AppStore io.jawziyya.azkar-app catalyst
 SWIFT_ACTIVE_COMPILATION_CONDITIONS[config=Debug]=DEBUG
 SWIFT_COMPILATION_MODE[config=Debug]=singlefile
 SWIFT_COMPILATION_MODE[config=Release]=wholemodule
