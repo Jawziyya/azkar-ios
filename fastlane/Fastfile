@@ -15,21 +15,37 @@
 
 default_platform(:ios)
 
+def api_key_path
+  "fastlane/AuthKey.json"
+end
+
+def project_name
+  "Azkar.xcodeproj"
+end
+
+def app_name
+  "Azkar"
+end
+
+desc 'Synchronizes certificates / profiles using via the App Store Connect API. Optionally creates new ones.'
+private_lane :match_configuration do |options|
+  force_for_new_devices = options[:force_for_new_devices] == true
+  readonly = options[:force] == false
+
+  match(api_key_path: api_key_path, type: 'appstore', readonly: readonly, force_for_new_devices: force_for_new_devices)
+end
+
 platform :ios do
 
-  def project_name
-    "Azkar.xcodeproj"
-  end
-
-  def app_name
-    "Azkar"
+  desc 'Synchronizes certificates / profiles and optionally creates new ones.'
+  lane :sync_signing do
+    match_configuration
   end
 
   desc "Push a new release build to the App Store"
   lane :release do |options|
     changelog = File.read("./changelog")
-    api_key_path = "fastlane/AuthKey.json"
-    match(api_key_path: api_key_path, type: options[:type] ||= 'appstore', readonly: options[:force_match] == false)
+    sync_signing
 
     current_build_number = get_build_number_from_plist(
       xcodeproj: project_name,
@@ -42,7 +58,42 @@ platform :ios do
       target: app_name
     )
 
-    build_app(project: project_name, scheme: "Azkar")
+    build_app(project: project_name, scheme: 'Azkar')
     testflight(api_key_path: api_key_path, changelog: changelog)
   end
+end
+
+platform :mac do
+
+  desc 'Synchronizes certificates / profiles and optionally creates new ones.'
+  lane :sync_signing do
+    match_configuration
+  end
+
+  desc 'Build app'
+  lane :release do
+    sync_signing
+
+    changelog = File.read("./changelog")
+    build_mac_app(
+      destination: "generic/platform=macOS,variant=Mac Catalyst",
+      installer_cert_name:
+        '3rd Party Mac Developer Installer: Al Jawziyya (486STKKP6Y)'
+    )
+
+    current_build_number = get_build_number_from_plist(
+      xcodeproj: project_name,
+      target: app_name
+    )
+    new_build_number = current_build_number.to_i + 1
+    increment_build_number_in_plist(
+      xcodeproj: project_name,
+      build_number: new_build_number.to_s, 
+      target: app_name
+    )
+
+    build_app(project: project_name, scheme: 'Azkar')
+    testflight(api_key_path: api_key_path, changelog: changelog)
+  end
+
 end
