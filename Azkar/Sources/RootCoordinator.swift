@@ -36,7 +36,7 @@ final class RootCoordinator: NavigationCoordinator, RootRouter {
 
     private let selectedZikrPageIndex = CurrentValueSubject<Int, Never>(0)
 
-    private var cancellabels = Set<AnyCancellable>()
+    private var cancellables = Set<AnyCancellable>()
 
     init(preferences: Preferences, deeplinker: Deeplinker, player: Player) {
         self.preferences = preferences
@@ -54,11 +54,21 @@ final class RootCoordinator: NavigationCoordinator, RootRouter {
         afterSalahAzkar = all.filter { $0.zikr.category == .afterSalah }
         otherAzkar = all.filter { $0.zikr.category == .other }
 
-        let navigationController = NavigationController()
+        let navigationController = UINavigationController()
         navigationController.navigationItem.largeTitleDisplayMode = .automatic
         navigationController.navigationBar.prefersLargeTitles = true
 
         super.init(rootViewController: navigationController)
+        
+        preferences.$colorTheme
+            .receive(on: RunLoop.main)
+            .prepend(preferences.colorTheme)
+            .sink(receiveValue: { theme in
+                let color = UIColor(Color.accent)
+                navigationController.navigationBar.tintColor = color
+                UINavigationBar.appearance().tintColor = color
+            })
+            .store(in: &cancellables)
 
         deeplinker
             .$route
@@ -76,7 +86,7 @@ final class RootCoordinator: NavigationCoordinator, RootRouter {
 
                 }
             })
-            .store(in: &cancellabels)
+            .store(in: &cancellables)
     }
 
     func azkarForCategory(_ category: ZikrCategory) -> [ZikrViewModel] {

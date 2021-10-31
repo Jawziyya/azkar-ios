@@ -203,7 +203,7 @@ internal enum L10n {
         internal static let darsigova9 = L10n.tr("Localizable", "settings.icon.list.darsigova_9")
         /// Gold
         internal static let gold = L10n.tr("Localizable", "settings.icon.list.gold")
-        /// Inc
+        /// Ink
         internal static let ink = L10n.tr("Localizable", "settings.icon.list.ink")
         /// Sunny day
         internal static let maccinzDay = L10n.tr("Localizable", "settings.icon.list.maccinz_day")

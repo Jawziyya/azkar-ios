@@ -17,7 +17,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     private let deeplinker = Deeplinker()
     private let preferences = Preferences()
 
-    private var cancellabels = Set<AnyCancellable>()
+    private var cancellables = Set<AnyCancellable>()
     private var rootCoordinator: RootCoordinator?
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
@@ -39,7 +39,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 return Deeplinker.Route.azkar(category)
             }
             .assign(to: \.route, on: deeplinker)
-            .store(in: &cancellabels)
+            .store(in: &cancellables)
 
         // Use a UIHostingController as window root view controller.
         if let windowScene = scene as? UIWindowScene {
@@ -69,7 +69,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 .sink { theme in
                     window.overrideUserInterfaceStyle = theme.userInterfaceStyle
                 }
-                .store(in: &cancellabels)
+                .store(in: &cancellables)
         }
 
     }
