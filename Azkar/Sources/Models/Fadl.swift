@@ -8,20 +8,6 @@
 
 import Foundation
 
-var languageIdentifier: LangId {
-    let id = Locale.preferredLanguages[0]
-    switch id {
-    case _ where id.hasPrefix("ar"): return .ar
-    case _ where id.hasPrefix("tr"): return .tr
-    case _ where id.hasPrefix("ru"): return .ru
-    default: return .en
-    }
-}
-
-enum LangId {
-    case ar, tr, en, ru
-}
-
 struct Fadl: Codable, Identifiable {
     
     enum CodingKeys: String, CodingKey {
@@ -58,4 +44,5 @@ struct Fadl: Codable, Identifiable {
         let data = try! Data(contentsOf: url)
         return try! JSONDecoder().decode([Fadl].self, from: data)
     }()
+    
 }
