@@ -47,21 +47,21 @@
         }
       },
       {
-        "package": "SwiftyMarkdown",
-        "repositoryURL": "https://github.com/SimonFairbairn/SwiftyMarkdown",
-        "state": {
-          "branch": null,
-          "revision": "5b0a1e76332a633726f9f9a00b4bbd840166bccf",
-          "version": "1.2.3"
-        }
-      },
-      {
         "package": "SwiftyStoreKit",
         "repositoryURL": "https://github.com/bizz84/SwiftyStoreKit",
         "state": {
           "branch": null,
           "revision": "3b54c8eac2840b0cdd576634e83d9ebeb70f847c",
           "version": "0.16.3"
+        }
+      },
+      {
+        "package": "ZIPFoundation",
+        "repositoryURL": "https://github.com/weichsel/ZIPFoundation",
+        "state": {
+          "branch": null,
+          "revision": "cf10bbff6ac3b873e97b36b9784c79866a051a8e",
+          "version": "0.9.12"
         }
       }
     ]

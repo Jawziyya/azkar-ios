@@ -21,6 +21,8 @@ let defaultEveningNotificationTime: Date = {
 }()
 
 final class Preferences {
+    
+    static var shared = Preferences()
 
     @Preference(Keys.enableFunFeatures, defaultValue: true)
     var enableFunFeatures: Bool
@@ -63,7 +65,10 @@ final class Preferences {
 
     @Preference(Keys.sizeCategory, defaultValue: ContentSizeCategory.medium)
     var sizeCategory
-
+    
+    @Preference(Keys.preferredFont, defaultValue: AppFont.iowanOldStyle)
+    var preferredFont: AppFont
+    
     private var notificationSubscription: AnyCancellable?
 
     func storageChangesPublisher() -> AnyPublisher<Void, Never> {

@@ -215,9 +215,12 @@ private extension RootCoordinator {
                 viewController.title = L10n.Settings.Theme.title
                 showDetailViewController(viewController)
 
-            case .fonts:
-                let viewController = view.fontsSection.wrapped
+            case .arabicFonts:
+                let viewController = view.textSettingsSection.wrapped
                 showDetailViewController(viewController)
+                
+            case .fonts:
+                break
 
             }
 

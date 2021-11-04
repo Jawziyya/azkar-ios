@@ -23,6 +23,10 @@ final class SettingsViewModel: ObservableObject {
         .init(preferences: preferences)
     }
     
+    var fontsViewModel: FontsViewModel {
+        FontsViewModel(service: FontsService())
+    }
+    
     var colorSchemeViewModel: ColorSchemesViewModel {
         ColorSchemesViewModel(preferences: preferences)
     }

@@ -9,7 +9,7 @@
 import SwiftUI
 
 enum SettingsSection: Equatable {
-    case root, themes, fonts, icons
+    case root, themes, arabicFonts, fonts, icons
 }
 
 extension URL: Identifiable {
@@ -22,13 +22,14 @@ struct SettingsView: View {
 
     @ObservedObject var viewModel: SettingsViewModel
     @State private var showFunFeaturesDescription = false
+    @State private var showSystemFontsizeTip = false
 
     var body: some View {
         Form {
             Group {
-                self.appearanceSection
-                self.fontsSection
-                self.notificationsSection
+                appearanceSection
+                textSettingsSection
+                notificationsSection
             }
             .listRowBackground(Color.contentBackground)
         }
@@ -48,7 +49,7 @@ struct SettingsView: View {
 
             Toggle(isOn: $viewModel.preferences.enableFunFeatures) {
                 HStack {
-                    Text(L10n.Settings.funFeatures)
+                    Text(L10n.Settings.useFunFeatures)
                         .font(Font.system(.body, design: .rounded))
                     Spacer()
                     Button { } label: {
@@ -60,7 +61,7 @@ struct SettingsView: View {
                     }
                     .alert(isPresented: $showFunFeaturesDescription) {
                         Alert(
-                            title: Text(L10n.Settings.FunFeatures.description),
+                            title: Text(L10n.Settings.useFunFeaturesTip),
                             dismissButton: .default(Text("OK"))
                         )
                     }
@@ -75,6 +76,10 @@ struct SettingsView: View {
             selection: $viewModel.preferences.arabicFont,
             items: ArabicFont.allCases
         )
+    }
+    
+    var fontsPicker: some View {
+        FontsView(viewModel: viewModel.fontsViewModel)
     }
 
     var themePicker: some View {
@@ -119,28 +124,65 @@ struct SettingsView: View {
     }
 
     // MARK: - Content Size
-    var fontsSection: some View {
+    var textSettingsSection: some View {
         Section(header: Text(L10n.Settings.Text.title).font(Font.system(.caption, design: .rounded))) {
-            PickerView(label: L10n.Settings.Text.arabicTextFont, titleDisplayMode: .inline, subtitle: viewModel.preferences.arabicFont.title, destination: arabicFontPicker)
+            
+            PickerView(
+                label: L10n.Settings.Text.arabicTextFont,
+                titleDisplayMode: .inline,
+                subtitle: viewModel.preferences.arabicFont.title,
+                destination: arabicFontPicker
+            )
+            
+            NavigationLink {
+                fontsPicker
+            } label: {
+                HStack {
+                    Text(L10n.Settings.Text.translationTextFont)
+                        .font(Font.system(.body, design: .rounded))
+                        .foregroundColor(Color.text)
+                    Spacer()
+                    Text(viewModel.preferences.preferredFont.name)
+                        .multilineTextAlignment(.trailing)
+                        .font(Font.system(.body, design: .rounded))
+                        .foregroundColor(Color.secondary)
+                }
+            }
 
             Toggle(isOn: $viewModel.preferences.showTashkeel) {
                 Text(L10n.Settings.Text.showTashkeel)
                     .padding(.vertical, 8)
                     .font(Font.system(.body, design: .rounded))
             }
-
-            Toggle(isOn: $viewModel.preferences.useSystemFontSize, label: {
-                Text(L10n.Settings.Text.useSystemFontSize)
-                    .padding(.vertical, 8)
-                    .font(Font.system(.body, design: .rounded))
-            })
+            
+            Toggle(isOn: $viewModel.preferences.useSystemFontSize) {
+                HStack {
+                    Text(L10n.Settings.Text.useSystemFontSize)
+                        .font(Font.system(.body, design: .rounded))
+                    Spacer()
+                    Button { } label: {
+                        Image(systemName: "info.circle")
+                            .foregroundColor(Color.accent.opacity(0.75))
+                    }
+                    .onTapGesture {
+                        self.showSystemFontsizeTip = true
+                    }
+                    .alert(isPresented: $showSystemFontsizeTip) {
+                        Alert(
+                            title: Text(L10n.Settings.Text.useSystemFontSizeTip),
+                            dismissButton: .default(Text("OK"))
+                        )
+                    }
+                }
+                .padding(.vertical, 8)
+            }
 
             if viewModel.preferences.useSystemFontSize == false {
                 self.sizePicker
             }
         }
     }
-
+    
     var sizePicker: some View {
         Picker(
             selection: $viewModel.preferences.sizeCategory,

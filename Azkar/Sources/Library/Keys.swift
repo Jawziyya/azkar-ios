@@ -27,4 +27,6 @@ enum Keys {
 
     static let morningNotificationId = "morning.notification"
     static let eveningNotificationId = "evening.notification"
+    
+    static let preferredFont = "kPreferredFont"
 }

@@ -15,15 +15,32 @@ struct ScaledFont: ViewModifier {
     var size: CGFloat
 
     func body(content: Content) -> some View {
-       let scaledSize = UIFontMetrics.default.scaledValue(for: size)
+        let scaledSize = UIFontMetrics.default.scaledValue(for: size)
         return content.font(.custom(name, size: scaledSize))
     }
 }
 
 @available(iOS 13, macCatalyst 13, tvOS 13, watchOS 6, *)
+struct ScaledFontStyle: ViewModifier {
+    @Environment(\.sizeCategory) var sizeCategory
+    var name: String
+    var style: UIFont.TextStyle
+
+    func body(content: Content) -> some View {
+        let size = textSize(forTextStyle: style, contentSizeCategory: sizeCategory.uiContentSizeCategory)
+        return content.font(.custom(name, size: size))
+    }
+}
+
+
+@available(iOS 13, macCatalyst 13, tvOS 13, watchOS 6, *)
 extension View {
     func scaledFont(name: String, size: CGFloat) -> some View {
         return self.modifier(ScaledFont(name: name, size: size))
+    }
+    
+    func scaledFont(name: String, style: UIFont.TextStyle) -> some View {
+        return self.modifier(ScaledFontStyle(name: name, style: style))
     }
 }
 
@@ -35,20 +52,25 @@ func textSize(forTextStyle textStyle: UIFont.TextStyle, contentSizeCategory: UIC
 }
 
 extension Font {
-
-//    static func arabic(_ style: UIFont.TextStyle = .body) -> Font {
-//        let size = textSize(forTextStyle: style)
-//        return Font.custom(name, size: size)
-//    }
-//
-//    static func arabicBold(_ style: UIFont.TextStyle = .body) -> Font {
-//        let size = textSize(forTextStyle: style)
-//        return Font.custom(name + "-Bold", size: size)
-//    }
-
-    static func textFont(_ style: UIFont.TextStyle = .body) -> Font {
-        let size = textSize(forTextStyle: style)
-        return Font.custom("IowanOldStyle-Roman", size: size)
+    
+    static func customFont(_ font: AppFont = Preferences.shared.preferredFont, style: UIFont.TextStyle = .body, sizeCategory: ContentSizeCategory? = Preferences.shared.sizeCategory) -> Font {
+        let size = textSize(forTextStyle: style, contentSizeCategory: sizeCategory?.uiContentSizeCategory)
+        let named = font.postscriptName
+        let adjustment = CGFloat(font.sizeAdjustment ?? 0)
+        if Preferences.shared.useSystemFontSize {
+            return Font.custom(named, size: size + adjustment)
+        } else {
+            return Font.custom(named, fixedSize: size + adjustment)
+        }
+    }
+    
+    static func customFont(_ named: String, style: UIFont.TextStyle = .body, sizeCategory: ContentSizeCategory? = Preferences.shared.sizeCategory) -> Font {
+        let size = textSize(forTextStyle: style, contentSizeCategory: sizeCategory?.uiContentSizeCategory)
+        if Preferences.shared.useSystemFontSize || sizeCategory == nil {
+            return Font.custom(named, size: size)
+        } else {
+            return Font.custom(named, fixedSize: size)
+        }
     }
     
 }

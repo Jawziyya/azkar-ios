@@ -25,8 +25,8 @@ let settings = Settings(
     base: baseSettingsDictionary
 )
 
-let deploymentTarget = DeploymentTarget.iOS(targetVersion: "14.0", devices: [.iphone, .ipad, .mac])
-let testsDeploymentTarget = DeploymentTarget.iOS(targetVersion: "14.0", devices: [.iphone, .ipad, .mac])
+let deploymentTarget = DeploymentTarget.iOS(targetVersion: "15.0", devices: [.iphone, .ipad, .mac])
+let testsDeploymentTarget = DeploymentTarget.iOS(targetVersion: "15.0", devices: [.iphone, .ipad, .mac])
 
 // MARK: - Extensions
 extension SettingsDictionary {
@@ -76,6 +76,7 @@ enum AzkarTarget: String, CaseIterable {
                     .package(product: "Lottie"),
                     .package(product: "Introspect"),
                     .package(product: "Alamofire"),
+                    .package(product: "ZIPFoundation"),
                 ],
                 settings: Settings(
                     base: baseSettingsDictionary
@@ -137,6 +138,7 @@ let packages: [Package] = [
     .remote(url: "https://github.com/airbnb/lottie-ios", requirement: .upToNextMajor(from: "3.0.0")),
     .remote(url: "https://github.com/siteline/SwiftUI-Introspect", requirement: .upToNextMajor(from: "0.1.3")),
     .remote(url: "https://github.com/Alamofire/Alamofire", requirement: .upToNextMajor(from: "5.0.0")),
+    .remote(url: "https://github.com/weichsel/ZIPFoundation", requirement: .upToNextMajor(from: "0.9.0")),
 ]
 
 let project = Project(

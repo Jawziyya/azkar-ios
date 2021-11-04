@@ -15,9 +15,9 @@ struct CollapsableSection: View, Equatable {
     }
 
     var title: String?
-    let text: NSAttributedString
+    let text: String
+    let isArabicText: Bool
     @Binding var isExpanded: Bool
-    @Binding var textHeight: CGFloat
     var tintColor: Color = .accent
     var expandingCallback: (() -> Void)?
 
@@ -46,14 +46,18 @@ struct CollapsableSection: View, Equatable {
 
             ZStack {
                 if isExpanded {
-                    GeometryReader { proxy in
-                        TextLabel(height: self.$textHeight, containerWidth: proxy.size.width.rounded(.down)) {
-                            return self.text
+                    Group {
+                        if isArabicText {
+                            Text(.init(text))
+                                .font(Font.customFont(Preferences.shared.arabicFont.fontName, style: .title1, sizeCategory: Preferences.shared.sizeCategory))
+                        } else {
+                            Text(.init(text))
+                                .font(Font.customFont(style: .body))
                         }
                     }
+                    .multilineTextAlignment(isArabicText ? .trailing : .leading)
                     .clipped()
                     .transition(.move(edge: .top))
-                    .frame(minHeight: self.textHeight)
                 }
             }
             .zIndex(0)
@@ -61,7 +65,7 @@ struct CollapsableSection: View, Equatable {
         }
         .clipped()
     }
-
+    
 }
 
 struct CollapsableSection_Previews: PreviewProvider {

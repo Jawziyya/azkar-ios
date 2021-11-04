@@ -112,6 +112,23 @@ internal enum L10n {
     }
   }
 
+  internal enum Fonts {
+    /// 
+    internal static let standardFont = L10n.tr("Localizable", "fonts.standard-font")
+    internal enum `Type` {
+      /// Decorative
+      internal static let decorative = L10n.tr("Localizable", "fonts.type.decorative")
+      /// Handwritten
+      internal static let handwritten = L10n.tr("Localizable", "fonts.type.handwritten")
+      /// Sans Serif
+      internal static let sansSerif = L10n.tr("Localizable", "fonts.type.sansSerif")
+      /// Serif
+      internal static let serif = L10n.tr("Localizable", "fonts.type.serif")
+      /// 
+      internal static let standard = L10n.tr("Localizable", "fonts.type.standard")
+    }
+  }
+
   internal enum IconPack {
     internal enum Darsigova {
       /// Sunsets and sunrises as our faith keepers which has signs of the mercy of our Lord.
@@ -167,14 +184,12 @@ internal enum L10n {
   }
 
   internal enum Settings {
-    /// Fun Features
-    internal static let funFeatures = L10n.tr("Localizable", "settings.fun_features")
     /// Settings
     internal static let title = L10n.tr("Localizable", "settings.title")
-    internal enum FunFeatures {
-      /// These are features which make Azkar app a bit beautiful but some people find useless and annoying.
-      internal static let description = L10n.tr("Localizable", "settings.fun_features.description")
-    }
+    /// Fun Features
+    internal static let useFunFeatures = L10n.tr("Localizable", "settings.use_fun_features")
+    /// These are features which make Azkar app a bit beautiful but some people find useless and annoying.
+    internal static let useFunFeaturesTip = L10n.tr("Localizable", "settings.use_fun_features_tip")
     internal enum Icon {
       /// Icon
       internal static let title = L10n.tr("Localizable", "settings.icon.title")
@@ -228,7 +243,7 @@ internal enum L10n {
       internal static let title = L10n.tr("Localizable", "settings.notifications.title")
     }
     internal enum Text {
-      /// Arabic font size
+      /// Arabic font
       internal static let arabicTextFont = L10n.tr("Localizable", "settings.text.arabic-text-font")
       /// Text size
       internal static let fontSize = L10n.tr("Localizable", "settings.text.font-size")
@@ -238,8 +253,12 @@ internal enum L10n {
       internal static let standardFontName = L10n.tr("Localizable", "settings.text.standard-font-name")
       /// Text
       internal static let title = L10n.tr("Localizable", "settings.text.title")
+      /// Translation font
+      internal static let translationTextFont = L10n.tr("Localizable", "settings.text.translation_text_font")
       /// System text size
       internal static let useSystemFontSize = L10n.tr("Localizable", "settings.text.use-system-font-size")
+      /// If this option is turned on Azkar app will use text size from iOS Settings (Settings — Display & Brightness — Text Size).\nIf it's turned off you can choose desired text size below.
+      internal static let useSystemFontSizeTip = L10n.tr("Localizable", "settings.text.use_system_font_size_tip")
     }
     internal enum Theme {
       /// System
@@ -264,6 +283,27 @@ internal enum L10n {
         /// Sea
         internal static let sea = L10n.tr("Localizable", "settings.theme.color-theme.sea")
       }
+    }
+  }
+
+  internal enum Text {
+    internal enum Source {
+      /// Abu Daud
+      internal static let abudaud = L10n.tr("Localizable", "text.source.abudaud")
+      /// Ahmad
+      internal static let ahmad = L10n.tr("Localizable", "text.source.ahmad")
+      /// al-Bukhari
+      internal static let bukhari = L10n.tr("Localizable", "text.source.bukhari")
+      /// Ibn Huzeyma
+      internal static let ibnhuzeyma = L10n.tr("Localizable", "text.source.ibnhuzeyma")
+      /// Muslim
+      internal static let muslim = L10n.tr("Localizable", "text.source.muslim")
+      /// an-Nasai
+      internal static let nasai = L10n.tr("Localizable", "text.source.nasai")
+      /// Quran
+      internal static let quran = L10n.tr("Localizable", "text.source.quran")
+      /// at-Tirmidhi
+      internal static let tirmidhi = L10n.tr("Localizable", "text.source.tirmidhi")
     }
   }
 }
