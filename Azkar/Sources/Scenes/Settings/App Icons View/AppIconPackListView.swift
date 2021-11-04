@@ -178,6 +178,7 @@ struct AppIconPackListView: View {
                 CheckboxView(isCheked:  .constant(self.viewModel.icon.referenceName == icon.referenceName))
                     .frame(width: 20, height: 20)
             }
+            .contentShape(Rectangle())
             .padding(.vertical, 10)
             .onTapGesture {
                 DispatchQueue.main.async {
