@@ -70,7 +70,6 @@ enum AzkarTarget: String, CaseIterable {
                 dependencies: [
                     .sdk(name: "SwiftUI.framework"),
                     .package(product: AzkarPackage.audioPlayer.name),
-                    .package(product: "SwiftyMarkdown"),
                     .package(product: "SwiftRichString"),
                     .package(product: "SwiftyStoreKit"),
                     .package(product: "Coordinator"),
@@ -132,7 +131,6 @@ enum AzkarPackage: String {
 
 let packages: [Package] = [
     .local(path: AzkarPackage.audioPlayer.path),
-    .remote(url: "https://github.com/SimonFairbairn/SwiftyMarkdown", requirement: .upToNextMajor(from: "1.2.3")),
     .remote(url: "https://github.com/bizz84/SwiftyStoreKit", requirement: .upToNextMajor(from: "0.16.3")),
     .remote(url: "https://github.com/malcommac/SwiftRichString", requirement: .upToNextMajor(from: "3.7.2")),
     .remote(url: "https://github.com/radianttap/Coordinator", requirement: .upToNextMajor(from: "6.4.2")),

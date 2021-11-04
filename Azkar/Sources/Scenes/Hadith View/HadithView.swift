@@ -55,9 +55,9 @@ struct HadithView: View {
     private var textView: some View {
         VStack(spacing: 10) {
             CollapsableSection(
-                text: MarkdownProcessor.arabicText(viewModel.text, textStyle: .title1, fontName: viewModel.preferences.arabicFont.fontName, sizeCategory: sizeCategory),
-                isExpanded: .constant(true),
-                textHeight: $textHeight
+                text: viewModel.text,
+                isArabicText: true,
+                isExpanded: .constant(true)
             )
             .equatable()
         }
@@ -67,9 +67,9 @@ struct HadithView: View {
     private func translationView(text: String) -> some View {
         CollapsableSection(
             title: nil,
-            text: MarkdownProcessor.translationText(text, sizeCategory: sizeCategory),
-            isExpanded: .constant(true),
-            textHeight: $translationHeight
+            text: text,
+            isArabicText: false,
+            isExpanded: .constant(true)
         )
     }
 
