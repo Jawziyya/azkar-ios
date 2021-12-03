@@ -1,6 +1,8 @@
 // Copyright © 2021 Al Jawziyya. All rights reserved. 
 
 import SwiftUI
+import NukeUI
+import Nuke
 
 struct FontsView: View {
     
@@ -11,7 +13,7 @@ struct FontsView: View {
     var body: some View {
         List {
             ForEach(viewModel.fonts) { section in
-                Section(section.type.title) {
+                Section(header: Text(section.type.title)) {
                     ForEach(section.fonts) { font in
                         fontView(font)
                             .onTapGesture {
@@ -27,7 +29,7 @@ struct FontsView: View {
         .environment(\.horizontalSizeClass, .regular)
         .background(Color.background.edgesIgnoringSafeArea(.all))
         .onAppear(perform: viewModel.loadData)
-        .navigationTitle("Шрифты")
+        .navigationTitle(L10n.Fonts.title)
         .navigationBarTitleDisplayMode(.inline)
         .sheet(item: $previewFont) { font in
             VStack {
@@ -77,19 +79,25 @@ struct FontsView: View {
     }
     
     func fontImageView(_ url: URL?) -> some View {
-        AsyncImage(url: url) { img in
-            img
-                .renderingMode(.template)
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-        } placeholder: {
-            ZStack {
-                if viewModel.didLoadData {                
+        LazyImage(source: url) { state in
+            if let image = state.image {
+                image
+                    .resizingMode(.aspectFit)
+                    .accentColor(Color.text)
+            } else if state.error != nil {
+                Color.clear
+            } else {
+                if viewModel.didLoadData {
                     ActivityIndicator(style: .medium, color: Color.secondary)
                         .frame(width: 20, height: 20)
                 }
             }
         }
+        .processors([
+            ImageProcessors.Anonymous(id: "rendering-mode") { image in
+                image.withRenderingMode(.alwaysTemplate)
+            }
+        ])
     }
     
 }
