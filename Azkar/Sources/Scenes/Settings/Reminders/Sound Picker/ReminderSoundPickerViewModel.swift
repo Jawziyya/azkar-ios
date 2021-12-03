@@ -7,14 +7,14 @@ import AudioPlayer
 enum ReminderSound: String, Identifiable, Equatable, Codable {
     
     case standard, glass, bamboo, note
-    case forSure, beyondDoubt, alert
+    case forSure, beyondDoubt, purr, twitter, pristine, deduction, timeIsNow
     
     static var standardSounds: [ReminderSound] {
         [standard, glass, bamboo, note]
     }
     
     static var customSounds: [ReminderSound] {
-        [forSure, beyondDoubt, alert]
+        [forSure, beyondDoubt, purr, twitter, pristine, deduction, timeIsNow]
     }
     
     var id: String { rawValue }
@@ -23,37 +23,42 @@ enum ReminderSound: String, Identifiable, Equatable, Codable {
         switch self {
         case .standard:
             return L10n.Common.default
-        case .glass:
-            return "Glass"
-        case .bamboo:
-            return "Bamboo"
-        case .note:
-            return "Note"
         case .forSure:
             return "For Sure"
         case .beyondDoubt:
             return "Beyond Doubt"
-        case .alert:
-            return "Alert"
+        case .timeIsNow:
+            return "Time is now"
+        default:
+            return rawValue.capitalized
         }
     }
     
-    var soundName: String {
+    var fileName: String { rawValue }
+    
+    var soundFileFormat: String {
         switch self {
-        case .standard:
-            return "standard.m4a"
-        case .glass:
-            return "glass.m4a"
-        case .bamboo:
-            return "bamboo.m4a"
-        case .note:
-            return "note.m4a"
-        case .forSure:
-            return "ForSure.m4r"
-        case .beyondDoubt:
-            return "Beyond Doubt.m4r"
-        case .alert:
-            return "Alert 2.m4a"
+        case .standard, .glass, .bamboo, .note, .purr, .twitter:
+            return "m4a"
+        case .forSure, .beyondDoubt, .pristine, .deduction, .timeIsNow:
+            return "m4r"
+        }
+    }
+    
+    var link: URL? {
+        switch self {
+        case .pristine:
+            return URL(string: "https://notificationsounds.com/message-tones/pristine-609")
+            
+        case .deduction:
+            return URL(string: "https://notificationsounds.com/notification-sounds/deduction-588")
+            
+            
+        case .timeIsNow:
+            return URL(string: "https://notificationsounds.com/notification-sounds/time-is-now-585")
+            
+        default:
+            return nil
         }
     }
     
@@ -101,11 +106,8 @@ final class ReminderSoundPickerViewModel: ObservableObject {
     }
     
     func playSound(_ sound: ReminderSound) {
-        let filename = sound.soundName.components(separatedBy: ".")
         guard
-            let name = filename.first,
-            let ext = filename.last,
-            let url = Bundle.main.url(forResource: name, withExtension: ext),
+            let url = Bundle.main.url(forResource: sound.fileName, withExtension: sound.soundFileFormat),
             let audioItem = AudioItem(soundURLs: [.high: url]) else {
             return
         }
