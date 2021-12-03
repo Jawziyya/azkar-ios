@@ -32,27 +32,36 @@ struct MainMenuView: View {
 
     var body: some View {
         Group {
-            ZStack {
-                Color.background.edgesIgnoringSafeArea(.all)
-                    .if(viewModel.enableEidBackground) { view in
-                        view.overlay(
-                            Image("eid_background")
-                                .resizable()
-                                .aspectRatio(contentMode: ContentMode.fill)
-                                .edgesIgnoringSafeArea(.all)
-                                .blendMode(.overlay)
-                        )
-                    }
-                scrollView
-                    .navigationTitle("")
-            }
-            .if(isIpad) {
-                $0.frame(minWidth: 300)
+            if isIpad {
+                content
+                    .frame(minWidth: 300)
+            } else {
+                content
             }
         }
         .environment(\.horizontalSizeClass, isIpad ? .regular : .compact)
         .saturation(viewModel.preferences.colorTheme == .ink ? 0 : 1)
         .attachEnvironmentOverrides(viewModel: EnvironmentOverridesViewModel(preferences: viewModel.preferences))
+    }
+    
+    private var content: some View {
+        ZStack {
+            Color.background.edgesIgnoringSafeArea(.all)
+                .overlay(
+                    ZStack {
+                        if viewModel.enableEidBackground {
+                            Image("eid_background")
+                                .resizable()
+                                .aspectRatio(contentMode: ContentMode.fill)
+                                .edgesIgnoringSafeArea(.all)
+                                .blendMode(.overlay)
+                        }
+                    }
+                )
+            
+            scrollView
+                .navigationTitle("")
+        }
     }
 
     private var scrollView: some View {
@@ -159,17 +168,17 @@ struct MainMenuView: View {
 
             VStack(spacing: 8) {
                 Text(viewModel.fadlText)
-                    .font(Font.system(.body, design: .rounded).weight(.regular))
+                    .font(Font.customFont(style: .caption1))
                     .tracking(1.2)
                     .foregroundColor(Color.text.opacity(0.7))
 
                 Text(viewModel.fadlSource)
-                    .font(Font.system(.caption2, design: .rounded).smallCaps())
+                    .font(Font.customFont(viewModel.preferences.preferredFont, style: .caption2))
                     .foregroundColor(Color.secondaryText.opacity(0.5))
             }
             .shadow(color: Color.text.opacity(0.5), radius: 0.5, x: 0.0, y: 0.05)
             .multilineTextAlignment(.center) 
-            .padding(.horizontal)
+            .padding()
         }
         .padding(.horizontal)
     }
