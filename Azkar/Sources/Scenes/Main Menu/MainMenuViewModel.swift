@@ -167,6 +167,12 @@ final class MainMenuViewModel: ObservableObject {
                 self.objectWillChange.send()
             })
             .store(in: &cancellabels)
+        
+        preferences.$preferredFont
+            .sink(receiveValue: { [unowned self] _ in
+                self.objectWillChange.send()
+            })
+            .store(in: &cancellabels)
     }
 
     private func hideNotificationsAccessMessage() {
