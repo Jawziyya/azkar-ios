@@ -87,6 +87,8 @@ internal enum L10n {
   internal enum Common {
     /// Default
     internal static let `default` = L10n.tr("Localizable", "common.default")
+    /// Enable
+    internal static let enable = L10n.tr("Localizable", "common.enable")
     /// Restore
     internal static let restore = L10n.tr("Localizable", "common.restore")
     /// Share Azkar App
@@ -113,8 +115,10 @@ internal enum L10n {
   }
 
   internal enum Fonts {
-    /// 
+    /// System font
     internal static let standardFont = L10n.tr("Localizable", "fonts.standard-font")
+    /// Fonts
+    internal static let title = L10n.tr("Localizable", "fonts.title")
     internal enum `Type` {
       /// Decorative
       internal static let decorative = L10n.tr("Localizable", "fonts.type.decorative")
@@ -124,8 +128,6 @@ internal enum L10n {
       internal static let sansSerif = L10n.tr("Localizable", "fonts.type.sansSerif")
       /// Serif
       internal static let serif = L10n.tr("Localizable", "fonts.type.serif")
-      /// 
-      internal static let standard = L10n.tr("Localizable", "fonts.type.standard")
     }
   }
 
@@ -159,6 +161,12 @@ internal enum L10n {
     internal static let eveningNotificationTitle = L10n.tr("Localizable", "notifications.evening-notification-title")
     /// Morning adhkar 🌅
     internal static let morningNotificationTitle = L10n.tr("Localizable", "notifications.morning-notification-title")
+    internal enum Jumua {
+      /// 
+      internal static let body = L10n.tr("Localizable", "notifications.jumua.body")
+      /// Dua in Jumua day
+      internal static let title = L10n.tr("Localizable", "notifications.jumua.title")
+    }
   }
 
   internal enum Read {
@@ -232,15 +240,41 @@ internal enum L10n {
         internal static let ramadan = L10n.tr("Localizable", "settings.icon.list.ramadan")
       }
     }
-    internal enum Notifications {
-      /// Evening reminder
-      internal static let eveningOptionLabel = L10n.tr("Localizable", "settings.notifications.evening-option-label")
-      /// Morning reminder
-      internal static let morningOptionLabel = L10n.tr("Localizable", "settings.notifications.morning-option-label")
-      /// Remind about morning & evening adhkar
-      internal static let switchLabel = L10n.tr("Localizable", "settings.notifications.switch-label")
-      /// Notifications
-      internal static let title = L10n.tr("Localizable", "settings.notifications.title")
+    internal enum Reminders {
+      /// Enable reminders
+      internal static let enable = L10n.tr("Localizable", "settings.reminders.enable")
+      /// Reminder types
+      internal static let reminderTypesSectionTitle = L10n.tr("Localizable", "settings.reminders.reminder-types-section-title")
+      /// Time
+      internal static let time = L10n.tr("Localizable", "settings.reminders.time")
+      /// Reminders
+      internal static let title = L10n.tr("Localizable", "settings.reminders.title")
+      internal enum Jumua {
+        /// Jumua supplication
+        internal static let label = L10n.tr("Localizable", "settings.reminders.jumua.label")
+        /// Remind about dua in Jumua
+        internal static let switchLabel = L10n.tr("Localizable", "settings.reminders.jumua.switch-label")
+      }
+      internal enum MorningEvening {
+        /// Evening reminder
+        internal static let eveningLabel = L10n.tr("Localizable", "settings.reminders.morning-evening.evening-label")
+        /// Morning & Evening adhkar
+        internal static let label = L10n.tr("Localizable", "settings.reminders.morning-evening.label")
+        /// Morning reminder
+        internal static let morningLabel = L10n.tr("Localizable", "settings.reminders.morning-evening.morning-label")
+        /// Remind about morning & evening adhkar
+        internal static let switchLabel = L10n.tr("Localizable", "settings.reminders.morning-evening.switch-label")
+      }
+      internal enum Sounds {
+        /// Custom
+        internal static let custom = L10n.tr("Localizable", "settings.reminders.sounds.custom")
+        /// Sound
+        internal static let sound = L10n.tr("Localizable", "settings.reminders.sounds.sound")
+        /// Standard
+        internal static let standard = L10n.tr("Localizable", "settings.reminders.sounds.standard")
+        /// Sounds
+        internal static let title = L10n.tr("Localizable", "settings.reminders.sounds.title")
+      }
     }
     internal enum Text {
       /// Arabic font
