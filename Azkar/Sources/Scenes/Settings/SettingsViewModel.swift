@@ -12,6 +12,8 @@ import UIKit
 import UserNotifications
 
 final class SettingsViewModel: ObservableObject {
+    
+    @Published var isNotificationsEnabled = true
 
     private let notificationsHandler: NotificationsHandler
 
@@ -30,32 +32,21 @@ final class SettingsViewModel: ObservableObject {
     var colorSchemeViewModel: ColorSchemesViewModel {
         ColorSchemesViewModel(preferences: preferences)
     }
-
+    
+    var adhkarRemindersViewModel: AdhkarRemindersViewModel {
+        AdhkarRemindersViewModel(preferences: preferences)
+    }
+    
+    var jumuaRemindersViewModel: JumuaRemindersViewModel {
+        JumuaRemindersViewModel(preferences: preferences)
+    }
+    
     private let formatter: DateFormatter
 
     var preferences: Preferences
-    @Published var morningTime: String
-    @Published var eveningTime: String
     
     var themeTitle: String {
         "\(preferences.theme.title), \(preferences.colorTheme.title)"
-    }
-
-    func getDatesRange(fromHour hour: Int, hours: Int) -> [Date] {
-        let now = DateComponents(calendar: Calendar.current, hour: hour, minute: 0).date ?? Date()
-        return (1...(hours * 2)).reduce(into: [now]) { (dates, multiplier) in
-            let duration = DateComponents(calendar: Calendar.current, minute: multiplier * 30)
-            let newDate = Calendar.current.date(byAdding: duration, to: now) ?? now
-            dates.append(newDate)
-        }
-    }
-
-    var morningDateItems: [String] {
-        return getDatesRange(fromHour: 2, hours: 11).compactMap(formatter.string)
-    }
-
-    var eveningDateItems: [String] {
-        return getDatesRange(fromHour: 14, hours: 10).compactMap(formatter.string)
     }
 
     private var cancellabels = Set<AnyCancellable>()
@@ -69,9 +60,7 @@ final class SettingsViewModel: ObservableObject {
         formatter.timeStyle = .short
 
         self.formatter = formatter
-        morningTime = formatter.string(from: preferences.morningNotificationTime)
-        eveningTime = formatter.string(from: preferences.eveningNotificationTime)
-
+        
         preferences
             .storageChangesPublisher()
             .receive(on: RunLoop.main)
@@ -79,53 +68,55 @@ final class SettingsViewModel: ObservableObject {
                 self.objectWillChange.send()
             })
             .store(in: &cancellabels)
-
-        $morningTime
-            .dropFirst()
-            .map { [unowned self] time in
-                self.formatter.date(from: time) ?? defaultMorningNotificationTime
-            }
-            .assign(to: \.morningNotificationTime, on: preferences)
-            .store(in: &cancellabels)
-
-        $eveningTime
-            .dropFirst()
-            .map { [unowned self] time in
-                self.formatter.date(from: time) ?? defaultEveningNotificationTime
-            }
-            .assign(to: \.eveningNotificationTime, on: preferences)
-            .store(in: &cancellabels)
-
-        Publishers.CombineLatest3(
-                preferences.$enableNotifications,
-                preferences.$morningNotificationTime,
-                preferences.$eveningNotificationTime
+        
+        Publishers.MergeMany(
+                preferences.$enableNotifications.toVoid().dropFirst(),
+                preferences.$enableAdhkarReminder.toVoid().dropFirst(),
+                preferences.$morningNotificationTime.toVoid().dropFirst(),
+                preferences.$eveningNotificationTime.toVoid().dropFirst(),
+                preferences.$adhkarReminderSound.toVoid().dropFirst(),
+                preferences.$enableJumuaReminder.toVoid().dropFirst(),
+                preferences.$jumuaReminderTime.toVoid().dropFirst(),
+                preferences.$jumuahDuaReminderSound.toVoid().dropFirst()
             )
-            .dropFirst()
             .receive(on: RunLoop.main)
-            .sink(receiveValue: { [unowned self] (enabled, morning, evening) in
+            .debounce(for: 3, scheduler: RunLoop.main)
+            .sink(receiveValue: { [unowned self] in
                 self.notificationsHandler.removeScheduledNotifications()
-                guard enabled else {
-                    return
-                }
                 self.scheduleNotifications()
             })
             .store(in: &cancellabels)
     }
 
     private func scheduleNotifications() {
-        notificationsHandler.scheduleNotification(
-            id: Keys.morningNotificationId,
-            date: preferences.morningNotificationTime,
-            title: L10n.Notifications.morningNotificationTitle,
-            categoryId: ZikrCategory.morning.rawValue
-        )
-        notificationsHandler.scheduleNotification(
-            id: Keys.eveningNotificationId,
-            date: preferences.eveningNotificationTime,
-            title: L10n.Notifications.eveningNotificationTitle,
-            categoryId: ZikrCategory.evening.rawValue
-        )
+        if preferences.enableAdhkarReminder {
+            notificationsHandler.scheduleNotification(
+                id: Keys.morningReminderId,
+                date: preferences.morningNotificationTime,
+                titleKey: "notifications.morning-notification-title",
+                categoryId: ZikrCategory.morning.rawValue,
+                sound: preferences.adhkarReminderSound
+            )
+            notificationsHandler.scheduleNotification(
+                id: Keys.eveningReminderId,
+                date: preferences.eveningNotificationTime,
+                titleKey: "notifications.evening-notification-title",
+                categoryId: ZikrCategory.evening.rawValue,
+                sound: preferences.adhkarReminderSound
+            )
+        }
+        
+        if preferences.enableJumuaReminder {
+            var components = Calendar.current.dateComponents([.hour, .minute, .weekday], from: preferences.jumuaReminderTime)
+            components.weekday = 6 // Jumua (friday).
+            notificationsHandler.scheduleNotification(
+                id: Keys.jumuaReminderId,
+                titleKey: "notifications.jumua.title",
+                dateComponents: components,
+                categoryId: "jumua",
+                sound: preferences.jumuahDuaReminderSound
+            )
+        }
     }
 
 }

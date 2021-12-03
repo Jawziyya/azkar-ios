@@ -16,17 +16,29 @@ enum Keys {
     static let showTashkeel = "kShowTashkeel"
     static let theme = "kTheme"
     static let colorTheme = "kColorTheme"
-    static let enableNotifications = "kEnableNotifications"
-    static let morningNotificationsTime = "kMorningNotificationsTime"
-    static let eveningNotificationsTime = "kEveningNotificationsTime"
     static let appIcon = "kAppIcon"
     static let purchasedIconPacks = "kPurchasedIconPacks"
 
     static let useSystemFontSize = "kUseSystemFontSize"
     static let sizeCategory = "kSizeCategory"
 
-    static let morningNotificationId = "morning.notification"
-    static let eveningNotificationId = "evening.notification"
+    static let morningReminderId = "morning.notification"
+    static let eveningReminderId = "evening.notification"
+    static let jumuaReminderId = "jumua.notification"
     
     static let preferredFont = "kPreferredFont"
+    
+    // MARK: Reminders
+    static let enableReminders = "kEnableNotifications"
+    static let enableAdhkarReminder = "kEnableAdhkarReminder"
+    static let enableJumuaReminder = "kEnableJumuaReminder"
+    
+    static let morningNotificationsTime = "kMorningNotificationsTime"
+    static let eveningNotificationsTime = "kEveningNotificationsTime"
+    static let jumuaReminderTime = "kJumuaReminderTime"
+    
+    static let preferredAdhkarReminderSound = "kAdhkarReminderSound"
+    static let preferredJumuahReminderSound = "kJumuahReminderSound"
+    
+    
 }

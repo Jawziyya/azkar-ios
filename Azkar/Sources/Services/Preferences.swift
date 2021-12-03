@@ -20,6 +20,11 @@ let defaultEveningNotificationTime: Date = {
     return components.date ?? Date()
 }()
 
+let defaultJumuaReminderTime: Date = {
+    let components = DateComponents(calendar: Calendar.current, hour: 15, weekday: 5)
+    return components.date ?? Date()
+}()
+
 final class Preferences {
     
     static var shared = Preferences()
@@ -45,9 +50,18 @@ final class Preferences {
     @Preference(Keys.colorTheme, defaultValue: ColorTheme.default)
     var colorTheme: ColorTheme
 
-    @Preference(Keys.enableNotifications, defaultValue: false)
+    @Preference(Keys.enableReminders, defaultValue: false)
     var enableNotifications: Bool
-
+    
+    @Preference(Keys.enableAdhkarReminder, defaultValue: true)
+    var enableAdhkarReminder: Bool
+    
+    @Preference(Keys.enableJumuaReminder, defaultValue: true)
+    var enableJumuaReminder: Bool
+    
+    @Preference(Keys.jumuaReminderTime, defaultValue: defaultJumuaReminderTime)
+    var jumuaReminderTime: Date
+    
     @Preference(Keys.morningNotificationsTime, defaultValue: defaultMorningNotificationTime)
     var morningNotificationTime: Date
 
@@ -68,6 +82,12 @@ final class Preferences {
     
     @Preference(Keys.preferredFont, defaultValue: AppFont.iowanOldStyle)
     var preferredFont: AppFont
+    
+    @Preference(Keys.preferredAdhkarReminderSound, defaultValue: ReminderSound.standard)
+    var adhkarReminderSound: ReminderSound
+    
+    @Preference(Keys.preferredJumuahReminderSound, defaultValue: ReminderSound.standard)
+    var jumuahDuaReminderSound: ReminderSound
     
     private var notificationSubscription: AnyCancellable?
 

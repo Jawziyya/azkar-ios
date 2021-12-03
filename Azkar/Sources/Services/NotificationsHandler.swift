@@ -34,12 +34,22 @@ final class NotificationsHandler: NSObject {
         notificationCenter.removeAllPendingNotificationRequests()
     }
 
-    func scheduleNotification(id: String, date: Date, title: String, categoryId: String) {
+    func scheduleNotification(id: String, date: Date, titleKey: String, categoryId: String, sound: ReminderSound) {
         let content = UNMutableNotificationContent()
-        content.title = title
-        content.sound = UNNotificationSound.default
+        content.title = NSString.localizedUserNotificationString(forKey: titleKey, arguments: nil)
+        content.sound = sound.notificationSound
         content.categoryIdentifier = categoryId
         let trigger = UNCalendarNotificationTrigger(dateMatching: Calendar.current.dateComponents([.hour, .minute], from: date), repeats: true)
+        let request = UNNotificationRequest(identifier: id, content: content, trigger: trigger)
+        notificationCenter.add(request)
+    }
+    
+    func scheduleNotification(id: String, titleKey: String, dateComponents: DateComponents, categoryId: String, sound: ReminderSound) {
+        let content = UNMutableNotificationContent()
+        content.title = NSString.localizedUserNotificationString(forKey: titleKey, arguments: nil)
+        content.sound = sound.notificationSound
+        content.categoryIdentifier = categoryId
+        let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
         let request = UNNotificationRequest(identifier: id, content: content, trigger: trigger)
         notificationCenter.add(request)
     }

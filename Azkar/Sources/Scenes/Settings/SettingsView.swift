@@ -29,7 +29,7 @@ struct SettingsView: View {
             Group {
                 appearanceSection
                 textSettingsSection
-                notificationsSection
+                remindersSection
             }
             .listRowBackground(Color.contentBackground)
         }
@@ -37,10 +37,27 @@ struct SettingsView: View {
         .toggleStyle(SwitchToggleStyle(tint: Color.accent))
         .background(Color.background.edgesIgnoringSafeArea(.all))
     }
+    
+    func getHeader(symbolName: String, title: String) -> some View {
+        HStack {
+            Image(systemName: symbolName)
+                .font(.caption.bold())
+                .aspectRatio(contentMode: .fit)
+                .padding(3)
+                .background(Color.accentColor.cornerRadius(4))
+            Text(title)
+                .font(Font.system(.caption, design: .rounded))
+                .foregroundColor(Color.secondaryText)
+        }
+    }
 
     // MARK: - Appearance
     var appearanceSection: some View {
-        Section {
+        Section(
+            header: getHeader(symbolName: "paintbrush", title: L10n.Settings.Theme.title)
+                .accentColor(Color.accent)
+                .foregroundColor(Color.white)
+        ) {
             PickerView(label: L10n.Settings.Theme.title, titleDisplayMode: .inline, subtitle: viewModel.themeTitle, destination: themePicker)
 
             if viewModel.canChangeIcon {
@@ -89,44 +106,14 @@ struct SettingsView: View {
     var iconPicker: some View {
         AppIconPackListView(viewModel: viewModel.appIconPackListViewModel)
     }
-
-    // MARK: - Notifications
-    var notificationsSection: some View {
-        Section(header: Text(L10n.Settings.Notifications.title).font(Font.system(.caption, design: .rounded))) {
-            Toggle(isOn: $viewModel.preferences.enableNotifications, label: {
-                Text(L10n.Settings.Notifications.switchLabel)
-                    .padding(.vertical, 8)
-                    .font(Font.system(.body, design: .rounded))
-            })
-
-            if viewModel.preferences.enableNotifications {
-                PickerView(label: L10n.Settings.Notifications.morningOptionLabel, titleDisplayMode: .inline, subtitle: viewModel.morningTime, destination: morningTimePicker)
-
-                PickerView(label: L10n.Settings.Notifications.eveningOptionLabel, titleDisplayMode: .inline, subtitle: viewModel.eveningTime, destination: eveningTimePicker)
-            }
-        }
-    }
-
-    var morningTimePicker: some View {
-        ItemPickerView(
-            selection: $viewModel.morningTime,
-            items: viewModel.morningDateItems,
-            dismissOnSelect: true
-        )
-    }
-
-    var eveningTimePicker: some View {
-        ItemPickerView(
-            selection: $viewModel.eveningTime,
-            items: viewModel.eveningDateItems,
-            dismissOnSelect: true
-        )
-    }
-
+    
     // MARK: - Content Size
     var textSettingsSection: some View {
-        Section(header: Text(L10n.Settings.Text.title).font(Font.system(.caption, design: .rounded))) {
-            
+        Section(
+            header: getHeader(symbolName: "textformat", title: L10n.Settings.Text.title)
+                .accentColor(Color.text)
+                .foregroundColor(Color.background)
+        ) {
             PickerView(
                 label: L10n.Settings.Text.arabicTextFont,
                 titleDisplayMode: .inline,
@@ -200,10 +187,53 @@ struct SettingsView: View {
         }
         .pickerStyle(SegmentedPickerStyle())
     }
+    
+    var remindersSection: some View {
+        Section(
+            header: getHeader(symbolName: "bell.fill", title: L10n.Settings.Reminders.title)
+                .foregroundColor(Color.white)
+                .accentColor(Color.orange)
+        ) {
+            Toggle(isOn: $viewModel.isNotificationsEnabled.animation()) {
+                Text(L10n.Settings.Reminders.enable)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .padding(.vertical, 8)
+                    .font(Font.system(.body, design: .rounded))
+            }
+            
+            if viewModel.isNotificationsEnabled {
+                reminderTypes
+            }
+            
+            if UIApplication.shared.isRanInSimulator {
+                NavigationLink {
+                    NotificationsListView(viewModel: NotificationsListViewModel(notifications: UNUserNotificationCenter.current().pendingNotificationRequests))
+                } label: {
+                    Text("[DEBUG] Scheduled notifications")
+                }
+            }
+        }
+    }
+    
+    var reminderTypes: some View {
+        Group {
+            NavigationLink {
+                AdhkarRemindersView(viewModel: viewModel.adhkarRemindersViewModel)
+            } label: {
+                Text(L10n.Settings.Reminders.MorningEvening.label)
+            }
+
+            NavigationLink {
+                JumuaRemindersView(viewModel: viewModel.jumuaRemindersViewModel)
+            } label: {
+                Text(L10n.Settings.Reminders.Jumua.label)
+            }
+        }
+    }
 
 }
 
-private struct PickerView<T: View>: View {
+struct PickerView<T: View>: View {
 
     var label: String
     var navigationTitle: String?
