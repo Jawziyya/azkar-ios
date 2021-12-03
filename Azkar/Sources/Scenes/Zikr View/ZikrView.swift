@@ -17,7 +17,7 @@ struct ZikrView: View {
     }
 
     private let tintColor = Color.accent
-    private let dividerColor = Color.contentBackground
+    private let dividerColor = Color.accent.opacity(0.1)
     private let dividerHeight: CGFloat = 1
 
     var body: some View {
@@ -210,7 +210,7 @@ struct ZikrView: View {
 struct ZikrView_Previews: PreviewProvider {
     static var previews: some View {
         let prefs = Preferences()
-        prefs.colorTheme = .roseQuartz
+        prefs.colorTheme = .sea
         return ZikrView(viewModel: ZikrViewModel(zikr: Zikr.data[3], preferences: prefs, player: .test))
             .environment(\.colorScheme, .dark)
     }
