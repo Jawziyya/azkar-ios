@@ -77,6 +77,8 @@ enum AzkarTarget: String, CaseIterable {
                     .package(product: "Introspect"),
                     .package(product: "Alamofire"),
                     .package(product: "ZIPFoundation"),
+                    .package(product: "NukeUI"),
+                    .package(product: "RevenueCat"),
                 ],
                 settings: Settings(
                     base: baseSettingsDictionary
@@ -139,6 +141,8 @@ let packages: [Package] = [
     .remote(url: "https://github.com/siteline/SwiftUI-Introspect", requirement: .upToNextMajor(from: "0.1.3")),
     .remote(url: "https://github.com/Alamofire/Alamofire", requirement: .upToNextMajor(from: "5.0.0")),
     .remote(url: "https://github.com/weichsel/ZIPFoundation", requirement: .upToNextMajor(from: "0.9.0")),
+    .remote(url: "https://github.com/kean/NukeUI", requirement: .upToNextMajor(from: "0.7.0")),
+    .remote(url: "https://github.com/RevenueCat/purchases-ios.git", requirement: .upToNextMajor(from: "4.0.0")),
 ]
 
 let project = Project(

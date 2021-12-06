@@ -16,10 +16,18 @@ final class AdhkarRemindersViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     let soundPickerViewModel: ReminderSoundPickerViewModel
     
-    init(preferences: Preferences = .shared) {
+    init(
+        preferences: Preferences = .shared,
+        subscriptionManager: SubscriptionManagerType = SubscriptionManagerFactory.create(),
+        subscribeScreenTrigger: @escaping Action
+    ) {
         self.preferences = preferences
         isNotificationsEnabled = preferences.enableAdhkarReminder
-        soundPickerViewModel = ReminderSoundPickerViewModel(preferredSound: preferences.adhkarReminderSound)
+        soundPickerViewModel = ReminderSoundPickerViewModel(
+            preferredSound: preferences.adhkarReminderSound,
+            subscriptionManager: subscriptionManager,
+            subscribeScreenTrigger: subscribeScreenTrigger
+        )
         let formatter = DateFormatter()
         formatter.dateStyle = .none
         formatter.timeStyle = .short

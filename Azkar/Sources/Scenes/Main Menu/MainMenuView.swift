@@ -92,6 +92,7 @@ struct MainMenuView: View {
                     .foregroundColor(Color.text)
                     .background(itemsBackgroundColor)
                     .clipShape(RoundedRectangle(cornerRadius: Constants.cornerRadius))
+                    .shadow(color: Color.black.opacity(0.05), radius: 10, x: 0, y: 1)
                 }
             }
             .frame(height: 120)
@@ -130,6 +131,7 @@ struct MainMenuView: View {
             }
             .background(itemsBackgroundColor)
             .clipShape(RoundedRectangle(cornerRadius: Constants.cornerRadius))
+            .shadow(color: Color.black.opacity(0.05), radius: 10, x: 0, y: 1)
 
             // MARK: - App Sections
             VStack(spacing: 0) {
@@ -150,6 +152,7 @@ struct MainMenuView: View {
             }
             .background(itemsBackgroundColor)
             .clipShape(RoundedRectangle(cornerRadius: Constants.cornerRadius))
+            .shadow(color: Color.black.opacity(0.05), radius: 10, x: 0, y: 1)
 
             // MARK: - Additional Sections
             VStack {
@@ -165,6 +168,7 @@ struct MainMenuView: View {
                     .clipShape(RoundedRectangle(cornerRadius: Constants.cornerRadius))
                 }
             }
+            .shadow(color: Color.black.opacity(0.05), radius: 10, x: 0, y: 1)
 
             VStack(spacing: 8) {
                 Text(viewModel.fadlText)
@@ -179,6 +183,7 @@ struct MainMenuView: View {
             .shadow(color: Color.text.opacity(0.5), radius: 0.5, x: 0.0, y: 0.05)
             .multilineTextAlignment(.center) 
             .padding()
+            .shadow(color: Color.black.opacity(0.05), radius: 10, x: 0, y: 1)
         }
         .padding(.horizontal)
     }
@@ -188,6 +193,6 @@ struct MainMenuView: View {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         MainMenuView(viewModel: MainMenuViewModel(router: RootCoordinator(preferences: Preferences(), deeplinker: Deeplinker(), player: Player.init(player: AudioPlayer())), preferences: Preferences(), player: .test))
-            .environment(\.colorScheme, .dark)
+            .environment(\.colorScheme, .light)
     }
 }

@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import Combine
+import SwiftUI
 
 struct SourceInfo: Identifiable {
     let title: String
@@ -19,7 +21,7 @@ struct SourceInfo: Identifiable {
     var id: String { title }
 }
 
-final class AppInfoViewModel {
+final class AppInfoViewModel: ObservableObject {
     
     var presentationSources: [String: AnyObject] = [:]
 
@@ -34,7 +36,7 @@ final class AppInfoViewModel {
 
     let preferences: Preferences
     let appVersion: String
-    let iconImageName: String
+    @Published private(set) var iconImageName: String
 
     private let materialsCredits: [SourceInfo] = [
         SourceInfo(title: L10n.About.azkarRU, url: URL(string: "https://azkar.ru")!),
@@ -66,15 +68,39 @@ final class AppInfoViewModel {
         SourceInfo(title: L10n.About.Studio.instagramPage, url: URL(string: "https://instagram.com/jawziyya.studio"), openUrlInApp: false),
         SourceInfo(title: L10n.About.Studio.jawziyyaApps, url: URL(string: "https://apps.apple.com/ru/developer/al-jawziyya/id1165327318")!, openUrlInApp: false)
     ]
+    
+    private var cancellables = Set<AnyCancellable>()
+    let subscriptionManager: SubscriptionManagerType
 
-    init(preferences: Preferences) {
+    init(
+        preferences: Preferences,
+        subscriptionManager: SubscriptionManagerType = SubscriptionManagerFactory.create()
+    ) {
         self.preferences = preferences
+        self.subscriptionManager = subscriptionManager
         iconImageName = preferences.appIcon.imageName
-
+        
         let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString")!
         let build = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion")!
 
         appVersion = "\(L10n.Common.version) \(version) (\(build))"
+        
+        let allIcons = AppIcon.allCases.shuffled()
+        let allIconsCount = allIcons.count
+        
+        Timer.publish(every: 3, on: .main, in: .default)
+            .autoconnect()
+            .scan(0, { time, output in
+                time + 1
+            })
+            .receive(on: RunLoop.main)
+            .sink { [weak self] value in
+                let index = min(allIconsCount - 1, max(0, (value % allIconsCount)))
+                withAnimation(Animation.spring().speed(0.5)) {
+                    self?.iconImageName = allIcons[index].imageName
+                }
+            }
+            .store(in: &cancellables)
 
         let materialsCreditsSection = Section(
             header: L10n.About.Credits.sourcesHeader,

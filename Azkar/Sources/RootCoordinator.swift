@@ -17,6 +17,8 @@ enum RootSection: Equatable {
     case zikr(_ zikr: Zikr, index: Int? = nil)
     case settings(SettingsSection)
     case aboutApp
+    case subscribe
+    case dismissModal
 }
 
 protocol RootRouter: AnyObject {
@@ -127,7 +129,7 @@ private extension RootCoordinator {
         switch section {
         case .aboutApp, .category, .root, .settings:
             selectedZikrPageIndex.send(0)
-        case .zikr:
+        case .zikr, .subscribe, .dismissModal:
             break
         }
         
@@ -194,7 +196,7 @@ private extension RootCoordinator {
             }
 
         case .settings(let section):
-            let viewModel = SettingsViewModel(preferences: preferences, notificationsHandler: NotificationsHandler.shared)
+            let viewModel = SettingsViewModel(preferences: preferences, notificationsHandler: NotificationsHandler.shared, router: self)
             let view = SettingsView(viewModel: viewModel)
 
             switch section {
@@ -230,6 +232,17 @@ private extension RootCoordinator {
             let viewController = UIHostingController(rootView: view)
             viewController.title = L10n.About.title
             show(viewController)
+            
+        case .subscribe:
+            let view = SubscribeView(viewModel: SubscribeViewModel(), closeButtonAction: { [unowned self] in
+                self.trigger(.dismissModal)
+            })
+            let viewController = UIHostingController(rootView: view)
+            viewController.modalPresentationStyle = .fullScreen
+            (rootViewController.presentedViewController ?? rootViewController).present(viewController, animated: true)
+            
+        case .dismissModal:
+            (rootViewController.presentedViewController ?? rootViewController).dismiss(animated: true)
 
         }
     }

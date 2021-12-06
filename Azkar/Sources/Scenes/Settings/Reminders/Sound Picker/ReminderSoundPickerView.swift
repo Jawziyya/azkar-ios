@@ -15,9 +15,7 @@ struct ReminderSoundPickerView: View {
                             .onTapGesture {
                                 DispatchQueue.main.async {
                                     viewModel.playSound(sound)
-                                    if viewModel.isSoundAvailable(sound) {
-                                        viewModel.setPreferredSound(sound)
-                                    }
+                                    viewModel.setPreferredSound(sound)
                                 }
                             }
                     }

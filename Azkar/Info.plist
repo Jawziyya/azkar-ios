@@ -382,6 +382,8 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>REVENUCE_CAT_API_KEY</key>
+	<string>gpAMTUYnTxQzRSbPszKrFTOekbEVzsXk</string>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>

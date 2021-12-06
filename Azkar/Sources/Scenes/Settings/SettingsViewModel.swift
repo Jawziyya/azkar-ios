@@ -26,19 +26,27 @@ final class SettingsViewModel: ObservableObject {
     }
     
     var fontsViewModel: FontsViewModel {
-        FontsViewModel(service: FontsService())
+        FontsViewModel(service: FontsService(), subscribeScreenTrigger: { [unowned self] in
+            self.router.trigger(.subscribe)
+        })
     }
     
     var colorSchemeViewModel: ColorSchemesViewModel {
-        ColorSchemesViewModel(preferences: preferences)
+        ColorSchemesViewModel(preferences: preferences, subscribeScreenTrigger: { [unowned self] in
+            self.router.trigger(.subscribe)
+        })
     }
     
     var adhkarRemindersViewModel: AdhkarRemindersViewModel {
-        AdhkarRemindersViewModel(preferences: preferences)
+        AdhkarRemindersViewModel(preferences: preferences, subscribeScreenTrigger: { [unowned self] in
+            self.router.trigger(.subscribe)
+        })
     }
     
     var jumuaRemindersViewModel: JumuaRemindersViewModel {
-        JumuaRemindersViewModel(preferences: preferences)
+        JumuaRemindersViewModel(preferences: preferences, subscribeScreenTrigger: { [unowned self] in
+            self.router.trigger(.subscribe)
+        })
     }
     
     private let formatter: DateFormatter
@@ -49,11 +57,13 @@ final class SettingsViewModel: ObservableObject {
         "\(preferences.theme.title), \(preferences.colorTheme.title)"
     }
 
-    private var cancellabels = Set<AnyCancellable>()
+    private var cancellables = Set<AnyCancellable>()
+    private unowned let router: RootRouter
 
-    init(preferences: Preferences, notificationsHandler: NotificationsHandler = .shared) {
+    init(preferences: Preferences, notificationsHandler: NotificationsHandler = .shared, router: RootRouter) {
         self.preferences = preferences
         self.notificationsHandler = notificationsHandler
+        self.router = router
 
         let formatter = DateFormatter()
         formatter.dateStyle = .none
@@ -67,7 +77,7 @@ final class SettingsViewModel: ObservableObject {
             .sink(receiveValue: { [unowned self] in
                 self.objectWillChange.send()
             })
-            .store(in: &cancellabels)
+            .store(in: &cancellables)
         
         Publishers.MergeMany(
                 preferences.$enableNotifications.toVoid().dropFirst(),
@@ -85,7 +95,7 @@ final class SettingsViewModel: ObservableObject {
                 self.notificationsHandler.removeScheduledNotifications()
                 self.scheduleNotifications()
             })
-            .store(in: &cancellabels)
+            .store(in: &cancellables)
     }
 
     private func scheduleNotifications() {

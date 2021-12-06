@@ -110,9 +110,10 @@ struct SettingsView: View {
     // MARK: - Content Size
     var textSettingsSection: some View {
         Section(
-            header: getHeader(symbolName: "textformat", title: L10n.Settings.Text.title)
-                .accentColor(Color.text)
+            header: getHeader(symbolName: "bold.italic.underline", title: L10n.Settings.Text.title)
+                .accentColor(Color.blue.opacity(0.25))
                 .foregroundColor(Color.background)
+                .symbolRenderingMode(.multicolor)
         ) {
             PickerView(
                 label: L10n.Settings.Text.arabicTextFont,
@@ -176,8 +177,7 @@ struct SettingsView: View {
             label: Text(L10n.Settings.Text.fontSize)
                 .font(Font.system(.body, design: .rounded))
                 .padding(.vertical, 8)
-        )
-        {
+        ) {
             ForEach(ContentSizeCategory.availableCases, id: \.title) { size in
                 Text(size.name)
                     .font(Font.system(.body, design: .rounded))
@@ -266,8 +266,16 @@ struct PickerView<T: View>: View {
 struct SettingsView_Previews: PreviewProvider {
     static var previews: some View {
         SettingsView(
-            viewModel: SettingsViewModel(preferences: Preferences())
+            viewModel: SettingsViewModel(
+                preferences: Preferences(),
+                router: RootCoordinator(
+                    preferences: Preferences.shared,
+                    deeplinker: Deeplinker(),
+                    player: Player.test
+                )
+            )
         )
         .embedInNavigation()
+        .environment(\.colorScheme, .dark)
     }
 }

@@ -10,6 +10,7 @@ import UIKit
 import AudioPlayer
 import UserNotifications
 import SwiftUI
+import RevenueCat
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -37,6 +38,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UITableView.appearance().separatorColor = .clear
         UITableView.appearance().backgroundColor = .clear
         UISwitch.appearance().onTintColor = UIColor(named: "accent")
+        
+        Purchases.logLevel = .debug
+        Purchases.configure(withAPIKey: Bundle.main.object(forInfoDictionaryKey: "REVENUCE_CAT_API_KEY") as! String)
+        SubscriptionManager.shared.loadProducts()
 
         return true
     }

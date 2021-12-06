@@ -13,7 +13,7 @@ struct AppInfoView: View {
 
     typealias ItemSection = AppInfoViewModel.Section
 
-    let viewModel: AppInfoViewModel
+    @ObservedObject var viewModel: AppInfoViewModel
 
     @State private var url: URL?
 
@@ -54,19 +54,29 @@ struct AppInfoView: View {
                     .frame(width: 100, height: 100)
                     .clipShape(RoundedRectangle(cornerRadius: 15))
                     .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 1)
+                    .id(viewModel.iconImageName)
+                    .transition(.opacity)
                 Spacer()
             }
 
             HStack {
                 Spacer()
                 VStack(spacing: 0) {
-                    Text("app-name", comment: "App name.")
-                        .font(Font.system(.headline, design: .rounded).smallCaps().weight(.heavy))
-                        .frame(alignment: .center)
-                        .foregroundColor(Color.accent)
+                    HStack(spacing: 0) {
+                        Text("app-name", comment: "App name.")
+                            .font(Font.system(.title3, design: .rounded).smallCaps().weight(.heavy))
+                            .frame(alignment: .center)
+                            .foregroundColor(Color.accent)
+                        if viewModel.subscriptionManager.isProUser() {
+                            Text(" PRO")
+                                .font(Font.system(.title3, design: .rounded).smallCaps().weight(.heavy))
+                                .foregroundColor(Color.blue)
+                        }
+                    }
+                    
                     Text(viewModel.appVersion)
                         .font(.subheadline)
-                        .foregroundColor(Color.accent.opacity(0.5))
+                        .foregroundColor(Color.secondary)
                 }
                 Spacer()
             }

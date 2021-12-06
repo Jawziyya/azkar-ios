@@ -28,6 +28,8 @@ enum Keys {
     
     static let preferredFont = "kPreferredFont"
     
+    static let enableProFeatures = "kIsProFeaturesEnabled"
+    
     // MARK: Reminders
     static let enableReminders = "kEnableNotifications"
     static let enableAdhkarReminder = "kEnableAdhkarReminder"

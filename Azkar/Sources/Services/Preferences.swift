@@ -89,6 +89,9 @@ final class Preferences {
     @Preference(Keys.preferredJumuahReminderSound, defaultValue: ReminderSound.standard)
     var jumuahDuaReminderSound: ReminderSound
     
+    @Preference(Keys.enableProFeatures, defaultValue: false)
+    var enableProFeatures: Bool
+    
     private var notificationSubscription: AnyCancellable?
 
     func storageChangesPublisher() -> AnyPublisher<Void, Never> {

@@ -13,10 +13,18 @@ final class JumuaRemindersViewModel: ObservableObject {
     private let preferences: Preferences
     private var cancellables = Set<AnyCancellable>()
     
-    init(preferences: Preferences = Preferences.shared) {
+    init(
+        preferences: Preferences = Preferences.shared,
+        subscriptionManager: SubscriptionManagerType = SubscriptionManagerFactory.create(),
+        subscribeScreenTrigger: @escaping Action
+    ) {
         self.preferences = preferences
         isNotificationsEnabled = preferences.enableJumuaReminder
-        soundPickerViewModel = ReminderSoundPickerViewModel(preferredSound: preferences.jumuahDuaReminderSound)
+        soundPickerViewModel = ReminderSoundPickerViewModel(
+            preferredSound: preferences.jumuahDuaReminderSound,
+            subscriptionManager: subscriptionManager,
+            subscribeScreenTrigger: subscribeScreenTrigger
+        )
         
         $isNotificationsEnabled
             .assign(to: \.enableJumuaReminder, on: preferences)

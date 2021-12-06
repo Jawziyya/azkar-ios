@@ -18,6 +18,7 @@ struct FontsView: View {
                         fontView(font)
                             .onTapGesture {
                                 viewModel.changeSelectedFont(font)
+                                UISelectionFeedbackGenerator().selectionChanged()
                             }
                     }
                 }
@@ -105,7 +106,7 @@ struct FontsView: View {
 struct FontsView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            FontsView(viewModel: FontsViewModel(service: FontsService()))
+            FontsView(viewModel: .placeholder)
         }
         .preferredColorScheme(.light)
     }

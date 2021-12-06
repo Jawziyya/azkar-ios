@@ -7,7 +7,7 @@ import AudioPlayer
 enum ReminderSound: String, Identifiable, Equatable, Codable {
     
     case standard, glass, bamboo, note
-    case forSure, beyondDoubt, purr, twitter, pristine, deduction, timeIsNow
+    case forSure, beyondDoubt, purr, twitter, pristine, deduction, timeIsNow, quiteImpressed
     
     static var standardSounds: [ReminderSound] {
         [standard, glass, bamboo, note]
@@ -28,7 +28,9 @@ enum ReminderSound: String, Identifiable, Equatable, Codable {
         case .beyondDoubt:
             return "Beyond Doubt"
         case .timeIsNow:
-            return "Time is now"
+            return "Time Is Now"
+        case .quiteImpressed:
+            return "Quite Impressed"
         default:
             return rawValue.capitalized
         }
@@ -40,22 +42,31 @@ enum ReminderSound: String, Identifiable, Equatable, Codable {
         switch self {
         case .standard, .glass, .bamboo, .note, .purr, .twitter:
             return "m4a"
-        case .forSure, .beyondDoubt, .pristine, .deduction, .timeIsNow:
+        case .forSure, .beyondDoubt, .pristine, .deduction, .timeIsNow, .quiteImpressed:
             return "m4r"
         }
     }
     
-    var link: URL? {
+    var link: String? {
         switch self {
+            
+        case .beyondDoubt:
+            return "https://notificationsounds.com/notification-sounds/beyond-doubt-580"
+            
+        case .forSure:
+            return "https://notificationsounds.com/notification-sounds/for-sure-576"
+            
         case .pristine:
-            return URL(string: "https://notificationsounds.com/message-tones/pristine-609")
+            return "https://notificationsounds.com/message-tones/pristine-609"
             
         case .deduction:
-            return URL(string: "https://notificationsounds.com/notification-sounds/deduction-588")
-            
+            return "https://notificationsounds.com/notification-sounds/deduction-588"
             
         case .timeIsNow:
-            return URL(string: "https://notificationsounds.com/notification-sounds/time-is-now-585")
+            return "https://notificationsounds.com/notification-sounds/time-is-now-585"
+            
+        case .quiteImpressed:
+            return "https://notificationsounds.com/notification-sounds/quite-impressed-565"
             
         default:
             return nil
@@ -78,7 +89,7 @@ final class ReminderSoundPickerViewModel: ObservableObject {
         case standard, custom
         
         var title: String {
-            return rawValue
+            return NSLocalizedString("settings.reminders.sounds." + rawValue, comment: "")
         }
         
         var id: String { rawValue }
@@ -92,9 +103,18 @@ final class ReminderSoundPickerViewModel: ObservableObject {
     }
     
     let sections = [Section.standard, Section.custom]
+
+    private let subscribeScreenTrigger: Action
+    private let subscriptionManager: SubscriptionManagerType
     
-    init(preferredSound: ReminderSound) {
+    init(
+        preferredSound: ReminderSound,
+        subscriptionManager: SubscriptionManagerType,
+        subscribeScreenTrigger: @escaping Action
+    ) {
         self.preferredSound = preferredSound
+        self.subscriptionManager = subscriptionManager
+        self.subscribeScreenTrigger = subscribeScreenTrigger
     }
     
     private let player = AudioPlayer()
@@ -102,7 +122,11 @@ final class ReminderSoundPickerViewModel: ObservableObject {
     @Published var preferredSound: ReminderSound
     
     static var placeholder: ReminderSoundPickerViewModel {
-        return ReminderSoundPickerViewModel(preferredSound: ReminderSound.standard)
+        return ReminderSoundPickerViewModel(
+            preferredSound: ReminderSound.standard,
+            subscriptionManager: DemoSubscriptionManager(),
+            subscribeScreenTrigger: {}
+        )
     }
     
     func playSound(_ sound: ReminderSound) {
@@ -116,11 +140,11 @@ final class ReminderSoundPickerViewModel: ObservableObject {
     }
     
     func setPreferredSound(_ sound: ReminderSound) {
-        self.preferredSound = sound
-    }
-    
-    func isSoundAvailable(_ sound: ReminderSound) -> Bool {
-        return true
+        if subscriptionManager.isProUser() || ReminderSound.standardSounds.contains(sound) {
+            self.preferredSound = sound
+        } else {
+            subscribeScreenTrigger()
+        }
     }
     
 }

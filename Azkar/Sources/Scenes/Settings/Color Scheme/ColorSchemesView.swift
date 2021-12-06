@@ -3,14 +3,24 @@
 import SwiftUI
 import Combine
 
+typealias Action = () -> Void
+
 final class ColorSchemesViewModel: ObservableObject {
     
     var preferences: Preferences
     
     private var cancellables = Set<AnyCancellable>()
+    private let subscriptionManager: SubscriptionManagerType
+    private let subscribeScreenTrigger: Action
     
-    init(preferences: Preferences) {
+    init(
+        preferences: Preferences,
+        subscriptionManager: SubscriptionManagerType = SubscriptionManagerFactory.create(),
+        subscribeScreenTrigger: @escaping Action
+    ) {
         self.preferences = preferences
+        self.subscriptionManager = subscriptionManager
+        self.subscribeScreenTrigger = subscribeScreenTrigger
         preferences
             .storageChangesPublisher()
             .receive(on: RunLoop.main)
@@ -20,8 +30,16 @@ final class ColorSchemesViewModel: ObservableObject {
             .store(in: &cancellables)
     }
     
+    func setColorTheme(_ theme: ColorTheme) {
+        if subscriptionManager.isProUser() {
+            preferences.colorTheme = theme
+        } else {
+            subscribeScreenTrigger()
+        }
+    }
+    
     static var placeholder: ColorSchemesViewModel {
-        ColorSchemesViewModel(preferences: Preferences())
+        ColorSchemesViewModel(preferences: Preferences(), subscribeScreenTrigger: {})
     }
     
 }
@@ -41,7 +59,11 @@ struct ColorSchemesView: View {
                 )
                 
                 ItemPickerView(
-                    selection: $viewModel.preferences.colorTheme,
+                    selection: .init(get: {
+                        viewModel.preferences.colorTheme
+                    }, set: { newValue in
+                        viewModel.setColorTheme(newValue)
+                    }),
                     header: L10n.Settings.Theme.ColorTheme.header,
                     items: ColorTheme.allCases,
                     dismissOnSelect: false

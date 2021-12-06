@@ -75,10 +75,19 @@ final class FontsViewModel: ObservableObject {
     
     private let service: FontsServiceType
     private let preferences: Preferences
+    private let subscriptionManager: SubscriptionManagerType
+    private let subscribeScreenTrigger: () -> Void
     
-    init(service: FontsServiceType, preferences: Preferences = .init()) {
+    init(
+        service: FontsServiceType,
+        preferences: Preferences = .init(),
+        subscriptionManager: SubscriptionManagerType = SubscriptionManagerFactory.create(),
+        subscribeScreenTrigger: @escaping () -> Void
+    ) {
         self.service = service
         self.preferences = preferences
+        self.subscriptionManager = subscriptionManager
+        self.subscribeScreenTrigger = subscribeScreenTrigger
         preferredFont = preferences.preferredFont
     }
     
@@ -86,6 +95,11 @@ final class FontsViewModel: ObservableObject {
         @Sendable func setFont() {
             preferredFont = font.font
             preferences.preferredFont = font.font
+        }
+        
+        if font.zipFileURL != nil, subscriptionManager.isProUser() == false {
+            subscribeScreenTrigger()
+            return
         }
         
         if let url = font.zipFileURL, isFontInstalled(font) == false {
@@ -137,7 +151,7 @@ final class FontsViewModel: ObservableObject {
     }
     
     static var placeholder: FontsViewModel {
-        FontsViewModel(service: DemoFontsService())
+        FontsViewModel(service: DemoFontsService(), subscribeScreenTrigger: {})
     }
     
 }
