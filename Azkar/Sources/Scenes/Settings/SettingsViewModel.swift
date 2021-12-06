@@ -13,9 +13,8 @@ import UserNotifications
 
 final class SettingsViewModel: ObservableObject {
     
-    @Published var isNotificationsEnabled = true
-
     private let notificationsHandler: NotificationsHandler
+    lazy var notificationsDisabledViewModel: NotificationsDisabledViewModel = .init(observationType: .generalAccess, didChangeCallback: objectWillChange.send)
 
     var canChangeIcon: Bool {
         return !UIDevice.current.isMac

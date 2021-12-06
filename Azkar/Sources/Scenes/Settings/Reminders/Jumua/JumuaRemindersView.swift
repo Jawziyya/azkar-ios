@@ -10,6 +10,7 @@ final class JumuaRemindersViewModel: ObservableObject {
     @Published var time = Date()
     
     let soundPickerViewModel: ReminderSoundPickerViewModel
+    lazy var notificationsDisabledViewModel: NotificationsDisabledViewModel = .init(observationType: .soundAccess, didChangeCallback: objectWillChange.send)
     private let preferences: Preferences
     private var cancellables = Set<AnyCancellable>()
     
@@ -82,22 +83,26 @@ struct JumuaRemindersView: View {
                     ) {
                         timePicker
                         
-                        Button(action: {
-                            presentSoundPicker.toggle()
-                        }) {
-                            HStack {
-                                Text(L10n.Settings.Reminders.Sounds.sound)
-                                    .foregroundColor(Color.text)
-                                
-                                Spacer()
-                                
-                                Text(viewModel.soundPickerViewModel.preferredSound.title)
-                                    .foregroundColor(Color.secondaryText)
-                                
-                                Image(systemName: "chevron.right")
-                                    .foregroundColor(Color.secondary)
+                        if viewModel.notificationsDisabledViewModel.isAccessGranted {
+                            Button(action: {
+                                presentSoundPicker.toggle()
+                            }) {
+                                HStack {
+                                    Text(L10n.Settings.Reminders.Sounds.sound)
+                                        .foregroundColor(Color.text)
+                                    
+                                    Spacer()
+                                    
+                                    Text(viewModel.soundPickerViewModel.preferredSound.title)
+                                        .foregroundColor(Color.secondary)
+                                    
+                                    Image(systemName: "chevron.right")
+                                        .foregroundColor(Color.secondary)
+                                }
+                                .font(Font.system(.body, design: .rounded))
                             }
-                            .font(Font.system(.body, design: .rounded))
+                        } else {
+                            notificationsDisabledView
                         }
                     }
                 }
@@ -141,11 +146,15 @@ struct JumuaRemindersView: View {
             .labelsHidden()
         }
     }
+    
+    var notificationsDisabledView: some View {
+        NotificationsDisabledView(viewModel: viewModel.notificationsDisabledViewModel)
+    }
  
 }
 
 struct JumuaRemindersView_Previews: PreviewProvider {
     static var previews: some View {
-        JumuaRemindersView(viewModel: JumuaRemindersViewModel())
+        JumuaRemindersView(viewModel: JumuaRemindersViewModel(subscribeScreenTrigger: {}))
     }
 }

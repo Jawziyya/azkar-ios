@@ -15,6 +15,7 @@ final class AdhkarRemindersViewModel: ObservableObject {
     private let formatter: DateFormatter
     private var cancellables = Set<AnyCancellable>()
     let soundPickerViewModel: ReminderSoundPickerViewModel
+    lazy var notificationsDisabledViewModel: NotificationsDisabledViewModel = .init(observationType: .soundAccess, didChangeCallback: objectWillChange.send)
     
     init(
         preferences: Preferences = .shared,

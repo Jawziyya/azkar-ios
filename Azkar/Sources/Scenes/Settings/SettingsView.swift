@@ -194,18 +194,22 @@ struct SettingsView: View {
                 .foregroundColor(Color.white)
                 .accentColor(Color.orange)
         ) {
-            Toggle(isOn: $viewModel.isNotificationsEnabled.animation()) {
+            Toggle(isOn: $viewModel.preferences.enableNotifications.animation()) {
                 Text(L10n.Settings.Reminders.enable)
                     .fixedSize(horizontal: false, vertical: true)
                     .padding(.vertical, 8)
                     .font(Font.system(.body, design: .rounded))
             }
             
-            if viewModel.isNotificationsEnabled {
+            if viewModel.preferences.enableNotifications && viewModel.notificationsDisabledViewModel.isAccessGranted {
                 reminderTypes
             }
             
-            if UIApplication.shared.isRanInSimulator {
+            if viewModel.preferences.enableNotifications && !viewModel.notificationsDisabledViewModel.isAccessGranted {
+                notificationsDisabledView
+            }
+            
+            if UIApplication.shared.inDebugMode {
                 NavigationLink {
                     NotificationsListView(viewModel: NotificationsListViewModel(notifications: UNUserNotificationCenter.current().pendingNotificationRequests))
                 } label: {
@@ -229,6 +233,10 @@ struct SettingsView: View {
                 Text(L10n.Settings.Reminders.Jumua.label)
             }
         }
+    }
+    
+    var notificationsDisabledView: some View {
+        NotificationsDisabledView(viewModel: viewModel.notificationsDisabledViewModel)
     }
 
 }

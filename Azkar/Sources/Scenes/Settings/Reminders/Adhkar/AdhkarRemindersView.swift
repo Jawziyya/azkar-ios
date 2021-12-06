@@ -26,22 +26,26 @@ struct AdhkarRemindersView: View {
                     ) {
                         timePicker
                         
-                        Button(action: {
-                            presentSoundPicker.toggle()
-                        }) {
-                            HStack {
-                                Text(L10n.Settings.Reminders.Sounds.sound)
-                                    .foregroundColor(Color.text)
-                                
-                                Spacer()
-                                
-                                Text(viewModel.soundPickerViewModel.preferredSound.title)
-                                    .foregroundColor(Color.secondary)
-                                
-                                Image(systemName: "chevron.right")
-                                    .foregroundColor(Color.secondary)
+                        if viewModel.notificationsDisabledViewModel.isAccessGranted {
+                            Button(action: {
+                                presentSoundPicker.toggle()
+                            }) {
+                                HStack {
+                                    Text(L10n.Settings.Reminders.Sounds.sound)
+                                        .foregroundColor(Color.text)
+                                    
+                                    Spacer()
+                                    
+                                    Text(viewModel.soundPickerViewModel.preferredSound.title)
+                                        .foregroundColor(Color.secondary)
+                                    
+                                    Image(systemName: "chevron.right")
+                                        .foregroundColor(Color.secondary)
+                                }
+                                .font(Font.system(.body, design: .rounded))
                             }
-                            .font(Font.system(.body, design: .rounded))
+                        } else {
+                            notificationsDisabledView
                         }
                     }
                 }
@@ -131,12 +135,16 @@ struct AdhkarRemindersView: View {
         )
     }
     
+    var notificationsDisabledView: some View {
+        NotificationsDisabledView(viewModel: viewModel.notificationsDisabledViewModel)
+    }
+    
 }
 
 struct MorningEveningRemindersView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            AdhkarRemindersView(viewModel: AdhkarRemindersViewModel())
+            AdhkarRemindersView(viewModel: AdhkarRemindersViewModel(subscribeScreenTrigger: {}))
         }
     }
 }
