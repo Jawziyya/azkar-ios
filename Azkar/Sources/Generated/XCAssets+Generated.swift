@@ -42,6 +42,7 @@ internal enum Asset {
     internal static let contentBackground = ColorAsset(name: "Sea/contentBackground")
   }
   internal static let accent = ColorAsset(name: "accent")
+  internal static let alternativeAccent = ColorAsset(name: "alternative-accent")
   internal static let background = ColorAsset(name: "background")
   internal static let contentBackground = ColorAsset(name: "contentBackground")
   internal static let secondaryBackground = ColorAsset(name: "secondaryBackground")

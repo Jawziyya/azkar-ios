@@ -87,6 +87,8 @@ internal enum L10n {
   internal enum Common {
     /// Default
     internal static let `default` = L10n.tr("Localizable", "common.default")
+    /// Done
+    internal static let done = L10n.tr("Localizable", "common.done")
     /// Enable
     internal static let enable = L10n.tr("Localizable", "common.enable")
     /// Restore
@@ -128,6 +130,8 @@ internal enum L10n {
       internal static let sansSerif = L10n.tr("Localizable", "fonts.type.sansSerif")
       /// Serif
       internal static let serif = L10n.tr("Localizable", "fonts.type.serif")
+      /// Standard
+      internal static let standard = L10n.tr("Localizable", "fonts.type.standard")
     }
   }
 
@@ -265,6 +269,18 @@ internal enum L10n {
         /// Remind about morning & evening adhkar
         internal static let switchLabel = L10n.tr("Localizable", "settings.reminders.morning-evening.switch-label")
       }
+      internal enum NoAccess {
+        /// 
+        internal static let general = L10n.tr("Localizable", "settings.reminders.no-access.general")
+        /// 
+        internal static let noSound = L10n.tr("Localizable", "settings.reminders.no-access.no-sound")
+        /// 
+        internal static let titleGeneral = L10n.tr("Localizable", "settings.reminders.no-access.title-general")
+        /// 
+        internal static let titleSound = L10n.tr("Localizable", "settings.reminders.no-access.title-sound")
+        /// Turn ON in Settings
+        internal static let turnOnTitle = L10n.tr("Localizable", "settings.reminders.no-access.turn-on-title")
+      }
       internal enum Sounds {
         /// Custom
         internal static let custom = L10n.tr("Localizable", "settings.reminders.sounds.custom")
@@ -317,6 +333,51 @@ internal enum L10n {
         /// Sea
         internal static let sea = L10n.tr("Localizable", "settings.theme.color-theme.sea")
       }
+    }
+  }
+
+  internal enum Subscribe {
+    /// Continue
+    internal static let purchaseTitle = L10n.tr("Localizable", "subscribe.purchase-title")
+    /// Restore
+    internal static let restore = L10n.tr("Localizable", "subscribe.restore")
+    /// Subscribe
+    internal static let subscribeTitle = L10n.tr("Localizable", "subscribe.subscribe-title")
+    /// 
+    internal static let title = L10n.tr("Localizable", "subscribe.title")
+    internal enum Billing {
+      /// One-time purchase
+      internal static let lifetime = L10n.tr("Localizable", "subscribe.billing.lifetime")
+      /// Billed monthly
+      internal static let monthly = L10n.tr("Localizable", "subscribe.billing.monthly")
+    }
+    internal enum Features {
+      internal enum ColorThemes {
+        /// Colorful themes
+        internal static let title = L10n.tr("Localizable", "subscribe.features.color-themes.title")
+      }
+      internal enum CustomFonts {
+        /// 10+ custom fonts
+        internal static let title = L10n.tr("Localizable", "subscribe.features.custom-fonts.title")
+      }
+      internal enum More {
+        /// And all the new features to come!
+        internal static let title = L10n.tr("Localizable", "subscribe.features.more.title")
+      }
+      internal enum ReminderSounds {
+        /// Different reminder sounds
+        internal static let title = L10n.tr("Localizable", "subscribe.features.reminder-sounds.title")
+      }
+    }
+    internal enum Finish {
+      /// Thank you for purchasing **Azkar Pro**!
+      internal static let thanks = L10n.tr("Localizable", "subscribe.finish.thanks")
+    }
+    internal enum Why {
+      /// • All basic features of Azkar app available for **free**.\n\n• Developing and publishing apps on the App Store takes money and time. Purchases help to cover these costs.\n\n• Free apps without ads and purchases do not profit developers.\n\n• We decided to provide Pro features instead of adding ads while keeping all the core functionality free.
+      internal static let message = L10n.tr("Localizable", "subscribe.why.message")
+      /// Why?
+      internal static let title = L10n.tr("Localizable", "subscribe.why.title")
     }
   }
 
