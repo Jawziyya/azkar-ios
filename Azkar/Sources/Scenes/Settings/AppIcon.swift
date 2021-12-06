@@ -59,7 +59,7 @@ enum AppIcon: String, Codable, CaseIterable, Identifiable {
         [gold, ink, darkNight]
     }
 
-    case maccinz_house, maccinz_mountains, maccinz_ramadan_night, maccinz_day, maccinz_confetti, maccinz_confetti_dark
+    case maccinz_house, maccinz_mountains, maccinz_ramadan_night, maccinz_day
 
     case darsigova_1, darsigova_2, darsigova_3, darsigova_4, darsigova_5, darsigova_6, darsigova_7, darsigova_8, darsigova_9, darsigova_10
 
