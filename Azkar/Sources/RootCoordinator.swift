@@ -238,7 +238,7 @@ private extension RootCoordinator {
                 self.trigger(.dismissModal)
             })
             let viewController = UIHostingController(rootView: view)
-            viewController.modalPresentationStyle = .fullScreen
+            viewController.modalPresentationStyle = .pageSheet
             (rootViewController.presentedViewController ?? rootViewController).present(viewController, animated: true)
             
         case .dismissModal:

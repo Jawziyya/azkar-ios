@@ -76,7 +76,7 @@ struct SubscribeView: View {
                     }
                     .background(Color.contentBackground)
                     .opacity(viewModel.isPurchasing || viewModel.isPurchased ? 0 : 1)
-                },
+                }.padding(.bottom, 8),
                 alignment: .bottom
             )
             .sheet(isPresented: $showWhyMessage) {
@@ -98,7 +98,6 @@ struct SubscribeView: View {
                     }
                     
                     LottieView(name: "rocket-purple", loopMode: .loop, contentMode: .scaleAspectFit, speed: 1)
-                        .cornerRadius(60)
                         .frame(height: viewModel.isPurchased ? increasedHeaderHeight : headerHeight)
                         .frame(maxWidth: .infinity)
                         .offset(y: viewModel.isPurchased ? -50 : 0)
@@ -110,6 +109,8 @@ struct SubscribeView: View {
                         nonSubscribedItems
                             .transition(.move(edge: .bottom).combined(with: .opacity))
                     }
+                    
+                    Color.clear.frame(height: 16)
                 }
                 .frame(maxWidth: .infinity, minHeight: proxy.size.height, maxHeight: .infinity)
             }
