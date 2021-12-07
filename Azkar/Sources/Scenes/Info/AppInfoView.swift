@@ -8,6 +8,8 @@
 
 import SwiftUI
 import Introspect
+import SwiftUIX
+import ActivityView
 
 struct AppInfoView: View {
 
@@ -16,6 +18,7 @@ struct AppInfoView: View {
     @ObservedObject var viewModel: AppInfoViewModel
 
     @State private var url: URL?
+    @State private var activityItem: ActivityItem?
 
     var body: some View {
         Form {
@@ -33,11 +36,22 @@ struct AppInfoView: View {
             .listRowBackground(Color.contentBackground)
             .saturation(viewModel.preferences.colorTheme == .ink ? 0 : 1)
         }
+        .toolbar {
+            ToolbarItem(placement: ToolbarItemPlacement.navigationBarTrailing) {
+                Button(action: {
+                    activityItem = ActivityItem(items: URL(string: "https://itunes.apple.com/app/id1511423586")!)
+                }, label: {
+                    Image(systemName: "square.and.arrow.up")
+                        .foregroundColor(Color.accent)
+                })
+            }
+        }
         .listStyle(GroupedListStyle())
         .environment(\.horizontalSizeClass, .regular)
         .environment(\.verticalSizeClass, .regular)
         .navigationTitle(Text("about.title", comment: "About app screen title."))
         .supportedOrientations(.portrait)
+        .activitySheet($activityItem)
         .sheet(item: $url) { url in
             SafariView(url: url, entersReaderIfAvailable: false)
         }
@@ -83,26 +97,13 @@ struct AppInfoView: View {
         }
     }
 
-    private func viewForItem(_ item: SourceInfo) -> some View {
+    private func viewForItem(_ item: SourceInfo.Item) -> some View {
         Button(action: {
-            if item.openUrlInApp {
-                self.url = item.url
-            } else if let url = item.url {
+            if let url = URL(string: item.link) {
                 UIApplication.shared.open(url)
-            } else if let action = item.action {
-                action()
             }
         }, label: {
             HStack {
-                item.imageName.flatMap { name in
-                    (item.imageType == .bundled ? Image(uiImage: UIImage(named: name)!) : Image(systemName: name))
-                        .renderingMode(.original)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 40, height: 40)
-                        .clipShape(RoundedRectangle(cornerRadius: 10))
-                        .shadow(radius: 1)
-                }
                 Text(item.title)
                     .foregroundColor(Color.text)
                 Spacer()

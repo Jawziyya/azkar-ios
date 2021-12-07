@@ -1,0 +1,94 @@
+[
+    {
+        "title": "credits.materials",
+        "items": [
+            {
+                "title": "credits.azkar-ru",
+                "link": "https://azkar.ru"
+            },
+            {
+                "title": "credits.source-code",
+                "link": "https://github.com/Jawziyya/azkar-ios"
+            }
+        ]
+    },
+    {
+        "title": "credits.links",
+        "items": [
+            {
+                "title": "credits.studio.telegram-channel",
+                "link": "https://telegram.me/jawziyya"
+            },
+            {
+                "title": "credits.studio.instagram-page",
+                "link": "https://instagram.com/jawziyya.studio"
+            },
+            {
+                "title": "credits.studio.jawziyya-apps",
+                "link": "https://apps.apple.com/ru/developer/al-jawziyya/id1165327318"
+            }
+        ]
+    },
+    {
+        "title": "credits.graphics",
+        "items": [
+            {
+                "title": "Moon",
+                "link": "https://flaticon.com/free-icon/moon_414942?term=moon&page=1&position=17"
+            },
+            {
+                "title": "Sunny",
+                "link": "https://lottiefiles.com/50649-sunny"
+            },
+            {
+                "title": "Moon & Stars",
+                "link": "https://lottiefiles.com/12572-moon-stars"
+            },
+            {
+                "title": "Weather Night",
+                "link": "https://lottiefiles.com/4799-weather-night"
+            },
+            {
+                "title": "Adobe Arabic",
+                "link": "https://fonts.adobe.com/fonts/adobe-arabic"
+            },
+            {
+                "title": "credits.quran-complex-font",
+                "link": "https://qurancomplex.gov.sa/en"
+            },
+            {
+                "title": "Google Noto Naskh",
+                "link": "https://www.google.com/get/noto/#naskh-arab"
+            },
+            {
+                "title": "Scheherazade",
+                "link": "https://software.sil.org/scheherazade"
+            }
+        ]
+    },
+    {
+        "title": "credits.libraries",
+        "items": [
+            {
+                "title": "Lottie",
+                "link": "https://github.com/airbnb/lottie-ios"
+            },
+            {
+                "title": "Coordinator",
+                "link": "https://github.com/radianttap/Coordinator"
+            },
+            {
+                "title": "SwiftGen",
+                "link": "https://github.com/SwiftGen/SwiftGen"
+            },
+            {
+                "title": "SwiftRichString",
+                "link": "https://github.com/SwiftGen/SwiftGen"
+            },
+            {
+                "title": "SwiftyMarkdown",
+                "link": "https://github.com/SwiftGen/SwiftGen"
+            }
+        ],
+    }
+]

@@ -18,43 +18,17 @@ internal enum L10n {
   }
 
   internal enum About {
-    /// Russian translation, transcription, audiofiles (azkar.ru)
-    internal static let azkarRU = L10n.tr("Localizable", "about.azkarRU")
-    /// Source code of the app (github.com)
-    internal static let sourceCode = L10n.tr("Localizable", "about.sourceCode")
     /// About
     internal static let title = L10n.tr("Localizable", "about.title")
     internal enum Credits {
-      /// Animation %@
-      internal static func animation(_ p1: Any) -> String {
-        return L10n.tr("Localizable", "about.credits.animation", String(describing: p1))
-      }
       /// Font %@
       internal static func font(_ p1: Any) -> String {
         return L10n.tr("Localizable", "about.credits.font", String(describing: p1))
       }
-      /// 🎨 Graphic materials and fonts
-      internal static let graphicsHeader = L10n.tr("Localizable", "about.credits.graphics-header")
       /// Image %@
       internal static func image(_ p1: Any) -> String {
         return L10n.tr("Localizable", "about.credits.image", String(describing: p1))
       }
-      /// 🧱 Open source libraries
-      internal static let openSourceLibrariesHeader = L10n.tr("Localizable", "about.credits.open-source-libraries-header")
-      /// Font of «King Fahd Complex for the Printing of the Holy Quran»
-      internal static let quranComplexFont = L10n.tr("Localizable", "about.credits.quran-complex-font")
-      /// 🗃 Reference
-      internal static let sourcesHeader = L10n.tr("Localizable", "about.credits.sources-header")
-    }
-    internal enum Studio {
-      /// 🥜 Jawziyya Studio
-      internal static let header = L10n.tr("Localizable", "about.studio.header")
-      /// Instagram page
-      internal static let instagramPage = L10n.tr("Localizable", "about.studio.instagram-page")
-      /// Our Apps
-      internal static let jawziyyaApps = L10n.tr("Localizable", "about.studio.jawziyya-apps")
-      /// Telegram channel
-      internal static let telegramChannel = L10n.tr("Localizable", "about.studio.telegram-channel")
     }
     internal enum Support {
       /// ⚒ Feedback
@@ -99,6 +73,35 @@ internal enum L10n {
     internal static let version = L10n.tr("Localizable", "common.version")
     /// Dhikr
     internal static let zikr = L10n.tr("Localizable", "common.zikr")
+  }
+
+  internal enum Credits {
+    /// Animation %@
+    internal static func animation(_ p1: Any) -> String {
+      return L10n.tr("Localizable", "credits.animation", String(describing: p1))
+    }
+    /// Russian translation, transcription, audiofiles (azkar.ru)
+    internal static let azkarRu = L10n.tr("Localizable", "credits.azkar-ru")
+    /// 🎨 Graphic materials and fonts
+    internal static let graphics = L10n.tr("Localizable", "credits.graphics")
+    /// 🧱 Open source libraries
+    internal static let libraries = L10n.tr("Localizable", "credits.libraries")
+    /// 🥜 Jawziyya Studio
+    internal static let links = L10n.tr("Localizable", "credits.links")
+    /// 🗃 Reference
+    internal static let materials = L10n.tr("Localizable", "credits.materials")
+    /// Font of «King Fahd Complex for the Printing of the Holy Quran»
+    internal static let quranComplexFont = L10n.tr("Localizable", "credits.quran-complex-font")
+    /// Source code of the app (github.com)
+    internal static let sourceCode = L10n.tr("Localizable", "credits.source-code")
+    internal enum Studio {
+      /// Instagram page
+      internal static let instagramPage = L10n.tr("Localizable", "credits.studio.instagram-page")
+      /// Our Apps
+      internal static let jawziyyaApps = L10n.tr("Localizable", "credits.studio.jawziyya-apps")
+      /// Telegram channel
+      internal static let telegramChannel = L10n.tr("Localizable", "credits.studio.telegram-channel")
+    }
   }
 
   internal enum Fadl {
