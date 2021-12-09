@@ -28,6 +28,7 @@ struct FontsView: View {
         }
         .listStyle(InsetGroupedListStyle())
         .environment(\.horizontalSizeClass, .regular)
+        .horizontalPaddingForLargeScreen()
         .background(Color.background.edgesIgnoringSafeArea(.all))
         .onAppear(perform: viewModel.loadData)
         .navigationTitle(L10n.Fonts.title)

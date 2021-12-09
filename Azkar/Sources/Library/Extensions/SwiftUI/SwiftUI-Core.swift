@@ -16,4 +16,8 @@ extension View {
     func eraseToAny() -> AnyView {
         return AnyView(self)
     }
+    
+    func horizontalPaddingForLargeScreen() -> some View {
+        self.padding(.horizontal, UIDevice.current.isIpadInterface ? 40 : 0)
+    }
 }

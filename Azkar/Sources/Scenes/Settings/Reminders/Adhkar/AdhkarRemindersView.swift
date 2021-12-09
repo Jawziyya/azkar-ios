@@ -59,6 +59,7 @@ struct AdhkarRemindersView: View {
         }
         .accentColor(Color.accent)
         .toggleStyle(SwitchToggleStyle(tint: Color.accent))
+        .horizontalPaddingForLargeScreen()
         .background(Color.background.edgesIgnoringSafeArea(.all))
         .navigationTitle(L10n.Settings.Reminders.MorningEvening.label)
         .navigationBarTitleDisplayMode(.inline)

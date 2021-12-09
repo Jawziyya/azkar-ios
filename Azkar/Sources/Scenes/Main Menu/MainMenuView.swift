@@ -31,17 +31,10 @@ struct MainMenuView: View {
     }
 
     var body: some View {
-        Group {
-            if isIpad {
-                content
-                    .frame(minWidth: 300)
-            } else {
-                content
-            }
-        }
-        .environment(\.horizontalSizeClass, isIpad ? .regular : .compact)
-        .saturation(viewModel.preferences.colorTheme == .ink ? 0 : 1)
-        .attachEnvironmentOverrides(viewModel: EnvironmentOverridesViewModel(preferences: viewModel.preferences))
+        content
+            .environment(\.horizontalSizeClass, isIpad ? .regular : .compact)
+            .saturation(viewModel.preferences.colorTheme == .ink ? 0 : 1)
+            .attachEnvironmentOverrides(viewModel: EnvironmentOverridesViewModel(preferences: viewModel.preferences))
     }
     
     private var content: some View {

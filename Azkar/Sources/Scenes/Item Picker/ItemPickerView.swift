@@ -43,6 +43,7 @@ struct ItemPickerView<SelectionValue>: View where SelectionValue: Hashable & Pic
             .padding()
         }
         .environment(\.horizontalSizeClass, .regular)
+        .horizontalPaddingForLargeScreen()
         .background(Color.background.edgesIgnoringSafeArea(.all))
     }
 

@@ -25,6 +25,7 @@ struct ReminderSoundPickerView: View {
         }
         .listStyle(InsetGroupedListStyle())
         .environment(\.horizontalSizeClass, .regular)
+        .horizontalPaddingForLargeScreen()
         .background(Color.background.edgesIgnoringSafeArea(.all))
         .navigationTitle(L10n.Settings.Reminders.Sounds.sound)
         .navigationBarTitleDisplayMode(.inline)

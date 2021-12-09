@@ -137,9 +137,13 @@ struct ZikrView: View {
             }
 
             viewModel.source.textOrNil.flatMap { text in
-                NavigationLink.init(destination: hadithView, label: {
-                    getInfoStack(label: L10n.Read.source, text: text, underline: viewModel.hadithViewModel != nil)
-                        .hoverEffect(HoverEffect.highlight)
+                NavigationLink(destination: hadithView, label: {
+                    getInfoStack(
+                        label: L10n.Read.source,
+                        text: text,
+                        underline: viewModel.hadithViewModel != nil
+                    )
+                    .hoverEffect(HoverEffect.highlight)
                 })
                 .disabled(viewModel.hadithViewModel == nil)
             }
@@ -148,15 +152,14 @@ struct ZikrView: View {
         .padding()
     }
 
-    private var hadithView: AnyView {
-        if let vm = viewModel.hadithViewModel {
-            return LazyView(
-                HadithView(viewModel: vm)
-            )
-            .eraseToAny()
-        } else {
-            return EmptyView().eraseToAny()
-        }
+    private var hadithView: some View {
+        LazyView(
+            ZStack {
+                if let vm = viewModel.hadithViewModel {
+                    HadithView(viewModel: vm)
+                }
+            }
+        )
     }
 
     private func getInfoStack(label: String, text: String, underline: Bool = false) -> some View {

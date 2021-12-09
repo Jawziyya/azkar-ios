@@ -134,6 +134,7 @@ struct AppIconPackListView: View {
         }
         .listStyle(InsetGroupedListStyle())
         .environment(\.horizontalSizeClass, .regular)
+        .horizontalPaddingForLargeScreen()
         .background(Color.background.edgesIgnoringSafeArea(.all))
     }
 

@@ -70,6 +70,7 @@ struct ColorSchemesView: View {
                 )
             }
         }
+        .horizontalPaddingForLargeScreen()
         .background(Color.background.edgesIgnoringSafeArea(.all))
     }
 }
