@@ -92,6 +92,8 @@ internal enum L10n {
     internal static let materials = L10n.tr("Localizable", "credits.materials")
     /// Font of «King Fahd Complex for the Printing of the Holy Quran»
     internal static let quranComplexFont = L10n.tr("Localizable", "credits.quran-complex-font")
+    /// 🔊 Sounds
+    internal static let sounds = L10n.tr("Localizable", "credits.sounds")
     /// Source code of the app (github.com)
     internal static let sourceCode = L10n.tr("Localizable", "credits.source-code")
     internal enum Studio {

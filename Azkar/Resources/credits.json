@@ -70,25 +70,70 @@
         "title": "credits.libraries",
         "items": [
             {
-                "title": "Lottie",
-                "link": "https://github.com/airbnb/lottie-ios"
+                "title": "ActivityView",
+                "link": ""
+            },
+            {
+                "title": "Alamofire",
+                "link": "https://github.com/Alamofire/Alamofire"
             },
             {
                 "title": "Coordinator",
                 "link": "https://github.com/radianttap/Coordinator"
             },
             {
+                "title": "Introspect",
+                "link": "https://github.com/siteline/SwiftUI-Introspect"
+            },
+            {
+                "title": "Lottie",
+                "link": "https://github.com/airbnb/lottie-ios"
+            },
+            {
                 "title": "SwiftGen",
                 "link": "https://github.com/SwiftGen/SwiftGen"
             },
             {
-                "title": "SwiftRichString",
-                "link": "https://github.com/SwiftGen/SwiftGen"
+                "title": "Nuke",
+                "link": "https://github.com/kean/NukeUI"
             },
             {
-                "title": "SwiftyMarkdown",
-                "link": "https://github.com/SwiftGen/SwiftGen"
+                "title": "SwiftUIX",
+                "link": "https://github.com/SwiftUIX/SwiftUIX"
+            },
+            {
+                "title": "ZIPFoundation",
+                "link": "https://github.com/weichsel/ZIPFoundation"
             }
         ],
+    },
+    {
+        "title": "credits.sounds",
+        "items": [
+            {
+                "title": "Beyound Doubt",
+                "link": "https://notificationsounds.com/notification-sounds/beyond-doubt-580"
+            },
+            {
+                "title": "For Sure",
+                "link": "https://notificationsounds.com/notification-sounds/for-sure-576"
+            },
+            {
+                "title": "Pristine",
+                "link": "https://notificationsounds.com/message-tones/pristine-609"
+            },
+            {
+                "title": "Deduction",
+                "link": "https://notificationsounds.com/notification-sounds/deduction-588"
+            },
+            {
+                "title": "Time is Now",
+                "link": "https://notificationsounds.com/notification-sounds/time-is-now-585"
+            },
+            {
+                "title": "Quite Impressed",
+                "link": "https://notificationsounds.com/notification-sounds/quite-impressed-565"
+            }
+        ]
     }
 ]

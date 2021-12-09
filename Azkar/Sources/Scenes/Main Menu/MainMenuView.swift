@@ -9,7 +9,6 @@
 import SwiftUI
 import AudioPlayer
 import UserNotifications
-import SwiftRichString
 
 enum Constants {
     static var cornerRadius: CGFloat = 12
