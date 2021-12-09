@@ -76,7 +76,7 @@ struct SubscribeView: View {
                     }
                     .background(Color.contentBackground)
                     .opacity(viewModel.isPurchasing || viewModel.isPurchased ? 0 : 1)
-                }.padding(.bottom, 8),
+                }.padding(.bottom, 16),
                 alignment: .bottom
             )
             .sheet(isPresented: $showWhyMessage) {
@@ -106,15 +106,16 @@ struct SubscribeView: View {
                     if viewModel.isPurchased {
                         subscribedItems
                     } else {
+                        Spacer()
                         nonSubscribedItems
                             .transition(.move(edge: .bottom).combined(with: .opacity))
                     }
                     
-                    Color.clear.frame(height: 16)
+                    Color.clear.frame(height: 20)
                 }
                 .frame(maxWidth: .infinity, minHeight: proxy.size.height, maxHeight: .infinity)
             }
-            .padding(.horizontal)
+            .horizontalPaddingForLargeScreen(applyDefaultPadding: true)
             .background(Color.contentBackground.ignoresSafeArea(.all, edges: .all))
             .multilineTextAlignment(.leading)
         }
@@ -148,6 +149,8 @@ struct SubscribeView: View {
     
     var nonSubscribedItems: some View {
         Group {
+            Spacer()
+            
             VStack(alignment: .leading, spacing: 12) {
                 Group {
                     Text(.init(L10n.Subscribe.title))
@@ -175,6 +178,8 @@ struct SubscribeView: View {
             
             Color.clear.frame(height: 16)
             
+            Spacer()
+            
             VStack(spacing: 20) {
                 ForEach(viewModel.options) { option in
                     planCard(option: option)
@@ -185,14 +190,18 @@ struct SubscribeView: View {
             .padding(.horizontal, 30)
             
             Color.clear.frame(height: 20)
-                            
+            
             subscriptionInfo
             
-            Color.clear.frame(height: 20)
-            
-            purchaseButton.opacity(0) // Placeholder for spacing
-            
-            Color.clear.frame(height: 40)
+            Group {
+                Color.clear.frame(height: 20)
+                
+                purchaseButton.opacity(0) // Placeholder for spacing
+                
+                Color.clear.frame(height: 40)
+                
+                Spacer()
+            }
         }
     }
     

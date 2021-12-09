@@ -17,7 +17,13 @@ extension View {
         return AnyView(self)
     }
     
-    func horizontalPaddingForLargeScreen() -> some View {
-        self.padding(.horizontal, UIDevice.current.isIpadInterface ? 40 : 0)
+    func horizontalPaddingForLargeScreen(value: CGFloat = 40, otherDevicesPadding: CGFloat = 0, applyDefaultPadding: Bool = true) -> some View {
+        if UIDevice.current.isIpadInterface {
+            return self.padding(.horizontal, 40)
+        } else if applyDefaultPadding {
+            return self.padding(.horizontal)
+        } else {
+            return self.padding(.horizontal, otherDevicesPadding)
+        }
     }
 }
