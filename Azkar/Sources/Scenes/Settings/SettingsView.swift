@@ -208,12 +208,17 @@ struct SettingsView: View {
                 .foregroundColor(Color.white)
                 .accentColor(Color.orange)
         ) {
-            Toggle(isOn: $viewModel.preferences.enableNotifications.animation()) {
-                Text(L10n.Settings.Reminders.enable)
+            Toggle(
+                isOn: Binding(get: {
+                    viewModel.preferences.enableNotifications
+                }, set: { newValue in
+                    viewModel.enableReminders(newValue)
+                }).animation()) {
+                    Text(L10n.Settings.Reminders.enable)
                     .fixedSize(horizontal: false, vertical: true)
                     .padding(.vertical, 8)
                     .font(Font.system(.body, design: .rounded))
-            }
+                }
             
             if viewModel.preferences.enableNotifications && viewModel.notificationsDisabledViewModel.isAccessGranted {
                 reminderTypes

@@ -11,12 +11,76 @@ import SwiftUI
 import Combine
 
 final class NotificationsHandler: NSObject {
+    
+    enum NotificationsPermissionState: Equatable {
+        /// Azkar did not ask for permissions.
+        case notDetermined
+        
+        /// Azkar asked permission but user denied.
+        case denied
+        
+        /// Azkar has access to send notifications withoud sound.
+        case noSound
+        
+        /// Azkar has access to send notifications.
+        case granted
+        
+        var hasAccess: Bool {
+            switch self {
+            case .noSound, .granted:
+                return true
+            case .denied, .notDetermined:
+                return false
+            }
+        }
+        
+        var isDenied: Bool {
+            switch self {
+            case .denied:
+                return true
+            default:
+                return false
+            }
+        }
+    }
 
     static let shared = NotificationsHandler()
 
     let selectedNotificationCategory = PassthroughSubject<String, Never>()
+    
+    var notificationsPermissionStatePublisher: AnyPublisher<NotificationsPermissionState, Never> {
+        Publishers
+            .Merge(
+                NotificationCenter.default
+                    .publisher(for: UIApplication.didBecomeActiveNotification, object: nil)
+                    .eraseToAnyPublisher()
+                    .toVoid()
+                    .prepend(())
+                    .flatMap { [unowned self] in self.readNotificationSettings() },
+                readNotificationSettings()
+            )
+            .map { settings -> NotificationsPermissionState in
+                switch settings.authorizationStatus {
+                case .notDetermined:
+                    return .notDetermined
+                case .denied:
+                    return .denied
+                case .authorized, .ephemeral, .provisional:
+                    let soundAccessDisabled = settings.soundSetting == .disabled
+                    if soundAccessDisabled {
+                        return .noSound
+                    } else {
+                        return .granted
+                    }
+                default:
+                    return .notDetermined
+                }
+            }
+            .eraseToAnyPublisher()
+    }
 
     private let notificationCenter = UNUserNotificationCenter.current()
+    private var cancellables = Set<AnyCancellable>()
 
     private override init() {
         super.init()
@@ -24,6 +88,16 @@ final class NotificationsHandler: NSObject {
 
         // Clean up the notifications list.
         notificationCenter.removeAllDeliveredNotifications()
+    }
+    
+    private func readNotificationSettings() -> AnyPublisher<UNNotificationSettings, Never> {
+        Future { observer in
+            UNUserNotificationCenter.current()
+                .getNotificationSettings { settings in
+                    observer(.success(settings))
+                }
+        }
+        .eraseToAnyPublisher()
     }
 
     func removeDeliveredNotifications() {

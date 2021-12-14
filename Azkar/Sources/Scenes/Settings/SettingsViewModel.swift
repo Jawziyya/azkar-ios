@@ -106,6 +106,25 @@ final class SettingsViewModel: ObservableObject {
             })
             .store(in: &cancellables)
     }
+    
+    func enableReminders(_ flag: Bool) {
+        notificationsHandler.getNotificationsAuthorizationStatus { [unowned self] status in
+            if status == .notDetermined {
+                self.notificationsHandler.requestNotificationsPermission(completion: { [unowned self] result in
+                    switch result {
+                    case .success(let granted):
+                        if granted {
+                            self.preferences.enableNotifications = flag
+                        }
+                    default:
+                        break
+                    }
+                })
+            } else {
+                self.preferences.enableNotifications = flag
+            }
+        }
+    }
 
     private func scheduleNotifications() {
         if preferences.enableAdhkarReminder {

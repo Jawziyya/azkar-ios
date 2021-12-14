@@ -143,6 +143,15 @@ final class MainMenuViewModel: ObservableObject {
                     break
                 }
             })
+        
+        NotificationsHandler.shared
+            .notificationsPermissionStatePublisher
+            .receive(on: RunLoop.main)
+            .sink { [unowned self] state in
+                guard state.hasAccess else { return }
+                self.hideNotificationsAccessMessage()
+            }
+            .store(in: &cancellables)
 
         let appName = L10n.appName
         let title = "\(appName)"

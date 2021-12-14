@@ -5,8 +5,8 @@ import Combine
 
 final class NotificationsDisabledViewModel: ObservableObject {
     
-    private(set) var notificationAccessTitle = ""
-    private(set) var notificationAccessMessage = ""
+    @Published private(set) var notificationAccessTitle = ""
+    @Published private(set) var notificationAccessMessage = ""
     private(set) var symbolName = ""
     @Published var isAccessGranted = true
     
@@ -37,19 +37,12 @@ final class NotificationsDisabledViewModel: ObservableObject {
     
     init(observationType: ObservationType = .generalAccess, didChangeCallback: @escaping () -> Void) {
         self.observationType = observationType
-        NotificationCenter.default
-            .publisher(for: UIApplication.didBecomeActiveNotification, object: nil)
-            .eraseToAnyPublisher()
-            .toVoid()
-            .prepend(())
+        NotificationsHandler
+            .shared
+            .notificationsPermissionStatePublisher
             .receive(on: RunLoop.main)
-            .sink { [weak self] in
-                UNUserNotificationCenter.current()
-                    .getNotificationSettings { [weak self] settings in
-                        DispatchQueue.main.async {
-                            self?.update(with: settings)
-                        }
-                    }
+            .sink { [unowned self] settings in
+                self.update(with: settings)
             }
             .store(in: &cancellables)
         
@@ -58,26 +51,26 @@ final class NotificationsDisabledViewModel: ObservableObject {
             .store(in: &cancellables)
     }
     
-    private func update(with settings: UNNotificationSettings) {
-        let systemAccessGranted = settings.authorizationStatus == .authorized
-        let soundAccessDisabled = settings.soundSetting == .disabled
-        defer {
-            notificationAccessTitle = observationType.title
-            symbolName = observationType.symbolName
-            if observationType == .generalAccess {
-                isAccessGranted = systemAccessGranted
-            } else {
-                isAccessGranted = !soundAccessDisabled
+    private func update(with settings: NotificationsHandler.NotificationsPermissionState) {
+        
+        if settings.hasAccess {
+            
+            switch settings {
+                
+            case .noSound where observationType == .soundAccess:
+                notificationAccessTitle = ObservationType.soundAccess.title
+                symbolName = ObservationType.soundAccess.symbolName
+                isAccessGranted = false
+                
+            default:
+                isAccessGranted = true
+                
             }
-        }
-        
-        guard systemAccessGranted else {
-            notificationAccessMessage = L10n.Settings.Reminders.NoAccess.general
-            return
-        }
-        
-        if observationType == .soundAccess && soundAccessDisabled {
-            notificationAccessMessage = L10n.Settings.Reminders.NoAccess.noSound
+            
+        } else {
+            isAccessGranted = false
+            notificationAccessTitle = ObservationType.generalAccess.title
+            symbolName = ObservationType.generalAccess.symbolName
         }
     }
     
