@@ -35,9 +35,10 @@ final class Preferences: ObservableObject {
         self.defaults = defaults
         
         Publishers
-            .Merge(
+            .Merge3(
                 $sizeCategory.dropFirst().map { _ in UUID() },
-                $useSystemFontSize.dropFirst().map { _ in UUID() }
+                $useSystemFontSize.dropFirst().map { _ in UUID() },
+                $showTashkeel.dropFirst().map { _ in UUID() }
             )
             .subscribe(textSettingsChangePublishSubject)
             .store(in: &cancellables)
