@@ -29,7 +29,10 @@ struct SettingsView: View {
             Group {
                 appearanceSection
                 textSettingsSection
-                remindersSection
+                
+                if viewModel.mode != .textAndAppearance {
+                    remindersSection
+                }
             }
             .listRowBackground(Color.contentBackground)
         }
@@ -88,16 +91,13 @@ struct SettingsView: View {
             }
         }
     }
-
-    var arabicFontPicker: some View {
-        ItemPickerView(
-            selection: $viewModel.preferences.arabicFont,
-            items: ArabicFont.allCases
-        )
+    
+    var arabicFontsPicker: some View {
+        FontsView(viewModel: viewModel.getFontsViewModel(fontsType: .arabic))
     }
     
-    var fontsPicker: some View {
-        FontsView(viewModel: viewModel.fontsViewModel)
+    var translationFontsPicker: some View {
+        FontsView(viewModel: viewModel.getFontsViewModel(fontsType: .translation))
     }
 
     var themePicker: some View {
@@ -116,33 +116,46 @@ struct SettingsView: View {
                 .foregroundColor(Color.background)
                 .symbolRenderingMode(.multicolor)
         ) {
-            PickerView(
-                label: L10n.Settings.Text.arabicTextFont,
-                titleDisplayMode: .inline,
-                subtitle: viewModel.preferences.arabicFont.title,
-                destination: arabicFontPicker
-            )
+            NavigationLink {
+                arabicFontsPicker
+            } label: {
+                HStack {
+                    Text(L10n.Settings.Text.arabicTextFont)
+                        .font(Font.system(.body, design: .rounded))
+                        .foregroundColor(Color.text)
+                    Spacer()
+                    Text(viewModel.preferences.preferredArabicFont.name)
+                        .multilineTextAlignment(.trailing)
+                        .font(Font.system(.body, design: .rounded))
+                        .foregroundColor(Color.secondary)
+                }
+            }
             
             NavigationLink {
-                fontsPicker
+                translationFontsPicker
             } label: {
                 HStack {
                     Text(L10n.Settings.Text.translationTextFont)
                         .font(Font.system(.body, design: .rounded))
                         .foregroundColor(Color.text)
                     Spacer()
-                    Text(viewModel.preferences.preferredFont.name)
+                    Text(viewModel.preferences.preferredTranslationFont.name)
                         .multilineTextAlignment(.trailing)
                         .font(Font.system(.body, design: .rounded))
                         .foregroundColor(Color.secondary)
                 }
             }
 
-            Toggle(isOn: $viewModel.preferences.showTashkeel) {
+            Toggle(isOn: .init(get: {
+                return viewModel.selectedArabicFontSupportsVowels ? viewModel.preferences.showTashkeel : false
+            }, set: { newValue in
+                viewModel.preferences.showTashkeel = newValue
+            })) {
                 Text(L10n.Settings.Text.showTashkeel)
                     .padding(.vertical, 8)
                     .font(Font.system(.body, design: .rounded))
             }
+            .disabled(!viewModel.selectedArabicFontSupportsVowels)
             
             Toggle(isOn: $viewModel.preferences.useSystemFontSize) {
                 HStack {
@@ -276,7 +289,7 @@ struct SettingsView_Previews: PreviewProvider {
     static var previews: some View {
         SettingsView(
             viewModel: SettingsViewModel(
-                preferences: Preferences(),
+                preferences: Preferences.shared,
                 router: RootCoordinator(
                     preferences: Preferences.shared,
                     deeplinker: Deeplinker(),

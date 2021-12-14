@@ -13,13 +13,19 @@ struct CollapsableSection: View, Equatable {
     static func == (lhs: CollapsableSection, rhs: CollapsableSection) -> Bool {
         return lhs.isExpanded == rhs.isExpanded && lhs.text == rhs.text
     }
-
+    
     var title: String?
     let text: String
     let isArabicText: Bool
     @Binding var isExpanded: Bool
+    let font: AppFont
+    var sizeCategory: ContentSizeCategory? = Preferences.shared.sizeCategory
     var tintColor: Color = .accent
     var expandingCallback: (() -> Void)?
+    
+    var lineSpacing: CGFloat {
+        CGFloat(25 * (font.lineAdjustment ?? 1))
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: isExpanded && expandingCallback != nil ? 10 : 0) {
@@ -49,10 +55,12 @@ struct CollapsableSection: View, Equatable {
                     Group {
                         if isArabicText {
                             Text(.init(text))
-                                .font(Font.customFont(Preferences.shared.arabicFont.fontName, style: .title1, sizeCategory: Preferences.shared.sizeCategory))
+                                .font(Font.customFont(font, style: .title1, sizeCategory: sizeCategory))
+                                .lineSpacing(lineSpacing)
                         } else {
                             Text(.init(text))
-                                .font(Font.customFont(style: .body))
+                                .font(Font.customFont(font, style: .body))
+                                .lineSpacing(lineSpacing)
                         }
                     }
                     .multilineTextAlignment(isArabicText ? .trailing : .leading)
@@ -70,6 +78,14 @@ struct CollapsableSection: View, Equatable {
 
 struct CollapsableSection_Previews: PreviewProvider {
     static var previews: some View {
-        /*@START_MENU_TOKEN@*/Text("Hello, World!")/*@END_MENU_TOKEN@*/
+        CollapsableSection(
+            title: "Title",
+            text: "Text",
+            isArabicText: false,
+            isExpanded: .constant(true),
+            font: TranslationFont.iowanOldStyle,
+            tintColor: Color.blue,
+            expandingCallback: {}
+        )
     }
 }

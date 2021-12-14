@@ -251,7 +251,7 @@ struct AppIconPackInfoView: View {
 
 struct AppIconPackInfoView_Previews: PreviewProvider {
     static var previews: some View {
-        let vm = AppIconPackInfoViewModel(preferences: Preferences(), pack: .darsigova, icon: AppIcon.darsigova_1)
+        let vm = AppIconPackInfoViewModel(preferences: Preferences.shared, pack: .darsigova, icon: AppIcon.darsigova_1)
         return AppIconPackInfoView(viewModel: vm)
             .previewDevice("iPhone 12 mini")
             .padding()

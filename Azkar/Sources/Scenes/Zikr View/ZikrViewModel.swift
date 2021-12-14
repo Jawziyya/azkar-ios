@@ -28,7 +28,7 @@ final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
     let zikr: Zikr
     let title: String
     var text: String {
-        preferences.showTashkeel ? zikr.text : zikr.text.trimmingArabicVowels
+        preferences.showTashkeel && preferences.preferredArabicFont.hasTashkeelSupport ? zikr.text : zikr.text.trimmingArabicVowels
     }
     let preferences: Preferences
 
@@ -43,8 +43,10 @@ final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
 
     let hasTransliteration: Bool
     @Published var expandTransliteration: Bool
+    
+    @Published var textSettingsToken = UUID()
 
-    private var cancellabels: [AnyCancellable] = []
+    private var cancellables: Set<AnyCancellable> = []
 
     init(zikr: Zikr, preferences: Preferences, player: Player) {
         self.zikr = zikr
@@ -66,43 +68,21 @@ final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
         if zikr.hadith != nil {
             hadithViewModel = HadithViewModel(zikrViewModel: self, preferences: preferences)
         }
-
-        cancellabels = [
-            preferences.$expandTranslation.assign(to: \.expandTranslation, on: self),
-            preferences.$expandTransliteration.assign(to: \.expandTransliteration, on: self)
-        ]
-    }
-
-    func getText() -> NSAttributedString {
-        let string = self.text
-        let fontName = preferences.arabicFont.fontName
-        let size = textSize(forTextStyle: .title1, contentSizeCategory: preferences.sizeCategory.uiContentSizeCategory)
-
-        let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.lineHeightMultiple = 1.1
-        paragraphStyle.alignment = .center
-
-        let font = UIFont(name: fontName, size: size) ?? UIFont.systemFont(ofSize: size)
-
-        let text = NSMutableAttributedString(
-            string: string,
-            attributes: [
-                .font: font,
-                .foregroundColor: UIColor(Color.text),
-                .paragraphStyle: paragraphStyle
-            ]
+        
+        cancellables.insert(
+            preferences.$expandTranslation.assign(to: \.expandTranslation, on: self)
         )
 
-        if fontName == ArabicFont.KFGQP.fontName {
-            let regex = try! NSRegularExpression(pattern: "،", options: [])
-            regex.enumerateMatches(in: string, options: [], range: string.nsRange) { result, _, _ in
-                if let range = result?.range {
-                    text.addAttribute(.font, value: UIFont(name: ArabicFont.adobe.fontName, size: size)!, range: range)
-                }
+        cancellables.insert(
+            preferences.$expandTransliteration.assign(to: \.expandTransliteration, on: self)
+        )
+        
+        preferences.fontSettingsChangesPublisher()
+            .receive(on: RunLoop.main)
+            .sink { [unowned self] id in
+                self.textSettingsToken = id
             }
-        }
-
-        return text
+            .store(in: &cancellables)
     }
 
 }

@@ -2,7 +2,7 @@
 
 import SwiftUI
 
-private let preferences = Preferences()
+private let preferences = Preferences.shared
 
 var colorTheme: ColorTheme {
     preferences.colorTheme

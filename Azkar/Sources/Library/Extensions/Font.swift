@@ -53,14 +53,14 @@ func textSize(forTextStyle textStyle: UIFont.TextStyle, contentSizeCategory: UIC
 
 extension Font {
     
-    static func customFont(_ font: AppFont = Preferences.shared.preferredFont, style: UIFont.TextStyle = .body, sizeCategory: ContentSizeCategory? = Preferences.shared.sizeCategory) -> Font {
+    static func customFont(_ font: AppFont, style: UIFont.TextStyle = .body, sizeCategory: ContentSizeCategory? = Preferences.shared.sizeCategory, fixedSize: Bool = !Preferences.shared.useSystemFontSize) -> Font {
         let size = textSize(forTextStyle: style, contentSizeCategory: sizeCategory?.uiContentSizeCategory)
         let named = font.postscriptName
         let adjustment = CGFloat(font.sizeAdjustment ?? 0)
-        if Preferences.shared.useSystemFontSize {
-            return Font.custom(named, size: size + adjustment)
-        } else {
+        if fixedSize {
             return Font.custom(named, fixedSize: size + adjustment)
+        } else {
+            return Font.custom(named, size: size + adjustment)
         }
     }
     

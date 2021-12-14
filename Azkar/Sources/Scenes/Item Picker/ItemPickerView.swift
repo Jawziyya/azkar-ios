@@ -106,7 +106,7 @@ struct ItemPickerView_Previews: PreviewProvider {
 
     static var previews: some View {
         let items = TestItems.allCases
-        Preferences().colorTheme = .purpleRose
+        Preferences.shared.colorTheme = .purpleRose
         return ItemPickerView(
             selection: .constant(items.randomElement()!),
             header: "Header",

@@ -15,7 +15,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
 
     private let deeplinker = Deeplinker()
-    private let preferences = Preferences()
+    private let preferences = Preferences.shared
 
     private var cancellables = Set<AnyCancellable>()
     private var rootCoordinator: RootCoordinator?

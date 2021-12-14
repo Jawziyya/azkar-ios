@@ -25,7 +25,23 @@ let defaultJumuaReminderTime: Date = {
     return components.date ?? Date()
 }()
 
-final class Preferences {
+final class Preferences: ObservableObject {
+    
+    private let defaults: UserDefaults
+    private let textSettingsChangePublishSubject = PassthroughSubject<UUID, Never>()
+    private var cancellables = Set<AnyCancellable>()
+    
+    private init(defaults: UserDefaults = .standard) {
+        self.defaults = defaults
+        
+        Publishers
+            .Merge(
+                $sizeCategory.dropFirst().map { _ in UUID() },
+                $useSystemFontSize.dropFirst().map { _ in UUID() }
+            )
+            .subscribe(textSettingsChangePublishSubject)
+            .store(in: &cancellables)
+    }
     
     static var shared = Preferences()
 
@@ -37,9 +53,6 @@ final class Preferences {
 
     @Preference(Keys.expandTransliteration, defaultValue: true)
     var expandTransliteration: Bool
-
-    @Preference(Keys.arabicFont, defaultValue: .noto)
-    var arabicFont: ArabicFont
 
     @Preference(Keys.showTashkeel, defaultValue: true)
     var showTashkeel
@@ -80,9 +93,6 @@ final class Preferences {
     @Preference(Keys.sizeCategory, defaultValue: ContentSizeCategory.medium)
     var sizeCategory
     
-    @Preference(Keys.preferredFont, defaultValue: AppFont.iowanOldStyle)
-    var preferredFont: AppFont
-    
     @Preference(Keys.preferredAdhkarReminderSound, defaultValue: ReminderSound.standard)
     var adhkarReminderSound: ReminderSound
     
@@ -92,6 +102,46 @@ final class Preferences {
     @Preference(Keys.enableProFeatures, defaultValue: false)
     var enableProFeatures: Bool
     
+    
+    private func getFont<T: AppFont & Decodable>(_ key: String) -> T? {
+        guard
+            let data = defaults.data(forKey: key),
+            let font = try? JSONDecoder().decode(T.self, from: data) else {
+                return nil
+            }
+        return font
+    }
+    
+    func setPreferredArabicFont(font: AppFont) {
+        guard let font = font as? ArabicFont, let data = try? JSONEncoder().encode(font) else {
+            return
+        }
+        defaults.set(data, forKey: Keys.arabicFont)
+        textSettingsChangePublishSubject.send(UUID())
+    }
+    
+    func setPreferredTranslationFont(font: AppFont) {
+        guard let font = font as? TranslationFont, let data = try? JSONEncoder().encode(font) else {
+            return
+        }
+        defaults.set(data, forKey: Keys.preferredFont)
+        textSettingsChangePublishSubject.send(UUID())
+    }
+    
+    var preferredArabicFont: ArabicFont {
+        guard let font: ArabicFont = getFont(Keys.arabicFont) else {
+            return ArabicFont.noto
+        }
+        return font
+    }
+    
+    var preferredTranslationFont: TranslationFont {
+        guard let font: TranslationFont = getFont(Keys.preferredFont) else {
+            return TranslationFont.iowanOldStyle
+        }
+        return font
+    }
+    
     private var notificationSubscription: AnyCancellable?
 
     func storageChangesPublisher() -> AnyPublisher<Void, Never> {
@@ -100,6 +150,10 @@ final class Preferences {
             .map { _ in }
             .receive(on: RunLoop.main)
             .eraseToAnyPublisher()
+    }
+    
+    func fontSettingsChangesPublisher() -> AnyPublisher<UUID, Never> {
+        textSettingsChangePublishSubject.share().eraseToAnyPublisher()
     }
 
 }

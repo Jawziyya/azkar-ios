@@ -2,65 +2,47 @@
 
 import SwiftUI
 
-struct AppFontViewModel: Identifiable, Equatable {
-    
-    private static let baseURL = URL(string: "https://azkar.ams3.digitaloceanspaces.com/media/fonts/files")!
-    
-    let id = UUID()
-    let font: AppFont
-    let name: String
-    let imageURL: URL?
-    let zipFileURL: URL?
-    
-    init(font: AppFont) {
-        self.font = font
-        name = font.name
-        let langId: String
-        switch languageIdentifier {
-        case .ar: langId = "en"
-        default: langId = languageIdentifier.rawValue
-        }
-        
-        let referenceName = font.referenceName
-        if referenceName != AppFont.defaultFontName {
-            imageURL = AppFontViewModel.baseURL.appendingPathComponent("\(referenceName)/\(referenceName)_\(langId).png")
-            zipFileURL = AppFontViewModel.baseURL.appendingPathComponent(referenceName).appendingPathComponent("\(referenceName).zip")
-        } else {
-            imageURL = nil
-            zipFileURL = nil
-        }
-    }
-}
-
 final class FontsViewModel: ObservableObject {
     
     @Published var didLoadData = false
     @Published var fonts: [FontsSection] = [
-        FontsSection(type: .appFont(.serif), fonts: [.placeholder, .placeholder, .placeholder].map(AppFontViewModel.init)),
-        FontsSection(type: .appFont(.sansSerif), fonts: [.placeholder, .placeholder].map(AppFontViewModel.init)),
-        FontsSection(type: .appFont(.handwritten), fonts: [.placeholder, .placeholder, .placeholder].map(AppFontViewModel.init)),
-        FontsSection(type: .appFont(.decorative), fonts: [.placeholder].map(AppFontViewModel.init)),
+        FontsSection(type: .appFont(TranslationFont.FontType.serif), fonts: [TranslationFont.placeholder, TranslationFont.placeholder, TranslationFont.placeholder].map(AppFontViewModel.init)),
+        FontsSection(type: .appFont(TranslationFont.FontType.sansSerif), fonts: [TranslationFont.placeholder, TranslationFont.placeholder].map(AppFontViewModel.init)),
+        FontsSection(type: .appFont(TranslationFont.FontType.handwritten), fonts: [TranslationFont.placeholder, TranslationFont.placeholder, TranslationFont.placeholder].map(AppFontViewModel.init)),
+        FontsSection(type: .appFont(TranslationFont.FontType.decorative), fonts: [TranslationFont.placeholder].map(AppFontViewModel.init)),
     ]
     @Published var preferredFont: AppFont
-    @Published var loadingFonts = Set<AppFont>()
+    @Published var loadingFonts = Set<UUID>()
     
     struct FontsSection: Equatable, Identifiable {
         
         enum FontsSectionType: Equatable {
+            
+            static func == (lhs: FontsViewModel.FontsSection.FontsSectionType, rhs: FontsViewModel.FontsSection.FontsSectionType) -> Bool {
+                switch (lhs, rhs) {
+                case (.stantard, .stantard):
+                    return true
+                case (.appFont(let lhsStyle), .appFont(let rhsStyle)):
+                    return lhsStyle.key == rhsStyle.key
+                default:
+                    return false
+                }
+            }
+            
             case stantard
-            case appFont(AppFont.FontType)
+            case appFont(AppFontStyle)
             
             var id: String {
                 switch self {
                 case .stantard:
                     return "standard"
-                case .appFont(let type):
-                    return "\(type)"
+                case .appFont(let style):
+                    return style.key
                 }
             }
             
-            init(from fontType: AppFont.FontType) {
-                self = .appFont(fontType)
+            init(from fontStyle: AppFontStyle) {
+                self = .appFont(fontStyle)
             }
             
             var title: String {
@@ -77,24 +59,35 @@ final class FontsViewModel: ObservableObject {
     private let preferences: Preferences
     private let subscriptionManager: SubscriptionManagerType
     private let subscribeScreenTrigger: () -> Void
+    let fontsType: FontsType
     
     init(
+        fontsType: FontsType,
         service: FontsServiceType,
-        preferences: Preferences = .init(),
+        preferences: Preferences = Preferences.shared,
         subscriptionManager: SubscriptionManagerType = SubscriptionManagerFactory.create(),
         subscribeScreenTrigger: @escaping () -> Void
     ) {
+        self.fontsType = fontsType
         self.service = service
         self.preferences = preferences
         self.subscriptionManager = subscriptionManager
         self.subscribeScreenTrigger = subscribeScreenTrigger
-        preferredFont = preferences.preferredFont
+        if fontsType == .arabic {
+            preferredFont = preferences.preferredArabicFont
+        } else {
+            preferredFont = preferences.preferredTranslationFont
+        }
     }
     
     func changeSelectedFont(_ font: AppFontViewModel) {
         @Sendable func setFont() {
             preferredFont = font.font
-            preferences.preferredFont = font.font
+            if fontsType == .arabic {
+                preferences.setPreferredArabicFont(font: font.font)
+            } else {
+                preferences.setPreferredTranslationFont(font: font.font)
+            }
         }
         
         if font.zipFileURL != nil, subscriptionManager.isProUser() == false {
@@ -103,11 +96,11 @@ final class FontsViewModel: ObservableObject {
         }
         
         if let url = font.zipFileURL, isFontInstalled(font) == false {
-            loadingFonts.insert(font.font)
+            loadingFonts.insert(font.id)
             Task(priority: .userInitiated) { [unowned self] in
                 let fileURLs = try await service.loadFont(url: url)
                 FontsHelper.registerFonts(fileURLs)
-                loadingFonts.remove(font.font)
+                loadingFonts.remove(font.id)
                 DispatchQueue.main.async(execute: setFont)
             }
         } else {
@@ -125,33 +118,55 @@ final class FontsViewModel: ObservableObject {
     
     func loadData() {
         Task(priority: TaskPriority.userInitiated) {
-            try await loadFonts()
+            do {
+                try await loadFonts()
+            } catch {
+                print(error.localizedDescription)
+            }
         }
     }
     
     private func loadFonts() async throws {
         let showNonCyrillicFonts = languageIdentifier != .ru
-        let fonts = try await service.loadFonts()
+        let isArabicFonts = fontsType == .arabic
+        let fonts: [AppFont]
+        if isArabicFonts {
+            let arabicFonts: [ArabicFont] = try await service.loadFonts(of: .arabic)
+            fonts = arabicFonts
+        } else {
+            let translationFonts: [TranslationFont] = try await service.loadFonts(of: .translation)
+            fonts = translationFonts
+        }
         DispatchQueue.main.async {
-            let grouped = Dictionary(grouping: fonts, by: \.type)
-            var sections = grouped.keys.sorted(by: { $0.rawValue < $1.rawValue })
-                .map { type -> FontsSection in
-                    let fonts = grouped[type] ?? []
+            let standardFonts = self.fontsType == .arabic ? ArabicFont.standardFonts : TranslationFont.standardFonts
+            let grouped = Dictionary(grouping: fonts, by: \.style.key)
+            var sections = grouped.keys.sorted(by: { $0 < $1 })
+                .compactMap { style -> FontsSection? in
+                    let fonts = grouped[style] ?? []
+                    guard let style = fonts.first?.style else {
+                        return nil
+                    }
                     let fontViewModels = fonts
                         .filter { font in
-                            return showNonCyrillicFonts ? true : font.supportsCyryllicCharacters
+                            if !isArabicFonts && !showNonCyrillicFonts, let translationFont = font as? TranslationFont {
+                                return translationFont.supportsCyryllicCharacters
+                            }
+                            return true
                         }
                         .map(AppFontViewModel.init)
-                    return FontsSection(type: .init(from: type), fonts: fontViewModels)
+                    return FontsSection(type: FontsSection.FontsSectionType(from: style), fonts: fontViewModels)
                 }
-            sections.insert(FontsSection(type: .stantard, fonts: AppFont.standardFonts.map(AppFontViewModel.init)), at: 0)
+            sections.insert(FontsSection(
+                type: .stantard,
+                fonts: standardFonts.map { AppFontViewModel(font: $0) }
+            ), at: 0)
             self.fonts = sections
             self.didLoadData = true
         }
     }
     
     static var placeholder: FontsViewModel {
-        FontsViewModel(service: DemoFontsService(), subscribeScreenTrigger: {})
+        FontsViewModel(fontsType: .translation, service: DemoFontsService(), subscribeScreenTrigger: {})
     }
     
 }

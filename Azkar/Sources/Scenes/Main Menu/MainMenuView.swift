@@ -164,12 +164,12 @@ struct MainMenuView: View {
 
             VStack(spacing: 8) {
                 Text(viewModel.fadlText)
-                    .font(Font.customFont(style: .caption1))
+                    .font(Font.customFont(viewModel.preferences.preferredTranslationFont, style: .caption1))
                     .tracking(1.2)
                     .foregroundColor(Color.text.opacity(0.7))
 
                 Text(viewModel.fadlSource)
-                    .font(Font.customFont(viewModel.preferences.preferredFont, style: .caption2))
+                    .font(Font.customFont(viewModel.preferences.preferredTranslationFont, style: .caption2))
                     .foregroundColor(Color.secondaryText.opacity(0.5))
             }
             .shadow(color: Color.text.opacity(0.5), radius: 0.5, x: 0.0, y: 0.05)
@@ -184,7 +184,7 @@ struct MainMenuView: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        MainMenuView(viewModel: MainMenuViewModel(router: RootCoordinator(preferences: Preferences(), deeplinker: Deeplinker(), player: Player.init(player: AudioPlayer())), preferences: Preferences(), player: .test))
+        MainMenuView(viewModel: MainMenuViewModel(router: RootCoordinator(preferences: Preferences.shared, deeplinker: Deeplinker(), player: Player.init(player: AudioPlayer())), preferences: Preferences.shared, player: .test))
             .environment(\.colorScheme, .light)
     }
 }

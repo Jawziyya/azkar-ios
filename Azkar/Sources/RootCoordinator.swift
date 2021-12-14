@@ -15,6 +15,7 @@ enum RootSection: Equatable {
     case root
     case category(ZikrCategory)
     case zikr(_ zikr: Zikr, index: Int? = nil)
+    case modalSettings(SettingsViewModel.SettingsMode)
     case settings(SettingsSection)
     case aboutApp
     case subscribe
@@ -129,7 +130,7 @@ private extension RootCoordinator {
         switch section {
         case .aboutApp, .category, .root, .settings:
             selectedZikrPageIndex.send(0)
-        case .zikr, .subscribe, .dismissModal:
+        case .zikr, .subscribe, .dismissModal, .modalSettings:
             break
         }
         
@@ -189,6 +190,8 @@ private extension RootCoordinator {
             let view = ZikrView(viewModel: viewModel)
             let viewController = UIHostingController(rootView: view)
             
+            viewController.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "gear"), style: .plain, target: nil, action: nil)
+            
             if rootViewController.isPadInterface {
                 rootViewController.replaceDetailViewController(with: viewController)
             } else {
@@ -225,6 +228,19 @@ private extension RootCoordinator {
                 break
 
             }
+            
+        case .modalSettings(let mode):
+            let viewModel = SettingsViewModel(mode: mode, preferences: preferences, notificationsHandler: NotificationsHandler.shared, router: self)
+            let view = SettingsView(viewModel: viewModel)
+            let viewController = UIHostingController(rootView: view)
+            viewController.title = L10n.Settings.title
+            let navigationController = UINavigationController(rootViewController: viewController)
+            if UIDevice.current.isIpadInterface {
+                navigationController.modalPresentationStyle = .formSheet
+            } else {
+                navigationController.modalPresentationStyle = .fullScreen
+            }
+            present(navigationController)
 
         case .aboutApp:
             let viewModel = AppInfoViewModel(preferences: preferences)
@@ -238,7 +254,11 @@ private extension RootCoordinator {
                 self.trigger(.dismissModal)
             })
             let viewController = UIHostingController(rootView: view)
-            viewController.modalPresentationStyle = .pageSheet
+            if UIDevice.current.isIpadInterface {
+                viewController.modalPresentationStyle = .pageSheet
+            } else {
+                viewController.modalPresentationStyle = .fullScreen
+            }
             (rootViewController.presentedViewController ?? rootViewController).present(viewController, animated: true)
             
         case .dismissModal:

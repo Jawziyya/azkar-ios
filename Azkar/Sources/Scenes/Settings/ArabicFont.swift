@@ -1,56 +1,73 @@
-//
-//  ArabicFont.swift
-//  Azkar
-//
-//  Created by Abdurahim Jauzee on 13.05.2020.
 //  Copyright © 2020 Al Jawziyya. All rights reserved.
-//
 
 import SwiftUI
 
-enum ArabicFont: String, CaseIterable, Identifiable, Codable, Hashable, PickableItem {
-    case standard, adobe, KFGQP, noto, scheherazade
-
-    var fontName: String {
-        switch self {
-        case .standard:
-            return ""
-        case .adobe:
-            return "AdobeArabic-Regular"
-        case .KFGQP:
-            return "KFGQPCUthmanicScriptHAFS"
-        case .noto:
-            return "NotoNaskhArabicUI"
-        case .scheherazade:
-            return "Scheherazade"
+struct ArabicFont: AppFont, Identifiable, Codable, Hashable {
+    
+    enum FontType: Int, Codable, AppFontStyle {
+        case naskh = 0, riqa = 1, thuluth = 2, kufi = 3, maghribi = 4, modern = 5, other = 6
+        
+        var key: String {
+            switch self {
+            case .naskh: return "arabic.naskh"
+            case .riqa: return "arabic.riqa"
+            case .thuluth: return "arabic.thuluth"
+            case .kufi: return "arabic.kufi"
+            case .maghribi: return "arabic.maghribi"
+            case .modern: return "arabic.modern"
+            case .other: return "arabic.other"
+            }
         }
     }
-
+    
     var id: String {
-        return rawValue
+        postscriptName
     }
-
-    var title: String {
-        switch self {
-        case .standard:
-            return L10n.Settings.Text.standardFontName
-        case .adobe:
-            return rawValue.capitalized
-        case .KFGQP:
-            return rawValue
-        case .noto:
-            return "Noto Nashkh"
-        default:
-            return fontName
-        }
+    
+    var style: AppFontStyle {
+        type
     }
-
-    var subtitle: String? {
-        return "باسم الله"
+    
+    var name: String
+    
+    var referenceName: String = STANDARD_FONT_REFERENCE_NAME
+    
+    var postscriptName: String
+    
+    var sizeAdjustment: Float?
+    
+    var lineAdjustment: Float?
+    
+    var type: FontType = .naskh
+    
+    private var supportsTashkeel: Int? = 1
+    
+    var hasTashkeelSupport: Bool {
+        supportsTashkeel == 1
     }
+    
+}
 
-    var subtitleFont: Font {
-        return Font.custom(fontName, size: textSize(forTextStyle: .callout))
+extension ArabicFont {
+    
+    static var standardFonts: [AppFont] {
+        [systemArabic, adobe, KFGQP, noto]
     }
-
+    
+    static var systemArabic: ArabicFont {
+        ArabicFont(name: L10n.Settings.Text.standardFontName, postscriptName: "")
+    }
+    
+    static var adobe: ArabicFont {
+        ArabicFont(name: "Adobe", postscriptName: "AdobeArabic-Regular")
+    }
+    
+    static var KFGQP: ArabicFont {
+        ArabicFont(name: "KFGQP", postscriptName: "KFGQPCUthmanicScriptHAFS")
+    }
+    
+    static var noto: ArabicFont {
+        ArabicFont(name: "Noto Naskh", postscriptName: "NotoNaskhArabicUI")
+    }
+    
 }

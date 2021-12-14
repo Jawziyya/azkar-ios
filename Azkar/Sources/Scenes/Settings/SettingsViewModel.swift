@@ -13,6 +13,10 @@ import UserNotifications
 
 final class SettingsViewModel: ObservableObject {
     
+    enum SettingsMode {
+        case standart, textAndAppearance
+    }
+    
     private let notificationsHandler: NotificationsHandler
     lazy var notificationsDisabledViewModel: NotificationsDisabledViewModel = .init(observationType: .generalAccess, didChangeCallback: objectWillChange.send)
 
@@ -24,8 +28,8 @@ final class SettingsViewModel: ObservableObject {
         .init(preferences: preferences)
     }
     
-    var fontsViewModel: FontsViewModel {
-        FontsViewModel(service: FontsService(), subscribeScreenTrigger: { [unowned self] in
+    func getFontsViewModel(fontsType: FontsType) -> FontsViewModel {
+        FontsViewModel(fontsType: fontsType, service: FontsService(), subscribeScreenTrigger: { [unowned self] in
             self.router.trigger(.subscribe)
         })
     }
@@ -48,6 +52,10 @@ final class SettingsViewModel: ObservableObject {
         })
     }
     
+    var selectedArabicFontSupportsVowels: Bool {
+        return preferences.preferredArabicFont.hasTashkeelSupport
+    }
+    
     private let formatter: DateFormatter
 
     var preferences: Preferences
@@ -58,8 +66,10 @@ final class SettingsViewModel: ObservableObject {
 
     private var cancellables = Set<AnyCancellable>()
     private unowned let router: RootRouter
+    let mode: SettingsMode
 
-    init(preferences: Preferences, notificationsHandler: NotificationsHandler = .shared, router: RootRouter) {
+    init(mode: SettingsMode = .standart, preferences: Preferences, notificationsHandler: NotificationsHandler = .shared, router: RootRouter) {
+        self.mode = mode
         self.preferences = preferences
         self.notificationsHandler = notificationsHandler
         self.router = router

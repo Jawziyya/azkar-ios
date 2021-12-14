@@ -213,6 +213,6 @@ struct AppIconPackListView: View {
 
 struct AppIconPackListView_Previews: PreviewProvider {
     static var previews: some View {
-        AppIconPackListView(viewModel: AppIconPackListViewModel(preferences: Preferences()))
+        AppIconPackListView(viewModel: AppIconPackListViewModel(preferences: Preferences.shared))
     }
 }

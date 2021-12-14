@@ -78,7 +78,7 @@ struct AppInfoView: View {
                 VStack(spacing: 0) {
                     HStack(spacing: 0) {
                         Text("app-name", comment: "App name.")
-                            .font(Font.system(.title3, design: .rounded).smallCaps().weight(.heavy))
+                            .font(Font.system(.title2, design: .rounded).smallCaps().weight(.heavy))
                             .frame(alignment: .center)
                             .foregroundColor(Color.accent)
                         if viewModel.subscriptionManager.isProUser() {
@@ -124,7 +124,7 @@ struct AppInfoView: View {
 
 struct LegalInfoView_Previews: PreviewProvider {
     static var previews: some View {
-        AppInfoView(viewModel: AppInfoViewModel(preferences: Preferences()))
+        AppInfoView(viewModel: AppInfoViewModel(preferences: Preferences.shared))
             .colorScheme(.dark)
     }
 }

@@ -30,7 +30,7 @@ final class InAppPurchaseService {
 
     static let shared = InAppPurchaseService()
 
-    private let preferences = Preferences()
+    private let preferences = Preferences.shared
     private let storeKitManager = SwiftyStoreKit.self
     private var cachedProducts: [String: ProductInfo] = [:]
 

@@ -126,6 +126,10 @@ internal enum L10n {
     internal static let standardFont = L10n.tr("Localizable", "fonts.standard-font")
     /// Fonts
     internal static let title = L10n.tr("Localizable", "fonts.title")
+    internal enum Arabic {
+      /// 
+      internal static let info = L10n.tr("Localizable", "fonts.arabic.info")
+    }
     internal enum `Type` {
       /// Decorative
       internal static let decorative = L10n.tr("Localizable", "fonts.type.decorative")
@@ -137,6 +141,22 @@ internal enum L10n {
       internal static let serif = L10n.tr("Localizable", "fonts.type.serif")
       /// Standard
       internal static let standard = L10n.tr("Localizable", "fonts.type.standard")
+      internal enum Arabic {
+        /// Kufi
+        internal static let kufi = L10n.tr("Localizable", "fonts.type.arabic.kufi")
+        /// Maghribi
+        internal static let maghribi = L10n.tr("Localizable", "fonts.type.arabic.maghribi")
+        /// Modern
+        internal static let modern = L10n.tr("Localizable", "fonts.type.arabic.modern")
+        /// Naskh
+        internal static let naskh = L10n.tr("Localizable", "fonts.type.arabic.naskh")
+        /// Other
+        internal static let other = L10n.tr("Localizable", "fonts.type.arabic.other")
+        /// Riqa
+        internal static let riqa = L10n.tr("Localizable", "fonts.type.arabic.riqa")
+        /// Thuluth
+        internal static let thuluth = L10n.tr("Localizable", "fonts.type.arabic.thuluth")
+      }
     }
   }
 

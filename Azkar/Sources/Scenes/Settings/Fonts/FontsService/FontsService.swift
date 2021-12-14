@@ -6,15 +6,16 @@ import ZIPFoundation
 
 struct FontsService: FontsServiceType {
     
-    func loadFonts() async throws -> [AppFont] {
-        let fontsListURL = URL(string: "https://azkar.ams3.digitaloceanspaces.com/media/fonts/fonts.json")!
+    func loadFonts<T>(of type: FontsType) async throws -> [T] where T : AppFont, T : Decodable {
+        let fontsListURL = URL(string: type.url)!
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
         return try await AF.request(
             fontsListURL,
-            method: HTTPMethod.get
+            method: HTTPMethod.get,
+            headers: ["Cache-Control": "max-age=3600"]
         )
-        .asyncDecodable(of: [AppFont].self, decoder: decoder)
+        .asyncDecodable(of: [T].self, decoder: decoder)
     }
     
     func loadFont(url: URL) async throws -> [URL] {

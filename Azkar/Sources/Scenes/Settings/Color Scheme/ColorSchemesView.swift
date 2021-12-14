@@ -39,7 +39,7 @@ final class ColorSchemesViewModel: ObservableObject {
     }
     
     static var placeholder: ColorSchemesViewModel {
-        ColorSchemesViewModel(preferences: Preferences(), subscribeScreenTrigger: {})
+        ColorSchemesViewModel(preferences: Preferences.shared, subscribeScreenTrigger: {})
     }
     
 }

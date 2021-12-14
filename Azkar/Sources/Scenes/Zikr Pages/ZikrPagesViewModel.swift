@@ -32,15 +32,19 @@ struct ZikrPagesViewModel {
         router.trigger(.zikr(vm.zikr, index: index))
     }
     
+    func navigateToSettings() {
+        router.trigger(.modalSettings(.textAndAppearance))
+    }
+    
     static var placeholder: ZikrPagesViewModel {
         AzkarListViewModel(
             router: RootCoordinator(
-                preferences: Preferences(), deeplinker: Deeplinker(),
+                preferences: Preferences.shared, deeplinker: Deeplinker(),
                 player: Player(player: AppDelegate.shared.player)),
             category: .other,
             title: ZikrCategory.morning.title,
             azkar: [],
-            preferences: Preferences(),
+            preferences: Preferences.shared,
             selectedPage: PassthroughSubject<Int, Never>().eraseToAnyPublisher()
         )
     }

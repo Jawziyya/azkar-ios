@@ -26,6 +26,13 @@ struct ZikrPagesView: View, Equatable {
             .onReceive(viewModel.selectedPage) { page in
                 self.page = page
             }
+            .toolbar {
+                ToolbarItem(id: "settings", placement: .navigationBarTrailing) {
+                    Button(action: viewModel.navigateToSettings) {
+                        Image(systemName: "textformat")
+                    }
+                }
+            }
     }
 
     var pagerView: some View {

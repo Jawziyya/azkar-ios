@@ -57,7 +57,8 @@ struct HadithView: View {
             CollapsableSection(
                 text: viewModel.text,
                 isArabicText: true,
-                isExpanded: .constant(true)
+                isExpanded: .constant(true),
+                font: viewModel.preferences.preferredArabicFont
             )
             .equatable()
         }
@@ -69,7 +70,8 @@ struct HadithView: View {
             title: nil,
             text: text,
             isArabicText: false,
-            isExpanded: .constant(true)
+            isExpanded: .constant(true),
+            font: viewModel.preferences.preferredTranslationFont
         )
     }
 
@@ -77,6 +79,6 @@ struct HadithView: View {
 
 struct HadithView_Previews: PreviewProvider {
     static var previews: some View {
-        HadithView(viewModel: HadithViewModel(hadith: Hadith.data[0], preferences: Preferences()))
+        HadithView(viewModel: HadithViewModel(hadith: Hadith.data[0], preferences: Preferences.shared))
     }
 }

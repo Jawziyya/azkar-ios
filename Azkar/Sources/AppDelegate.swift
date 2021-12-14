@@ -67,7 +67,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     private func registerUserDefaults() {
         let defaults: [String: Any] = [
-            Keys.arabicFont: ArabicFont.noto.fontName,
             Keys.expandTranslation: true,
             Keys.expandTransliteration: true,
             Keys.showTashkeel: true,

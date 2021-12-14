@@ -54,7 +54,7 @@ final class MainMenuViewModel: ObservableObject {
 
     let preferences: Preferences
 
-    private var cancellabels = Set<AnyCancellable>()
+    private var cancellables = Set<AnyCancellable>()
 
     private var isIpad: Bool {
         UIDevice.current.isIpad
@@ -155,24 +155,20 @@ final class MainMenuViewModel: ObservableObject {
                 }
             }
             .assign(to: \.title, on: self)
-            .store(in: &cancellabels)
+            .store(in: &cancellables)
 
         preferences.$enableFunFeatures
             .map { flag in flag && Date().isRamadanEidDays }
             .assign(to: \.enableEidBackground, on: self)
-            .store(in: &cancellabels)
+            .store(in: &cancellables)
         
-        preferences.$colorTheme
-            .sink(receiveValue: { [unowned self] _ in
+        preferences
+            .storageChangesPublisher()
+            .receive(on: RunLoop.main)
+            .sink { [unowned self] in
                 self.objectWillChange.send()
-            })
-            .store(in: &cancellabels)
-        
-        preferences.$preferredFont
-            .sink(receiveValue: { [unowned self] _ in
-                self.objectWillChange.send()
-            })
-            .store(in: &cancellabels)
+            }
+            .store(in: &cancellables)
     }
 
     private func hideNotificationsAccessMessage() {

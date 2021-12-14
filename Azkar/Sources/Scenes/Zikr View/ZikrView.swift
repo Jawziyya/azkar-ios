@@ -66,7 +66,7 @@ struct ZikrView: View {
                             .frame(maxWidth: 20, maxHeight: 15)
                             .foregroundColor(Color.accent)
                         Text(text)
-                            .font(.customFont(style: .footnote))
+                            .font(.customFont(viewModel.preferences.preferredTranslationFont, style: .footnote))
                     }
                     .padding()
                 }
@@ -96,9 +96,10 @@ struct ZikrView: View {
             CollapsableSection(
                 text: viewModel.text,
                 isArabicText: true,
-                isExpanded: .constant(true)
+                isExpanded: .constant(true),
+                font: viewModel.preferences.preferredArabicFont
             )
-            .equatable()
+            .id(viewModel.textSettingsToken)
             .padding([.leading, .trailing, .bottom])
 
             viewModel.playerViewModel.flatMap { vm in
@@ -109,23 +110,36 @@ struct ZikrView: View {
 
     // MARK: - Translation
     private func getTranslationView(text: String) -> some View {
-        CollapsableSection(title: L10n.Read.translation, text: text, isArabicText: false, isExpanded: $viewModel.expandTranslation, tintColor: tintColor) {
+        CollapsableSection(
+            title: L10n.Read.translation,
+            text: text, isArabicText: false,
+            isExpanded: $viewModel.expandTranslation,
+            font: viewModel.preferences.preferredTranslationFont,
+            tintColor: tintColor
+        ) {
             withAnimation(Animation.easeInOut(duration: 0.2)) {
                 self.viewModel.preferences.expandTranslation.toggle()
             }
         }
-        .equatable()
+        .id(viewModel.textSettingsToken)
         .padding()
     }
 
     // MARK: - Transliteration
     private func getTransliterationView(text: String) -> some View {
-        CollapsableSection(title: L10n.Read.transcription, text: text, isArabicText: false, isExpanded: $viewModel.expandTransliteration, tintColor: tintColor) {
+        CollapsableSection(
+            title: L10n.Read.transcription,
+            text: text,
+            isArabicText: false,
+            isExpanded: $viewModel.expandTransliteration,
+            font: viewModel.preferences.preferredTranslationFont,
+            tintColor: tintColor
+        ) {
             withAnimation(Animation.easeInOut(duration: 0.2)) {
                 self.viewModel.preferences.expandTransliteration.toggle()
             }
         }
-        .equatable()
+        .id(viewModel.textSettingsToken)
         .padding()
     }
 
@@ -192,7 +206,7 @@ struct ZikrView: View {
                 .frame(width: 15, height: 15)
                 .foregroundColor(Color.accent)
             Text(text)
-                .font(Font.customFont(style: .footnote))
+                .font(Font.customFont(viewModel.preferences.preferredTranslationFont, style: .footnote))
         }
         .padding()
     }
@@ -212,7 +226,7 @@ struct ZikrView: View {
 @available(iOS 15, *)
 struct ZikrView_Previews: PreviewProvider {
     static var previews: some View {
-        let prefs = Preferences()
+        let prefs = Preferences.shared
         prefs.colorTheme = .sea
         return ZikrView(viewModel: ZikrViewModel(zikr: Zikr.data[3], preferences: prefs, player: .test))
             .environment(\.colorScheme, .dark)

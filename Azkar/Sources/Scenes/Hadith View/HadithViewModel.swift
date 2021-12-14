@@ -26,7 +26,7 @@ struct HadithViewModel {
     init(hadith: Hadith, preferences: Preferences) {
         self.preferences = preferences
         self.hadith = hadith
-        text = (preferences.showTashkeel ? hadith.text : hadith.text.trimmingArabicVowels).trimmingCharacters(in: .whitespacesAndNewlines)
+        text = (preferences.showTashkeel && preferences.preferredArabicFont.hasTashkeelSupport ? hadith.text : hadith.text.trimmingArabicVowels).trimmingCharacters(in: .whitespacesAndNewlines)
         translation = hadith.translation?.trimmingCharacters(in: .whitespacesAndNewlines)
         source = hadith.source
     }
