@@ -84,5 +84,13 @@ final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
             }
             .store(in: &cancellables)
     }
+    
+    func increaseFontSize() {
+        preferences.sizeCategory = preferences.sizeCategory.bigger()
+    }
+    
+    func decreaseFontSize() {
+        preferences.sizeCategory = preferences.sizeCategory.smaller()
+    }
 
 }

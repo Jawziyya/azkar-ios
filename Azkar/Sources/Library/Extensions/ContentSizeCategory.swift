@@ -89,5 +89,19 @@ extension ContentSizeCategory: Codable {
             .accessibilityLarge
         ]
     }
+    
+    func bigger() -> ContentSizeCategory {
+        let all = ContentSizeCategory.availableCases
+        let index = all.firstIndex(of: self)!
+        let nextIndex = min(all.count - 1, index + 1)
+        return all[nextIndex]
+    }
+    
+    func smaller() -> ContentSizeCategory {
+        let all = ContentSizeCategory.availableCases
+        let index = all.firstIndex(of: self)!
+        let prevIndex = max(0, index - 1)
+        return all[prevIndex]
+    }
 
 }

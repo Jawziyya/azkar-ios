@@ -27,6 +27,8 @@ struct ZikrView: View {
         }
         .saturation(viewModel.preferences.colorTheme == .ink ? 0 : 1)
         .background(Color.background.edgesIgnoringSafeArea(.all))
+        .onKeyboardShortcut("+", modifiers: [.command], perform: viewModel.increaseFontSize)
+        .onKeyboardShortcut("-", modifiers: [.command], perform: viewModel.decreaseFontSize)
     }
 
     private func getContent() -> some View {
