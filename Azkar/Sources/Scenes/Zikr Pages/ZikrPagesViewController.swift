@@ -2,6 +2,7 @@
 
 import UIKit
 import SwiftUI
+import MessageUI
 
 final class ZikrPagesViewController: UIHostingController<ZikrPagesView> {
     
@@ -36,7 +37,12 @@ final class ZikrPagesViewController: UIHostingController<ZikrPagesView> {
     
     @objc private func share(_ sender: UIBarButtonItem) {
         let currentViewModel = viewModel.azkar[viewModel.page]
-        let activityController = UIActivityViewController(activityItems: [currentViewModel.getShareText()], applicationActivities: nil)
+        let activityController = UIActivityViewController(
+            activityItems: [currentViewModel.getShareText()],
+            applicationActivities: [ZikrFeedbackActivity(prepareAction: { [unowned self] in
+                self.presentMailComposer()
+            })]
+        )
         activityController.excludedActivityTypes = [
             .init(rawValue: "com.apple.reminders.sharingextension")
         ]
@@ -48,6 +54,25 @@ final class ZikrPagesViewController: UIHostingController<ZikrPagesView> {
     
     @objc private func goToSettings(_ sender: UIBarButtonItem) {
         viewModel.navigateToSettings()
+    }
+    
+    private func presentMailComposer() {
+        guard MFMailComposeViewController.canSendMail() else {
+            UIApplication.shared.open(URL(string: "https://t.me/jawziyya_feedback")!)
+            return
+        }
+        let viewController = MFMailComposeViewController()
+        viewController.setToRecipients(["azkar.app@pm.me"])
+        viewController.mailComposeDelegate = self
+        present(viewController, animated: true)
+    }
+    
+}
+
+extension ZikrPagesViewController: MFMailComposeViewControllerDelegate {
+    
+    func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
+        dismiss(animated: true)
     }
     
 }

@@ -65,6 +65,8 @@ internal enum L10n {
     internal static let done = L10n.tr("Localizable", "common.done")
     /// Enable
     internal static let enable = L10n.tr("Localizable", "common.enable")
+    /// Report a problem
+    internal static let reportProblem = L10n.tr("Localizable", "common.report-problem")
     /// Restore
     internal static let restore = L10n.tr("Localizable", "common.restore")
     /// Share Azkar App
