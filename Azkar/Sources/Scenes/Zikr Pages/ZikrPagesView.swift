@@ -9,43 +9,37 @@
 import SwiftUI
 import AudioPlayer
 import Combine
+import SwiftUIX
 
 struct ZikrPagesView: View, Equatable {
 
     static func == (lhs: ZikrPagesView, rhs: ZikrPagesView) -> Bool {
-        lhs.viewModel.title == rhs.viewModel.title && lhs.page == rhs.page
+        lhs.viewModel.title == rhs.viewModel.title && lhs.viewModel.page == rhs.viewModel.page
     }
 
-    let viewModel: ZikrPagesViewModel
-
-    @State var page = 0
+    @ObservedObject var viewModel: ZikrPagesViewModel
 
     var body: some View {
         pagerView
             .background(Color.background.edgesIgnoringSafeArea(.all))
             .onReceive(viewModel.selectedPage) { page in
-                self.page = page
-            }
-            .toolbar {
-                ToolbarItem(id: "settings", placement: .navigationBarTrailing) {
-                    Button(action: viewModel.navigateToSettings) {
-                        Image(systemName: "textformat")
-                    }
-                }
+                self.viewModel.page = page
             }
     }
 
     var pagerView: some View {
-        PageView(
-            viewModel.azkar.map { zikr in
+        PaginationView(
+            axis: .horizontal,
+            transitionStyle: .scroll,
+            showsIndicators: false
+        ) {
+            ForEach(viewModel.azkar) { zikr in
                 LazyView(
                     ZikrView(viewModel: zikr)
                 )
-            },
-            currentPage: $page,
-            infinityScroll: false,
-            displayPageControl: false
-        )
+            }
+        }
+        .currentPageIndex($viewModel.page)
         .edgesIgnoringSafeArea(.bottom)
     }
 

@@ -9,7 +9,7 @@
 import UIKit
 import Combine
 
-struct ZikrPagesViewModel {
+final class ZikrPagesViewModel: ObservableObject {
 
     unowned let router: RootRouter
     let category: ZikrCategory
@@ -17,14 +17,16 @@ struct ZikrPagesViewModel {
     let azkar: [ZikrViewModel]
     let preferences: Preferences
     let selectedPage: AnyPublisher<Int, Never>
+    @Published var page = 0
 
-    init(router: RootRouter, category: ZikrCategory, title: String, azkar: [ZikrViewModel], preferences: Preferences, selectedPage: AnyPublisher<Int, Never>) {
+    init(router: RootRouter, category: ZikrCategory, title: String, azkar: [ZikrViewModel], preferences: Preferences, selectedPagePublisher: AnyPublisher<Int, Never>, page: Int = 0) {
         self.router = router
         self.category = category
         self.title = title
         self.preferences = preferences
         self.azkar = azkar
-        self.selectedPage = selectedPage
+        self.selectedPage = selectedPagePublisher
+        self.page = page
     }
 
     func navigateToZikr(_ vm: ZikrViewModel, index: Int) {
@@ -45,7 +47,7 @@ struct ZikrPagesViewModel {
             title: ZikrCategory.morning.title,
             azkar: [],
             preferences: Preferences.shared,
-            selectedPage: PassthroughSubject<Int, Never>().eraseToAnyPublisher()
+            selectedPagePublisher: PassthroughSubject<Int, Never>().eraseToAnyPublisher()
         )
     }
 

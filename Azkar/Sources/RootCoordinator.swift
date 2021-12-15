@@ -153,7 +153,7 @@ private extension RootCoordinator {
                 title: category.title,
                 azkar: azkarForCategory(category),
                 preferences: preferences,
-                selectedPage: selectedZikrPageIndex.eraseToAnyPublisher()
+                selectedPagePublisher: selectedZikrPageIndex.eraseToAnyPublisher()
             )
 
             if rootViewController.isPadInterface || category == .other {
@@ -161,8 +161,7 @@ private extension RootCoordinator {
                 let listViewController = UIHostingController(rootView: listView)
                 listViewController.title = viewModel.title
                 if rootViewController.isPadInterface {
-                    let view = ZikrPagesView(viewModel: viewModel)
-                    let viewController = UIHostingController(rootView: view)
+                    let viewController = ZikrPagesViewController(viewModel: viewModel)
                     viewController.title = viewModel.title
                     show(listViewController)
                     rootViewController.replaceDetailViewController(with: viewController)
@@ -172,8 +171,7 @@ private extension RootCoordinator {
                     show(listViewController)
                 }
             } else {
-                let view = ZikrPagesView(viewModel: viewModel)
-                let viewController = UIHostingController(rootView: view)
+                let viewController = ZikrPagesViewController(viewModel: viewModel)
                 viewController.title = category.title
                 viewController.navigationItem.largeTitleDisplayMode = .never
                 show(viewController)
@@ -238,7 +236,7 @@ private extension RootCoordinator {
             if UIDevice.current.isIpadInterface {
                 navigationController.modalPresentationStyle = .formSheet
             } else {
-                navigationController.modalPresentationStyle = .fullScreen
+                navigationController.modalPresentationStyle = .popover
             }
             present(navigationController)
 

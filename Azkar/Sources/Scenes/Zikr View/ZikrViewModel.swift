@@ -85,6 +85,32 @@ final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
             .store(in: &cancellables)
     }
     
+    func getShareText() -> String {
+        var text = ""
+        
+        if let title = zikr.title {
+            text += title
+        }
+        
+        text += "\n\n\(zikr.text)"
+        
+        if let translation = translation {
+            text += "\n\n\(translation)"
+        }
+        
+        if let transliteration = transliteration {
+            text += "\n\n\(transliteration)"
+        }
+        
+        text += "\n\n\(zikr.source)"
+        
+        if let benefit = zikr.benefit {
+            text += "\n\n[\(benefit)]"
+        }
+        
+        return text
+    }
+    
     func increaseFontSize() {
         preferences.sizeCategory = preferences.sizeCategory.bigger()
     }
