@@ -51,7 +51,7 @@ final class SettingsViewModel: ObservableObject {
             self.router.trigger(.subscribe)
         })
     }
-    
+
     var selectedArabicFontSupportsVowels: Bool {
         return preferences.preferredArabicFont.hasTashkeelSupport
     }
@@ -68,7 +68,12 @@ final class SettingsViewModel: ObservableObject {
     private unowned let router: RootRouter
     let mode: SettingsMode
 
-    init(mode: SettingsMode = .standart, preferences: Preferences, notificationsHandler: NotificationsHandler = .shared, router: RootRouter) {
+    init(
+        mode: SettingsMode = .standart,
+        preferences: Preferences,
+        notificationsHandler: NotificationsHandler = .shared,
+        router: RootRouter
+    ) {
         self.mode = mode
         self.preferences = preferences
         self.notificationsHandler = notificationsHandler
@@ -98,8 +103,8 @@ final class SettingsViewModel: ObservableObject {
                 preferences.$jumuaReminderTime.toVoid().dropFirst(),
                 preferences.$jumuahDuaReminderSound.toVoid().dropFirst()
             )
-            .receive(on: RunLoop.main)
-            .debounce(for: 3, scheduler: RunLoop.main)
+            .receive(on: DispatchQueue.main)
+            .throttle(for: 2, scheduler: DispatchQueue.main, latest: true)
             .sink(receiveValue: { [unowned self] in
                 self.notificationsHandler.removeScheduledNotifications()
                 self.scheduleNotifications()
@@ -108,25 +113,18 @@ final class SettingsViewModel: ObservableObject {
     }
     
     func enableReminders(_ flag: Bool) {
-        notificationsHandler.getNotificationsAuthorizationStatus { [unowned self] status in
-            if status == .notDetermined {
-                self.notificationsHandler.requestNotificationsPermission(completion: { [unowned self] result in
-                    switch result {
-                    case .success(let granted):
-                        if granted {
-                            self.preferences.enableNotifications = flag
-                        }
-                    default:
-                        break
-                    }
-                })
-            } else {
-                self.preferences.enableNotifications = flag
-            }
-        }
+        preferences.enableNotifications = flag
+    }
+
+    func navigateToNotificationsList() {
+        router.trigger(.notificationsList)
     }
 
     private func scheduleNotifications() {
+        guard preferences.enableNotifications else {
+            return
+        }
+
         if preferences.enableAdhkarReminder {
             notificationsHandler.scheduleNotification(
                 id: Keys.morningReminderId,

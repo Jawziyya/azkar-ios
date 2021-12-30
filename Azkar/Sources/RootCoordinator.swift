@@ -20,6 +20,7 @@ enum RootSection: Equatable {
     case aboutApp
     case subscribe
     case dismissModal
+    case notificationsList
 }
 
 protocol RootRouter: AnyObject {
@@ -130,7 +131,7 @@ private extension RootCoordinator {
         switch section {
         case .aboutApp, .category, .root, .settings:
             selectedZikrPageIndex.send(0)
-        case .zikr, .subscribe, .dismissModal, .modalSettings:
+        case .zikr, .subscribe, .dismissModal, .modalSettings, .notificationsList:
             break
         }
         
@@ -258,6 +259,12 @@ private extension RootCoordinator {
                 viewController.modalPresentationStyle = .fullScreen
             }
             (rootViewController.presentedViewController ?? rootViewController).present(viewController, animated: true)
+
+        case .notificationsList:
+            let viewModel = NotificationsListViewModel(notifications: UNUserNotificationCenter.current().pendingNotificationRequests)
+            let view = NotificationsListView(viewModel: viewModel)
+            let viewController = UIHostingController(rootView: view)
+            show(viewController)
             
         case .dismissModal:
             (rootViewController.presentedViewController ?? rootViewController).dismiss(animated: true)

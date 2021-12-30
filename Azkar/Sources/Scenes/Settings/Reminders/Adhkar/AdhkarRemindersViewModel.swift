@@ -6,12 +6,10 @@ import Combine
 final class AdhkarRemindersViewModel: ObservableObject {
     
     @Published var isNotificationsEnabled: Bool
-    @Published var morningDate = Date()
-    @Published var eveningDate = Date()
     @Published var morningTime: String = ""
     @Published var eveningTime: String = ""
     
-    private let preferences: Preferences
+    var preferences: Preferences
     private let formatter: DateFormatter
     private var cancellables = Set<AnyCancellable>()
     let soundPickerViewModel: ReminderSoundPickerViewModel
@@ -84,10 +82,12 @@ final class AdhkarRemindersViewModel: ObservableObject {
     
     func setMorningTime(_ time: String) {
         preferences.morningNotificationTime = formatter.date(from: morningTime) ?? defaultMorningNotificationTime
+        morningTime = formatter.string(from: preferences.morningNotificationTime)
     }
-    
+
     func setEveningTime(_ time: String) {
         preferences.eveningNotificationTime = formatter.date(from: eveningTime) ?? defaultEveningNotificationTime
+        eveningTime = formatter.string(from: preferences.eveningNotificationTime)
     }
     
 }

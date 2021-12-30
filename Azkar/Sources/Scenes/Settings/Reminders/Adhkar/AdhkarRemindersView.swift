@@ -84,7 +84,7 @@ struct AdhkarRemindersView: View {
                 
                 DatePicker(
                     L10n.Settings.Reminders.MorningEvening.morningLabel,
-                    selection: $viewModel.morningDate,
+                    selection: $viewModel.preferences.morningNotificationTime,
                     in: viewModel.morningNotificationDateRange,
                     displayedComponents: [.hourAndMinute]
                 )
@@ -99,7 +99,7 @@ struct AdhkarRemindersView: View {
                 
                 DatePicker(
                     L10n.Settings.Reminders.MorningEvening.eveningLabel,
-                    selection: $viewModel.eveningDate,
+                    selection: $viewModel.preferences.eveningNotificationTime,
                     in: viewModel.eveningNotificationDateRange,
                     displayedComponents: [.hourAndMinute]
                 )

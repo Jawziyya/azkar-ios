@@ -16,7 +16,7 @@ let defaultMorningNotificationTime: Date = {
 }()
 
 let defaultEveningNotificationTime: Date = {
-    let components = DateComponents(calendar: Calendar.current, hour: 18)
+    let components = DateComponents(calendar: Calendar.current, hour: 14)
     return components.date ?? Date()
 }()
 

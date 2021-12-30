@@ -42,10 +42,10 @@ final class NotificationsListViewModel: ObservableObject {
     init(notifications: @escaping (() async -> [UserNotification])) {
         Task(priority: .userInitiated) {
             let notifications = await notifications()
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateStyle = .short
+            dateFormatter.timeStyle = .medium
             self.notifications = notifications.enumerated().map { index, notification in
-                let dateFormatter = DateFormatter()
-                dateFormatter.dateStyle = .short
-                dateFormatter.timeStyle = .medium
                 let time = dateFormatter.string(from: notification.date)
                 return NotificationsRowViewModel(
                     row: index,
@@ -78,13 +78,6 @@ private struct NotificationsRowView: View {
     var body: some View {
         VStack(spacing: 8) {
             HStack(spacing: 8) {
-                Image("SplashTopIcon")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 10, height: 10)
-                    .padding(2)
-                    .background(Color.contentBackground)
-                    .cornerRadius(4)
                 Text("Notification #\(vm.row + 1)")
                     .foregroundColor(.secondary)
                     .font(.callout.smallCaps())
@@ -113,7 +106,6 @@ private struct NotificationsRowView: View {
                 }
             }
         }
-        .environment(\.colorScheme, .dark)
         .padding(16)
         .cornerRadius(15)
         .padding(.horizontal, 16)

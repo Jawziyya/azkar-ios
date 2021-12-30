@@ -229,10 +229,9 @@ struct SettingsView: View {
             }
             
             if UIApplication.shared.inDebugMode {
-                NavigationLink {
-                    NotificationsListView(viewModel: NotificationsListViewModel(notifications: UNUserNotificationCenter.current().pendingNotificationRequests))
-                } label: {
+                Button(action: viewModel.navigateToNotificationsList) {
                     Text("[DEBUG] Scheduled notifications")
+                        .padding()
                 }
             }
         }

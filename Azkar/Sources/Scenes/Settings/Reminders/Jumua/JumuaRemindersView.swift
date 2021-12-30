@@ -6,12 +6,10 @@ import Combine
 final class JumuaRemindersViewModel: ObservableObject {
     
     @Published var isNotificationsEnabled = true
-    @Published var formattedTime = ""
-    @Published var time = Date()
     
     let soundPickerViewModel: ReminderSoundPickerViewModel
     lazy var notificationsDisabledViewModel: NotificationsDisabledViewModel = .init(observationType: .soundAccess, didChangeCallback: objectWillChange.send)
-    private let preferences: Preferences
+    var preferences: Preferences
     private var cancellables = Set<AnyCancellable>()
     
     init(
@@ -140,7 +138,7 @@ struct JumuaRemindersView: View {
             
             DatePicker(
                 "Time",
-                selection: $viewModel.time,
+                selection: $viewModel.preferences.jumuaReminderTime,
                 in: viewModel.notificationDateRange,
                 displayedComponents: [.hourAndMinute]
             )
