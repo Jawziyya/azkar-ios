@@ -64,21 +64,6 @@ final class MainMenuViewModel: ObservableObject {
         ["🌙", "🌸", "☘️", "🌳", "🌴", "🌱", "🌼", "💫", "🌎", "🌍", "🌏", "🪐", "✨", "❄️"].randomElement()!
     }
 
-    private lazy var notificationsAccessMenuItem: AzkarMenuOtherItem = {
-        let title = L10n.Alerts.turnOnNotificationsAlert
-        var item = AzkarMenuOtherItem(imageName: "app.badge", title: title, color: Color.blue)
-        item.action = {
-            NotificationsHandler.shared.requestNotificationsPermission { result in
-                switch result {
-                case .success:
-                    self.hideNotificationsAccessMessage()
-                case .failure: break
-                }
-            }
-        }
-        return item
-    }()
-
     private lazy var iconsPackMessage: AzkarMenuOtherItem = {
         let title = L10n.Alerts.checkoutIconPacks
         var item = AzkarMenuOtherItem(imageName: AppIconPack.maccinz.icons.randomElement()!.imageName, title: title, color: Color.red, iconType: .bundled, imageCornerRadius: 4)
@@ -134,25 +119,6 @@ final class MainMenuViewModel: ObservableObject {
             additionalMenuItems.append(iconsPackMessage)
         }
 
-        NotificationsHandler.shared
-            .getNotificationsAuthorizationStatus(completion: { [unowned self] status in
-                switch status {
-                case .notDetermined:
-                    self.additionalMenuItems.insert(self.notificationsAccessMenuItem, at: 0)
-                default:
-                    break
-                }
-            })
-        
-        NotificationsHandler.shared
-            .notificationsPermissionStatePublisher
-            .receive(on: RunLoop.main)
-            .sink { [unowned self] state in
-                guard state.hasAccess else { return }
-                self.hideNotificationsAccessMessage()
-            }
-            .store(in: &cancellables)
-
         let appName = L10n.appName
         let title = "\(appName)"
         preferences.$enableFunFeatures
@@ -178,14 +144,6 @@ final class MainMenuViewModel: ObservableObject {
                 self.objectWillChange.send()
             }
             .store(in: &cancellables)
-    }
-
-    private func hideNotificationsAccessMessage() {
-        DispatchQueue.main.async {
-            if let index = self.additionalMenuItems.firstIndex(where: { $0 == self.notificationsAccessMenuItem }) {
-                self.additionalMenuItems.remove(at: index)
-            }
-        }
     }
 
     private func hideIconPacksMessage() {

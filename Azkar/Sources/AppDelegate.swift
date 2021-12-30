@@ -29,6 +29,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         notificationsHandler.removeDeliveredNotifications()
 
+        notificationsHandler
+            .getNotificationsAuthorizationStatus(completion: { status in
+                switch status {
+                case .notDetermined:
+                    NotificationsHandler.shared.requestNotificationsPermission { _ in }
+                default:
+                    break
+                }
+            })
+
         application.beginReceivingRemoteControlEvents()
         InAppPurchaseService.shared.completeTransactions()
         registerUserDefaults()
@@ -67,6 +77,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     private func registerUserDefaults() {
         let defaults: [String: Any] = [
+            Keys.enableReminders: true,
             Keys.expandTranslation: true,
             Keys.expandTransliteration: true,
             Keys.showTashkeel: true,

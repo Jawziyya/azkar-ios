@@ -64,7 +64,7 @@ final class Preferences: ObservableObject {
     @Preference(Keys.colorTheme, defaultValue: ColorTheme.default)
     var colorTheme: ColorTheme
 
-    @Preference(Keys.enableReminders, defaultValue: false)
+    @Preference(Keys.enableReminders, defaultValue: true)
     var enableNotifications: Bool
     
     @Preference(Keys.enableAdhkarReminder, defaultValue: true)
