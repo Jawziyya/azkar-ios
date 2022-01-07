@@ -76,7 +76,7 @@ struct SubscribeView: View {
                     }
                     .background(Color.contentBackground)
                     .opacity(viewModel.isPurchasing || viewModel.isPurchased ? 0 : 1)
-                }.padding(.bottom, 16),
+                }.padding(.bottom, 16).background(Color.contentBackground),
                 alignment: .bottom
             )
             .sheet(isPresented: $showWhyMessage) {
