@@ -54,6 +54,7 @@ final class SubscribeViewModel: ObservableObject {
     init(
         subscriptionManager: SubscriptionManagerType = SubscriptionManagerFactory.create()
     ) {
+        isPurchased = subscriptionManager.isProUser()
         self.subscriptionManager = subscriptionManager
         subscriptionManager
             .products
@@ -127,8 +128,8 @@ final class SubscribeViewModel: ObservableObject {
             .store(in: &cancellables)
     }
     
-    static var placeholder: SubscribeViewModel {
-        SubscribeViewModel(subscriptionManager: DemoSubscriptionManager())
+    static func placeholder(isProUser: Bool = false) -> SubscribeViewModel {
+        SubscribeViewModel(subscriptionManager: DemoSubscriptionManager(isProUser: isProUser))
     }
     
 }

@@ -75,8 +75,10 @@ struct SubscribeView: View {
                             .opacity(viewModel.isPurchasing || viewModel.isPurchased ? 0 : 1)
                     }
                     .background(Color.contentBackground)
-                    .opacity(viewModel.isPurchasing || viewModel.isPurchased ? 0 : 1)
-                }.padding(.bottom, 16).background(Color.contentBackground),
+                }
+                .padding(.bottom, 16)
+                .background(Color.contentBackground)
+                .opacity(viewModel.isPurchased ? 0 : 1),
                 alignment: .bottom
             )
             .sheet(isPresented: $showWhyMessage) {
@@ -294,10 +296,13 @@ struct SubscribeView_Previews: PreviewProvider {
     static var previews: some View {
         Preferences.shared.colorTheme = .default
         return Group {
-            SubscribeView(viewModel: .placeholder, closeButtonAction: {})
+            SubscribeView(viewModel: .placeholder(), closeButtonAction: {})
+                .colorScheme(.light)
+
+            SubscribeView(viewModel: .placeholder(isProUser: true), closeButtonAction: {})
                 .colorScheme(.light)
             
-            SubscribeView(viewModel: .placeholder, closeButtonAction: {})
+            SubscribeView(viewModel: .placeholder(), closeButtonAction: {})
                 .colorScheme(.dark)
         }
     }

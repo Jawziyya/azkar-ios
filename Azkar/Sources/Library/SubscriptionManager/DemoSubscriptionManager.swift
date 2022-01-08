@@ -4,7 +4,11 @@ import Foundation
 import Combine
 
 final class DemoSubscriptionManager: SubscriptionManagerType {
-    
+
+    init(isProUser: Bool = false) {
+        self._isProUser = isProUser
+    }
+
     private var _isProUser = false
     private var _isPurchaseSuccessful = true
     
