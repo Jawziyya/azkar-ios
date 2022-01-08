@@ -370,7 +370,7 @@ internal enum L10n {
     internal static let restore = L10n.tr("Localizable", "subscribe.restore")
     /// Subscribe
     internal static let subscribeTitle = L10n.tr("Localizable", "subscribe.subscribe-title")
-    /// 
+    /// Some features only available for **Azkar Pro** users.
     internal static let title = L10n.tr("Localizable", "subscribe.title")
     internal enum Billing {
       /// One-time purchase
@@ -405,6 +405,17 @@ internal enum L10n {
       internal static let message = L10n.tr("Localizable", "subscribe.why.message")
       /// Why?
       internal static let title = L10n.tr("Localizable", "subscribe.why.title")
+    }
+  }
+
+  internal enum Subscription {
+    internal enum Period {
+      /// month
+      internal static let month = L10n.tr("Localizable", "subscription.period.month")
+      /// week
+      internal static let week = L10n.tr("Localizable", "subscription.period.week")
+      /// year
+      internal static let year = L10n.tr("Localizable", "subscription.period.year")
     }
   }
 
