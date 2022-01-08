@@ -81,7 +81,7 @@ struct AppInfoView: View {
                             .font(Font.system(.title2, design: .rounded).smallCaps().weight(.heavy))
                             .frame(alignment: .center)
                             .foregroundColor(Color.accent)
-                        if viewModel.subscriptionManager.isProUser() {
+                        if !UIDevice.current.isMac, viewModel.subscriptionManager.isProUser() {
                             Text(" PRO")
                                 .font(Font.system(.title3, design: .rounded).smallCaps().weight(.heavy))
                                 .foregroundColor(Color.blue)

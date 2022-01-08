@@ -3,6 +3,7 @@
 import Foundation
 import RevenueCat
 import Combine
+import UIKit
 
 extension RevenueCat.Package: Package {}
 
@@ -10,7 +11,7 @@ final class SubscriptionManager: SubscriptionManagerType {
     
     @Preference(Keys.enableProFeatures, defaultValue: false)
     var enableProFeatures: Bool
-        
+
     let _products = CurrentValueSubject<[Product], Error>([])
     
     var products: AnyPublisher<[Product], Error> {
@@ -22,7 +23,11 @@ final class SubscriptionManager: SubscriptionManagerType {
     private init() {}
     
     func isProUser() -> Bool {
-        return enableProFeatures
+        if UIDevice.current.isMac {
+            return true
+        } else {
+            return enableProFeatures
+        }
     }
     
     func loadProducts() {
