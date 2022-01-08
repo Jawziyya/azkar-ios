@@ -47,11 +47,19 @@ final class SubscriptionManager: SubscriptionManagerType {
                 }
             }
             
-            let products = currentOffering.availablePackages.map { package in
-                Product(
+            let products = currentOffering.availablePackages.map { package -> Product in
+                var period: Product.Period?
+                if let periodInfo = package.storeProduct.subscriptionPeriod {
+                    period = Product.Period(
+                        type: Product.Period.PeriodType(rawValue: periodInfo.unit.rawValue) ?? .unknown,
+                        value: periodInfo.value
+                    )
+                }
+
+                return Product(
                     id: package.identifier,
                     price: package.localizedPriceString,
-                    period: package.product.localizedSubscriptionPeriod.textOrNil,
+                    period: period,
                     isRenewable: package.packageType != .lifetime,
                     billingDescription: billingDescription(type: package.packageType),
                     package: package

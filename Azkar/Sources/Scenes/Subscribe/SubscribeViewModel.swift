@@ -22,7 +22,7 @@ final class SubscribeViewModel: ObservableObject {
             text = product.id
             subtitle = product.billingDescription
             if let period = product.period {
-                priceInfo = product.price + "/" + period
+                priceInfo = product.price + "/" + period.type.localizedDescription
             } else {
                 priceInfo = product.price
             }

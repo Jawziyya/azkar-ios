@@ -2,6 +2,7 @@
 
 import Foundation
 import Combine
+import StoreKit
 
 enum PurchaseResult: Equatable {
     case cancelled, productNotFound, purchased
@@ -11,9 +12,27 @@ protocol Package {}
 struct PlaceholderPackage: Package {}
 
 struct Product {
+
+    struct Period {
+        enum PeriodType: Int {
+            case unknown = -1
+            case day = 0
+            case week = 1
+            case month = 2
+            case year = 3
+
+            var localizedDescription: String {
+                NSLocalizedString("subscription.period.\(self)", comment: "")
+            }
+        }
+
+        let type: PeriodType
+        let value: Int
+    }
+
     let id: String
     let price: String
-    let period: String?
+    let period: Period?
     let isRenewable: Bool
     let billingDescription: String
     let package: Package
@@ -22,7 +41,7 @@ struct Product {
         Product(
             id: UUID().uuidString,
             price: "12.99$",
-            period: "1 month",
+            period: .init(type: .month, value: 1),
             isRenewable: true,
             billingDescription: "Billed yearly",
             package: PlaceholderPackage()
