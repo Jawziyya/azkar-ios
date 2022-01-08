@@ -114,7 +114,8 @@ struct ZikrView: View {
     private func getTranslationView(text: String) -> some View {
         CollapsableSection(
             title: L10n.Read.translation,
-            text: text, isArabicText: false,
+            text: text,
+            isArabicText: false,
             isExpanded: $viewModel.expandTranslation,
             font: viewModel.preferences.preferredTranslationFont,
             tintColor: tintColor

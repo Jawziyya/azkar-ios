@@ -9,7 +9,11 @@
 import UIKit
 import Combine
 
-final class ZikrPagesViewModel: ObservableObject {
+final class ZikrPagesViewModel: ObservableObject, Equatable {
+
+    static func == (lhs: ZikrPagesViewModel, rhs: ZikrPagesViewModel) -> Bool {
+        lhs.category == rhs.category && lhs.title == rhs.title
+    }
 
     unowned let router: RootRouter
     let category: ZikrCategory
@@ -30,8 +34,11 @@ final class ZikrPagesViewModel: ObservableObject {
     }
 
     func navigateToZikr(_ vm: ZikrViewModel, index: Int) {
-        assert(Thread.isMainThread)
-        router.trigger(.zikr(vm.zikr, index: index))
+        if UIDevice.current.isIpadInterface {
+            router.trigger(.zikr(vm.zikr, index: index))
+        } else {
+            router.trigger(.zikrPages(self, page: index))
+        }
     }
     
     func navigateToSettings() {

@@ -29,12 +29,12 @@ struct AzkarListView: View {
 
     var list: some View {
         LazyVStack(alignment: HorizontalAlignment.leading, spacing: 8) {
-            ForEach(viewModel.azkar.indexed(), id: \.1) { index, vm in
+            ForEach(viewModel.azkar.indices, id: \.self) { index in
                 Button {
-                    self.viewModel.navigateToZikr(vm, index: index)
+                    self.viewModel.navigateToZikr(viewModel.azkar[index], index: index)
                 } label: {
                     HStack {
-                        Text(vm.title)
+                        Text(viewModel.azkar[index].title)
                             .contentShape(Rectangle())
                         Spacer(minLength: 8)
                         Image(systemName: "chevron.right")

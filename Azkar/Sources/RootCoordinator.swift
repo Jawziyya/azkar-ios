@@ -15,6 +15,7 @@ enum RootSection: Equatable {
     case root
     case category(ZikrCategory)
     case zikr(_ zikr: Zikr, index: Int? = nil)
+    case zikrPages(_ vm: ZikrPagesViewModel, page: Int?)
     case modalSettings(SettingsViewModel.SettingsMode)
     case settings(SettingsSection)
     case aboutApp
@@ -131,7 +132,7 @@ private extension RootCoordinator {
         switch section {
         case .aboutApp, .category, .root, .settings:
             selectedZikrPageIndex.send(0)
-        case .zikr, .subscribe, .dismissModal, .modalSettings, .notificationsList:
+        case .zikr, .subscribe, .dismissModal, .modalSettings, .notificationsList, .zikrPages:
             break
         }
         
@@ -178,19 +179,22 @@ private extension RootCoordinator {
                 show(viewController)
             }
 
+        case .zikrPages(let vm, let page):
+            let viewController = ZikrPagesViewController(viewModel: vm)
+            selectedZikrPageIndex.send(page ?? 0)
+            show(viewController)
+
         case .zikr(let zikr, let index):
             assert(Thread.isMainThread)
             if let index = index, rootViewController.isPadInterface {
                 self.selectedZikrPageIndex.send(index)
                 return
             }
-            
+
             let viewModel = ZikrViewModel(zikr: zikr, preferences: preferences, player: player)
             let view = ZikrView(viewModel: viewModel)
             let viewController = UIHostingController(rootView: view)
-            
-            viewController.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "gear"), style: .plain, target: nil, action: nil)
-            
+
             if rootViewController.isPadInterface {
                 rootViewController.replaceDetailViewController(with: viewController)
             } else {
