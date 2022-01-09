@@ -43,7 +43,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         // Use a UIHostingController as window root view controller.
         if let windowScene = scene as? UIWindowScene {
-            let window = UIWindow(windowScene: windowScene)
+            let window: UIWindow
+            if CommandLine.arguments.contains("DEMO_MODE") {
+                window = GSTouchesShowingWindow(windowScene: windowScene)
+            } else {
+                window = UIWindow(windowScene: windowScene)
+            }
 
             let rootCoordinator = RootCoordinator(preferences: preferences, deeplinker: deeplinker, player: Player(player: AppDelegate.shared.player))
 

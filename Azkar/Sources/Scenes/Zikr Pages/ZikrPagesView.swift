@@ -35,7 +35,10 @@ struct ZikrPagesView: View, Equatable {
         ) {
             ForEach(viewModel.azkar) { zikr in
                 LazyView(
-                    ZikrView(viewModel: zikr)
+                    ZikrView(
+                        viewModel: zikr,
+                        counterFinishedCallback: viewModel.goToNextZikrIfNeeded
+                    )
                 )
             }
         }

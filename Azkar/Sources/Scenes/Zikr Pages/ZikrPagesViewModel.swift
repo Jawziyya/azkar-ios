@@ -44,6 +44,14 @@ final class ZikrPagesViewModel: ObservableObject, Equatable {
     func navigateToSettings() {
         router.trigger(.modalSettings(.textAndAppearance))
     }
+
+    func goToNextZikrIfNeeded() {
+        let newIndex = page + 1
+        guard preferences.enableGoToNextZikrOnCounterFinished, newIndex < azkar.count else {
+            return
+        }
+        router.trigger(.goToPage(newIndex))
+    }
     
     static var placeholder: ZikrPagesViewModel {
         AzkarListViewModel(

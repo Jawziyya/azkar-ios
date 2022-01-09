@@ -41,6 +41,11 @@ enum Keys {
     
     static let preferredAdhkarReminderSound = "kAdhkarReminderSound"
     static let preferredJumuahReminderSound = "kJumuahReminderSound"
-    
+
+    // MARK: Counter
+    static let enableCounter = "kEnableCounter"
+    static let enableCounterTicker = "kEnableCounterTicker"
+    static let enableCounterHapticFeedback = "kEnableCounterHapticFeedback"
+    static let enableGoToNextZikrOnCounterFinished = "kEnableGoToZikrOnCounterFinished"
     
 }

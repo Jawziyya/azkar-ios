@@ -16,6 +16,7 @@ enum RootSection: Equatable {
     case category(ZikrCategory)
     case zikr(_ zikr: Zikr, index: Int? = nil)
     case zikrPages(_ vm: ZikrPagesViewModel, page: Int?)
+    case goToPage(Int)
     case modalSettings(SettingsViewModel.SettingsMode)
     case settings(SettingsSection)
     case aboutApp
@@ -132,7 +133,7 @@ private extension RootCoordinator {
         switch section {
         case .aboutApp, .category, .root, .settings:
             selectedZikrPageIndex.send(0)
-        case .zikr, .subscribe, .dismissModal, .modalSettings, .notificationsList, .zikrPages:
+        case .zikr, .subscribe, .dismissModal, .modalSettings, .notificationsList, .zikrPages, .goToPage:
             break
         }
         
@@ -200,6 +201,9 @@ private extension RootCoordinator {
             } else {
                 show(viewController)
             }
+
+        case .goToPage(let page):
+            selectedZikrPageIndex.send(page)
 
         case .settings(let section):
             let viewModel = SettingsViewModel(preferences: preferences, notificationsHandler: NotificationsHandler.shared, router: self)

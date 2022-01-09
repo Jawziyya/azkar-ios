@@ -23,11 +23,13 @@ struct SettingsView: View {
     @ObservedObject var viewModel: SettingsViewModel
     @State private var showFunFeaturesDescription = false
     @State private var showSystemFontsizeTip = false
+    @State private var showGoToNextZikrTip = false
 
     var body: some View {
         Form {
             Group {
                 appearanceSection
+                counterSection
                 textSettingsSection
                 
                 if viewModel.mode != .textAndAppearance {
@@ -90,6 +92,44 @@ struct SettingsView: View {
                 .padding(.vertical, 8)
             }
         }
+    }
+
+    var counterSection: some View {
+        Section(
+            header: getHeader(symbolName: "arrow.counterclockwise", title: L10n.Settings.Counter.sectionTitle)
+                .accentColor(Color(.systemCyan))
+                .foregroundColor(Color.white)
+            ,
+            content: {
+                if viewModel.preferences.enableCounter {
+                    Toggle(L10n.Settings.Counter.counterTicker, isOn: $viewModel.preferences.enableCounterTicker)
+
+                    Toggle(L10n.Settings.Counter.counterHaptics, isOn: $viewModel.preferences.enableCounterHapticFeedback)
+
+                    Toggle(isOn: $viewModel.preferences.enableGoToNextZikrOnCounterFinished) {
+                        HStack {
+                            Text(L10n.Settings.Counter.goToNextDhikr)
+                                .font(Font.system(.body, design: .rounded))
+                            Spacer()
+                            Button { } label: {
+                                Image(systemName: "info.circle")
+                                    .foregroundColor(Color.accent.opacity(0.75))
+                            }
+                            .onTapGesture {
+                                self.showGoToNextZikrTip = true
+                            }
+                            .alert(isPresented: $showGoToNextZikrTip) {
+                                Alert(
+                                    title: Text(L10n.Settings.Counter.goToNextDhikrTip),
+                                    dismissButton: .default(Text("OK"))
+                                )
+                            }
+                        }
+                        .padding(.vertical, 8)
+                    }
+                }
+            }
+        )
     }
     
     var arabicFontsPicker: some View {

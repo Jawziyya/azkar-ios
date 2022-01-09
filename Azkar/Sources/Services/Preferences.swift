@@ -102,7 +102,19 @@ final class Preferences: ObservableObject {
     
     @Preference(Keys.enableProFeatures, defaultValue: false)
     var enableProFeatures: Bool
-    
+
+    // MARK: Counter
+    @Preference(Keys.enableCounter, defaultValue: true)
+    var enableCounter: Bool
+
+    @Preference(Keys.enableCounterTicker, defaultValue: true)
+    var enableCounterTicker: Bool
+
+    @Preference(Keys.enableCounterHapticFeedback, defaultValue: true)
+    var enableCounterHapticFeedback: Bool
+
+    @Preference(Keys.enableGoToNextZikrOnCounterFinished, defaultValue: true)
+    var enableGoToNextZikrOnCounterFinished: Bool
     
     private func getFont<T: AppFont & Decodable>(_ key: String) -> T? {
         guard

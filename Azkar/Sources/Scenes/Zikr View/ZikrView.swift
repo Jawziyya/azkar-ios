@@ -10,7 +10,21 @@ import SwiftUI
 
 struct ZikrView: View {
 
+    @AppStorage("kDidDisplayCounterOnboardingTip", store: UserDefaults.standard)
+    var didDisplayCounterOnboardingTip: Bool?
+
     @ObservedObject var viewModel: ZikrViewModel
+
+    var counterFinishedCallback: Action?
+
+    @State
+    private var isLongPressGestureActive = false
+
+    @State
+    private var isIncrementActionPerformed = false
+
+    @State
+    private var counterFeedbackCompleted = false
 
     var sizeCategory: ContentSizeCategory {
         viewModel.preferences.sizeCategory
@@ -19,6 +33,14 @@ struct ZikrView: View {
     private let tintColor = Color.accent
     private let dividerColor = Color.accent.opacity(0.1)
     private let dividerHeight: CGFloat = 1
+
+    func incrementZikrCounter() {
+        isIncrementActionPerformed = true
+        viewModel.incrementZikrCount()
+        if viewModel.remainingRepeatsNumber > 0, viewModel.preferences.enableCounterHapticFeedback {
+            Haptic.toggleFeedback()
+        }
+    }
 
     var body: some View {
         ScrollView {
@@ -29,6 +51,15 @@ struct ZikrView: View {
         .background(Color.background.edgesIgnoringSafeArea(.all))
         .onKeyboardShortcut("+", modifiers: [.command], perform: viewModel.increaseFontSize)
         .onKeyboardShortcut("-", modifiers: [.command], perform: viewModel.decreaseFontSize)
+        .onKeyboardShortcut(.return, modifiers: [.command], perform: viewModel.incrementZikrCount)
+        .onTapGesture(count: 2, perform: incrementZikrCounter)
+        .onLongPressGesture(
+            minimumDuration: 1,
+            perform: {
+                isLongPressGestureActive = true
+                incrementZikrCounter()
+            }
+        )
     }
 
     private func getContent() -> some View {
@@ -73,6 +104,30 @@ struct ZikrView: View {
                     .padding()
                 }
             }
+
+            Spacer(minLength: 20)
+
+            ZStack {
+                if viewModel.remainingRepeatsNumber == 0 {
+                    LottieView(name: "checkmark", loopMode: .playOnce, contentMode: .scaleAspectFit, speed: 1.5, progress: !isIncrementActionPerformed ? 1 : 0) {
+                        self.isLongPressGestureActive = false
+                    }
+                    .onAppear {
+                        if isIncrementActionPerformed, !counterFeedbackCompleted {
+                            if viewModel.preferences.enableCounterHapticFeedback {
+                                Haptic.successFeedback()
+                            }
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                                counterFinishedCallback?()
+                                counterFeedbackCompleted.toggle()
+                            }
+                        }
+                    }
+                }
+            }
+            .frame(height: 80, alignment: .center)
+            .frame(maxWidth: .infinity)
+            .opacity(viewModel.remainingRepeatsNumber == 0 ? 1 : 0)
 
             Spacer(minLength: 20)
         }
@@ -150,7 +205,24 @@ struct ZikrView: View {
     private var infoView: some View {
         HStack(alignment: .center, spacing: 20) {
             if viewModel.zikr.repeats > 0 {
-                getInfoStack(label: L10n.Read.repeats, text: L10n.repeats(viewModel.zikr.repeats))
+                getInfoStack(label: L10n.Read.repeats, text: viewModel.remainingRepeatsFormatted)
+                    .onTapGesture(perform: viewModel.toggleCounterFormat)
+//                    .opacity(viewModel.remainingRepeatsNumber == 0 ? 0.25 : 1)
+//                    .overlay {
+//                        ZStack {
+//                            if viewModel.remainingRepeatsNumber == 0 {
+//                                LottieView(name: "checkmark", loopMode: .playOnce, contentMode: .scaleAspectFit, speed: 1, progress: !isIncrementActionPerformed ? 1 : 0) {
+//                                    self.isLongPressGestureActive = false
+//                                }
+//                                .onAppear {
+//                                    if isIncrementActionPerformed {
+//                                        Haptic.successFeedback()
+//                                    }
+//                                }
+//                            }
+//                        }
+//                        .frame(width: 60, height: 40)
+//                    }
             }
 
             viewModel.source.textOrNil.flatMap { text in

@@ -10,6 +10,7 @@ import UIKit
 import SwiftUI
 import Combine
 import UIKit
+import AudioPlayer
 
 final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
 
@@ -31,6 +32,7 @@ final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
         preferences.showTashkeel && preferences.preferredArabicFont.hasTashkeelSupport ? zikr.text : zikr.text.trimmingArabicVowels
     }
     let preferences: Preferences
+    let counter: ZikrCounterServiceType
 
     let transliteration: String?
     let translation: String?
@@ -46,11 +48,39 @@ final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
     
     @Published var textSettingsToken = UUID()
 
-    private var cancellables: Set<AnyCancellable> = []
+    @Published var remainingRepeatsFormatted: String = ""
+    @Published var remainingRepeatsNumber: Int {
+        didSet {
+            updateRemainingRepeats()
+        }
+    }
+    private var showRemainingCounter = true {
+        didSet {
+            updateRemainingRepeats()
+        }
+    }
 
-    init(zikr: Zikr, preferences: Preferences, player: Player) {
+    func updateRemainingRepeats() {
+        if !showRemainingCounter || remainingRepeatsNumber == zikr.repeats {
+            remainingRepeatsFormatted = L10n.repeats(zikr.repeats)
+        } else {
+            remainingRepeatsFormatted = L10n.remainingRepeats(remainingRepeatsNumber)
+        }
+    }
+
+    private var cancellables: Set<AnyCancellable> = []
+    private lazy var player = AudioPlayer()
+
+    init(
+        zikr: Zikr,
+        preferences: Preferences,
+        player: Player,
+        counter: ZikrCounterServiceType = ZikrCounterService()
+    ) {
+        self.counter = counter
         self.zikr = zikr
         self.preferences = preferences
+        self.remainingRepeatsNumber = counter.getRemainingRepeats(for: zikr)
         title = zikr.title ?? "\(L10n.Common.zikr) №\(zikr.rowInCategory)"
         
         expandTranslation = preferences.expandTranslation
@@ -83,6 +113,8 @@ final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
                 self.textSettingsToken = id
             }
             .store(in: &cancellables)
+
+        updateRemainingRepeats()
     }
     
     func getShareText() -> String {
@@ -117,6 +149,35 @@ final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
     
     func decreaseFontSize() {
         preferences.sizeCategory = preferences.sizeCategory.smaller()
+    }
+
+    func incrementZikrCount() {
+        guard remainingRepeatsNumber > 0 else {
+            return
+        }
+        showRemainingCounter = true
+        counter.incrementCounter(for: zikr)
+        remainingRepeatsNumber = counter.getRemainingRepeats(for: zikr)
+
+        guard preferences.enableCounterTicker else { return }
+        DispatchQueue.global(qos: .userInitiated).async {
+            self.playTickerSound()
+        }
+    }
+
+    func toggleCounterFormat() {
+        showRemainingCounter.toggle()
+    }
+
+    private func playTickerSound() {
+        guard
+            let url = Bundle.main.url(forResource: "counter-ticker", withExtension: "m4a"),
+            let audioItem = AudioItem(soundURLs: [.high: url]) else {
+            return
+        }
+        player.volume = 0.25
+        player.pause()
+        player.play(item: audioItem)
     }
 
 }

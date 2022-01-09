@@ -18,9 +18,12 @@ struct LottieView: UIViewRepresentable {
     var loopMode: LottieLoopMode = .playOnce
     var contentMode: UIView.ContentMode = .scaleAspectFit
     var speed: CGFloat = 1
+    var progress: CGFloat?
+    var completionBlock: Action?
     
     class Coordinator {
         var colorScheme: ColorScheme?
+        var completionBlock: Action?
     }
     
     func makeCoordinator() -> Coordinator {
@@ -29,12 +32,21 @@ struct LottieView: UIViewRepresentable {
     
     func makeUIView(context: UIViewRepresentableContext<LottieView>) -> UIView {
         context.coordinator.colorScheme = context.environment.colorScheme
+        context.coordinator.completionBlock = completionBlock
         animationView.animation = Animation.named(name)
         animationView.contentMode = contentMode
         animationView.loopMode = loopMode
         animationView.backgroundBehavior = .pauseAndRestore
         animationView.animationSpeed = speed
-        animationView.play()
+        if let progress = progress {
+            animationView.currentProgress = progress
+        }
+        if progress != 1 {
+            animationView.play { finished in
+                guard finished else { return }
+                context.coordinator.completionBlock?()
+            }
+        }
         animationView.isUserInteractionEnabled = false
         
         let view = UIView()

@@ -49,6 +49,7 @@ internal enum Asset {
   internal static let secondaryText = ColorAsset(name: "secondaryText")
   internal static let tertiaryText = ColorAsset(name: "tertiaryText")
   internal static let text = ColorAsset(name: "text")
+  internal static let touchImageBlue = ImageAsset(name: "TouchImageBlue")
   internal static let eidBackground = ImageAsset(name: "eid_background")
   internal static let mosque = ImageAsset(name: "mosque")
 }

@@ -51,7 +51,7 @@ struct Haptic {
     
     static func toggleFeedback() {
         #if !os(macOS)
-        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+        UIImpactFeedbackGenerator(style: .soft).impactOccurred()
         #endif
     }
 }

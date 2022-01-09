@@ -13,6 +13,10 @@ internal enum L10n {
   /// Azkar
   internal static let appName = L10n.tr("Localizable", "app-name")
   /// Plural format key: "%#@items@"
+  internal static func remainingRepeats(_ p1: Int) -> String {
+    return L10n.tr("Localizable", "remaining-repeats", p1)
+  }
+  /// Plural format key: "%#@items@"
   internal static func repeats(_ p1: Int) -> String {
     return L10n.tr("Localizable", "repeats", p1)
   }
@@ -129,7 +133,7 @@ internal enum L10n {
     /// Fonts
     internal static let title = L10n.tr("Localizable", "fonts.title")
     internal enum Arabic {
-      /// 
+      /// Some fonts do not support displaying Arabic language vowels. Please look at the sample image to determine which font supports vowels.
       internal static let info = L10n.tr("Localizable", "fonts.arabic.info")
     }
     internal enum `Type` {
@@ -229,6 +233,18 @@ internal enum L10n {
     internal static let useFunFeatures = L10n.tr("Localizable", "settings.use_fun_features")
     /// These are features which make Azkar app a bit beautiful but some people find useless and annoying.
     internal static let useFunFeaturesTip = L10n.tr("Localizable", "settings.use_fun_features_tip")
+    internal enum Counter {
+      /// Enable counter haptic feedback
+      internal static let counterHaptics = L10n.tr("Localizable", "settings.counter.counter-haptics")
+      /// Enable counter ticker sound
+      internal static let counterTicker = L10n.tr("Localizable", "settings.counter.counter-ticker")
+      /// Go to next dhikr when repeats completed
+      internal static let goToNextDhikr = L10n.tr("Localizable", "settings.counter.go-to-next-dhikr")
+      /// If this option is enabled whenever you finish repeating a dhikr Azkar will show the next one
+      internal static let goToNextDhikrTip = L10n.tr("Localizable", "settings.counter.go-to-next-dhikr-tip")
+      /// Counter
+      internal static let sectionTitle = L10n.tr("Localizable", "settings.counter.section-title")
+    }
     internal enum Icon {
       /// Icon
       internal static let title = L10n.tr("Localizable", "settings.icon.title")
@@ -370,7 +386,7 @@ internal enum L10n {
     internal static let restore = L10n.tr("Localizable", "subscribe.restore")
     /// Subscribe
     internal static let subscribeTitle = L10n.tr("Localizable", "subscribe.subscribe-title")
-    /// Some features only available for **Azkar Pro** users.
+    /// Some of the features only available for **Azkar Pro** users.
     internal static let title = L10n.tr("Localizable", "subscribe.title")
     internal enum Billing {
       /// One-time purchase
