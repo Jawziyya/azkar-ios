@@ -335,13 +335,15 @@
 	<key>CFBundleShortVersionString</key>
 	<string>2.3</string>
 	<key>CFBundleVersion</key>
-	<string>56</string>
+	<string>60</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>LSApplicationCategoryType</key>
 	<string>public.app-category.reference</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>REVENUCE_CAT_API_KEY</key>
+	<string>gpAMTUYnTxQzRSbPszKrFTOekbEVzsXk</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>AdobeArabic-Regular.otf</string>
@@ -381,8 +383,6 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	<key>REVENUCE_CAT_API_KEY</key>
-	<string>gpAMTUYnTxQzRSbPszKrFTOekbEVzsXk</string>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
