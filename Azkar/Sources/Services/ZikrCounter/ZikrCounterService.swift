@@ -19,7 +19,7 @@ final class ZikrCounterService: ZikrCounterServiceType {
     @Preference("kAzkarCounter", defaultValue: AzkarCounterData(data: [:]))
     var counter: AzkarCounterData
 
-    @Preference("kLastChangeDate", defaultValue: Date())
+    @Preference("kAzkarCounterLastChangeDate", defaultValue: Date())
     var lastChangeTimestamp: Date
 
     private let calendar = Calendar.current
@@ -27,6 +27,8 @@ final class ZikrCounterService: ZikrCounterServiceType {
     private func resetCounterIfNeeded() {
         if calendar.isDateInToday(lastChangeTimestamp) == false {
             counter = .init(data: [:])
+            lastChangeTimestamp = .init()
+        } else {
             lastChangeTimestamp = .init()
         }
     }

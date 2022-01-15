@@ -51,16 +51,20 @@ final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
     @Published var remainingRepeatsFormatted: String = ""
     @Published var remainingRepeatsNumber: Int {
         didSet {
-            updateRemainingRepeats()
+            updateRemainingRepeatsText()
         }
     }
     private var showRemainingCounter = true {
         didSet {
-            updateRemainingRepeats()
+            updateRemainingRepeatsText()
         }
     }
 
     func updateRemainingRepeats() {
+        remainingRepeatsNumber = counter.getRemainingRepeats(for: zikr)
+    }
+
+    func updateRemainingRepeatsText() {
         if !showRemainingCounter || remainingRepeatsNumber == zikr.repeats {
             remainingRepeatsFormatted = L10n.repeats(zikr.repeats)
         } else {
@@ -114,7 +118,7 @@ final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
             }
             .store(in: &cancellables)
 
-        updateRemainingRepeats()
+        updateRemainingRepeatsText()
     }
     
     func getShareText() -> String {

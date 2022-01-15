@@ -86,6 +86,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             Keys.appIcon: AppIcon.gold.rawValue,
             Keys.useSystemFontSize: true,
             Keys.sizeCategory: ContentSizeCategory.medium.floatValue,
+            "kAzkarCounterLastChangeDate": Date()
         ]
 
         UserDefaults.standard.register(defaults: defaults)

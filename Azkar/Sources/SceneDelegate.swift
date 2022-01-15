@@ -50,7 +50,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 window = UIWindow(windowScene: windowScene)
             }
 
-            let rootCoordinator = RootCoordinator(preferences: preferences, deeplinker: deeplinker, player: Player(player: AppDelegate.shared.player))
+            let rootCoordinator = RootCoordinator(
+                preferences: preferences,
+                deeplinker: deeplinker,
+                player: Player(player: AppDelegate.shared.player)
+            )
 
             let rootViewController: UIViewController
             if UIDevice.current.isIpadInterface {

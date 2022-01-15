@@ -103,7 +103,7 @@ final class Preferences: ObservableObject {
     @Preference(Keys.enableProFeatures, defaultValue: false)
     var enableProFeatures: Bool
 
-    // MARK: Counter
+    // MARK: - Counter
     @Preference(Keys.enableCounter, defaultValue: true)
     var enableCounter: Bool
 

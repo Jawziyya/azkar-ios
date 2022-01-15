@@ -47,6 +47,7 @@ struct ZikrView: View {
             getContent()
                 .largeScreenPadding()
         }
+        .onAppear(perform: viewModel.updateRemainingRepeats)
         .saturation(viewModel.preferences.colorTheme == .ink ? 0 : 1)
         .background(Color.background.edgesIgnoringSafeArea(.all))
         .onKeyboardShortcut("+", modifiers: [.command], perform: viewModel.increaseFontSize)
