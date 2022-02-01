@@ -16,10 +16,10 @@ final class ZikrCounterService: ZikrCounterServiceType {
         var data: [ZikrID: Int]
     }
 
-    @Preference("kAzkarCounter", defaultValue: AzkarCounterData(data: [:]))
+    @Preference(Keys.azkarCounter, defaultValue: AzkarCounterData(data: [:]))
     var counter: AzkarCounterData
 
-    @Preference("kAzkarCounterLastChangeDate", defaultValue: Date())
+    @Preference(Keys.azkarCounterLastChangeDate, defaultValue: Date())
     var lastChangeTimestamp: Date
 
     private let calendar = Calendar.current
@@ -27,10 +27,8 @@ final class ZikrCounterService: ZikrCounterServiceType {
     private func resetCounterIfNeeded() {
         if calendar.isDateInToday(lastChangeTimestamp) == false {
             counter = .init(data: [:])
-            lastChangeTimestamp = .init()
-        } else {
-            lastChangeTimestamp = .init()
         }
+        lastChangeTimestamp = .init()
     }
 
     func getRemainingRepeats(for zikr: Zikr) -> Int {
