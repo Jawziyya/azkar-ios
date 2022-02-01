@@ -42,8 +42,13 @@ final class SubscribeViewModel: ObservableObject {
         .placeholder,
         .placeholder
     ]
-    @Published var selectedOption: SubscriptionOption?
+    @Published var selectedOption: SubscriptionOption? {
+        didSet {
+            showSubscriptionWarningMessage = selectedOption?.isRenewable == true
+        }
+    }
     @Published var didLoadData = false
+    @Published var showSubscriptionWarningMessage = false
     @Published var isPurchasing = false
     @Published var isPurchased = false
     @Published var errorMessage: String?

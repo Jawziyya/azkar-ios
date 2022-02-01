@@ -2,6 +2,7 @@
 
 import SwiftUI
 import Lottie
+import StoreKit
 
 struct SubscribeView: View {
     
@@ -146,6 +147,20 @@ struct SubscribeView: View {
             .padding(.horizontal, 30)
             .buttonStyle(PlainButtonStyle())
             .zIndex(1)
+
+            Button(action: {
+                if let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+                    Task(priority: .high) {
+                        try? await AppStore.showManageSubscriptions(in: scene)
+                    }
+                }
+            }, label: {
+                Text(L10n.Subscribe.cancel)
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .foregroundColor(Color.primary)
+                    .font(.body.bold())
+            })
         }
     }
     
@@ -277,13 +292,24 @@ struct SubscribeView: View {
     
     var subscriptionInfo: some View {
         VStack(spacing: 8) {
-            Text("The subscription renews automatically until you turn it off")
-            Text("Privacy Policy, Terms & Conditions")
-                .underline()
-                .foregroundColor(Color.blue)
-                .onTapGesture {
-                    UIApplication.shared.open(URL(string: "https://raw.githubusercontent.com/Jawziyya/legal-info/master/privacy-policies/azkar-app.txt")!)
-                }
+            HStack(spacing: 0) {
+                Text("Terms of Service")
+                    .underline()
+                    .onTapGesture {
+                        UIApplication.shared.open(URL(string: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/")!)
+                    }
+                Text(" and ")
+                    .foregroundColor(Color.secondaryText)
+                Text("Privacy Policy")
+                    .underline()
+                    .onTapGesture {
+                        UIApplication.shared.open(URL(string: "https://raw.githubusercontent.com/Jawziyya/legal-info/master/privacy-policies/azkar-app.txt")!)
+                    }
+            }
+            .foregroundColor(Color.blue)
+            Text(L10n.Subscribe.Billing.autoRenewing)
+                .opacity(viewModel.showSubscriptionWarningMessage ? 1 : 0)
+                .fixedSize(horizontal: false, vertical: true)
         }
         .font(Font.caption2)
         .foregroundColor(Color.tertiaryText)

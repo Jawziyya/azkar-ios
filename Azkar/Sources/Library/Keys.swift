@@ -47,5 +47,7 @@ enum Keys {
     static let enableCounterTicker = "kEnableCounterTicker"
     static let enableCounterHapticFeedback = "kEnableCounterHapticFeedback"
     static let enableGoToNextZikrOnCounterFinished = "kEnableGoToZikrOnCounterFinished"
+    static let azkarCounterLastChangeDate = "kAzkarCounterLastChangeDate"
+    static let azkarCounter = "kAzkarCounter"
     
 }
