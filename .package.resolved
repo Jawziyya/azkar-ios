@@ -1,0 +1,124 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "ActivityView",
+        "repositoryURL": "https://github.com/SwiftUI-Plus/ActivityView",
+        "state": {
+          "branch": null,
+          "revision": "a6843efd45db389a39701e9a8dc1f91672789b33",
+          "version": "1.1.1"
+        }
+      },
+      {
+        "package": "Alamofire",
+        "repositoryURL": "https://github.com/Alamofire/Alamofire",
+        "state": {
+          "branch": null,
+          "revision": "d120af1e8638c7da36c8481fd61a66c0c08dc4fc",
+          "version": "5.4.4"
+        }
+      },
+      {
+        "package": "Coordinator",
+        "repositoryURL": "https://github.com/radianttap/Coordinator",
+        "state": {
+          "branch": null,
+          "revision": "2a189289efe6a5143b66193dbd9b083ebcf38d40",
+          "version": "6.4.2"
+        }
+      },
+      {
+        "package": "Gifu",
+        "repositoryURL": "https://github.com/kaishin/Gifu",
+        "state": {
+          "branch": null,
+          "revision": "51f2eab32903e336f590c013267cfa4d7f8b06c4",
+          "version": "3.3.1"
+        }
+      },
+      {
+        "package": "Lottie",
+        "repositoryURL": "https://github.com/airbnb/lottie-ios",
+        "state": {
+          "branch": null,
+          "revision": "79a0b70547f7c40ea54c67487f935fa2f2eaaadc",
+          "version": "3.2.3"
+        }
+      },
+      {
+        "package": "Nuke",
+        "repositoryURL": "https://github.com/kean/Nuke.git",
+        "state": {
+          "branch": null,
+          "revision": "6f7c6adb11a8d22587b2995b3f7d9554682ad122",
+          "version": "10.7.0"
+        }
+      },
+      {
+        "package": "NukeUI",
+        "repositoryURL": "https://github.com/kean/NukeUI",
+        "state": {
+          "branch": null,
+          "revision": "08e953d8d80b409bebcd95ba0635fdd748934ce0",
+          "version": "0.7.0"
+        }
+      },
+      {
+        "package": "RevenueCat",
+        "repositoryURL": "https://github.com/RevenueCat/purchases-ios.git",
+        "state": {
+          "branch": null,
+          "revision": "102aa68c51587e3d9b7ba97a4c2a470cff92cf2b",
+          "version": null
+        }
+      },
+      {
+        "package": "SwiftRichString",
+        "repositoryURL": "https://github.com/malcommac/SwiftRichString",
+        "state": {
+          "branch": null,
+          "revision": "9bf4b5af6bb4386865636fc504d6c588c2b65040",
+          "version": "3.7.2"
+        }
+      },
+      {
+        "package": "Introspect",
+        "repositoryURL": "https://github.com/siteline/SwiftUI-Introspect",
+        "state": {
+          "branch": null,
+          "revision": "2e09be8af614401bc9f87d40093ec19ce56ccaf2",
+          "version": "0.1.3"
+        }
+      },
+      {
+        "package": "SwiftUIX",
+        "repositoryURL": "https://github.com/SwiftUIX/SwiftUIX",
+        "state": {
+          "branch": null,
+          "revision": "eb6a23fc4cc79545e40a8cf5c82119684750194f",
+          "version": "0.1.1"
+        }
+      },
+      {
+        "package": "SwiftyStoreKit",
+        "repositoryURL": "https://github.com/bizz84/SwiftyStoreKit",
+        "state": {
+          "branch": null,
+          "revision": "3b54c8eac2840b0cdd576634e83d9ebeb70f847c",
+          "version": "0.16.3"
+        }
+      },
+      {
+        "package": "ZIPFoundation",
+        "repositoryURL": "https://github.com/weichsel/ZIPFoundation",
+        "state": {
+          "branch": null,
+          "revision": "cf10bbff6ac3b873e97b36b9784c79866a051a8e",
+          "version": "0.9.12"
+        }
+      }
+    ]
+  },
+  "version": 1
+}
