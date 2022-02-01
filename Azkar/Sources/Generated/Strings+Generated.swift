@@ -290,6 +290,8 @@ internal enum L10n {
     internal enum Reminders {
       /// Enable reminders
       internal static let enable = L10n.tr("Localizable", "settings.reminders.enable")
+      /// Configuration
+      internal static let header = L10n.tr("Localizable", "settings.reminders.header")
       /// Reminder types
       internal static let reminderTypesSectionTitle = L10n.tr("Localizable", "settings.reminders.reminder-types-section-title")
       /// Time
@@ -380,6 +382,8 @@ internal enum L10n {
   }
 
   internal enum Subscribe {
+    /// Cancel subscription
+    internal static let cancel = L10n.tr("Localizable", "subscribe.cancel")
     /// Continue
     internal static let purchaseTitle = L10n.tr("Localizable", "subscribe.purchase-title")
     /// Restore
@@ -389,6 +393,8 @@ internal enum L10n {
     /// Some of the features only available for **Azkar Pro** users.
     internal static let title = L10n.tr("Localizable", "subscribe.title")
     internal enum Billing {
+      /// The subscription renews automatically until you turn it off
+      internal static let autoRenewing = L10n.tr("Localizable", "subscribe.billing.auto-renewing")
       /// One-time purchase
       internal static let lifetime = L10n.tr("Localizable", "subscribe.billing.lifetime")
       /// Billed monthly

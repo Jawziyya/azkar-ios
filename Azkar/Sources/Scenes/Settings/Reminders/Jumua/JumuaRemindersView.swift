@@ -77,7 +77,7 @@ struct JumuaRemindersView: View {
                 if viewModel.isNotificationsEnabled {
                     Section(
                         header:
-                            Text("Настройки уведомлений")
+                            Text(L10n.Settings.Reminders.header)
                     ) {
                         timePicker
                         
