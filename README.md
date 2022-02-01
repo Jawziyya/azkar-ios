@@ -15,8 +15,8 @@
 
 Azkar app supports the following platforms:
 
-- 📱 iOS/iPad 14.0+
-- 🖥 macOS 11.1+
+- 📱 iOS/iPad 15.0+
+- 🖥 macOS 12.0+
 
 <br>
 
