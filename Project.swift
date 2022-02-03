@@ -142,7 +142,7 @@ let packages: [Package] = [
     .remote(url: "https://github.com/Alamofire/Alamofire", requirement: .upToNextMajor(from: "5.0.0")),
     .remote(url: "https://github.com/weichsel/ZIPFoundation", requirement: .upToNextMajor(from: "0.9.0")),
     .remote(url: "https://github.com/kean/NukeUI", requirement: .upToNextMajor(from: "0.7.0")),
-    .remote(url: "https://github.com/RevenueCat/purchases-ios.git", requirement: .upToNextMajor(from: "4.0.0")),
+    .remote(url: "https://github.com/RevenueCat/purchases-ios.git", requirement: .revision("09c9d4d2ceb41c471d5e3110ac1a97e3de9defb4")),
 ]
 
 let project = Project(
