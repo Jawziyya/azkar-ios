@@ -156,7 +156,6 @@ let project = Project(
             name: AzkarTarget.azkarApp.rawValue,
             shared: true,
             buildAction: BuildAction(targets: ["Azkar"]),
-            testAction: TestAction.testPlans("Azkar/Resources/quiz.xctestplan"),
             runAction: RunAction(executable: "Azkar")
         )
     ],
