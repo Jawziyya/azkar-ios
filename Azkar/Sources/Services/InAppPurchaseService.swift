@@ -92,6 +92,10 @@ final class InAppPurchaseService {
                     default:
                         promise(.success(false))
                     }
+                case .deferred(let purchase):
+                    // TODO: Handle this case.
+                    print(purchase)
+                    break
                 }
             }
         }

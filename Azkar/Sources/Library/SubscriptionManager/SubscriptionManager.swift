@@ -115,7 +115,7 @@ final class SubscriptionManager: SubscriptionManagerType {
     func restorePurchases() -> AnyPublisher<PurchaseResult, Error> {
         return Future { observer in
             Purchases.shared
-                .restoreTransactions { info, error in
+                .restorePurchases { info, error in
                     if let error = error {
                         observer(.failure(error))
                         return

@@ -70,7 +70,6 @@ enum AzkarTarget: String, CaseIterable {
                 dependencies: [
                     .sdk(name: "SwiftUI.framework"),
                     .package(product: AzkarPackage.audioPlayer.name),
-                    .package(product: "SwiftRichString"),
                     .package(product: "SwiftyStoreKit"),
                     .package(product: "Coordinator"),
                     .package(product: "Lottie"),
@@ -79,6 +78,8 @@ enum AzkarTarget: String, CaseIterable {
                     .package(product: "ZIPFoundation"),
                     .package(product: "NukeUI"),
                     .package(product: "RevenueCat"),
+                    .package(product: "SwiftUIX"),
+                    .package(product: "ActivityView")
                 ],
                 settings: Settings(
                     base: baseSettingsDictionary
@@ -133,16 +134,26 @@ enum AzkarPackage: String {
 }
 
 let packages: [Package] = [
+    // MARK: Internal depedencies.
     .local(path: AzkarPackage.audioPlayer.path),
+
+    // MARK: Services.
+    .remote(url: "https://github.com/RevenueCat/purchases-ios.git", requirement: .revision("09c9d4d2ceb41c471d5e3110ac1a97e3de9defb4")),
+
+    // MARK: Network.
+    .remote(url: "https://github.com/Alamofire/Alamofire", requirement: .upToNextMajor(from: "5.0.0")),
+
+    // MARK: Utilities.
+    .remote(url: "https://github.com/weichsel/ZIPFoundation", requirement: .upToNextMajor(from: "0.9.0")),
     .remote(url: "https://github.com/bizz84/SwiftyStoreKit", requirement: .upToNextMajor(from: "0.16.3")),
-    .remote(url: "https://github.com/malcommac/SwiftRichString", requirement: .upToNextMajor(from: "3.7.2")),
+
+    // MARK: UI.
     .remote(url: "https://github.com/radianttap/Coordinator", requirement: .upToNextMajor(from: "6.4.2")),
     .remote(url: "https://github.com/airbnb/lottie-ios", requirement: .upToNextMajor(from: "3.0.0")),
-    .remote(url: "https://github.com/siteline/SwiftUI-Introspect", requirement: .upToNextMajor(from: "0.1.3")),
-    .remote(url: "https://github.com/Alamofire/Alamofire", requirement: .upToNextMajor(from: "5.0.0")),
-    .remote(url: "https://github.com/weichsel/ZIPFoundation", requirement: .upToNextMajor(from: "0.9.0")),
     .remote(url: "https://github.com/kean/NukeUI", requirement: .upToNextMajor(from: "0.7.0")),
-    .remote(url: "https://github.com/RevenueCat/purchases-ios.git", requirement: .revision("09c9d4d2ceb41c471d5e3110ac1a97e3de9defb4")),
+    .remote(url: "https://github.com/SwiftUIX/SwiftUIX", requirement: .upToNextMajor(from: "0.1.1")),
+    .remote(url: "https://github.com/siteline/SwiftUI-Introspect", requirement: .upToNextMajor(from: "0.1.3")),
+    .remote(url: "https://github.com/SwiftUI-Plus/ActivityView", requirement: .upToNextMajor(from: "1.0.0")),
 ]
 
 let project = Project(
