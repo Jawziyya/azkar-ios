@@ -2,6 +2,7 @@ default_platform(:ios)
 
 APPLE_ID = ENV['APPLE_ID']
 APP_ID = ENV['APP_ID']
+APP_APPLE_ID = ENV['APP_APPLE_ID']
 AUTH_KEY_CONTENT = ENV['AUTH_KEY_CONTENT']
 AUTH_KEY_ID = ENV['AUTH_KEY_ID']
 AUTH_KEY_ISSUER_ID = ENV['AUTH_KEY_ISSUER_ID']
@@ -11,6 +12,7 @@ ITC_TEAM_ID = ENV['ITC_TEAM_ID']
 TEAM_ID = ENV['TEAM_ID']
 TEMP_KEYCHAIN_USER = ENV['TEMP_KEYCHAIN_USER']
 TEMP_KEYCHAIN_PASSWORD = ENV['TEMP_KEYCHAIN_PASSWORD']
+PROVISIONING_PROFILE_SPECIFIER = ENV['PROVISIONING_PROFILE_SPECIFIER']
 
 # Keychain related operations.
 def delete_temp_keychain(name)
@@ -108,11 +110,16 @@ platform :ios do
       target: app_name
     )
 
-    match_configuration(type: 'appstore')
-
-    build_app(
-      project: project_name,
-      scheme: 'Azkar'
+    gym(
+      project_name: project_name,
+      scheme: "Azkar",
+      configuration: "Release",
+      export_method: "app-store",
+      export_options: {
+        provisioningProfiles: { 
+            APP_APPLE_ID => PROVISIONING_PROFILE_SPECIFIER
+        }
+      }
     )
 
     testflight(
