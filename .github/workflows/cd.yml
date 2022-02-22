@@ -16,6 +16,12 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v1
+        
+      - name: Generate Xcode project
+        uses: tuist/tuist-action@0.13.0
+        with:
+          command: 'build'
+          arguments: ''
 
       - name: Deploy iOS Beta to TestFlight via Fastlane
         uses: maierj/fastlane-action@v1.4.0
