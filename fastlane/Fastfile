@@ -1,26 +1,40 @@
-# This file contains the fastlane.tools configuration
-# You can find the documentation at https://docs.fastlane.tools
-#
-# For a list of all available actions, check out
-#
-#     https://docs.fastlane.tools/actions
-#
-# For a list of all available plugins, check out
-#
-#     https://docs.fastlane.tools/plugins/available-plugins
-#
-
-# Uncomment the line if you want fastlane to automatically update itself
-# update_fastlane
-
 default_platform(:ios)
 
-def api_key_path
-  "fastlane/AuthKey.json"
+APPLE_ID = ENV['APPLE_ID']
+APP_ID = ENV['APP_ID']
+AUTH_KEY_CONTENT = ENV['AUTH_KEY_CONTENT']
+AUTH_KEY_ID = ENV['AUTH_KEY_ID']
+AUTH_KEY_ISSUER_ID = ENV['AUTH_KEY_ISSUER_ID']
+MATCH_GIT_AUTH = ENV['MATCH_GIT_AUTH']
+MATCH_GIT_URL = ENV['MATCH_GIT_URL']
+ITC_TEAM_ID = ENV['ITC_TEAM_ID']
+TEAM_ID = ENV['TEAM_ID']
+TEMP_KEYCHAIN_USER = ENV['TEMP_KEYCHAIN_USER']
+TEMP_KEYCHAIN_PASSWORD = ENV['TEMP_KEYCHAIN_PASSWORD']
+
+# Keychain related operations.
+def delete_temp_keychain(name)
+  delete_keychain(
+    name: name
+  ) if File.exist? File.expand_path("~/Library/Keychains/#{name}-db")
+end
+
+def create_temp_keychain(name, password)
+  create_keychain(
+    name: name,
+    password: password,
+    unlock: false,
+    timeout: 0
+  )
 end
 
 def project_name
   "Azkar.xcodeproj"
+end
+
+def ensure_temp_keychain(name, password)
+  delete_temp_keychain(name)
+  create_temp_keychain(name, password)
 end
 
 def app_name
@@ -61,6 +75,57 @@ platform :ios do
     build_app(project: project_name, scheme: 'Azkar')
     testflight(api_key_path: api_key_path, changelog: changelog)
   end
+
+  lane :closed_beta do
+    keychain_name = TEMP_KEYCHAIN_USER
+    keychain_password = TEMP_KEYCHAIN_PASSWORD
+    ensure_temp_keychain(keychain_name, keychain_password)
+
+    api_key = app_store_connect_api_key(
+      key_id: AUTH_KEY_ID,
+      issuer_id: AUTH_KEY_ISSUER_ID,
+      key_content: AUTH_KEY_CONTENT,            
+      duration: 1200,            
+      in_house: false
+    )
+    
+    current_build_number = get_build_number_from_plist(
+      xcodeproj: project_name,
+      target: app_name
+    )
+    new_build_number = current_build_number.to_i + 1
+    increment_build_number_in_plist(
+      xcodeproj: project_name,
+      build_number: new_build_number.to_s, 
+      target: app_name
+    )
+
+    match(
+      type: 'appstore',
+      app_identifier: "#{APP_ID}",
+      git_basic_authorization: Base64.strict_encode64(MATCH_GIT_AUTH),
+      readonly: true,
+      keychain_name: keychain_name,
+      keychain_password: keychain_password,
+      api_key: api_key
+    )
+
+    build_app(
+      project: project_name,
+      scheme: 'Azkar'
+    )
+
+    testflight(
+      api_key: api_key,
+      skip_waiting_for_build_processing: true,
+      skip_submission: true,
+      distribute_external: false,
+      notify_external_testers: false
+    )
+
+    delete_temp_keychain(keychain_name)
+  end
+
 end
 
 platform :mac do
