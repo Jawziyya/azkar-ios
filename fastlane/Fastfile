@@ -117,7 +117,7 @@ platform :ios do
       export_method: "app-store",
       export_options: {
         provisioningProfiles: { 
-            APP_APPLE_ID => PROVISIONING_PROFILE_SPECIFIER
+            APP_ID => PROVISIONING_PROFILE_SPECIFIER
         }
       }
     )
