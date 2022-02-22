@@ -30,6 +30,7 @@ jobs:
         env:
           APPLE_ID: '${{ secrets.APPLE_ID }}'
           APP_ID: '${{ secrets.APP_ID }}'
+          APP_APPLE_ID: '${{ secrets.APP_APPLE_ID }}'
           AUTH_KEY_CONTENT: '${{ secrets.AUTH_KEY_CONTENT }}'
           AUTH_KEY_ID: '${{ secrets.AUTH_KEY_ID }}'
           AUTH_KEY_ISSUER_ID: '${{ secrets.AUTH_KEY_ISSUER_ID }}'
@@ -40,3 +41,4 @@ jobs:
           TEMP_KEYCHAIN_USER: '${{ secrets.TEMP_KEYCHAIN_USER }}'
           TEMP_KEYCHAIN_PASSWORD: '${{ secrets.TEMP_KEYCHAIN_PASSWORD }}'          
           MATCH_PASSWORD: '${{ secrets.MATCH_PASSWORD }}'
+          PROVISIONING_PROFILE_SPECIFIER: '${{ secrets.PROVISIONING_PROFILE_SPECIFIER }}'
