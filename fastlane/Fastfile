@@ -109,7 +109,6 @@ platform :ios do
     )
 
     match_configuration(type: 'appstore')
-    match_configuration(type: 'development')
 
     build_app(
       project: project_name,
