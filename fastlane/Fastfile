@@ -111,7 +111,7 @@ platform :ios do
     )
 
     gym(
-      project_name: project_name,
+      project: project_name,
       scheme: "Azkar",
       configuration: "Release",
       export_method: "app-store",
