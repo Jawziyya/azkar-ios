@@ -20,7 +20,7 @@ jobs:
       - name: Generate Xcode project
         uses: tuist/tuist-action@0.13.0
         with:
-          command: 'build'
+          command: 'generate'
           arguments: ''
 
       - name: Deploy iOS Beta to TestFlight via Fastlane
