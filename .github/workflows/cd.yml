@@ -27,6 +27,7 @@ jobs:
         uses: maierj/fastlane-action@v1.4.0
         with:
           lane: closed_beta
+          arguments: '--verbose'
         env:
           APPLE_ID: '${{ secrets.APPLE_ID }}'
           APP_ID: '${{ secrets.APP_ID }}'
