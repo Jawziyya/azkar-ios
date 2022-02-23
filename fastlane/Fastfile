@@ -113,6 +113,12 @@ platform :ios do
     keychain_name = TEMP_KEYCHAIN_USER
     keychain_password = TEMP_KEYCHAIN_PASSWORD
     ensure_temp_keychain(keychain_name, keychain_password)
+
+    match_configuration(
+      type: 'appstore', 
+      keychain_name: keychain_name,
+      keychain_password: keychain_password
+    )
     
     current_build_number = get_build_number_from_plist(
       xcodeproj: project_name,
@@ -125,16 +131,7 @@ platform :ios do
       target: app_name
     )
 
-    match_configuration(
-      type: 'appstore', 
-      keychain_name: keychain_name,
-      keychain_password: keychain_password
-    )
-
-    build_app(
-      project: project_name,
-      scheme: "Azkar"
-    )
+    build_app(project: project_name, scheme: 'Azkar')
 
     testflight(
       api_key: get_api_key,
