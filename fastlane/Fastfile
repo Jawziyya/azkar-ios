@@ -110,6 +110,8 @@ platform :ios do
       target: app_name
     )
 
+    match_configuration(type: 'appstore')
+
     gym(
       project: project_name,
       scheme: "Azkar",
