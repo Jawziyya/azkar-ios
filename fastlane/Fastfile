@@ -60,8 +60,8 @@ private_lane :match_configuration do |options|
     app_identifier: "#{APP_ID}",
     git_basic_authorization: Base64.strict_encode64(MATCH_GIT_AUTH),
     readonly: options[:force] == false,
-    keychain_name: TEMP_KEYCHAIN_USER,
-    keychain_password: TEMP_KEYCHAIN_PASSWORD,
+    keychain_name: options[:keychain_user],
+    keychain_password: options[:keychain_password],
     api_key: get_api_key,
     force_for_new_devices: options[:force_for_new_devices] == true
   )
@@ -71,7 +71,8 @@ platform :ios do
 
   desc 'Synchronizes certificates / profiles and optionally creates new ones.'
   lane :sync_signing do
-    match_configuration
+    match_configuration(type: 'appstore')
+    match_configuration(type: 'development')
   end
 
   desc "Push a new release build to the App Store"
@@ -110,7 +111,11 @@ platform :ios do
       target: app_name
     )
 
-    match_configuration(type: 'appstore')
+    match_configuration(
+      type: 'appstore', 
+      keychain_name: keychain_name,
+      keychain_password: keychain_password
+    )
 
     gym(
       project: project_name,
