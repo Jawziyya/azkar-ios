@@ -20,7 +20,7 @@ jobs:
       - name: Sync signing
         uses: maierj/fastlane-action@v1.4.0
         with:
-          lane: sync_signing
+          lane: ci_sync_signing
         env:
           APPLE_ID: '${{ secrets.APPLE_ID }}'
           APP_ID: '${{ secrets.APP_ID }}'

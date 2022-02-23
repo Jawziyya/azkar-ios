@@ -75,6 +75,20 @@ platform :ios do
     match_configuration(type: 'development')
   end
 
+  desc 'Synchronizes certificates / profiles and optionally creates new ones.'
+  lane :ci_sync_signing do
+    match_configuration(
+      type: 'appstore', 
+      keychain_name: TEMP_KEYCHAIN_USER,
+      keychain_password: TEMP_KEYCHAIN_PASSWORD
+    )
+    match_configuration(
+      type: 'development', 
+      keychain_name: TEMP_KEYCHAIN_USER,
+      keychain_password: TEMP_KEYCHAIN_PASSWORD
+    )
+  end
+
   desc "Push a new release build to the App Store"
   lane :release do |options|
     changelog = File.read("./changelog")
@@ -117,16 +131,9 @@ platform :ios do
       keychain_password: keychain_password
     )
 
-    gym(
+    build_app(
       project: project_name,
-      scheme: "Azkar",
-      configuration: "Release",
-      export_method: "app-store",
-      export_options: {
-        provisioningProfiles: { 
-            APP_ID => PROVISIONING_PROFILE_SPECIFIER
-        }
-      }
+      scheme: "Azkar"
     )
 
     testflight(
