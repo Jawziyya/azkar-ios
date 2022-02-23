@@ -24,10 +24,10 @@ jobs:
           arguments: ''
 
       - name: Deploy iOS Beta to TestFlight
-        uses: maierj/fastlane-action@v1.4.0
+        uses: maierj/fastlane-action@v2.1.0
         with:
           lane: closed_beta
-          arguments: '--verbose'
+          verbose: true
         env:
           APPLE_ID: '${{ secrets.APPLE_ID }}'
           APP_ID: '${{ secrets.APP_ID }}'
