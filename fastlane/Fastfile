@@ -91,7 +91,7 @@ platform :ios do
 
   desc "Push a new release build to the App Store"
   lane :release do |options|
-    changelog = File.read("./changelog")
+    changelog = File.read("./Changelog.txt")
     sync_signing
 
     current_build_number = get_build_number_from_plist(
