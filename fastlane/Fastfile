@@ -113,7 +113,7 @@ platform :ios do
     testflight(
       api_key: get_api_key,
       distribute_external: true,
-      changelog: changelog
+      changelog: File.read("./Changelog.txt")
     )
   end
 
