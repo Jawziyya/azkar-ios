@@ -333,7 +333,7 @@
 	<key>CFBundlePackageType</key>
 	<string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
 	<key>CFBundleShortVersionString</key>
-	<string>2.3</string>
+	<string>2.3.1</string>
 	<key>CFBundleVersion</key>
 	<string>66</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
