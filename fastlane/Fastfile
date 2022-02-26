@@ -110,14 +110,10 @@ platform :ios do
   end
 
   lane :closed_beta do
-    keychain_name = TEMP_KEYCHAIN_USER
-    keychain_password = TEMP_KEYCHAIN_PASSWORD
-    ensure_temp_keychain(keychain_name, keychain_password)
+    setup_ci
 
     match_configuration(
-      type: 'appstore', 
-      keychain_name: keychain_name,
-      keychain_password: keychain_password
+      type: 'appstore'
     )
     
     current_build_number = get_build_number_from_plist(
@@ -140,8 +136,6 @@ platform :ios do
       distribute_external: false,
       notify_external_testers: false
     )
-
-    delete_temp_keychain(keychain_name)
   end
 
 end
