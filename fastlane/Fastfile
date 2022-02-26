@@ -112,7 +112,8 @@ platform :ios do
 
     testflight(
       api_key: get_api_key,
-      distribute_external: true
+      distribute_external: true,
+      changelog: changelog
     )
   end
 
