@@ -102,14 +102,9 @@ platform :ios do
       type: 'appstore'
     )
     
-    current_build_number = get_build_number_from_plist(
-      xcodeproj: project_name,
-      target: app_name
-    )
-    new_build_number = current_build_number.to_i + 1
     increment_build_number_in_plist(
       xcodeproj: project_name,
-      build_number: new_build_number.to_s, 
+      build_number: ENV['CI_JOB_ID'], 
       target: app_name
     )
 
@@ -117,10 +112,7 @@ platform :ios do
 
     testflight(
       api_key: get_api_key,
-      skip_waiting_for_build_processing: true,
-      skip_submission: true,
-      distribute_external: false,
-      notify_external_testers: false
+      distribute_external: true
     )
   end
 
