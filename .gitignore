@@ -6,7 +6,6 @@ Project Resources/*
 *.dSYM.zip
 
 fastlane/report.xml
-fastlane/Changelog*
 fastlane/MatchFile
 fastlane/AuthKey.json
 

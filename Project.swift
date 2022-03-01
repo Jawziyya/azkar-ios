@@ -86,8 +86,26 @@ enum AzkarTarget: String, CaseIterable {
                         .merging(["DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER": "NO"])
                     ,
                     configurations: [
-                        .debug(name: "Debug", xcconfig: "./Azkar.xcconfig"),
-                        .release(name: "Release", xcconfig: "./Azkar.xcconfig")
+                        .debug(
+                            name: "Debug",
+                            settings: [
+                                "CODE_SIGN_IDENTITY": "iPhone Developer",
+                                "CODE_SIGN_IDENTITY[sdk=macosx*]": "Mac Developer",
+                                "PROVISIONING_PROFILE_SPECIFIER": "match Development io.jawziyya.azkar-app",
+                                "PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]": "match Development io.jawziyya.azkar-app catalyst",
+                            ],
+                            xcconfig: "./Azkar.xcconfig"
+                        ),
+                        .release(
+                            name: "Release",
+                            settings: [
+                                "CODE_SIGN_IDENTITY": "iPhone Distribution",
+                                "CODE_SIGN_IDENTITY[sdk=macosx*]": "Apple Distribution",
+                                "PROVISIONING_PROFILE_SPECIFIER": "match AppStore io.jawziyya.azkar-app",
+                                "PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]": "match AppStore io.jawziyya.azkar-app catalyst",
+                            ],
+                            xcconfig: "./Azkar.xcconfig"
+                        )
                     ]
                 )
             )
@@ -111,8 +129,6 @@ enum AzkarTarget: String, CaseIterable {
                 ],
                 settings: Settings(
                     base: baseSettingsDictionary
-                        .manualCodeSigning()
-                        .codeSignIdentity("")
                 ),
                 launchArguments: []
             )

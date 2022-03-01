@@ -11,19 +11,10 @@ PRODUCT_NAME=Azkar
 SDKROOT=iphoneos
 SUPPORTED_PLATFORMS=iphonesimulator iphoneos
 SUPPORTS_MACCATALYST=YES
-SWIFT_VERSION=5.4.2
+SWIFT_VERSION=5.5.2
 TARGETED_DEVICE_FAMILY=1,2
-
-CODE_SIGN_IDENTITY[config=Debug]=iPhone Developer
-CODE_SIGN_IDENTITY[config=Release]=iPhone Distribution
-CODE_SIGN_IDENTITY[sdk=macosx*][config=Debug]=Mac Developer
-CODE_SIGN_IDENTITY[sdk=macosx*][config=Release]=3rd Party Mac Developer Application
-LD_RUNPATH_SEARCH_PATHS[config=Debug]=["$(inherited)", "@executable_path/Frameworks"]
-LD_RUNPATH_SEARCH_PATHS[config=Release]=["$(inherited)", "@executable_path/Frameworks"]
-PROVISIONING_PROFILE_SPECIFIER[config=Debug]=match Development io.jawziyya.azkar-app
-PROVISIONING_PROFILE_SPECIFIER[config=Release]=match AppStore io.jawziyya.azkar-app
-PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*][config=Debug]=match Development io.jawziyya.azkar-app catalyst
-PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*][config=Release]=match AppStore io.jawziyya.azkar-app catalyst
+CODE_SIGN_STYLE=Manual
+LD_RUNPATH_SEARCH_PATHS=["$(inherited)", "@executable_path/Frameworks"]
 SWIFT_ACTIVE_COMPILATION_CONDITIONS[config=Debug]=DEBUG
 SWIFT_COMPILATION_MODE[config=Debug]=singlefile
 SWIFT_COMPILATION_MODE[config=Release]=wholemodule
