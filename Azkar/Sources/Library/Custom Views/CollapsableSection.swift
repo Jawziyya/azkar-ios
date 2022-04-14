@@ -60,7 +60,6 @@ struct CollapsableSection: View, Equatable {
                         } else {
                             Text(.init(text))
                                 .font(Font.customFont(font, style: .body))
-                                .lineSpacing(lineSpacing)
                         }
                     }
                     .multilineTextAlignment(isArabicText ? .trailing : .leading)
