@@ -315,13 +315,13 @@ internal enum L10n {
         internal static let switchLabel = L10n.tr("Localizable", "settings.reminders.morning-evening.switch-label")
       }
       internal enum NoAccess {
-        /// 
+        /// Azkar App can not send notifications since the permission wasn't granted.
         internal static let general = L10n.tr("Localizable", "settings.reminders.no-access.general")
-        /// 
+        /// Azkar App can send notifications but sounds switched off
         internal static let noSound = L10n.tr("Localizable", "settings.reminders.no-access.no-sound")
-        /// 
+        /// No permission to send notifications
         internal static let titleGeneral = L10n.tr("Localizable", "settings.reminders.no-access.title-general")
-        /// 
+        /// No access to play sounds
         internal static let titleSound = L10n.tr("Localizable", "settings.reminders.no-access.title-sound")
         /// Turn ON in Settings
         internal static let turnOnTitle = L10n.tr("Localizable", "settings.reminders.no-access.turn-on-title")
@@ -342,6 +342,8 @@ internal enum L10n {
       internal static let arabicTextFont = L10n.tr("Localizable", "settings.text.arabic-text-font")
       /// Text size
       internal static let fontSize = L10n.tr("Localizable", "settings.text.font-size")
+      /// Line spacing
+      internal static let lineHeight = L10n.tr("Localizable", "settings.text.line-height")
       /// Show tashkeel
       internal static let showTashkeel = L10n.tr("Localizable", "settings.text.show-tashkeel")
       /// Standard iOS
