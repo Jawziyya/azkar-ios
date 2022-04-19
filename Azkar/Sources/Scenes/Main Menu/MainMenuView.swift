@@ -96,7 +96,7 @@ struct MainMenuView: View {
                         self.viewModel.navigateToZikr(self.viewModel.fastingDua)
                     }, label: {
                         HStack {
-                            MainMenuSmallGroup(item: AzkarMenuItem(category: ZikrCategory.other, imageName: "🌕", title: "Молитва разговения", color: Color.blue, count: nil, iconType: .emoji))
+                            MainMenuSmallGroup(item: AzkarMenuItem(category: ZikrCategory.other, imageName: "🌕", title: viewModel.fastingDua.title ?? "", color: Color.blue, count: nil, iconType: .emoji))
                             Image(systemName: "chevron.right")
                                 .foregroundColor(Color.tertiaryText)
                                 .padding(.trailing)
