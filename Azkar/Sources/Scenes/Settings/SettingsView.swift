@@ -222,6 +222,15 @@ struct SettingsView: View {
             if viewModel.preferences.useSystemFontSize == false {
                 self.sizePicker
             }
+
+
+            VStack(alignment: .leading, spacing: 16) {
+                Divider()
+                    .padding(.horizontal, -20)
+                Text(L10n.Settings.Text.lineHeight)
+                lineHeightPicker
+            }
+            .padding(.vertical, 8)
         }
     }
     
@@ -240,6 +249,22 @@ struct SettingsView: View {
             }
         }
         .pickerStyle(SegmentedPickerStyle())
+    }
+
+    var lineHeightPicker: some View {
+        Picker(
+            selection: $viewModel.preferences.lineHeight,
+            label: Text(L10n.Settings.Text.fontSize)
+                .font(Font.system(.body, design: .rounded))
+                .padding(.vertical, 8)
+        ) {
+            ForEach(LineHeight.allCases) { height in
+                Text(height.title)
+                    .font(Font.system(.body, design: .rounded))
+                    .tag(height)
+            }
+        }
+        .pickerStyle(.segmented)
     }
     
     var remindersSection: some View {
@@ -341,7 +366,6 @@ struct SettingsView_Previews: PreviewProvider {
                 )
             )
         )
-        .embedInNavigation()
         .environment(\.colorScheme, .dark)
     }
 }

@@ -19,12 +19,17 @@ struct CollapsableSection: View, Equatable {
     let isArabicText: Bool
     @Binding var isExpanded: Bool
     let font: AppFont
+    var lineHeight: LineHeight?
     var sizeCategory: ContentSizeCategory? = Preferences.shared.sizeCategory
     var tintColor: Color = .accent
     var expandingCallback: (() -> Void)?
     
     var lineSpacing: CGFloat {
         CGFloat(25 * (font.lineAdjustment ?? 1))
+    }
+
+    var translationLineSpacing: CGFloat {
+        (lineHeight?.spacing ?? 1)
     }
 
     var body: some View {
@@ -59,7 +64,8 @@ struct CollapsableSection: View, Equatable {
                                 .lineSpacing(lineSpacing)
                         } else {
                             Text(.init(text))
-                                .font(Font.customFont(font, style: .body))
+                                .font(Font.customFont(font, style: .body).leading(.tight))
+                                .lineSpacing(translationLineSpacing)
                         }
                     }
                     .multilineTextAlignment(isArabicText ? .trailing : .leading)
@@ -77,14 +83,17 @@ struct CollapsableSection: View, Equatable {
 
 struct CollapsableSection_Previews: PreviewProvider {
     static var previews: some View {
-        CollapsableSection(
-            title: "Title",
-            text: "Text",
+        let zikr = Zikr.data[5]
+        return CollapsableSection(
+            title: zikr.title ?? "Zikr",
+            text: zikr.translation ?? "",
             isArabicText: false,
             isExpanded: .constant(true),
             font: TranslationFont.iowanOldStyle,
+            lineHeight: .l,
             tintColor: Color.blue,
             expandingCallback: {}
         )
+        .previewLayout(.fixed(width: 350, height: 200))
     }
 }

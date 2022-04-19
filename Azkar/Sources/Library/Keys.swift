@@ -27,6 +27,7 @@ enum Keys {
     static let jumuaReminderId = "jumua.notification"
     
     static let preferredFont = "kPreferredFont"
+    static let lineHeight = "kPreferredLineHeight"
     
     static let enableProFeatures = "kIsProFeaturesEnabled"
     

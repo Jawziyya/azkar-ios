@@ -58,7 +58,8 @@ struct HadithView: View {
                 text: viewModel.text,
                 isArabicText: true,
                 isExpanded: .constant(true),
-                font: viewModel.preferences.preferredArabicFont
+                font: viewModel.preferences.preferredArabicFont,
+                lineHeight: viewModel.preferences.lineHeight
             )
             .equatable()
         }
@@ -71,7 +72,8 @@ struct HadithView: View {
             text: text,
             isArabicText: false,
             isExpanded: .constant(true),
-            font: viewModel.preferences.preferredTranslationFont
+            font: viewModel.preferences.preferredTranslationFont,
+            lineHeight: viewModel.preferences.lineHeight
         )
     }
 

@@ -174,6 +174,7 @@ struct ZikrView: View {
             isArabicText: false,
             isExpanded: $viewModel.expandTranslation,
             font: viewModel.preferences.preferredTranslationFont,
+            lineHeight: viewModel.preferences.lineHeight,
             tintColor: tintColor
         ) {
             withAnimation(Animation.easeInOut(duration: 0.2)) {
@@ -192,6 +193,7 @@ struct ZikrView: View {
             isArabicText: false,
             isExpanded: $viewModel.expandTransliteration,
             font: viewModel.preferences.preferredTranslationFont,
+            lineHeight: viewModel.preferences.lineHeight,
             tintColor: tintColor
         ) {
             withAnimation(Animation.easeInOut(duration: 0.2)) {

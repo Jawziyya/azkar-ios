@@ -35,10 +35,11 @@ final class Preferences: ObservableObject {
         self.defaults = defaults
         
         Publishers
-            .Merge3(
-                $sizeCategory.dropFirst().map { _ in UUID() },
-                $useSystemFontSize.dropFirst().map { _ in UUID() },
-                $showTashkeel.dropFirst().map { _ in UUID() }
+            .MergeMany(
+                $sizeCategory.toVoid().dropFirst().map { _ in UUID() },
+                $useSystemFontSize.toVoid().dropFirst().map { _ in UUID() },
+                $showTashkeel.toVoid().dropFirst().map { _ in UUID() },
+                $lineHeight.toVoid().dropFirst().map { _ in UUID() }
             )
             .subscribe(textSettingsChangePublishSubject)
             .store(in: &cancellables)
@@ -87,6 +88,9 @@ final class Preferences: ObservableObject {
 
     @Preference(Keys.useSystemFontSize, defaultValue: true)
     var useSystemFontSize
+
+    @Preference(Keys.lineHeight, defaultValue: LineHeight.m)
+    var lineHeight
 
     @Preference(Keys.purchasedIconPacks, defaultValue: [AppIconPack.standard])
     var purchasedIconPacks
