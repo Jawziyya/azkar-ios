@@ -222,6 +222,24 @@ struct SettingsView: View {
             if viewModel.preferences.useSystemFontSize == false {
                 self.sizePicker
             }
+
+            NavigationLink(L10n.Settings.Text.lineSpacing) {
+                Form {
+                    Group {
+                        Section(L10n.Settings.Text.arabicLineSpacing) {
+                            lineSpacingPicker
+                        }
+                        Section(L10n.Settings.Text.translationLineSpacing) {
+                            translationLineSpacingPicker
+                        }
+                    }
+                    .listRowBackground(Color.contentBackground)
+                }
+                .navigationBarTitle(L10n.Settings.Text.lineSpacing)
+                .accentColor(Color.accent)
+                .horizontalPaddingForLargeScreen()
+                .background(Color.background.edgesIgnoringSafeArea(.all))
+            }
         }
     }
     
@@ -240,6 +258,34 @@ struct SettingsView: View {
             }
         }
         .pickerStyle(SegmentedPickerStyle())
+    }
+
+    var lineSpacingPicker: some View {
+        Picker(
+            selection: $viewModel.preferences.lineSpacing,
+            label: EmptyView()
+        ) {
+            ForEach(LineSpacing.allCases) { height in
+                Text(height.title)
+                    .font(Font.system(.body, design: .rounded))
+                    .tag(height)
+            }
+        }
+        .pickerStyle(.segmented)
+    }
+
+    var translationLineSpacingPicker: some View {
+        Picker(
+            selection: $viewModel.preferences.translationLineSpacing,
+            label: EmptyView()
+        ) {
+            ForEach(LineSpacing.allCases) { height in
+                Text(height.title)
+                    .font(Font.system(.body, design: .rounded))
+                    .tag(height)
+            }
+        }
+        .pickerStyle(.segmented)
     }
     
     var remindersSection: some View {
@@ -341,7 +387,6 @@ struct SettingsView_Previews: PreviewProvider {
                 )
             )
         )
-        .embedInNavigation()
         .environment(\.colorScheme, .dark)
     }
 }

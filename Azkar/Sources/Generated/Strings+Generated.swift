@@ -315,13 +315,13 @@ internal enum L10n {
         internal static let switchLabel = L10n.tr("Localizable", "settings.reminders.morning-evening.switch-label")
       }
       internal enum NoAccess {
-        /// 
+        /// Azkar App can not send notifications since the permission wasn't granted.
         internal static let general = L10n.tr("Localizable", "settings.reminders.no-access.general")
-        /// 
+        /// Azkar App can send notifications but sounds switched off
         internal static let noSound = L10n.tr("Localizable", "settings.reminders.no-access.no-sound")
-        /// 
+        /// No permission to send notifications
         internal static let titleGeneral = L10n.tr("Localizable", "settings.reminders.no-access.title-general")
-        /// 
+        /// No access to play sounds
         internal static let titleSound = L10n.tr("Localizable", "settings.reminders.no-access.title-sound")
         /// Turn ON in Settings
         internal static let turnOnTitle = L10n.tr("Localizable", "settings.reminders.no-access.turn-on-title")
@@ -338,16 +338,22 @@ internal enum L10n {
       }
     }
     internal enum Text {
+      /// Line spacing (arabic)
+      internal static let arabicLineSpacing = L10n.tr("Localizable", "settings.text.arabic-line-spacing")
       /// Arabic font
       internal static let arabicTextFont = L10n.tr("Localizable", "settings.text.arabic-text-font")
       /// Text size
       internal static let fontSize = L10n.tr("Localizable", "settings.text.font-size")
+      /// Line spacing
+      internal static let lineSpacing = L10n.tr("Localizable", "settings.text.line-spacing")
       /// Show tashkeel
       internal static let showTashkeel = L10n.tr("Localizable", "settings.text.show-tashkeel")
       /// Standard iOS
       internal static let standardFontName = L10n.tr("Localizable", "settings.text.standard-font-name")
       /// Text
       internal static let title = L10n.tr("Localizable", "settings.text.title")
+      /// Line spacing (translation)
+      internal static let translationLineSpacing = L10n.tr("Localizable", "settings.text.translation-line-spacing")
       /// Translation font
       internal static let translationTextFont = L10n.tr("Localizable", "settings.text.translation_text_font")
       /// System text size

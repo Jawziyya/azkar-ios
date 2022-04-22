@@ -53,15 +53,13 @@ struct HadithView: View {
 
     // MARK: - Text
     private var textView: some View {
-        VStack(spacing: 10) {
-            CollapsableSection(
-                text: viewModel.text,
-                isArabicText: true,
-                isExpanded: .constant(true),
-                font: viewModel.preferences.preferredArabicFont
-            )
-            .equatable()
-        }
+        CollapsableSection(
+            text: viewModel.text,
+            isArabicText: true,
+            isExpanded: .constant(true),
+            font: viewModel.preferences.preferredArabicFont,
+            lineSpacing: viewModel.preferences.lineSpacing
+        )
     }
 
     // MARK: - Translation
@@ -71,7 +69,8 @@ struct HadithView: View {
             text: text,
             isArabicText: false,
             isExpanded: .constant(true),
-            font: viewModel.preferences.preferredTranslationFont
+            font: viewModel.preferences.preferredTranslationFont,
+            lineSpacing: viewModel.preferences.translationLineSpacing
         )
     }
 

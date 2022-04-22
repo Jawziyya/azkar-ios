@@ -86,7 +86,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             Keys.appIcon: AppIcon.gold.rawValue,
             Keys.useSystemFontSize: true,
             Keys.sizeCategory: ContentSizeCategory.medium.floatValue,
-            Keys.azkarCounterLastChangeDate: Date()
+            Keys.azkarCounterLastChangeDate: Date(),
+            Keys.lineSpacing: LineSpacing.s.rawValue,
+            Keys.translationLineSpacing: LineSpacing.s.rawValue,
         ]
 
         UserDefaults.standard.register(defaults: defaults)

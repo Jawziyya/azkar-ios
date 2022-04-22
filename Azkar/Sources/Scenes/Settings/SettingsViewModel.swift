@@ -92,7 +92,12 @@ final class SettingsViewModel: ObservableObject {
                 self.objectWillChange.send()
             })
             .store(in: &cancellables)
-        
+
+        setupNotificationsRescheduler()
+    }
+
+    /// Observes some preferences to reschedule notifications if needed.
+    private func setupNotificationsRescheduler() {
         Publishers.MergeMany(
                 preferences.$enableNotifications.toVoid().dropFirst(),
                 preferences.$enableAdhkarReminder.toVoid().dropFirst(),
