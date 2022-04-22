@@ -2,12 +2,13 @@ name: CD
 on:
   push:
     branches:
-      - 'main'
+      - 'fix/**'
+      - 'feature/**'
       - 'releases/**'
   pull_request:
     branches: [ main ]
 
-  # Allows you to run this workflow manually from the Actions a tab
+  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
 jobs:
