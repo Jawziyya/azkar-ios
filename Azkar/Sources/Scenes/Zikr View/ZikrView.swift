@@ -155,7 +155,8 @@ struct ZikrView: View {
                 text: viewModel.text,
                 isArabicText: true,
                 isExpanded: .constant(true),
-                font: viewModel.preferences.preferredArabicFont
+                font: viewModel.preferences.preferredArabicFont,
+                lineSpacing: viewModel.preferences.lineSpacing
             )
             .id(viewModel.textSettingsToken)
             .padding([.leading, .trailing, .bottom])
@@ -174,7 +175,7 @@ struct ZikrView: View {
             isArabicText: false,
             isExpanded: $viewModel.expandTranslation,
             font: viewModel.preferences.preferredTranslationFont,
-            lineHeight: viewModel.preferences.lineHeight,
+            lineSpacing: viewModel.preferences.translationLineSpacing,
             tintColor: tintColor
         ) {
             withAnimation(Animation.easeInOut(duration: 0.2)) {
@@ -193,7 +194,7 @@ struct ZikrView: View {
             isArabicText: false,
             isExpanded: $viewModel.expandTransliteration,
             font: viewModel.preferences.preferredTranslationFont,
-            lineHeight: viewModel.preferences.lineHeight,
+            lineSpacing: viewModel.preferences.translationLineSpacing,
             tintColor: tintColor
         ) {
             withAnimation(Animation.easeInOut(duration: 0.2)) {

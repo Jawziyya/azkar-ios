@@ -19,17 +19,13 @@ struct CollapsableSection: View, Equatable {
     let isArabicText: Bool
     @Binding var isExpanded: Bool
     let font: AppFont
-    var lineHeight: LineHeight?
+    var lineSpacing: LineSpacing?
     var sizeCategory: ContentSizeCategory? = Preferences.shared.sizeCategory
     var tintColor: Color = .accent
     var expandingCallback: (() -> Void)?
     
-    var lineSpacing: CGFloat {
-        CGFloat(25 * (font.lineAdjustment ?? 1))
-    }
-
-    var translationLineSpacing: CGFloat {
-        (lineHeight?.spacing ?? 1)
+    var lineSpacingValue: CGFloat {
+        (lineSpacing?.value ?? 1) * CGFloat(font.lineAdjustment ?? 1)
     }
 
     var body: some View {
@@ -61,20 +57,19 @@ struct CollapsableSection: View, Equatable {
                         if isArabicText {
                             Text(.init(text))
                                 .font(Font.customFont(font, style: .title1, sizeCategory: sizeCategory))
-                                .lineSpacing(lineSpacing)
+                                .lineSpacing(lineSpacingValue)
                         } else {
                             Text(.init(text))
                                 .font(Font.customFont(font, style: .body).leading(.tight))
-                                .lineSpacing(translationLineSpacing)
+                                .lineSpacing(lineSpacingValue)
                         }
                     }
                     .multilineTextAlignment(isArabicText ? .trailing : .leading)
                     .clipped()
-                    .transition(.move(edge: .top))
+                    .transition(.move(edge: .top).combined(with: .opacity))
                 }
             }
             .zIndex(0)
-            .opacity(isExpanded ? 1 : 0)
         }
         .clipped()
     }
@@ -90,7 +85,7 @@ struct CollapsableSection_Previews: PreviewProvider {
             isArabicText: false,
             isExpanded: .constant(true),
             font: TranslationFont.iowanOldStyle,
-            lineHeight: .l,
+            lineSpacing: LineSpacing.m,
             tintColor: Color.blue,
             expandingCallback: {}
         )

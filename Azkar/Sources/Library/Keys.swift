@@ -1,10 +1,4 @@
-//
-//  Keys.swift
-//  Azkar
-//
-//  Created by Abdurahim Jauzee on 09.05.2020.
 //  Copyright © 2020 Al Jawziyya. All rights reserved.
-//
 
 import Foundation
 
@@ -27,7 +21,8 @@ enum Keys {
     static let jumuaReminderId = "jumua.notification"
     
     static let preferredFont = "kPreferredFont"
-    static let lineHeight = "kPreferredLineHeight"
+    static let lineSpacing = "kLineSpacing"
+    static let translationLineSpacing = "kTranslationLineSpacing"
     
     static let enableProFeatures = "kIsProFeaturesEnabled"
     

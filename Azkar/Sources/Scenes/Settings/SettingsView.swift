@@ -223,14 +223,23 @@ struct SettingsView: View {
                 self.sizePicker
             }
 
-
-            VStack(alignment: .leading, spacing: 16) {
-                Divider()
-                    .padding(.horizontal, -20)
-                Text(L10n.Settings.Text.lineHeight)
-                lineHeightPicker
+            NavigationLink(L10n.Settings.Text.lineSpacing) {
+                Form {
+                    Group {
+                        Section(L10n.Settings.Text.arabicLineSpacing) {
+                            lineSpacingPicker
+                        }
+                        Section(L10n.Settings.Text.translationLineSpacing) {
+                            translationLineSpacingPicker
+                        }
+                    }
+                    .listRowBackground(Color.contentBackground)
+                }
+                .navigationBarTitle(L10n.Settings.Text.lineSpacing)
+                .accentColor(Color.accent)
+                .horizontalPaddingForLargeScreen()
+                .background(Color.background.edgesIgnoringSafeArea(.all))
             }
-            .padding(.vertical, 8)
         }
     }
     
@@ -251,14 +260,26 @@ struct SettingsView: View {
         .pickerStyle(SegmentedPickerStyle())
     }
 
-    var lineHeightPicker: some View {
+    var lineSpacingPicker: some View {
         Picker(
-            selection: $viewModel.preferences.lineHeight,
-            label: Text(L10n.Settings.Text.fontSize)
-                .font(Font.system(.body, design: .rounded))
-                .padding(.vertical, 8)
+            selection: $viewModel.preferences.lineSpacing,
+            label: EmptyView()
         ) {
-            ForEach(LineHeight.allCases) { height in
+            ForEach(LineSpacing.allCases) { height in
+                Text(height.title)
+                    .font(Font.system(.body, design: .rounded))
+                    .tag(height)
+            }
+        }
+        .pickerStyle(.segmented)
+    }
+
+    var translationLineSpacingPicker: some View {
+        Picker(
+            selection: $viewModel.preferences.translationLineSpacing,
+            label: EmptyView()
+        ) {
+            ForEach(LineSpacing.allCases) { height in
                 Text(height.title)
                     .font(Font.system(.body, design: .rounded))
                     .tag(height)

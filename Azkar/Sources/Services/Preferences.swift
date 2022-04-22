@@ -39,7 +39,8 @@ final class Preferences: ObservableObject {
                 $sizeCategory.toVoid().dropFirst().map { _ in UUID() },
                 $useSystemFontSize.toVoid().dropFirst().map { _ in UUID() },
                 $showTashkeel.toVoid().dropFirst().map { _ in UUID() },
-                $lineHeight.toVoid().dropFirst().map { _ in UUID() }
+                $lineSpacing.toVoid().dropFirst().map { _ in UUID() },
+                $translationLineSpacing.toVoid().dropFirst().map { _ in UUID() }
             )
             .subscribe(textSettingsChangePublishSubject)
             .store(in: &cancellables)
@@ -89,8 +90,11 @@ final class Preferences: ObservableObject {
     @Preference(Keys.useSystemFontSize, defaultValue: true)
     var useSystemFontSize
 
-    @Preference(Keys.lineHeight, defaultValue: LineHeight.m)
-    var lineHeight
+    @Preference(Keys.lineSpacing, defaultValue: LineSpacing.s)
+    var lineSpacing
+
+    @Preference(Keys.translationLineSpacing, defaultValue: LineSpacing.s)
+    var translationLineSpacing
 
     @Preference(Keys.purchasedIconPacks, defaultValue: [AppIconPack.standard])
     var purchasedIconPacks
