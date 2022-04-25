@@ -59,7 +59,7 @@ final class AdhkarRemindersViewModel: ObservableObject {
     
     var eveningNotificationDateRange: ClosedRange<Date> {
         let minDate = DateComponents(calendar: Calendar.current, hour: 13, minute: 0).date ?? Date()
-        let maxDate = DateComponents(calendar: Calendar.current, hour: 16, minute: 0).date ?? Date()
+        let maxDate = DateComponents(calendar: Calendar.current, hour: 18, minute: 0).date ?? Date()
         return minDate ... maxDate
     }
 
