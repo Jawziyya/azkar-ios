@@ -7,7 +7,7 @@ import MessageUI
 final class ZikrPagesViewController: UIHostingController<ZikrPagesView> {
     
     private let viewModel: ZikrPagesViewModel
-    private lazy var shareMenuItem = UIBarButtonItem(image: UIImage(systemName: "square.and.arrow.up"), style: .plain, target: self, action: #selector(share))
+    private var shareMenuItem: UIBarButtonItem?
     private lazy var settingsMenuItem = UIBarButtonItem(image: UIImage(systemName: "textformat"), style: .plain, target: self, action: #selector(goToSettings))
     
     init(viewModel: ZikrPagesViewModel) {
@@ -21,8 +21,25 @@ final class ZikrPagesViewController: UIHostingController<ZikrPagesView> {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        let shareBarButtonItem = UIBarButtonItem(
+            title: nil,
+            image: UIImage(systemName: "square.and.arrow.up"),
+            primaryAction: nil,
+            menu: UIMenu(
+                title: L10n.Common.share,
+                children: [
+                    UIAction(title: L10n.Share.image, image: UIImage(systemName: "photo"), handler: { _ in
+                        self.share(shareAsImage: true)
+                    }),
+                    UIAction(title: L10n.Share.text, image: UIImage(systemName: "doc.plaintext"), handler: { _ in
+                        self.share()
+                    })
+                ])
+        )
+        self.shareMenuItem = shareBarButtonItem
+        navigationItem.rightBarButtonItems = [shareBarButtonItem, settingsMenuItem]
         updateStyle()
-        navigationItem.rightBarButtonItems = [shareMenuItem, settingsMenuItem]
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -31,14 +48,40 @@ final class ZikrPagesViewController: UIHostingController<ZikrPagesView> {
     }
     
     private func updateStyle() {
-        shareMenuItem.tintColor = UIColor(Color.accent)
+        shareMenuItem?.tintColor = UIColor(Color.accent)
         settingsMenuItem.tintColor = UIColor(Color.accent)
     }
     
-    @objc private func share(_ sender: UIBarButtonItem) {
+    @objc private func share(shareAsImage: Bool = false) {
         let currentViewModel = viewModel.azkar[viewModel.page]
+        let activityItems: [Any]
+
+        if shareAsImage {
+            let view = ZikrShareView(
+                viewModel: currentViewModel,
+                includeTranslation: viewModel.preferences.expandTranslation,
+                includeTransliteration: viewModel.preferences.expandTransliteration
+            )
+            .frame(width: view.bounds.width)
+            .frame(maxHeight: .infinity)
+            let image = view.snapshot()
+            let tempDir = FileManager.default.temporaryDirectory
+            let imgFileName = "\(currentViewModel.title).png"
+            let tempImagePath = tempDir.appendingPathComponent(imgFileName)
+            try? image.pngData()?.write(to: tempImagePath)
+            activityItems = [tempImagePath]
+        } else {
+            let text = currentViewModel.getShareText(
+                includeTitle: true,
+                includeTranslation: viewModel.preferences.expandTranslation,
+                includeTransliteration: viewModel.preferences.expandTransliteration,
+                includeBenefit: true
+            )
+            activityItems = [text]
+        }
+
         let activityController = UIActivityViewController(
-            activityItems: [currentViewModel.getShareText()],
+            activityItems: activityItems,
             applicationActivities: [ZikrFeedbackActivity(prepareAction: { [unowned self] in
                 self.presentMailComposer()
             })]
@@ -47,7 +90,7 @@ final class ZikrPagesViewController: UIHostingController<ZikrPagesView> {
             .init(rawValue: "com.apple.reminders.sharingextension")
         ]
         if let popover = activityController.popoverPresentationController {
-            popover.barButtonItem = sender
+            popover.barButtonItem = self.shareMenuItem
         }
         present(activityController, animated: true)
     }

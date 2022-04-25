@@ -73,6 +73,8 @@ internal enum L10n {
     internal static let reportProblem = L10n.tr("Localizable", "common.report-problem")
     /// Restore
     internal static let restore = L10n.tr("Localizable", "common.restore")
+    /// Share
+    internal static let share = L10n.tr("Localizable", "common.share")
     /// Share Azkar App
     internal static let shareApp = L10n.tr("Localizable", "common.share-app")
     /// Version
@@ -385,6 +387,15 @@ internal enum L10n {
         internal static let sea = L10n.tr("Localizable", "settings.theme.color-theme.sea")
       }
     }
+  }
+
+  internal enum Share {
+    /// Image
+    internal static let image = L10n.tr("Localizable", "share.image")
+    /// Shared from Azkar App
+    internal static let sharedWithAzkar = L10n.tr("Localizable", "share.shared-with-azkar")
+    /// Text
+    internal static let text = L10n.tr("Localizable", "share.text")
   }
 
   internal enum Subscribe {

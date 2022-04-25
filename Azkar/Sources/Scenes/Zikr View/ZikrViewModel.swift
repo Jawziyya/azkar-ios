@@ -121,7 +121,12 @@ final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
         updateRemainingRepeatsText()
     }
     
-    func getShareText() -> String {
+    func getShareText(
+        includeTitle: Bool,
+        includeTranslation: Bool,
+        includeTransliteration: Bool,
+        includeBenefit: Bool
+    ) -> String {
         var text = ""
         
         if let title = zikr.title {
@@ -130,17 +135,17 @@ final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
         
         text += "\n\n\(zikr.text)"
         
-        if let translation = translation {
+        if includeTranslation, let translation = translation {
             text += "\n\n\(translation)"
         }
         
-        if let transliteration = transliteration {
+        if includeTransliteration, let transliteration = transliteration {
             text += "\n\n\(transliteration)"
         }
         
         text += "\n\n\(zikr.source)"
         
-        if let benefit = zikr.benefit {
+        if includeBenefit, let benefit = zikr.benefit {
             text += "\n\n[\(benefit)]"
         }
         
