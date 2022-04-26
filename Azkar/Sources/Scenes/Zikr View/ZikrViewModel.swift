@@ -125,11 +125,11 @@ final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
         includeTitle: Bool,
         includeTranslation: Bool,
         includeTransliteration: Bool,
-        includeBenefit: Bool
+        includeBenefits: Bool
     ) -> String {
         var text = ""
         
-        if let title = zikr.title {
+        if includeTitle, let title = zikr.title {
             text += title
         }
         
@@ -145,7 +145,7 @@ final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
         
         text += "\n\n\(zikr.source)"
         
-        if includeBenefit, let benefit = zikr.benefit {
+        if includeBenefits, let benefit = zikr.benefit {
             text += "\n\n[\(benefit)]"
         }
         

@@ -4,14 +4,10 @@ import UIKit
 import SwiftUI
 import MessageUI
 
-private let INSTAGRAM_STORIES_URL = URL(string: "instagram-stories://share")!
+let INSTAGRAM_STORIES_URL = URL(string: "instagram-stories://share")!
 
 final class ZikrPagesViewController: UIHostingController<ZikrPagesView> {
 
-    enum ShareType {
-        case image, text, instagramStory
-    }
-    
     private let viewModel: ZikrPagesViewModel
     private var shareMenuItem: UIBarButtonItem?
     private lazy var settingsMenuItem = UIBarButtonItem(image: UIImage(systemName: "textformat"), style: .plain, target: self, action: #selector(goToSettings))
@@ -28,33 +24,36 @@ final class ZikrPagesViewController: UIHostingController<ZikrPagesView> {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        func getAction(for type: ShareType) -> UIMenuElement {
+            UIAction(title: type.title, image: UIImage(systemName: type.imageName), handler: { _ in
+                self.share(options: .init(shareType: type))
+            })
+        }
+
         var menuItems: [UIMenuElement] = [
             UIMenu(title: "", options: .displayInline, children: [
-                UIAction(title: L10n.Share.image, image: UIImage(systemName: "photo"), handler: { _ in
-                    self.share(type: .image)
-                }),
-                UIAction(title: L10n.Share.text, image: UIImage(systemName: "doc.plaintext"), handler: { _ in
-                    self.share(type: .text)
-                }),
+                getAction(for: .image),
+                getAction(for: .text),
             ])
         ]
 
         if UIApplication.shared.canOpenURL(INSTAGRAM_STORIES_URL) {
             menuItems.append(
                 UIMenu(title: "", options: .displayInline, children: [
-                    UIAction(title: "Instagram", image: UIImage(systemName: "circle.fill.square.fill"), handler: { _ in
-                        self.share(type: .instagramStory)
-                    })
+                    getAction(for: .instagramStories)
                 ])
             )
         }
 
         let shareBarButtonItem = UIBarButtonItem(
-            title: nil,
             image: UIImage(systemName: "square.and.arrow.up"),
-            primaryAction: nil,
-            menu: UIMenu(title: L10n.Common.share ,children: menuItems)
+            style: .plain,
+            target: self,
+            action: #selector(presentShareOptions(_:))
         )
+
+        shareBarButtonItem.menu = UIMenu(title: L10n.Common.share ,children: menuItems)
+
         self.shareMenuItem = shareBarButtonItem
         navigationItem.rightBarButtonItems = [shareBarButtonItem, settingsMenuItem]
         updateStyle()
@@ -69,33 +68,47 @@ final class ZikrPagesViewController: UIHostingController<ZikrPagesView> {
         shareMenuItem?.tintColor = UIColor(Color.accent)
         settingsMenuItem.tintColor = UIColor(Color.accent)
     }
+
+    @objc private func presentShareOptions(_ sender: UIBarButtonItem) {
+        let view = NavigationView {
+            ZikrShareOptionsView { [unowned self] options in
+                self.share(options: options)
+            }
+            .accentColor(Color.accent)
+        }
+        let viewController = UIHostingController(rootView: view)
+        present(viewController, animated: true)
+    }
     
-    private func share(type: ShareType) {
+    private func share(options: ZikrShareOptionsView.ShareOptions) {
         let currentViewModel = viewModel.azkar[viewModel.page]
         let activityItems: [Any]
 
-        switch type {
+        switch options.shareType {
 
-        case .image, .instagramStory:
+        case .image, .instagramStories:
 
             let view = ZikrShareView(
                 viewModel: currentViewModel,
+                includeTitle: options.includeTitle,
                 includeTranslation: viewModel.preferences.expandTranslation,
                 includeTransliteration: viewModel.preferences.expandTransliteration,
-                arabicTextAlignment: .center,
-                otherTextAlignment: .center
+                includeBenefits: options.includeBenefits,
+                includeLogo: options.includeLogo,
+                arabicTextAlignment: options.textAlignment.isCentered ? .center : .trailing,
+                otherTextAlignment: options.textAlignment.isCentered ? .center : .leading
             )
             .frame(width: view.bounds.width)
             .frame(maxHeight: .infinity)
             let image = view.snapshot()
 
-            if type == .image {
+            if options.shareType == .image {
                 let tempDir = FileManager.default.temporaryDirectory
                 let imgFileName = "\(currentViewModel.title).png"
                 let tempImagePath = tempDir.appendingPathComponent(imgFileName)
                 try? image.pngData()?.write(to: tempImagePath)
                 activityItems = [tempImagePath]
-            } else if type == .instagramStory {
+            } else if options.shareType == .instagramStories {
                 guard let data = image.pngData() else {
                     return
                 }
@@ -118,10 +131,10 @@ final class ZikrPagesViewController: UIHostingController<ZikrPagesView> {
 
         case .text:
             let text = currentViewModel.getShareText(
-                includeTitle: true,
+                includeTitle: options.includeTitle,
                 includeTranslation: viewModel.preferences.expandTranslation,
                 includeTransliteration: viewModel.preferences.expandTransliteration,
-                includeBenefit: true
+                includeBenefits: options.includeBenefits
             )
             activityItems = [text]
 

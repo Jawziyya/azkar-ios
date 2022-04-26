@@ -5,10 +5,12 @@ import SwiftUI
 struct ZikrShareView: View {
 
     let viewModel: ZikrViewModel
+    var includeTitle = true
     var includeTranslation = true
     var includeTransliteration =  false
     var includeBenefits = true
     var includeLogo = true
+    var includeSource = false
     var backgroundColor = Color.background
     var arabicTextAlignment = TextAlignment.trailing
     var otherTextAlignment = TextAlignment.leading
@@ -24,7 +26,9 @@ struct ZikrShareView: View {
 
     var content: some View {
         VStack(spacing: 16) {
-            Text(viewModel.title)
+            if includeTitle {
+                Text(viewModel.title)
+            }
 
             VStack(spacing: 0) {
                 Text(.init(viewModel.text))
@@ -63,6 +67,15 @@ struct ZikrShareView: View {
                             .font(.customFont(viewModel.preferences.preferredTranslationFont, style: .footnote))
                     }
                     .padding()
+                }
+
+                if includeSource {
+                    Text(viewModel.source)
+                        .font(Font.customFont(viewModel.preferences.preferredTranslationFont, style: .caption1, sizeCategory: .large))
+                        .foregroundColor(Color.secondaryText)
+                        .padding(.horizontal)
+                        .padding(.vertical, 8)
+                        .frame(maxWidth: .infinity, alignment: .leading)
                 }
             }
             .background(Color.contentBackground)
