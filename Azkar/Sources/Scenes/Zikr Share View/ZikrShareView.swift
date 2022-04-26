@@ -13,6 +13,8 @@ struct ZikrShareView: View {
     var body: some View {
         ScrollView {
             content
+                .frame(minHeight: UIScreen.main.bounds.height)
+                .background(Color.background)
         }
         .edgesIgnoringSafeArea(.all)
     }
@@ -75,8 +77,8 @@ struct ZikrShareView: View {
                 .opacity(0.5)
             }
         }
-        .padding()
-        .background(Color.background)
+        .padding(.horizontal)
+        .padding(.vertical, 30)
     }
 
 }
@@ -85,7 +87,7 @@ struct ZikrShareView_Previews: PreviewProvider {
     static var previews: some View {
         ZikrShareView(
             viewModel: ZikrViewModel(
-                zikr: Zikr.data[3],
+                zikr: Zikr.data[1],
                 preferences: Preferences.shared,
                 player: Player.test
             )
