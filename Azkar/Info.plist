@@ -344,6 +344,11 @@
 	<string>public.app-category.reference</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+    <key>LSApplicationQueriesSchemes</key>
+    <array>
+       <string>instagram</string>
+       <string>instagram-stories</string>
+    </array>
 	<key>REVENUCE_CAT_API_KEY</key>
 	<string>gpAMTUYnTxQzRSbPszKrFTOekbEVzsXk</string>
 	<key>UIAppFonts</key>

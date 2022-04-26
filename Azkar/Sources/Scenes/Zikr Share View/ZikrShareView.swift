@@ -9,12 +9,15 @@ struct ZikrShareView: View {
     var includeTransliteration =  false
     var includeBenefits = true
     var includeLogo = true
+    var backgroundColor = Color.background
+    var arabicTextAlignment = TextAlignment.trailing
+    var otherTextAlignment = TextAlignment.leading
 
     var body: some View {
         ScrollView {
             content
                 .frame(minHeight: UIScreen.main.bounds.height)
-                .background(Color.background)
+                .background(backgroundColor)
         }
         .edgesIgnoringSafeArea(.all)
     }
@@ -26,7 +29,7 @@ struct ZikrShareView: View {
             VStack(spacing: 0) {
                 Text(.init(viewModel.text))
                     .font(Font.customFont(viewModel.preferences.preferredArabicFont, style: .title1, sizeCategory: .large))
-                    .multilineTextAlignment(.trailing)
+                    .multilineTextAlignment(arabicTextAlignment)
                     .padding()
 
                 if includeTranslation, let text = viewModel.translation {
@@ -34,7 +37,7 @@ struct ZikrShareView: View {
 
                     Text(.init(text))
                         .font(Font.customFont(viewModel.preferences.preferredTranslationFont, style: .body, sizeCategory: .large))
-                        .multilineTextAlignment(.leading)
+                        .multilineTextAlignment(otherTextAlignment)
                         .padding()
                 }
 
@@ -55,6 +58,7 @@ struct ZikrShareView: View {
                             .minimumScaleFactor(0.1)
                             .font(Font.largeTitle)
                             .frame(maxWidth: 20, maxHeight: 15)
+                            .grayscale(1)
                         Text(text)
                             .font(.customFont(viewModel.preferences.preferredTranslationFont, style: .footnote))
                     }
