@@ -335,7 +335,7 @@
 	<key>CFBundlePackageType</key>
 	<string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
 	<key>CFBundleShortVersionString</key>
-	<string>2.3.3</string>
+	<string>2.3.4</string>
 	<key>CFBundleVersion</key>
 	<string>66</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
@@ -344,11 +344,11 @@
 	<string>public.app-category.reference</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-    <key>LSApplicationQueriesSchemes</key>
-    <array>
-       <string>instagram</string>
-       <string>instagram-stories</string>
-    </array>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>instagram</string>
+		<string>instagram-stories</string>
+	</array>
 	<key>REVENUCE_CAT_API_KEY</key>
 	<string>gpAMTUYnTxQzRSbPszKrFTOekbEVzsXk</string>
 	<key>UIAppFonts</key>

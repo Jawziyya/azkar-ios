@@ -15,6 +15,9 @@ struct ZikrShareView: View {
     var arabicTextAlignment = TextAlignment.trailing
     var otherTextAlignment = TextAlignment.leading
 
+    @Environment(\.colorScheme)
+    var colorScheme
+
     var body: some View {
         ScrollView {
             content
@@ -22,6 +25,7 @@ struct ZikrShareView: View {
                 .background(backgroundColor)
         }
         .edgesIgnoringSafeArea(.all)
+        .environment(\.dynamicTypeSize, .large)
     }
 
     var content: some View {
@@ -80,6 +84,7 @@ struct ZikrShareView: View {
             }
             .background(Color.contentBackground)
             .cornerRadius(Constants.cornerRadius)
+            .shadow(color: colorScheme == .dark ? Color.clear : Color.black.opacity(0.1), radius: 5, x: 0, y: 1)
 
             if includeLogo {
                 VStack {
@@ -111,5 +116,6 @@ struct ZikrShareView_Previews: PreviewProvider {
         )
         .previewLayout(.fixed(width: 380, height: 1200))
         .environment(\.locale, Locale(identifier: "ru_RU"))
+        .environment(\.colorScheme, .dark)
     }
 }
