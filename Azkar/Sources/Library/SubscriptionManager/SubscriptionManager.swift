@@ -23,7 +23,7 @@ final class SubscriptionManager: SubscriptionManagerType {
     private init() {}
     
     func isProUser() -> Bool {
-        if UIDevice.current.isMac {
+        if UIDevice.current.isMac || UIApplication.shared.isRanInSimulator {
             return true
         } else {
             return enableProFeatures

@@ -22,8 +22,29 @@ final class ZikrPagesViewModel: ObservableObject, Equatable {
     let preferences: Preferences
     let selectedPage: AnyPublisher<Int, Never>
     @Published var page = 0
+    @Published var currentZikrRemainingRepeatNumber = 0
 
-    init(router: RootRouter, category: ZikrCategory, title: String, azkar: [ZikrViewModel], preferences: Preferences, selectedPagePublisher: AnyPublisher<Int, Never>, page: Int = 0) {
+    var alignZikrCounterByLeadingSide: Bool? {
+        get {
+            UserDefaults.standard.bool(forKey: "kZikrCounterButtonByLeadingSide")
+        } set {
+            UserDefaults.standard.set(newValue, forKey: "kZikrCounterButtonByLeadingSide")
+        }
+    }
+
+    var showCounterButton: Bool {
+        preferences.counterType == .floatingButton
+    }
+
+    init(
+        router: RootRouter,
+        category: ZikrCategory,
+        title: String,
+        azkar: [ZikrViewModel],
+        preferences: Preferences,
+        selectedPagePublisher: AnyPublisher<Int, Never>,
+        page: Int = 0
+    ) {
         self.router = router
         self.category = category
         self.title = title
@@ -31,6 +52,13 @@ final class ZikrPagesViewModel: ObservableObject, Equatable {
         self.azkar = azkar
         self.selectedPage = selectedPagePublisher
         self.page = page
+
+        $page
+            .map { [unowned self] page in
+                let zikr = self.azkar[page]
+                return zikr.remainingRepeatsNumber
+            }
+            .assign(to: &$currentZikrRemainingRepeatNumber)
     }
 
     func navigateToZikr(_ vm: ZikrViewModel, index: Int) {
@@ -64,6 +92,12 @@ final class ZikrPagesViewModel: ObservableObject, Equatable {
             preferences: Preferences.shared,
             selectedPagePublisher: PassthroughSubject<Int, Never>().eraseToAnyPublisher()
         )
+    }
+
+    func incrementCounterForCurrentZikr() {
+        let zikr = azkar[page]
+        zikr.incrementZikrCount()
+        currentZikrRemainingRepeatNumber = zikr.remainingRepeatsNumber
     }
 
 }

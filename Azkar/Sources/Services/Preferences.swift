@@ -10,6 +10,21 @@ import Foundation
 import Combine
 import SwiftUI
 
+enum CounterType: Int, Codable, CaseIterable, Identifiable {
+    case floatingButton, tap
+
+    var id: Int {
+        rawValue
+    }
+
+    var title: String {
+        switch self {
+        case .floatingButton: return L10n.Settings.Counter.counterTypeButton
+        case .tap: return L10n.Settings.Counter.counterTypeTap
+        }
+    }
+}
+
 let defaultMorningNotificationTime: Date = {
     let components = DateComponents(calendar: Calendar.current, hour: 8)
     return components.date ?? Date()
@@ -123,6 +138,9 @@ final class Preferences: ObservableObject {
 
     @Preference(Keys.enableGoToNextZikrOnCounterFinished, defaultValue: true)
     var enableGoToNextZikrOnCounterFinished: Bool
+
+    @Preference(Keys.azkarCounteType, defaultValue: CounterType.floatingButton)
+    var counterType: CounterType
     
     private func getFont<T: AppFont & Decodable>(_ key: String) -> T? {
         guard

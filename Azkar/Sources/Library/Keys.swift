@@ -45,5 +45,6 @@ enum Keys {
     static let enableGoToNextZikrOnCounterFinished = "kEnableGoToZikrOnCounterFinished"
     static let azkarCounterLastChangeDate = "kAzkarCounterLastChangeDate"
     static let azkarCounter = "kAzkarCounter"
+    static let azkarCounteType = "kCounterType"
     
 }

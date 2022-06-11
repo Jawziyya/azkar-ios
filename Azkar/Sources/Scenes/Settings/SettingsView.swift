@@ -24,6 +24,7 @@ struct SettingsView: View {
     @State private var showFunFeaturesDescription = false
     @State private var showSystemFontsizeTip = false
     @State private var showGoToNextZikrTip = false
+    @State private var showCounterTypeTip = false
 
     var body: some View {
         Form {
@@ -102,6 +103,33 @@ struct SettingsView: View {
             ,
             content: {
                 if viewModel.preferences.enableCounter {
+                    HStack {
+                        Text(L10n.Settings.Counter.counterType)
+                        Spacer()
+                        Button { } label: {
+                            Image(systemName: "info.circle")
+                                .foregroundColor(Color.accent.opacity(0.75))
+                        }
+                        .onTapGesture {
+                            self.showCounterTypeTip = true
+                        }
+                        .alert(isPresented: $showCounterTypeTip) {
+                            Alert(
+                                title: Text(L10n.Settings.Counter.counterTypeInfo),
+                                dismissButton: .default(Text("OK"))
+                            )
+                        }
+                        Picker(
+                            CounterType.allCases,
+                            id: \.self,
+                            selection: $viewModel.preferences.counterType,
+                            content: { type in
+                                Text(type.title)
+                            }
+                        )
+                        .pickerStyle(.segmented)
+                    }
+
                     Toggle(L10n.Settings.Counter.counterTicker, isOn: $viewModel.preferences.enableCounterTicker)
 
                     Toggle(L10n.Settings.Counter.counterHaptics, isOn: $viewModel.preferences.enableCounterHapticFeedback)

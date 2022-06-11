@@ -36,6 +36,12 @@ extension EnvironmentValues {
 
 // MARK: - Haptic
 struct Haptic {
+
+    static func tapFeedback() {
+        #if !os(macOS)
+        UISelectionFeedbackGenerator().selectionChanged()
+        #endif
+    }
     
     static func successFeedback() {
         #if !os(macOS)

@@ -10,6 +10,7 @@ import SwiftUI
 import AudioPlayer
 import Combine
 import SwiftUIX
+import SwiftUIDrag
 
 struct ZikrPagesView: View, Equatable {
 
@@ -25,6 +26,36 @@ struct ZikrPagesView: View, Equatable {
             .onReceive(viewModel.selectedPage) { page in
                 self.viewModel.page = page
             }
+            .overlay(
+                SDView(
+                    alignment: viewModel.alignZikrCounterByLeadingSide == true ? .bottomLeading : .bottomTrailing,
+                    floating: [.bottomLeading, .bottomTrailing, .bottom],
+                    collapse: [],
+                    content: { geo, state in
+                        Group {
+                            let number = viewModel.currentZikrRemainingRepeatNumber
+                            if viewModel.showCounterButton, number > 0 {
+                                Text(number.description)
+                                    .font(Font.system(size: 14, weight: .regular, design: .monospaced).monospacedDigit())
+                                    .frame(minWidth: 20, minHeight: 20)
+                                    .padding()
+                                    .foregroundColor(Color.white)
+                                    .background(Color.accent)
+                                    .clipShape(Capsule())
+                                    .padding()
+                                    .onTapGesture {
+                                        if viewModel.preferences.enableCounterHapticFeedback {
+                                            Haptic.tapFeedback()
+                                        }
+                                        withAnimation(.easeInOut) {
+                                            viewModel.incrementCounterForCurrentZikr()
+                                        }
+                                    }
+                            }
+                        }
+                    }
+                )
+            )
     }
 
     var pagerView: some View {

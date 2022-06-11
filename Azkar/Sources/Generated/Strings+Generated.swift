@@ -242,6 +242,14 @@ internal enum L10n {
       internal static let counterHaptics = L10n.tr("Localizable", "settings.counter.counter-haptics")
       /// Enable counter ticker sound
       internal static let counterTicker = L10n.tr("Localizable", "settings.counter.counter-ticker")
+      /// Counter type
+      internal static let counterType = L10n.tr("Localizable", "settings.counter.counter-type")
+      /// Button
+      internal static let counterTypeButton = L10n.tr("Localizable", "settings.counter.counter-type-button")
+      /// This option allows you to switch type of the counter used.\n\nIf you choose 'button' Azkar will display a button at the bottom of reading screen. If you choose 'tap' there will be no visible indication, but you will be able to tap twice at any area to decrement the counter.
+      internal static let counterTypeInfo = L10n.tr("Localizable", "settings.counter.counter-type-info")
+      /// Tap
+      internal static let counterTypeTap = L10n.tr("Localizable", "settings.counter.counter-type-tap")
       /// Go to next dhikr when repeats completed
       internal static let goToNextDhikr = L10n.tr("Localizable", "settings.counter.go-to-next-dhikr")
       /// If this option is enabled whenever you finish repeating a dhikr Azkar will show the next one

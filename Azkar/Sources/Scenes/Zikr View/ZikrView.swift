@@ -43,6 +43,22 @@ struct ZikrView: View {
     }
 
     var body: some View {
+        if viewModel.preferences.counterType == .floatingButton {
+            getBody()
+        } else {
+            getBody()
+                .onTapGesture(count: 2, perform: incrementZikrCounter)
+                .onLongPressGesture(
+                    minimumDuration: 1,
+                    perform: {
+                        isLongPressGestureActive = true
+                        incrementZikrCounter()
+                    }
+                )
+        }
+    }
+
+    private func getBody() -> some View {
         ScrollView {
             getContent()
                 .largeScreenPadding()
@@ -53,14 +69,6 @@ struct ZikrView: View {
         .onKeyboardShortcut("+", modifiers: [.command], perform: viewModel.increaseFontSize)
         .onKeyboardShortcut("-", modifiers: [.command], perform: viewModel.decreaseFontSize)
         .onKeyboardShortcut(.return, modifiers: [.command], perform: viewModel.incrementZikrCount)
-        .onTapGesture(count: 2, perform: incrementZikrCounter)
-        .onLongPressGesture(
-            minimumDuration: 1,
-            perform: {
-                isLongPressGestureActive = true
-                incrementZikrCounter()
-            }
-        )
     }
 
     private func getContent() -> some View {
@@ -211,22 +219,6 @@ struct ZikrView: View {
             if viewModel.zikr.repeats > 0 {
                 getInfoStack(label: L10n.Read.repeats, text: viewModel.remainingRepeatsFormatted)
                     .onTapGesture(perform: viewModel.toggleCounterFormat)
-//                    .opacity(viewModel.remainingRepeatsNumber == 0 ? 0.25 : 1)
-//                    .overlay {
-//                        ZStack {
-//                            if viewModel.remainingRepeatsNumber == 0 {
-//                                LottieView(name: "checkmark", loopMode: .playOnce, contentMode: .scaleAspectFit, speed: 1, progress: !isIncrementActionPerformed ? 1 : 0) {
-//                                    self.isLongPressGestureActive = false
-//                                }
-//                                .onAppear {
-//                                    if isIncrementActionPerformed {
-//                                        Haptic.successFeedback()
-//                                    }
-//                                }
-//                            }
-//                        }
-//                        .frame(width: 60, height: 40)
-//                    }
             }
 
             viewModel.source.textOrNil.flatMap { text in
