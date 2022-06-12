@@ -89,6 +89,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             Keys.azkarCounterLastChangeDate: Date(),
             Keys.lineSpacing: LineSpacing.s.rawValue,
             Keys.translationLineSpacing: LineSpacing.s.rawValue,
+            Keys.alignCounterByLeadingSide: true,
         ]
 
         UserDefaults.standard.register(defaults: defaults)

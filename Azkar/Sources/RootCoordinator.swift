@@ -193,7 +193,7 @@ private extension RootCoordinator {
             }
 
             let viewModel = ZikrViewModel(zikr: zikr, preferences: preferences, player: player)
-            let view = ZikrView(viewModel: viewModel)
+            let view = ZikrView(viewModel: viewModel, incrementAction: Empty().eraseToAnyPublisher())
             let viewController = UIHostingController(rootView: view)
 
             if rootViewController.isPadInterface {

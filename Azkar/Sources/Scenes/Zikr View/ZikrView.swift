@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import Combine
 
 struct ZikrView: View {
 
@@ -14,6 +15,8 @@ struct ZikrView: View {
     var didDisplayCounterOnboardingTip: Bool?
 
     @ObservedObject var viewModel: ZikrViewModel
+
+    let incrementAction: AnyPublisher<Void, Never>
 
     var counterFinishedCallback: Action?
 
@@ -43,22 +46,6 @@ struct ZikrView: View {
     }
 
     var body: some View {
-        if viewModel.preferences.counterType == .floatingButton {
-            getBody()
-        } else {
-            getBody()
-                .onTapGesture(count: 2, perform: incrementZikrCounter)
-                .onLongPressGesture(
-                    minimumDuration: 1,
-                    perform: {
-                        isLongPressGestureActive = true
-                        incrementZikrCounter()
-                    }
-                )
-        }
-    }
-
-    private func getBody() -> some View {
         ScrollView {
             getContent()
                 .largeScreenPadding()
@@ -69,6 +56,23 @@ struct ZikrView: View {
         .onKeyboardShortcut("+", modifiers: [.command], perform: viewModel.increaseFontSize)
         .onKeyboardShortcut("-", modifiers: [.command], perform: viewModel.decreaseFontSize)
         .onKeyboardShortcut(.return, modifiers: [.command], perform: viewModel.incrementZikrCount)
+        .onReceive(incrementAction, perform: incrementZikrCounter)
+        .onTapGesture(count: 2, perform: {
+            guard viewModel.preferences.counterType == .tap else {
+                return
+            }
+            incrementZikrCounter()
+        })
+        .onLongPressGesture(
+            minimumDuration: 1,
+            perform: {
+                guard viewModel.preferences.counterType == .tap else {
+                    return
+                }
+                isLongPressGestureActive = true
+                incrementZikrCounter()
+            }
+        )
     }
 
     private func getContent() -> some View {
@@ -294,12 +298,14 @@ struct ZikrView: View {
 
 }
 
-@available(iOS 15, *)
 struct ZikrView_Previews: PreviewProvider {
     static var previews: some View {
         let prefs = Preferences.shared
         prefs.colorTheme = .sea
-        return ZikrView(viewModel: ZikrViewModel(zikr: Zikr.data[3], preferences: prefs, player: .test))
-            .environment(\.colorScheme, .dark)
+        return ZikrView(
+            viewModel: ZikrViewModel(zikr: Zikr.data[3], preferences: prefs, player: .test),
+            incrementAction: Empty().eraseToAnyPublisher()
+        )
+        .environment(\.colorScheme, .dark)
     }
 }

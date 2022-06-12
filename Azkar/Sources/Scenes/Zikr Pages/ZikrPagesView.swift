@@ -27,35 +27,43 @@ struct ZikrPagesView: View, Equatable {
                 self.viewModel.page = page
             }
             .overlay(
-                SDView(
-                    alignment: viewModel.alignZikrCounterByLeadingSide == true ? .bottomLeading : .bottomTrailing,
-                    floating: [.bottomLeading, .bottomTrailing, .bottom],
-                    collapse: [],
-                    content: { geo, state in
-                        Group {
-                            let number = viewModel.currentZikrRemainingRepeatNumber
-                            if viewModel.showCounterButton, number > 0 {
-                                Text(number.description)
-                                    .font(Font.system(size: 14, weight: .regular, design: .monospaced).monospacedDigit())
-                                    .frame(minWidth: 20, minHeight: 20)
-                                    .padding()
-                                    .foregroundColor(Color.white)
-                                    .background(Color.accent)
-                                    .clipShape(Capsule())
-                                    .padding()
-                                    .onTapGesture {
-                                        if viewModel.preferences.enableCounterHapticFeedback {
-                                            Haptic.tapFeedback()
-                                        }
-                                        withAnimation(.easeInOut) {
-                                            viewModel.incrementCounterForCurrentZikr()
-                                        }
-                                    }
+                Group {
+                    if viewModel.preferences.counterType == .floatingButton {
+                        counterButton
+                    }
+                }
+            )
+    }
+
+    var counterButton: some View {
+        SDView(
+            alignment: viewModel.alignZikrCounterByLeadingSide ? .bottomLeading : .bottomTrailing,
+            floating: [.bottom],
+            collapse: [],
+            content: { geo, state in
+                ExecuteCallView {
+                    if state != .expanded {
+                        viewModel.setZikrCounterAlignment(byLeftSide: state.isLeading)
+                    }
+                }
+                let number = viewModel.currentZikrRemainingRepeatNumber
+                if viewModel.showCounterButton, number > 0 {
+                    Text(number.description)
+                        .font(Font.system(size: 14, weight: .regular, design: .monospaced).monospacedDigit())
+                        .frame(minWidth: 20, minHeight: 20)
+                        .padding()
+                        .foregroundColor(Color.white)
+                        .background(Color.accent)
+                        .clipShape(Capsule())
+                        .padding()
+                        .onTapGesture {
+                            withAnimation(.easeInOut) {
+                                viewModel.incrementCurrentPageZikrCounter()
                             }
                         }
-                    }
-                )
-            )
+                }
+            }
+        )
     }
 
     var pagerView: some View {
@@ -68,6 +76,7 @@ struct ZikrPagesView: View, Equatable {
                 LazyView(
                     ZikrView(
                         viewModel: zikr,
+                        incrementAction: viewModel.getIncrementPublisher(for: zikr),
                         counterFinishedCallback: viewModel.goToNextZikrIfNeeded
                     )
                 )
