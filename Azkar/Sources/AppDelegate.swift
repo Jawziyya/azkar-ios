@@ -24,7 +24,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
-        
         FontsHelper.registerFonts()
 
         notificationsHandler.removeDeliveredNotifications()

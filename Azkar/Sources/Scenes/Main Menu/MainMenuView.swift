@@ -12,6 +12,7 @@ import UserNotifications
 
 enum Constants {
     static var cornerRadius: CGFloat = 12
+    static var windowSafeAreaInsets: EdgeInsets = .zero
 }
 
 struct MainMenuView: View {
@@ -34,6 +35,14 @@ struct MainMenuView: View {
             .environment(\.horizontalSizeClass, isIpad ? .regular : .compact)
             .saturation(viewModel.preferences.colorTheme == .ink ? 0 : 1)
             .attachEnvironmentOverrides(viewModel: EnvironmentOverridesViewModel(preferences: viewModel.preferences))
+            .background(
+                GeometryReader { proxy in
+                    Color.clear
+                        .onAppear {
+                            Constants.windowSafeAreaInsets = proxy.safeAreaInsets
+                        }
+                }
+            )
     }
     
     private var content: some View {

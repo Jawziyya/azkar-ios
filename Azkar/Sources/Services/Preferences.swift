@@ -141,6 +141,9 @@ final class Preferences: ObservableObject {
 
     @Preference(Keys.azkarCounteType, defaultValue: CounterType.floatingButton)
     var counterType: CounterType
+
+    @Preference(Keys.alignCounterByLeadingSide, defaultValue: true)
+    var alignCounterButtonByLeadingSide
     
     private func getFont<T: AppFont & Decodable>(_ key: String) -> T? {
         guard

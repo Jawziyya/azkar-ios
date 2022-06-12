@@ -8,6 +8,7 @@
 
 import SwiftUI
 import Combine
+import SwiftUIDrag
 
 struct ZikrView: View {
 
@@ -29,6 +30,13 @@ struct ZikrView: View {
     @State
     private var counterFeedbackCompleted = false
 
+    @Namespace
+    private var counterButtonAnimationNamespace
+
+    private let counterButtonAnimationId = "counter-button"
+
+    @State private var animateCounterButton = false
+
     var sizeCategory: ContentSizeCategory {
         viewModel.preferences.sizeCategory
     }
@@ -39,7 +47,9 @@ struct ZikrView: View {
 
     func incrementZikrCounter() {
         isIncrementActionPerformed = true
-        viewModel.incrementZikrCount()
+        withAnimation(.spring()) {
+            viewModel.incrementZikrCount()
+        }
         if viewModel.remainingRepeatsNumber > 0, viewModel.preferences.enableCounterHapticFeedback {
             Haptic.toggleFeedback()
         }
@@ -73,6 +83,27 @@ struct ZikrView: View {
                 incrementZikrCounter()
             }
         )
+        .overlay(
+            Group {
+                counterButton
+                    .opacity(!isIncrementActionPerformed || viewModel.remainingRepeatsNumber == 0 ? 0 : 1)
+                    .matchedGeometryEffect(id: counterButtonAnimationId, in: counterButtonAnimationNamespace)
+                    .padding(.horizontal)
+                    .padding(.bottom, Constants.windowSafeAreaInsets.bottom)
+            },
+            alignment: viewModel.preferences.alignCounterButtonByLeadingSide ? .bottomLeading : .bottomTrailing
+        )
+    }
+
+    private var counterButton: some View {
+        Text("1")
+            .foregroundColor(Color.accent)
+            .font(Font.system(size: 14, weight: .regular, design: .monospaced).monospacedDigit())
+            .frame(minWidth: 20, minHeight: 20)
+            .padding()
+            .foregroundColor(Color.white)
+            .background(Color.accent)
+            .clipShape(Capsule())
     }
 
     private func getContent() -> some View {
@@ -120,7 +151,7 @@ struct ZikrView: View {
 
             Spacer(minLength: 20)
 
-            ZStack {
+            ZStack(alignment: .center) {
                 if viewModel.remainingRepeatsNumber == 0 {
                     LottieView(name: "checkmark", loopMode: .playOnce, contentMode: .scaleAspectFit, speed: 1.5, progress: !isIncrementActionPerformed ? 1 : 0) {
                         self.isLongPressGestureActive = false
@@ -138,9 +169,20 @@ struct ZikrView: View {
                     }
                 }
             }
+            .background(
+                Group {
+                    if viewModel.remainingRepeatsNumber == 0 {
+                        Circle()
+                            .foregroundColor(Color.clear)
+                            .frame(width: 52, height: 52)
+                            .matchedGeometryEffect(id: counterButtonAnimationId, in: counterButtonAnimationNamespace)
+                    }
+                },
+                alignment: .center
+            )
             .frame(height: 80, alignment: .center)
             .frame(maxWidth: .infinity)
-            .opacity(viewModel.remainingRepeatsNumber == 0 ? 1 : 0)
+            .opacity(viewModel.remainingRepeatsNumber == 0 || animateCounterButton ? 1 : 0)
 
             Spacer(minLength: 20)
         }

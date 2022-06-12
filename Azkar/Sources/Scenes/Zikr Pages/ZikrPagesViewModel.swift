@@ -51,7 +51,7 @@ final class ZikrPagesViewModel: ObservableObject, Equatable {
         self.selectedPage = selectedPagePublisher
         self.page = page
 
-        alignZikrCounterByLeadingSide = UserDefaults.standard.bool(forKey: Keys.alignCounterByLeadingSide)
+        alignZikrCounterByLeadingSide = preferences.alignCounterButtonByLeadingSide
 
         azkar.forEach { vm in
             incrementerPublishers[vm] = PassthroughSubject<Void, Never>()
@@ -105,7 +105,7 @@ final class ZikrPagesViewModel: ObservableObject, Equatable {
     }
 
     func setZikrCounterAlignment(byLeftSide flag: Bool) {
-        UserDefaults.standard.set(flag, forKey: Keys.alignCounterByLeadingSide)
+        preferences.alignCounterButtonByLeadingSide = flag
     }
 
     func incrementCurrentPageZikrCounter() {

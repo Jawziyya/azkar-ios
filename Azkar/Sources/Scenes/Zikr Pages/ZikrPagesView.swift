@@ -55,7 +55,7 @@ struct ZikrPagesView: View, Equatable {
                         .foregroundColor(Color.white)
                         .background(Color.accent)
                         .clipShape(Capsule())
-                        .padding()
+                        .padding(.horizontal)
                         .onTapGesture {
                             withAnimation(.easeInOut) {
                                 viewModel.incrementCurrentPageZikrCounter()
