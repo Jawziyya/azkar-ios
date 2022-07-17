@@ -84,26 +84,26 @@ struct ZikrView: View {
             }
         )
         .overlay(
-            Group {
-                counterButton
-                    .opacity(!isIncrementActionPerformed || viewModel.remainingRepeatsNumber == 0 ? 0 : 1)
-                    .matchedGeometryEffect(id: counterButtonAnimationId, in: counterButtonAnimationNamespace)
-                    .padding(.horizontal)
-                    .padding(.bottom, Constants.windowSafeAreaInsets.bottom)
-            },
+            counterButton,
             alignment: viewModel.preferences.alignCounterButtonByLeadingSide ? .bottomLeading : .bottomTrailing
         )
     }
 
     private var counterButton: some View {
-        Text("1")
-            .foregroundColor(Color.accent)
-            .font(Font.system(size: 14, weight: .regular, design: .monospaced).monospacedDigit())
-            .frame(minWidth: 20, minHeight: 20)
-            .padding()
-            .foregroundColor(Color.white)
-            .background(Color.accent)
-            .clipShape(Capsule())
+        Group {
+            Text("1")
+                .foregroundColor(Color.accent)
+                .font(Font.system(size: 14, weight: .regular, design: .monospaced).monospacedDigit())
+                .frame(minWidth: 20, minHeight: 20)
+                .padding()
+                .foregroundColor(Color.white)
+                .background(Color.accent)
+                .clipShape(Capsule())
+        }
+        .opacity((viewModel.preferences.counterType == .tap) || (!isIncrementActionPerformed || viewModel.remainingRepeatsNumber == 0) ? 0 : 1)
+        .matchedGeometryEffect(id: counterButtonAnimationId, in: counterButtonAnimationNamespace)
+        .padding(.horizontal)
+        .padding(.bottom, Constants.windowSafeAreaInsets.bottom)
     }
 
     private func getContent() -> some View {
