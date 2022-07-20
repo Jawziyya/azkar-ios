@@ -172,7 +172,7 @@ let packages: [Package] = [
     .remote(url: "https://github.com/SwiftUIX/SwiftUIX", requirement: .upToNextMajor(from: "0.1.1")),
     .remote(url: "https://github.com/siteline/SwiftUI-Introspect", requirement: .upToNextMajor(from: "0.1.3")),
     .remote(url: "https://github.com/SwiftUI-Plus/ActivityView", requirement: .upToNextMajor(from: "1.0.0")),
-    .remote(url: "https://github.com/demharusnam/SwiftUIDrag", requirement: .upToNextMajor(from: "0.0.11")),
+    .remote(url: "https://github.com/demharusnam/SwiftUIDrag", requirement: .revision("0686318a")),
     .remote(url: "https://github.com/aheze/Popovers", requirement: .upToNextMajor(from: "1.3.2")),
 ]
 
