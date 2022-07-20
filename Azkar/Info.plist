@@ -5,7 +5,7 @@
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string></string>
 	<key>CFBundleDevelopmentRegion</key>
-	<string>ru</string>
+	<string>en</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIcons</key>

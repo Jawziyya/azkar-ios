@@ -1,58 +1,58 @@
 [
   {
     "id": 1,
-    "text": "Разве не поминанием Аллаха утешаются сердца?",
+    "text_ru": "Разве не поминанием Аллаха утешаются сердца?",
     "source": "Quran",
-    "text_en": "Surely in the remembrance of Allah do hearts find comfort.",
+    "text": "Surely in the remembrance of Allah do hearts find comfort.",
     "source_ext": "13:28"
   },
   {
     "id": 2,
-    "text": "Когда вы завершите намаз, то поминайте Аллаха стоя, сидя или лежа на боках.",
+    "text_ru": "Когда вы завершите намаз, то поминайте Аллаха стоя, сидя или лежа на боках.",
     "source": "Quran",
-    "text_en": "When the prayers are over, remember Allah—whether you are standing, sitting, or lying down.",
+    "text": "When the prayers are over, remember Allah—whether you are standing, sitting, or lying down.",
     "source_ext": "4:103"
   },
   {
     "id": 3,
-    "text": "Поминай Аллаха с покорностью и страхом про себя и не громко по утрам и перед закатом и не будь одним из беспечных невежд.",
+    "text_ru": "Поминай Аллаха с покорностью и страхом про себя и не громко по утрам и перед закатом и не будь одним из беспечных невежд.",
     "source": "Quran",
-    "text_en": "And remember your Lord within yourself in humility and in fear without being apparent in speech - in the mornings and the evenings. And do not be among the heedless.",
+    "text": "And remember your Lord within yourself in humility and in fear without being apparent in speech - in the mornings and the evenings. And do not be among the heedless.",
     "source_ext": "7:205"
   },
   {
     "id": 4,
-    "text": "...и часто поминайте Его, — быть может, вы преуспеете.",
+    "text_ru": "...и часто поминайте Его, — быть может, вы преуспеете.",
     "source": "Quran",
-    "text_en": "...and remember Allah often that you may succeed.",
+    "text": "...and remember Allah often that you may succeed.",
     "source_ext": "62:10"
   },
   {
     "id": 5,
-    "text": "Посланник Аллаха ﷺ сказал: «Поминающий своего Господа и не поминающий своего Господа подобны живому и мёртвому».",
+    "text_ru": "Посланник Аллаха ﷺ сказал: «Поминающий своего Господа и не поминающий своего Господа подобны живому и мёртвому».",
     "source": "Bukhari",
-    "text_en": "The Prophet (ﷺ) said, «The example of the one who celebrates the Praises of his Lord (Allah) in comparison to the one who does not celebrate the Praises of his Lord, is that of a living creature compared to a dead one.»",
+    "text": "The Prophet (ﷺ) said, «The example of the one who celebrates the Praises of his Lord (Allah) in comparison to the one who does not celebrate the Praises of his Lord, is that of a living creature compared to a dead one.»",
     "source_ext": "6407"
   },
   {
     "id": 6,
-    "text": "...для часто поминающих Аллаха мужчин и женщин, Аллах уготовил прощение и великую награду.",
+    "text_ru": "...для часто поминающих Аллаха мужчин и женщин, Аллах уготовил прощение и великую награду.",
     "source": "Quran",
-    "text_en": "...and men and women who remember Allah often—for ˹all of˺ them Allah has prepared forgiveness and a great reward.",
+    "text": "...and men and women who remember Allah often—for ˹all of˺ them Allah has prepared forgiveness and a great reward.",
     "source_ext": "33:35"
   },
   {
     "id": 7,
-    "text": "О те, которые уверовали! Поминайте Аллаха многократно и славьте Его утром и перед закатом.",
+    "text_ru": "О те, которые уверовали! Поминайте Аллаха многократно и славьте Его утром и перед закатом.",
     "source": "Quran",
-    "text_en": "O you who have believed, remember Allah with much remembrance and glorify Him morning and evening.",
+    "text": "O you who have believed, remember Allah with much remembrance and glorify Him morning and evening.",
     "source_ext": "33:41-42"
   },
   {
     "id": 8,
-    "text": "Мольбы трёх людей не отвергаются: мольба родителя (за своего ребенка), мольба постящегося и мольба путника.",
+    "text_ru": "Мольбы трёх людей не отвергаются: мольба родителя (за своего ребенка), мольба постящегося и мольба путника.",
     "source": "Beyhaqi",
-    "text_en": "Three duas will not be rejected by Allah: Dua of the parent for his child, dua of one who is fasting, and dua of the traveler.",
+    "text": "Three duas will not be rejected by Allah: Dua of the parent for his child, dua of one who is fasting, and dua of the traveler.",
     "source_ext": "Beyhaqi"
   }
 ]
