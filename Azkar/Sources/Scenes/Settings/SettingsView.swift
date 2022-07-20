@@ -1,12 +1,7 @@
-//
-//  SettingsView.swift
-//  Azkar
-//
-//  Created by Abdurahim Jauzee on 04.05.2020.
 //  Copyright © 2020 Al Jawziyya. All rights reserved.
-//
 
 import SwiftUI
+import Popovers
 
 enum SettingsSection: Equatable {
     case root, themes, arabicFonts, fonts, icons
@@ -21,10 +16,6 @@ extension URL: Identifiable {
 struct SettingsView: View {
 
     @ObservedObject var viewModel: SettingsViewModel
-    @State private var showFunFeaturesDescription = false
-    @State private var showSystemFontsizeTip = false
-    @State private var showGoToNextZikrTip = false
-    @State private var showCounterTypeTip = false
 
     var body: some View {
         Form {
@@ -76,18 +67,13 @@ struct SettingsView: View {
                     Text(L10n.Settings.useFunFeatures)
                         .font(Font.system(.body, design: .rounded))
                     Spacer()
-                    Button { } label: {
+
+                    Templates.Menu {
+                        Text(L10n.Settings.useFunFeaturesTip)
+                            .padding()
+                    } label: { _ in
                         Image(systemName: "info.circle")
                             .foregroundColor(Color.accent.opacity(0.75))
-                    }
-                    .onTapGesture {
-                        self.showFunFeaturesDescription = true
-                    }
-                    .alert(isPresented: $showFunFeaturesDescription) {
-                        Alert(
-                            title: Text(L10n.Settings.useFunFeaturesTip),
-                            dismissButton: .default(Text("OK"))
-                        )
                     }
                 }
                 .padding(.vertical, 8)
@@ -106,19 +92,15 @@ struct SettingsView: View {
                     HStack {
                         Text(L10n.Settings.Counter.counterType)
                         Spacer()
-                        Button { } label: {
+
+                        Templates.Menu {
+                            Text(L10n.Settings.Counter.counterTypeInfo)
+                                .padding()
+                        } label: { _ in
                             Image(systemName: "info.circle")
                                 .foregroundColor(Color.accent.opacity(0.75))
                         }
-                        .onTapGesture {
-                            self.showCounterTypeTip = true
-                        }
-                        .alert(isPresented: $showCounterTypeTip) {
-                            Alert(
-                                title: Text(L10n.Settings.Counter.counterTypeInfo),
-                                dismissButton: .default(Text("OK"))
-                            )
-                        }
+
                         Picker(
                             CounterType.allCases,
                             id: \.self,
@@ -138,19 +120,15 @@ struct SettingsView: View {
                         HStack {
                             Text(L10n.Settings.Counter.goToNextDhikr)
                                 .font(Font.system(.body, design: .rounded))
+
                             Spacer()
-                            Button { } label: {
+
+                            Templates.Menu {
+                                Text(L10n.Settings.Counter.goToNextDhikrTip)
+                                    .padding()
+                            } label: { _ in
                                 Image(systemName: "info.circle")
                                     .foregroundColor(Color.accent.opacity(0.75))
-                            }
-                            .onTapGesture {
-                                self.showGoToNextZikrTip = true
-                            }
-                            .alert(isPresented: $showGoToNextZikrTip) {
-                                Alert(
-                                    title: Text(L10n.Settings.Counter.goToNextDhikrTip),
-                                    dismissButton: .default(Text("OK"))
-                                )
                             }
                         }
                         .padding(.vertical, 8)
@@ -230,18 +208,12 @@ struct SettingsView: View {
                     Text(L10n.Settings.Text.useSystemFontSize)
                         .font(Font.system(.body, design: .rounded))
                     Spacer()
-                    Button { } label: {
+                    Templates.Menu {
+                        Text(L10n.Settings.Text.useSystemFontSizeTip)
+                            .padding()
+                    } label: { _ in
                         Image(systemName: "info.circle")
                             .foregroundColor(Color.accent.opacity(0.75))
-                    }
-                    .onTapGesture {
-                        self.showSystemFontsizeTip = true
-                    }
-                    .alert(isPresented: $showSystemFontsizeTip) {
-                        Alert(
-                            title: Text(L10n.Settings.Text.useSystemFontSizeTip),
-                            dismissButton: .default(Text("OK"))
-                        )
                     }
                 }
                 .padding(.vertical, 8)

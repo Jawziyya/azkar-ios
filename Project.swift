@@ -81,6 +81,7 @@ enum AzkarTarget: String, CaseIterable {
                     .package(product: "SwiftUIX"),
                     .package(product: "ActivityView"),
                     .package(product: "SwiftUIDrag"),
+                    .package(product: "Popovers"),
                 ],
                 settings: Settings(
                     base: baseSettingsDictionary
@@ -172,6 +173,7 @@ let packages: [Package] = [
     .remote(url: "https://github.com/siteline/SwiftUI-Introspect", requirement: .upToNextMajor(from: "0.1.3")),
     .remote(url: "https://github.com/SwiftUI-Plus/ActivityView", requirement: .upToNextMajor(from: "1.0.0")),
     .remote(url: "https://github.com/demharusnam/SwiftUIDrag", requirement: .upToNextMajor(from: "0.0.11")),
+    .remote(url: "https://github.com/aheze/Popovers", requirement: .upToNextMajor(from: "1.3.2")),
 ]
 
 let project = Project(

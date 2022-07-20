@@ -3,13 +3,13 @@
 import SwiftUI
 import NukeUI
 import Nuke
+import Popovers
 
 struct FontsView: View {
     
     @StateObject var viewModel: FontsViewModel
     @Environment(\.colorScheme) var colorScheme
     @State private var previewFont: AppFontViewModel?
-    @State private var showArabicVowelsInfo = false
     
     var body: some View {
         List {
@@ -37,10 +37,13 @@ struct FontsView: View {
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 if viewModel.fontsType == .arabic {
-                    Button(action: {
-                        self.showArabicVowelsInfo = true
-                    }) {
+                    Templates.Menu {
+                        Text(L10n.Fonts.Arabic.info)
+                            .foregroundColor(Color.primary)
+                            .padding()
+                    } label: { _ in
                         Image(systemName: "info")
+                            .foregroundColor(Color.accent)
                     }
                 }
             }
@@ -57,14 +60,6 @@ struct FontsView: View {
                     
                     Spacer()
                 }
-            }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .padding()
-            .background(Color.background)
-        }
-        .sheet(isPresented: $showArabicVowelsInfo) {
-            VStack {
-                Text(L10n.Fonts.Arabic.info)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .padding()
