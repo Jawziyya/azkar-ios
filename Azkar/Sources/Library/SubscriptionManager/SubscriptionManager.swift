@@ -23,11 +23,15 @@ final class SubscriptionManager: SubscriptionManagerType {
     private init() {}
     
     func isProUser() -> Bool {
+        #if DEBUG
+        return CommandLine.arguments.contains("ENABLE_PRO")
+        #else
         if UIDevice.current.isMac || UIApplication.shared.isRanInSimulator {
             return true
         } else {
             return enableProFeatures
         }
+        #endif
     }
     
     func loadProducts() {
