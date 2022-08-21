@@ -202,6 +202,22 @@ struct SettingsView: View {
                     .font(Font.system(.body, design: .rounded))
             }
             .disabled(!viewModel.selectedArabicFontSupportsVowels)
+
+            Toggle(isOn: $viewModel.preferences.enableLineBreaks) {
+                HStack {
+                    Text(L10n.Settings.Breaks.title)
+                        .font(Font.system(.body, design: .rounded))
+                    Spacer()
+                    Templates.Menu {
+                        Text(L10n.Settings.Breaks.info)
+                            .padding()
+                    } label: { _ in
+                        Image(systemName: "info.circle")
+                            .foregroundColor(Color.accent.opacity(0.75))
+                    }
+                }
+                .padding(.vertical, 8)
+            }
             
             Toggle(isOn: $viewModel.preferences.useSystemFontSize) {
                 HStack {

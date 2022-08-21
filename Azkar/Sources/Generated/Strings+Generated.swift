@@ -237,6 +237,12 @@ internal enum L10n {
     internal static let useFunFeatures = L10n.tr("Localizable", "settings.use_fun_features")
     /// These are features which make Azkar app a bit beautiful but some people find useless and annoying.
     internal static let useFunFeaturesTip = L10n.tr("Localizable", "settings.use_fun_features_tip")
+    internal enum Breaks {
+      /// If enabled, Azkar will insert line-breaks after each sentence in dhikr/dua.
+      internal static let info = L10n.tr("Localizable", "settings.breaks.info")
+      /// Use smart line-breaks
+      internal static let title = L10n.tr("Localizable", "settings.breaks.title")
+    }
     internal enum Counter {
       /// Enable counter haptic feedback
       internal static let counterHaptics = L10n.tr("Localizable", "settings.counter.counter-haptics")
@@ -246,7 +252,9 @@ internal enum L10n {
       internal static let counterType = L10n.tr("Localizable", "settings.counter.counter-type")
       /// Button
       internal static let counterTypeButton = L10n.tr("Localizable", "settings.counter.counter-type-button")
-      /// This option allows you to switch type of the counter used.\n\nIf you choose 'button' Azkar will display a button at the bottom of reading screen. If you choose 'tap' there will be no visible indication, but you will be able to tap twice at any area to decrement the counter.
+      /// This option allows you to switch type of the counter used.
+      /// 
+      /// If you choose 'button' Azkar will display a button at the bottom of reading screen. If you choose 'tap' there will be no visible indication, but you will be able to tap twice at any area to decrement the counter.
       internal static let counterTypeInfo = L10n.tr("Localizable", "settings.counter.counter-type-info")
       /// Tap
       internal static let counterTypeTap = L10n.tr("Localizable", "settings.counter.counter-type-tap")
@@ -370,7 +378,8 @@ internal enum L10n {
       internal static let translationTextFont = L10n.tr("Localizable", "settings.text.translation_text_font")
       /// System text size
       internal static let useSystemFontSize = L10n.tr("Localizable", "settings.text.use-system-font-size")
-      /// If this option is turned on Azkar app will use text size from iOS Settings (Settings — Display & Brightness — Text Size).\nIf it's turned off you can choose desired text size below.
+      /// If this option is turned on Azkar app will use text size from iOS Settings (Settings — Display & Brightness — Text Size).
+      /// If it's turned off you can choose desired text size below.
       internal static let useSystemFontSizeTip = L10n.tr("Localizable", "settings.text.use_system_font_size_tip")
     }
     internal enum Theme {
@@ -458,7 +467,13 @@ internal enum L10n {
       internal static let thanks = L10n.tr("Localizable", "subscribe.finish.thanks")
     }
     internal enum Why {
-      /// • All basic features of Azkar app available for **free**.\n\n• Developing and publishing apps on the App Store takes money and time. Purchases help to cover these costs.\n\n• Free apps without ads and purchases do not profit developers.\n\n• We decided to provide Pro features instead of adding ads while keeping all the core functionality free.
+      /// • All basic features of Azkar app available for **free**.
+      /// 
+      /// • Developing and publishing apps on the App Store takes money and time. Purchases help to cover these costs.
+      /// 
+      /// • Free apps without ads and purchases do not profit developers.
+      /// 
+      /// • We decided to provide Pro features instead of adding ads while keeping all the core functionality free.
       internal static let message = L10n.tr("Localizable", "subscribe.why.message")
       /// Why?
       internal static let title = L10n.tr("Localizable", "subscribe.why.title")

@@ -144,6 +144,9 @@ final class Preferences: ObservableObject {
 
     @Preference(Keys.alignCounterByLeadingSide, defaultValue: true)
     var alignCounterButtonByLeadingSide
+
+    @Preference(Keys.enableLineBreaks, defaultValue: true)
+    var enableLineBreaks
     
     private func getFont<T: AppFont & Decodable>(_ key: String) -> T? {
         guard

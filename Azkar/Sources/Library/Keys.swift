@@ -12,6 +12,7 @@ enum Keys {
     static let colorTheme = "kColorTheme"
     static let appIcon = "kAppIcon"
     static let purchasedIconPacks = "kPurchasedIconPacks"
+    static let enableLineBreaks = "kEnableLineBreaks"
 
     static let useSystemFontSize = "kUseSystemFontSize"
     static let sizeCategory = "kSizeCategory"
