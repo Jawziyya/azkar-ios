@@ -100,12 +100,12 @@ struct MainMenuView: View {
 
             // MARK: - Other Azkar
             VStack(spacing: 0) {
-                if Date().isRamadan {
+                if Date().isRamadan, let dua = viewModel.fastingDua {
                     Button(action: {
-                        self.viewModel.navigateToZikr(self.viewModel.fastingDua)
+                        self.viewModel.navigateToZikr(dua)
                     }, label: {
                         HStack {
-                            MainMenuSmallGroup(item: AzkarMenuItem(category: ZikrCategory.other, imageName: "🌕", title: viewModel.fastingDua.title ?? "", color: Color.blue, count: nil, iconType: .emoji))
+                            MainMenuSmallGroup(item: AzkarMenuItem(category: ZikrCategory.other, imageName: "🌕", title: dua.title ?? "", color: Color.blue, count: nil, iconType: .emoji))
                             Image(systemName: "chevron.right")
                                 .foregroundColor(Color.tertiaryText)
                                 .padding(.trailing)
@@ -171,20 +171,22 @@ struct MainMenuView: View {
             }
             .shadow(color: Color.black.opacity(0.05), radius: 10, x: 0, y: 1)
 
-            VStack(spacing: 8) {
-                Text(viewModel.fadlText)
-                    .font(Font.customFont(viewModel.preferences.preferredTranslationFont, style: .caption1))
-                    .tracking(1.2)
-                    .foregroundColor(Color.text.opacity(0.7))
+            if let fadl = viewModel.fadl {
+                VStack(spacing: 8) {
+                    Text(fadl.text)
+                        .font(Font.customFont(viewModel.preferences.preferredTranslationFont, style: .caption1))
+                        .tracking(1.2)
+                        .foregroundColor(Color.text.opacity(0.7))
 
-                Text(viewModel.fadlSource)
-                    .font(Font.customFont(viewModel.preferences.preferredTranslationFont, style: .caption2))
-                    .foregroundColor(Color.secondaryText.opacity(0.5))
+                    Text(fadl.source)
+                        .font(Font.customFont(viewModel.preferences.preferredTranslationFont, style: .caption2))
+                        .foregroundColor(Color.secondaryText.opacity(0.5))
+                }
+                .shadow(color: Color.text.opacity(0.5), radius: 0.5, x: 0.0, y: 0.05)
+                .multilineTextAlignment(.center)
+                .padding()
+                .shadow(color: Color.black.opacity(0.05), radius: 10, x: 0, y: 1)
             }
-            .shadow(color: Color.text.opacity(0.5), radius: 0.5, x: 0.0, y: 0.05)
-            .multilineTextAlignment(.center) 
-            .padding()
-            .shadow(color: Color.black.opacity(0.05), radius: 10, x: 0, y: 1)
         }
         .padding(.horizontal)
     }

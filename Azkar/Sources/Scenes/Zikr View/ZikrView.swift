@@ -345,7 +345,7 @@ struct ZikrView_Previews: PreviewProvider {
         let prefs = Preferences.shared
         prefs.colorTheme = .sea
         return ZikrView(
-            viewModel: ZikrViewModel(zikr: Zikr.data[3], preferences: prefs, player: .test),
+            viewModel: ZikrViewModel(zikr: Zikr.placeholder, hadith: Hadith.placeholder, preferences: prefs, player: .test),
             incrementAction: Empty().eraseToAnyPublisher()
         )
         .environment(\.colorScheme, .dark)

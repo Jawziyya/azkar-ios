@@ -28,14 +28,15 @@ final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
 
     let zikr: Zikr
     let title: String
-    var text: String {
-        preferences.showTashkeel && preferences.preferredArabicFont.hasTashkeelSupport ? zikr.text : zikr.text.trimmingArabicVowels
-    }
+
+    @Published private(set) var text: String
+    @Published private(set) var translation: String?
+    @Published private(set) var transliteration: String?
+
     let preferences: Preferences
     let counter: ZikrCounterServiceType
+    let textProcessor: TextProcessor
 
-    let transliteration: String?
-    let translation: String?
     let source: String
 
     var playerViewModel: PlayerViewModel?
@@ -77,15 +78,19 @@ final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
 
     init(
         zikr: Zikr,
+        hadith: Hadith?,
         preferences: Preferences,
         player: Player,
-        counter: ZikrCounterServiceType = ZikrCounterService()
+        counter: ZikrCounterServiceType = ZikrCounterService(),
+        textProcessor: TextProcessor = TextProcessor(preferences: Preferences.shared)
     ) {
         self.counter = counter
         self.zikr = zikr
         self.preferences = preferences
         self.remainingRepeatsNumber = counter.getRemainingRepeats(for: zikr)
+        self.textProcessor = textProcessor
         title = zikr.title ?? "\(L10n.Common.zikr) №\(zikr.rowInCategory)"
+        text = textProcessor.processArabicText(zikr.text)
         
         expandTranslation = preferences.expandTranslation
         expandTransliteration = preferences.expandTransliteration
@@ -99,8 +104,8 @@ final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
             playerViewModel = PlayerViewModel(title: title, subtitle: zikr.category.title, audioURL: url, player: player)
         }
 
-        if zikr.hadith != nil {
-            hadithViewModel = HadithViewModel(zikrViewModel: self, preferences: preferences)
+        if let hadith = hadith {
+            hadithViewModel = HadithViewModel(hadith: hadith, preferences: preferences)
         }
         
         cancellables.insert(
@@ -116,6 +121,15 @@ final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
             .sink { [unowned self] id in
                 self.textSettingsToken = id
             }
+            .store(in: &cancellables)
+
+        preferences.$enableLineBreaks
+            .throttle(for: 1, scheduler: DispatchQueue.main, latest: true)
+            .sink(receiveValue: { [unowned self] _ in
+                text = textProcessor.processArabicText(zikr.text)
+                translation = zikr.translation?.textOrNil.flatMap(textProcessor.processTranslationText)
+                transliteration = zikr.transliteration?.textOrNil.flatMap(textProcessor.processTransliterationText)
+            })
             .store(in: &cancellables)
 
         updateRemainingRepeatsText()

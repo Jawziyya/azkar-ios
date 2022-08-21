@@ -109,7 +109,8 @@ struct ZikrShareView_Previews: PreviewProvider {
     static var previews: some View {
         ZikrShareView(
             viewModel: ZikrViewModel(
-                zikr: Zikr.data[1],
+                zikr: Zikr.placeholder,
+                hadith: Hadith.placeholder,
                 preferences: Preferences.shared,
                 player: Player.test
             )

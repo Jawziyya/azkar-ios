@@ -152,12 +152,36 @@ struct Zikr: Identifiable, Hashable, Equatable, Codable {
         let asset = AVURLAsset(url: url)
         return Double(CMTimeGetSeconds(asset.duration))
     }
-    
-    static var data: [Zikr] = {
-        let url = Bundle.main.url(forResource: "azkar", withExtension: "json")!
-        let data = try! Data(contentsOf: url)
-        let azkar = try! JSONDecoder().decode([Zikr].self, from: data)
-        return azkar
-    }()
+
+    static var placeholder: Zikr {
+        Zikr(
+            id: 1,
+            hadith: 1,
+            rowInCategory: 1,
+            text: "Text",
+            category: ZikrCategory.other,
+            audioFileName: "123.mp3",
+            repeats: 1,
+            _title: "Title",
+            titleRU: "Title RU",
+            titleEN: "Title EN",
+            titleTR: "Title TR",
+            translationRU: "Translation RU",
+            translationEN: "Translation EN",
+            translationTR: "Translation TR",
+            _source: "Source",
+            transliterationEN: "Transliteration EN",
+            transliterationRU: "Transliteration RU",
+            transliterationTR: "Trasnliteration TR",
+            _notes: "Notes",
+            notesRU: "Notes RU",
+            notesEN: "Notes EN",
+            notesTR: "Notes TR",
+            _benefit: "Benefit",
+            benefitRU: "Benifit RU",
+            benefitEN: "Benefit EN",
+            benefitTR: "Benefit TR"
+        )
+    }
     
 }

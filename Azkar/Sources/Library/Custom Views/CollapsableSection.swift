@@ -78,7 +78,7 @@ struct CollapsableSection: View, Equatable {
 
 struct CollapsableSection_Previews: PreviewProvider {
     static var previews: some View {
-        let zikr = Zikr.data[5]
+        let zikr = Zikr.placeholder
         return CollapsableSection(
             title: zikr.title ?? "Zikr",
             text: zikr.translation ?? "",

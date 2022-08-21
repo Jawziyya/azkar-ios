@@ -18,11 +18,6 @@ struct HadithViewModel {
     let translation: String?
     let source: String
 
-    init(zikrViewModel: ZikrViewModel, preferences: Preferences) {
-        let hadith = Hadith.data.first(where: { $0.id == zikrViewModel.zikr.hadith })!
-        self.init(hadith: hadith, preferences: preferences)
-    }
-
     init(hadith: Hadith, preferences: Preferences) {
         self.preferences = preferences
         self.hadith = hadith

@@ -32,33 +32,24 @@ protocol RootRouter: AnyObject {
 final class RootCoordinator: NavigationCoordinator, RootRouter {
 
     let preferences: Preferences
+    let databaseService: DatabaseService
     let deeplinker: Deeplinker
     let player: Player
-
-    let morningAzkar: [ZikrViewModel]
-    let eveningAzkar: [ZikrViewModel]
-    let afterSalahAzkar: [ZikrViewModel]
-    let otherAzkar: [ZikrViewModel]
 
     private let selectedZikrPageIndex = CurrentValueSubject<Int, Never>(0)
 
     private var cancellables = Set<AnyCancellable>()
 
-    init(preferences: Preferences, deeplinker: Deeplinker, player: Player) {
+    init(
+        databaseService: DatabaseService = DatabaseService.shared,
+        preferences: Preferences,
+        deeplinker: Deeplinker,
+        player: Player
+    ) {
+        self.databaseService = databaseService
         self.preferences = preferences
         self.deeplinker = deeplinker
         self.player = player
-
-        let azkar = Zikr.data
-        let all = azkar
-            .sorted(by: { $0.rowInCategory < $1.rowInCategory })
-            .map {
-                ZikrViewModel(zikr: $0, preferences: preferences, player: player)
-            }
-        morningAzkar = all.filter { $0.zikr.category == .morning }
-        eveningAzkar = all.filter { $0.zikr.category == .evening }
-        afterSalahAzkar = all.filter { $0.zikr.category == .afterSalah }
-        otherAzkar = all.filter { $0.zikr.category == .other }
 
         let navigationController = UINavigationController()
         navigationController.navigationItem.largeTitleDisplayMode = .automatic
@@ -95,13 +86,17 @@ final class RootCoordinator: NavigationCoordinator, RootRouter {
             .store(in: &cancellables)
     }
 
-    func azkarForCategory(_ category: ZikrCategory) -> [ZikrViewModel] {
-        switch category {
-        case .morning: return morningAzkar
-        case .evening: return eveningAzkar
-        case .afterSalah: return afterSalahAzkar
-        case .other: return otherAzkar
+    func azkarForCategory(_ category: ZikrCategory) throws -> [ZikrViewModel] {
+        let adhkar = try databaseService.getAdhkar(category)
+        let viewModels = try adhkar.map { zikr in
+            try ZikrViewModel(
+                zikr: zikr,
+                hadith: zikr.hadith.flatMap(databaseService.getHadith),
+                preferences: preferences,
+                player: player
+            )
         }
+        return viewModels
     }
 
     func trigger(_ route: RootSection) {
@@ -150,11 +145,20 @@ private extension RootCoordinator {
             root(viewController)
 
         case .category(let category):
+            let azkar: [ZikrViewModel]
+
+            do {
+                azkar = try azkarForCategory(category)
+            } catch {
+                // TODO: Handle error.
+                return
+            }
+
             let viewModel = ZikrPagesViewModel(
                 router: self,
                 category: category,
                 title: category.title,
-                azkar: azkarForCategory(category),
+                azkar: azkar,
                 preferences: preferences,
                 selectedPagePublisher: selectedZikrPageIndex.eraseToAnyPublisher()
             )
@@ -192,7 +196,8 @@ private extension RootCoordinator {
                 return
             }
 
-            let viewModel = ZikrViewModel(zikr: zikr, preferences: preferences, player: player)
+            let hadith = try? zikr.hadith.flatMap(databaseService.getHadith)
+            let viewModel = ZikrViewModel(zikr: zikr, hadith: hadith, preferences: preferences, player: player)
             let view = ZikrView(viewModel: viewModel, incrementAction: Empty().eraseToAnyPublisher())
             let viewController = UIHostingController(rootView: view)
 

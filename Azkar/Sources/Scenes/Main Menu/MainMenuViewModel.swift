@@ -23,11 +23,6 @@ final class MainMenuViewModel: ObservableObject {
         case notificationsAccess
     }
 
-    let morningAzkar: [ZikrViewModel]
-    let eveningAzkar: [ZikrViewModel]
-    let afterSalahAzkar: [ZikrViewModel]
-    let otherAzkar: [ZikrViewModel]
-
     let currentYear: String
 
     func getDayNightSectionModels(isDarkModeEnabled: Bool) -> [MainMenuLargeGroupViewModel] {
@@ -40,8 +35,7 @@ final class MainMenuViewModel: ObservableObject {
     let otherAzkarModels: [AzkarMenuItem]
     let infoModels: [AzkarMenuOtherItem]
     
-    let fadlText: String
-    let fadlSource: String
+    let fadl: Fadl?
 
     @Published var additionalMenuItems: [AzkarMenuOtherItem] = []
     @Published var enableEidBackground = false
@@ -50,7 +44,7 @@ final class MainMenuViewModel: ObservableObject {
     var kDidDisplayIconPacksMessage
 
     let player: Player
-    let fastingDua: Zikr
+    let fastingDua: Zikr?
 
     let preferences: Preferences
 
@@ -75,26 +69,34 @@ final class MainMenuViewModel: ObservableObject {
         return item
     }()
 
-    init(router: RootRouter, preferences: Preferences, player: Player) {
+    init(
+        databaseService: DatabaseService = DatabaseService.shared,
+        router: RootRouter,
+        preferences: Preferences,
+        player: Player
+    ) {
         self.router = router
-        let azkar = Zikr.data
-        let all = azkar
-            .sorted(by: { $0.rowInCategory < $1.rowInCategory })
-            .map {
-                ZikrViewModel(zikr: $0, preferences: preferences, player: player)
-            }
-        morningAzkar = all.filter { $0.zikr.category == .morning }
-        eveningAzkar = all.filter { $0.zikr.category == .evening }
-        afterSalahAzkar = all.filter { $0.zikr.category == .afterSalah }
-        otherAzkar = all.filter { $0.zikr.category == .other }
         self.preferences = preferences
         self.player = player
 
-        fastingDua = azkar.first(where: { $0.id == 51 })!
+        fastingDua = try? databaseService.getZikr(51)
 
         otherAzkarModels = [
-            AzkarMenuItem(category: .afterSalah, imageName: "mosque", title: L10n.Category.afterSalah, color: Color.init(.systemBlue), count: afterSalahAzkar.count, iconType: .bundled),
-            AzkarMenuItem(category: .other, imageName: "square.stack.3d.down.right.fill", title: L10n.Category.other, color: Color.init(.systemTeal), count: otherAzkar.count),
+            AzkarMenuItem(
+                category: .afterSalah,
+                imageName: "mosque",
+                title: L10n.Category.afterSalah,
+                color: Color.init(.systemBlue),
+                count: nil,
+                iconType: .bundled
+            ),
+            AzkarMenuItem(
+                category: .other,
+                imageName: "square.stack.3d.down.right.fill",
+                title: L10n.Category.other,
+                color: Color.init(.systemTeal),
+                count: nil
+            ),
         ]
 
         infoModels = [
@@ -102,9 +104,7 @@ final class MainMenuViewModel: ObservableObject {
             AzkarMenuOtherItem(groupType: .settings, imageName: "gear", title: L10n.Root.settings, color: Color.init(.systemGray)),
         ]
         
-        let fadl = Fadl.all.randomElement()!
-        fadlText = fadl.text
-        fadlSource = fadl.source
+        fadl = try? databaseService.getRandomFadl()
 
         var year = "\(Date().hijriYear) г.х."
         switch Calendar.current.identifier {

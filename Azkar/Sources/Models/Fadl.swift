@@ -38,11 +38,5 @@ struct Fadl: Codable, Identifiable {
         }
         return source
     }
-
-    static var all: [Fadl] = {
-        let url = Bundle.main.url(forResource: "fudul", withExtension: "json")!
-        let data = try! Data(contentsOf: url)
-        return try! JSONDecoder().decode([Fadl].self, from: data)
-    }()
     
 }

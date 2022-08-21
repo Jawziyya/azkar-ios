@@ -44,10 +44,8 @@ struct Hadith: Codable, Identifiable {
         return source
     }
 
-    static var data: [Hadith] = {
-        let url = Bundle.main.url(forResource: "ahadith", withExtension: "json")!
-        let data = try! Data(contentsOf: url)
-        let azkar = try! JSONDecoder().decode([Hadith].self, from: data)
-        return azkar
-    }()
+    static var placeholder: Hadith {
+        Hadith(id: 1, text: "Text", _translation: "Translatioin", translationEN: "Translation EN", translationTR: "Translation TR", _source: "Source", sourceExtension: "123")
+    }
+
 }

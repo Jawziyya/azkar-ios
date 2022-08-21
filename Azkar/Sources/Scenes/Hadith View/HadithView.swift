@@ -78,6 +78,6 @@ struct HadithView: View {
 
 struct HadithView_Previews: PreviewProvider {
     static var previews: some View {
-        HadithView(viewModel: HadithViewModel(hadith: Hadith.data[0], preferences: Preferences.shared))
+        HadithView(viewModel: HadithViewModel(hadith: Hadith.placeholder, preferences: Preferences.shared))
     }
 }
