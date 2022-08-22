@@ -82,6 +82,7 @@ enum AzkarTarget: String, CaseIterable {
                     .package(product: "ActivityView"),
                     .package(product: "SwiftUIDrag"),
                     .package(product: "Popovers"),
+                    .package(product: "GRDB"),
                 ],
                 settings: Settings(
                     base: baseSettingsDictionary
@@ -164,6 +165,7 @@ let packages: [Package] = [
     // MARK: Utilities.
     .remote(url: "https://github.com/weichsel/ZIPFoundation", requirement: .upToNextMajor(from: "0.9.0")),
     .remote(url: "https://github.com/bizz84/SwiftyStoreKit", requirement: .upToNextMajor(from: "0.16.3")),
+    .remote(url: "https://github.com/groue/GRDB.swift", requirement: .upToNextMajor(from: "5.0.0")),
 
     // MARK: UI.
     .remote(url: "https://github.com/radianttap/Coordinator", requirement: .upToNextMajor(from: "6.4.2")),
