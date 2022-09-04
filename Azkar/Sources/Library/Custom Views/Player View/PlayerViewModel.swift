@@ -21,6 +21,8 @@ final class PlayerViewModel: ObservableObject, Equatable {
 
     @Published var isPlaying: Bool
     @Published var progress: Double = 0
+    @Published var progressInSecondsAdjustd: Double = 0
+    @Published var progressInSeconds: Double = 0
     @Published var timeElapsed = ""
     @Published var timeRemaining = ""
     @Published var speed: Player.Speed = .normal
@@ -59,8 +61,12 @@ final class PlayerViewModel: ObservableObject, Equatable {
                 return progress
             }
             .removeDuplicates()
-            .assign(to: \.progress, on: self)
-            .store(in: &cancellabels)
+            .assign(to: &$progress)
+
+        player.$timeElapsed
+            .filter { _ in player.isPlayingItemAtURL(audioURL) }
+            .removeDuplicates()
+            .assign(to: &$progressInSeconds)
 
         let zeroTime = "00:00"
         let formatter = DateComponentsFormatter()
@@ -72,7 +78,7 @@ final class PlayerViewModel: ObservableObject, Equatable {
         let asset = AVURLAsset(url: audioURL)
         let duration = Double(CMTimeGetSeconds(asset.duration))
 
-        player.$timeElapsed
+        player.$timeElapsedAdjusted
             .prepend(0)
             .map {
                 player.isPlayingItemAtURL(audioURL) ? $0 : 0
@@ -82,7 +88,7 @@ final class PlayerViewModel: ObservableObject, Equatable {
             .assign(to: \.timeElapsed, on: self)
             .store(in: &cancellabels)
 
-        player.$timeRemaining
+        player.$timeRemainingAdjusted
             .map { time in player.isPlayingItemAtURL(audioURL) ? time : duration }
             .removeDuplicates()
             .prepend(duration)

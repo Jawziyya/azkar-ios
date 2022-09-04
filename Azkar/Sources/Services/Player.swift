@@ -79,6 +79,8 @@ final class Player: NSObject, ObservableObject {
     @Published var currentItemSubtitle = ""
     @Published var timeElapsed: Double = 0
     @Published var timeRemaining: Double = 0
+    @Published var timeElapsedAdjusted: Double = 0
+    @Published var timeRemainingAdjusted: Double = 0
     @Published var speed: Speed = .normal
     
     var currentItemURL: URL? {
@@ -172,7 +174,8 @@ extension Player: AudioPlayerDelegate {
             
         case (.playing, .stopped):
             timeElapsed = 0
-            timeRemaining = adjustedTime(time: (audioPlayer.currentItemDuration ?? 0), speed: speed)
+            timeRemaining = audioPlayer.currentItemDuration ?? 0
+            timeRemainingAdjusted = adjustedTime(time: (audioPlayer.currentItemDuration ?? 0), speed: speed)
             progress = 0
 
         default:
@@ -182,8 +185,11 @@ extension Player: AudioPlayerDelegate {
 
     func audioPlayer(_ audioPlayer: AudioPlayer, didUpdateProgressionTo time: TimeInterval, percentageRead: Float) {
         progress = Double(percentageRead/100)
-        timeElapsed = adjustedTime(time: time, speed: speed)
-        timeRemaining = adjustedTime(time: (audioPlayer.currentItemDuration ?? 0) - time, speed: speed)
+        timeElapsed = time
+        timeElapsedAdjusted = adjustedTime(time: time, speed: speed)
+
+        timeRemaining = (audioPlayer.currentItemDuration ?? 0) - time
+        timeRemaining = adjustedTime(time: timeRemaining, speed: speed)
     }
 
 }

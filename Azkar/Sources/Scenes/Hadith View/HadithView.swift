@@ -58,7 +58,7 @@ struct HadithView: View {
             isArabicText: true,
             isExpanded: .constant(true),
             font: viewModel.preferences.preferredArabicFont,
-            lineSpacing: viewModel.preferences.lineSpacing
+            lineSpacing: viewModel.preferences.arabicLineAdjustment
         )
     }
 
@@ -70,7 +70,7 @@ struct HadithView: View {
             isArabicText: false,
             isExpanded: .constant(true),
             font: viewModel.preferences.preferredTranslationFont,
-            lineSpacing: viewModel.preferences.translationLineSpacing
+            lineSpacing: viewModel.preferences.translationLineAdjustment
         )
     }
 

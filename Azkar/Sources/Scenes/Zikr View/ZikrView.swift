@@ -111,14 +111,14 @@ struct ZikrView: View {
             titleView
             textView
             
-            if let text = viewModel.translation {
-                getTranslationView(text: text)
+            if !viewModel.translation.isEmpty {
+                getTranslationView(text: viewModel.translation)
                 
                 getDivider()
             }
             
-            if let text = viewModel.transliteration {
-                getTransliterationView(text: text)
+            if !viewModel.transliteration.isEmpty {
+                getTransliterationView(text: viewModel.transliteration)
                 
                 getDivider()
             }
@@ -202,15 +202,47 @@ struct ZikrView: View {
         }
     }
 
+    private func getReadingTextView(
+        text: [String],
+        isArabicText: Bool,
+        font: AppFont,
+        spacing: CGFloat,
+        lineSpacing: CGFloat,
+        alignment: Alignment
+    ) -> some View {
+        VStack(spacing: spacing) {
+            ForEach(Array(zip(text.indices, text)), id: \.0) { idx, line in
+                ReadingTextView(
+                    text: line,
+                    isArabicText: isArabicText,
+                    font: font,
+                    lineSpacing: lineSpacing
+                )
+                .background(
+                    Group {
+                        if idx == viewModel.indexToHighlight, viewModel.highlightCurrentIndex {
+                            RoundedRectangle(cornerRadius: 6)
+                                .foregroundColor(Color.accent)
+                                .opacity(0.15)
+                                .padding(isArabicText ? -4 : 0)
+                        }
+                    }
+                )
+                .frame(maxWidth: .infinity, alignment: alignment)
+            }
+        }
+    }
+
     // MARK: - Text
     private var textView: some View {
         VStack(spacing: 10) {
-            CollapsableSection(
+            getReadingTextView(
                 text: viewModel.text,
                 isArabicText: true,
-                isExpanded: .constant(true),
                 font: viewModel.preferences.preferredArabicFont,
-                lineSpacing: viewModel.preferences.lineSpacing
+                spacing: viewModel.preferences.arabicLineAdjustment,
+                lineSpacing: viewModel.preferences.enableLineBreaks ? 0 : viewModel.preferences.arabicLineAdjustment,
+                alignment: .trailing
             )
             .id(viewModel.textSettingsToken)
             .padding([.leading, .trailing, .bottom])
@@ -222,39 +254,65 @@ struct ZikrView: View {
     }
 
     // MARK: - Translation
-    private func getTranslationView(text: String) -> some View {
-        CollapsableSection(
-            title: L10n.Read.translation,
-            text: text,
-            isArabicText: false,
-            isExpanded: $viewModel.expandTranslation,
-            font: viewModel.preferences.preferredTranslationFont,
-            lineSpacing: viewModel.preferences.translationLineSpacing,
-            tintColor: tintColor
-        ) {
-            withAnimation(Animation.easeInOut(duration: 0.2)) {
-                self.viewModel.preferences.expandTranslation.toggle()
+    private func getTranslationView(text: [String]) -> some View {
+        CollapsableView(
+            isExpanded: .init(get: {
+                viewModel.expandTranslation
+            }, set: { newValue in
+                withAnimation(Animation.spring()) {
+                    viewModel.preferences.expandTranslation = newValue
+                }
+            }),
+            header: {
+                CollapsableSectionHeaderView(
+                    title: L10n.Read.translation,
+                    isExpanded: viewModel.expandTranslation,
+                    isExpandable: true
+                )
+            },
+            content: {
+                getReadingTextView(
+                    text: text,
+                    isArabicText: false,
+                    font: viewModel.preferences.preferredTranslationFont,
+                    spacing: viewModel.preferences.translationLineAdjustment,
+                    lineSpacing: viewModel.preferences.enableLineBreaks ? 0 : viewModel.preferences.translationLineAdjustment,
+                    alignment: .leading
+                )
             }
-        }
+        )
         .id(viewModel.textSettingsToken)
         .padding()
     }
 
     // MARK: - Transliteration
-    private func getTransliterationView(text: String) -> some View {
-        CollapsableSection(
-            title: L10n.Read.transcription,
-            text: text,
-            isArabicText: false,
-            isExpanded: $viewModel.expandTransliteration,
-            font: viewModel.preferences.preferredTranslationFont,
-            lineSpacing: viewModel.preferences.translationLineSpacing,
-            tintColor: tintColor
-        ) {
-            withAnimation(Animation.easeInOut(duration: 0.2)) {
-                self.viewModel.preferences.expandTransliteration.toggle()
+    private func getTransliterationView(text: [String]) -> some View {
+        CollapsableView(
+            isExpanded: .init(get: {
+                viewModel.expandTransliteration
+            }, set: { newValue in
+                withAnimation(Animation.spring()) {
+                    viewModel.preferences.expandTransliteration = newValue
+                }
+            }),
+            header: {
+                CollapsableSectionHeaderView(
+                    title: L10n.Read.transcription,
+                    isExpanded: viewModel.expandTransliteration,
+                    isExpandable: true
+                )
+            },
+            content: {
+                getReadingTextView(
+                    text: text,
+                    isArabicText: false,
+                    font: viewModel.preferences.preferredTranslationFont,
+                    spacing: viewModel.preferences.translationLineAdjustment,
+                    lineSpacing: viewModel.preferences.enableLineBreaks ? 0 : viewModel.preferences.translationLineAdjustment,
+                    alignment: .leading
+                )
             }
-        }
+        )
         .id(viewModel.textSettingsToken)
         .padding()
     }

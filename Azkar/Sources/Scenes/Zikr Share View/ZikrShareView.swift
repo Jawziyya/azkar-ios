@@ -35,12 +35,12 @@ struct ZikrShareView: View {
             }
 
             VStack(spacing: 0) {
-                Text(.init(viewModel.text))
+                Text(.init(viewModel.text.joined(separator: "\n")))
                     .font(Font.customFont(viewModel.preferences.preferredArabicFont, style: .title1, sizeCategory: .large))
                     .multilineTextAlignment(arabicTextAlignment)
                     .padding()
 
-                if includeTranslation, let text = viewModel.translation {
+                if includeTranslation, let text = viewModel.translation.joined(separator: "\n") {
                     Divider()
 
                     Text(.init(text))
@@ -49,7 +49,7 @@ struct ZikrShareView: View {
                         .padding()
                 }
 
-                if includeTransliteration, let text = viewModel.transliteration {
+                if includeTransliteration, let text = viewModel.transliteration.joined(separator: "\n") {
                     Divider()
 
                     Text(.init(text))

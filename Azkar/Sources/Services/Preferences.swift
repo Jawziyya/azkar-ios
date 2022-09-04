@@ -6,7 +6,7 @@
 //  Copyright © 2020 Al Jawziyya. All rights reserved.
 //
 
-import Foundation
+import UIKit
 import Combine
 import SwiftUI
 
@@ -179,12 +179,20 @@ final class Preferences: ObservableObject {
         }
         return font
     }
+
+    var arabicLineAdjustment: CGFloat {
+        lineSpacing.value * CGFloat(preferredArabicFont.lineAdjustment ?? 1)
+    }
     
     var preferredTranslationFont: TranslationFont {
         guard let font: TranslationFont = getFont(Keys.preferredFont) else {
             return TranslationFont.iowanOldStyle
         }
         return font
+    }
+
+    var translationLineAdjustment: CGFloat {
+        translationLineSpacing.value * CGFloat(preferredTranslationFont.lineAdjustment ?? 1)
     }
     
     private var notificationSubscription: AnyCancellable?

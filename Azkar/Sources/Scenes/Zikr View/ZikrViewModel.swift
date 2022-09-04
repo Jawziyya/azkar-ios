@@ -29,9 +29,12 @@ final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
     let zikr: Zikr
     let title: String
 
-    @Published private(set) var text: String
-    @Published private(set) var translation: String?
-    @Published private(set) var transliteration: String?
+    @Published private(set) var text: [String]
+    @Published private(set) var translation: [String]
+    @Published private(set) var transliteration: [String]
+
+    @Published private(set) var highlightCurrentIndex = true
+    @Published private(set) var indexToHighlight: Int?
 
     let preferences: Preferences
     let counter: ZikrCounterServiceType
@@ -96,12 +99,39 @@ final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
         expandTransliteration = preferences.expandTransliteration
         hasTransliteration = zikr.transliteration?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty == false
         
-        transliteration = zikr.transliteration?.textOrNil
-        translation = zikr.translation?.textOrNil
+        translation = zikr.translation?.textOrNil.flatMap(textProcessor.processTranslationText) ?? []
+        transliteration = zikr.transliteration?.textOrNil.flatMap(textProcessor.processTransliterationText) ?? []
         source = zikr.source
 
         if let url = zikr.audioURL {
-            playerViewModel = PlayerViewModel(title: title, subtitle: zikr.category.title, audioURL: url, player: player)
+            let playerViewModel = PlayerViewModel(title: title, subtitle: zikr.category.title, audioURL: url, player: player)
+            self.playerViewModel = playerViewModel
+
+            do {
+                let timings = try DatabaseService.shared.getAudioTimings(audioId: zikr.audioId ?? -1)
+                playerViewModel
+                    .$progressInSeconds
+                    .filter { $0 > 0 }
+                    .compactMap { time -> AudioTiming? in
+                        return timings.last(where: { $0.time == time || $0.time < time })
+                    }
+                    .removeDuplicates()
+                    .sink { [weak self] timing in
+                        self?.indexToHighlight = timings.firstIndex(of: timing) ?? 0
+                    }
+                    .store(in: &cancellables)
+
+                playerViewModel
+                    .$progress
+                    .sink { [weak self] progress in
+                        if progress == 0 {
+                            self?.indexToHighlight = nil
+                        }
+                    }
+                    .store(in: &cancellables)
+            } catch {
+                print(error.localizedDescription)
+            }
         }
 
         if let hadith = hadith {
@@ -127,8 +157,8 @@ final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
             .throttle(for: 1, scheduler: DispatchQueue.main, latest: true)
             .sink(receiveValue: { [unowned self] _ in
                 text = textProcessor.processArabicText(zikr.text)
-                translation = zikr.translation?.textOrNil.flatMap(textProcessor.processTranslationText)
-                transliteration = zikr.transliteration?.textOrNil.flatMap(textProcessor.processTransliterationText)
+                translation = zikr.translation?.textOrNil.flatMap(textProcessor.processTranslationText) ?? []
+                transliteration = zikr.transliteration?.textOrNil.flatMap(textProcessor.processTransliterationText) ?? []
             })
             .store(in: &cancellables)
 
@@ -149,12 +179,12 @@ final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
         
         text += "\n\n\(zikr.text)"
         
-        if includeTranslation, let translation = translation {
-            text += "\n\n\(translation)"
+        if includeTranslation, !translation.isEmpty {
+            text += "\n\n\(translation.joined(separator: "\n"))"
         }
         
-        if includeTransliteration, let transliteration = transliteration {
-            text += "\n\n\(transliteration)"
+        if includeTransliteration, !transliteration.isEmpty {
+            text += "\n\n\(transliteration.joined(separator: "\n"))"
         }
         
         text += "\n\n\(zikr.source)"

@@ -22,6 +22,7 @@ struct Zikr: Identifiable, Hashable, Equatable, Codable {
     enum CodingKeys: String, CodingKey {
         case id, hadith
         case text, category, repeats
+        case audioId = "audio_id"
         
         case audioFileName = "audio_file_name"
         case rowInCategory = "row_in_category"
@@ -59,6 +60,7 @@ struct Zikr: Identifiable, Hashable, Equatable, Codable {
     let category: ZikrCategory
     let audioFileName: String?
     let repeats: Int
+    let audioId: Int?
     
     private let _title: String?
     private let titleRU: String?
@@ -162,6 +164,7 @@ struct Zikr: Identifiable, Hashable, Equatable, Codable {
             category: ZikrCategory.other,
             audioFileName: "123.mp3",
             repeats: 1,
+            audioId: nil,
             _title: "Title",
             titleRU: "Title RU",
             titleEN: "Title EN",

@@ -19,14 +19,10 @@ struct CollapsableSection: View, Equatable {
     let isArabicText: Bool
     @Binding var isExpanded: Bool
     let font: AppFont
-    var lineSpacing: LineSpacing?
+    var lineSpacing: CGFloat
     var sizeCategory: ContentSizeCategory? = Preferences.shared.sizeCategory
     var tintColor: Color = .accent
     var expandingCallback: (() -> Void)?
-    
-    var lineSpacingValue: CGFloat {
-        (lineSpacing?.value ?? 1) * CGFloat(font.lineAdjustment ?? 1)
-    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: isExpanded && expandingCallback != nil ? 10 : 0) {
@@ -34,37 +30,18 @@ struct CollapsableSection: View, Equatable {
                 UIImpactFeedbackGenerator(style: .soft).impactOccurred()
                 self.expandingCallback?()
             }, label: {
-                HStack {
-                    title.flatMap { title in
-                        Text(title)
-                            .font(Font.system(.caption, design: .rounded).smallCaps())
-                            .foregroundColor(Color.tertiaryText)
-                    }
-                    if expandingCallback != nil {
-                        Spacer()
-                        Image(systemName: "chevron.down")
-                            .foregroundColor(tintColor)
-                            .rotationEffect(.init(degrees: isExpanded ? 180 : 0))
-                    }
-                }
+                CollapsableSectionHeaderView(
+                    title: title,
+                    isExpanded: isExpanded,
+                    isExpandable: expandingCallback != nil
+                )
             })
             .buttonStyle(BorderlessButtonStyle())
             .zIndex(1)
 
             ZStack {
                 if isExpanded {
-                    Group {
-                        if isArabicText {
-                            Text(.init(text))
-                                .font(Font.customFont(font, style: .title1, sizeCategory: sizeCategory))
-                                .lineSpacing(lineSpacingValue)
-                        } else {
-                            Text(.init(text))
-                                .font(Font.customFont(font, style: .body).leading(.tight))
-                                .lineSpacing(lineSpacingValue)
-                        }
-                    }
-                    .multilineTextAlignment(isArabicText ? .trailing : .leading)
+                    ReadingTextView(text: text, isArabicText: isArabicText, font: font, lineSpacing: lineSpacing, sizeCategory: sizeCategory)
                     .clipped()
                     .transition(.move(edge: .top).combined(with: .opacity))
                 }
@@ -79,16 +56,20 @@ struct CollapsableSection: View, Equatable {
 struct CollapsableSection_Previews: PreviewProvider {
     static var previews: some View {
         let zikr = Zikr.placeholder
-        return CollapsableSection(
-            title: zikr.title ?? "Zikr",
-            text: zikr.translation ?? "",
-            isArabicText: false,
-            isExpanded: .constant(true),
-            font: TranslationFont.iowanOldStyle,
-            lineSpacing: LineSpacing.m,
-            tintColor: Color.blue,
-            expandingCallback: {}
-        )
+        Stateful(initialState: false) { isExpanded in
+            CollapsableSection(
+                title: zikr.title ?? "Zikr",
+                text: zikr.translation ?? "",
+                isArabicText: false,
+                isExpanded: isExpanded,
+                font: TranslationFont.iowanOldStyle,
+                lineSpacing: 10,
+                tintColor: Color.blue,
+                expandingCallback: {
+                    isExpanded.wrappedValue.toggle()
+                }
+            )
+        }
         .previewLayout(.fixed(width: 350, height: 200))
     }
 }

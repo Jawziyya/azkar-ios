@@ -10,38 +10,38 @@ struct TextProcessor {
         self.preferences = preferences
     }
 
-    func processArabicText(_ text: String) -> String {
+    func processArabicText(_ text: String) -> [String] {
         var t = text
-
-        if preferences.enableLineBreaks == false {
-            t = t.replacingOccurrences(of: "\n", with: " ", options: .regularExpression)
-        }
 
         if !preferences.showTashkeel || !preferences.preferredArabicFont.hasTashkeelSupport {
             t = t.trimmingArabicVowels
         }
 
-        return t
+        if preferences.enableLineBreaks {
+            return t.components(separatedBy: "\n")
+        } else {
+            return [t.replacingOccurrences(of: "\n", with: " ", options: .regularExpression)]
+        }
     }
 
-    func processTranslationText(_ text: String) -> String {
-        var t = text
+    func processTranslationText(_ text: String) -> [String] {
+        let t = text
 
-        if preferences.enableLineBreaks == false {
-            t = t.replacingOccurrences(of: "\n", with: " ", options: .regularExpression)
+        if preferences.enableLineBreaks {
+            return t.components(separatedBy: "\n")
+        } else {
+            return [t.replacingOccurrences(of: "\n", with: " ", options: .regularExpression)]
         }
-
-        return t
     }
 
-    func processTransliterationText(_ text: String) -> String {
-        var t = text
+    func processTransliterationText(_ text: String) -> [String] {
+        let t = text
 
-        if preferences.enableLineBreaks == false {
-            t = t.replacingOccurrences(of: "\n", with: " ", options: .regularExpression)
+        if preferences.enableLineBreaks {
+            return t.components(separatedBy: "\n")
+        } else {
+            return [t.replacingOccurrences(of: "\n", with: " ", options: .regularExpression)]
         }
-
-        return t
     }
 
 }

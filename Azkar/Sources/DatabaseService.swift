@@ -4,21 +4,19 @@ import GRDB
 import Foundation
 
 extension Hadith: FetchableRecord, PersistableRecord {
-    static var databaseTableName: String {
-        "ahadith"
-    }
+    static let databaseTableName = "ahadith"
 }
 
 extension Zikr: FetchableRecord, PersistableRecord {
-    static var databaseTableName: String {
-        "azkar"
-    }
+    static let databaseTableName = "azkar"
 }
 
 extension Fadl: FetchableRecord, PersistableRecord {
-    static var databaseTableName: String {
-        "fudul"
-    }
+    static let databaseTableName = "fudul"
+}
+
+extension AudioTiming: FetchableRecord, PersistableRecord {
+    static let databaseTableName = "audio_timings"
 }
 
 enum DatabaseServiceError: Error {
@@ -111,6 +109,14 @@ extension DatabaseService {
             try Zikr
                 .filter(sql: "category = ?", arguments: [category.rawValue])
                 .fetchCount(db)
+        }
+    }
+
+    func getAudioTimings(audioId: Int) throws -> [AudioTiming] {
+        return try getDatabaseQueue().read { db in
+            try AudioTiming
+                .filter(sql: "audio_id = ?", arguments: [audioId])
+                .fetchAll(db)
         }
     }
 
