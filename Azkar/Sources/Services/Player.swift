@@ -189,7 +189,7 @@ extension Player: AudioPlayerDelegate {
         timeElapsedAdjusted = adjustedTime(time: time, speed: speed)
 
         timeRemaining = (audioPlayer.currentItemDuration ?? 0) - time
-        timeRemaining = adjustedTime(time: timeRemaining, speed: speed)
+        timeRemainingAdjusted = adjustedTime(time: timeRemaining, speed: speed)
     }
 
 }
