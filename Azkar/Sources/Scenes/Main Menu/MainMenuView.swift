@@ -171,9 +171,9 @@ struct MainMenuView: View {
             }
             .shadow(color: Color.black.opacity(0.05), radius: 10, x: 0, y: 1)
 
-            if let fadl = viewModel.fadl {
+            if let fadl = viewModel.fadl, let text = fadl.text {
                 VStack(spacing: 8) {
-                    Text(fadl.text)
+                    Text(text)
                         .font(Font.customFont(viewModel.preferences.preferredTranslationFont, style: .caption1))
                         .tracking(1.2)
                         .foregroundColor(Color.text.opacity(0.7))

@@ -2,8 +2,19 @@
 
 import Foundation
 
+extension Bundle {
+    
+    var currentLocalizedUILanguageCode: String {
+        guard let code = Bundle.main.preferredLocalizations.first?.components(separatedBy: "-").first else {
+            return Locale.current.languageCode ?? "en"
+        }
+        return code
+    }
+    
+}
+
 var languageIdentifier: LangId {
-    let id = Locale.preferredLanguages[0]
+    let id = Bundle.main.currentLocalizedUILanguageCode.lowercased()
     switch id {
     case _ where id.hasPrefix("ar"): return .ar
     case _ where id.hasPrefix("tr"): return .tr
