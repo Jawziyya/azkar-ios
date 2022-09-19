@@ -22,8 +22,8 @@ final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
         return lhs.id == rhs.id
     }
 
-    var id: String {
-        title
+    var id: Int {
+        zikr.id
     }
 
     let zikr: Zikr
