@@ -52,8 +52,8 @@ final class RootCoordinator: NavigationCoordinator, RootRouter {
         self.player = player
 
         let navigationController = UINavigationController()
-        navigationController.navigationItem.largeTitleDisplayMode = .automatic
-        navigationController.navigationBar.prefersLargeTitles = true
+        navigationController.navigationItem.largeTitleDisplayMode = .never
+        navigationController.navigationBar.prefersLargeTitles = false
 
         super.init(rootViewController: navigationController)
         
@@ -219,7 +219,7 @@ private extension RootCoordinator {
             case .root:
                 let viewController = view.wrapped
                 viewController.title = L10n.Settings.title
-                viewController.navigationItem.largeTitleDisplayMode = .always
+                viewController.navigationItem.largeTitleDisplayMode = .never
                 showDetailViewController(viewController)
 
             case .icons:
