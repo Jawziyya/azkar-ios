@@ -21,6 +21,7 @@ final class ZikrPagesViewModel: ObservableObject, Equatable {
     let azkar: [ZikrViewModel]
     let preferences: Preferences
     let selectedPage: AnyPublisher<Int, Never>
+    let canUseCounter: Bool
     @Published var page = 0
     @Published var currentZikrRemainingRepeatNumber = 0
 
@@ -50,6 +51,7 @@ final class ZikrPagesViewModel: ObservableObject, Equatable {
         self.azkar = azkar
         self.selectedPage = selectedPagePublisher
         self.page = page
+        canUseCounter = category == .morning || category == .evening
 
         alignZikrCounterByLeadingSide = preferences.alignCounterButtonByLeadingSide
 
@@ -59,6 +61,9 @@ final class ZikrPagesViewModel: ObservableObject, Equatable {
 
         $page
             .map { [unowned self] page in
+                guard page < self.azkar.count else {
+                    return 0
+                }
                 let zikr = self.azkar[page]
                 return zikr.remainingRepeatsNumber
             }
@@ -69,13 +74,15 @@ final class ZikrPagesViewModel: ObservableObject, Equatable {
             .toVoid()
             .sink(receiveValue: objectWillChange.send)
             .store(in: &cancellables)
+        
+        selectedPagePublisher.assign(to: &$page)
     }
 
     func navigateToZikr(_ vm: ZikrViewModel, index: Int) {
         if UIDevice.current.isIpadInterface {
             router.trigger(.zikr(vm.zikr, index: index))
         } else {
-            router.trigger(.zikrPages(self, page: index))
+            router.trigger(.zikrPages(.init(router: router, category: category, title: title, azkar: azkar, preferences: preferences, selectedPagePublisher: selectedPage.eraseToAnyPublisher()), page: index))
         }
     }
     
@@ -110,13 +117,17 @@ final class ZikrPagesViewModel: ObservableObject, Equatable {
 
     func incrementCurrentPageZikrCounter() {
         let zikr = azkar[page]
-        incrementerPublishers[zikr]!.send()
+        incrementerPublishers[zikr]?.send()
         let number = zikr.remainingRepeatsNumber - 1
         currentZikrRemainingRepeatNumber = number
     }
 
     func getIncrementPublisher(for zikr: ZikrViewModel) -> AnyPublisher<Void, Never> {
-        incrementerPublishers[zikr]!.eraseToAnyPublisher()
+        if let publisher = incrementerPublishers[zikr] {
+            return publisher.eraseToAnyPublisher()
+        } else {
+            return Empty().eraseToAnyPublisher()
+        }
     }
 
 }

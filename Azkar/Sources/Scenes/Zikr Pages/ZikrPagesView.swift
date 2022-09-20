@@ -28,7 +28,7 @@ struct ZikrPagesView: View, Equatable {
             }
             .overlay(
                 Group {
-                    if viewModel.preferences.counterType == .floatingButton {
+                    if viewModel.canUseCounter, viewModel.preferences.counterType == .floatingButton {
                         counterButton
                     }
                 }
@@ -73,12 +73,10 @@ struct ZikrPagesView: View, Equatable {
             showsIndicators: false
         ) {
             ForEach(viewModel.azkar) { zikr in
-                LazyView(
-                    ZikrView(
-                        viewModel: zikr,
-                        incrementAction: viewModel.getIncrementPublisher(for: zikr),
-                        counterFinishedCallback: viewModel.goToNextZikrIfNeeded
-                    )
+                ZikrView(
+                    viewModel: zikr,
+                    incrementAction: viewModel.getIncrementPublisher(for: zikr),
+                    counterFinishedCallback: viewModel.goToNextZikrIfNeeded
                 )
             }
         }

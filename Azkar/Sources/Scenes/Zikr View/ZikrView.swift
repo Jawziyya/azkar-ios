@@ -1,15 +1,16 @@
-//
-//  ZikrView.swift
-//  Azkar
-//
-//  Created by Al Jawziyya on 06.04.2020.
 //  Copyright © 2020 Al Jawziyya. All rights reserved.
-//
 
 import SwiftUI
 import Combine
 import SwiftUIDrag
 
+/**
+ This view shows contents of Zikr object:
+    - title
+    - text
+    - transliteration and translation
+    - source
+ */
 struct ZikrView: View {
 
     @AppStorage("kDidDisplayCounterOnboardingTip", store: UserDefaults.standard)
