@@ -96,7 +96,8 @@ final class ZikrPagesViewController: UIHostingController<ZikrPagesView> {
                 includeBenefits: options.includeBenefits,
                 includeLogo: options.includeLogo,
                 arabicTextAlignment: options.textAlignment.isCentered ? .center : .trailing,
-                otherTextAlignment: options.textAlignment.isCentered ? .center : .leading
+                otherTextAlignment: options.textAlignment.isCentered ? .center : .leading,
+                useFullScreen: options.shareType == .image
             )
             .frame(width: view.bounds.width)
             .frame(maxHeight: .infinity)
