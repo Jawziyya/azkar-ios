@@ -17,6 +17,10 @@ jobs:
     runs-on: macOS-latest
     
     steps:
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+
       - name: Checkout repository
         uses: actions/checkout@v1
   
