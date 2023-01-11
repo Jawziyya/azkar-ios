@@ -42,7 +42,7 @@ final class ZikrPagesViewModel: ObservableObject, Equatable {
         azkar: [ZikrViewModel],
         preferences: Preferences,
         selectedPagePublisher: AnyPublisher<Int, Never>,
-        page: Int = 0
+        page: Int
     ) {
         self.router = router
         self.category = category
@@ -82,7 +82,15 @@ final class ZikrPagesViewModel: ObservableObject, Equatable {
         if UIDevice.current.isIpadInterface {
             router.trigger(.zikr(vm.zikr, index: index))
         } else {
-            router.trigger(.zikrPages(.init(router: router, category: category, title: title, azkar: azkar, preferences: preferences, selectedPagePublisher: selectedPage.eraseToAnyPublisher()), page: index))
+            router.trigger(RootSection.zikrPages(ZikrPagesViewModel(
+                router: router,
+                category: category,
+                title: title,
+                azkar: azkar,
+                preferences: preferences,
+                selectedPagePublisher: selectedPage.eraseToAnyPublisher(),
+                page: index
+            )))
         }
     }
     
@@ -107,7 +115,8 @@ final class ZikrPagesViewModel: ObservableObject, Equatable {
             title: ZikrCategory.morning.title,
             azkar: [],
             preferences: Preferences.shared,
-            selectedPagePublisher: PassthroughSubject<Int, Never>().eraseToAnyPublisher()
+            selectedPagePublisher: PassthroughSubject<Int, Never>().eraseToAnyPublisher(),
+            page: 0
         )
     }
 
