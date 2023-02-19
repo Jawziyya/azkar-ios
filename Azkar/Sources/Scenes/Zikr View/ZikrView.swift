@@ -355,7 +355,7 @@ struct ZikrView: View {
     private func getInfoStack(label: String, text: String, underline: Bool = false) -> some View {
         VStack(alignment: .leading, spacing: 0) {
             self.getCaption(label)
-            Text(text.firstWord())
+            Text(text)
                 .if(underline, transform: { text in
                     text.underline()
                 })

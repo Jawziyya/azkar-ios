@@ -101,7 +101,7 @@ final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
         
         translation = zikr.translation?.textOrNil.flatMap(textProcessor.processTranslationText) ?? []
         transliteration = zikr.transliteration?.textOrNil.flatMap(textProcessor.processTransliterationText) ?? []
-        source = zikr.source
+        source = zikr.source.firstWord()
 
         if let url = zikr.audioURL {
             let playerViewModel = PlayerViewModel(title: title, subtitle: zikr.category.title, audioURL: url, player: player)
