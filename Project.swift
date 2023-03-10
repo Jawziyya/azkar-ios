@@ -44,11 +44,13 @@ extension SettingsDictionary {
 enum AzkarTarget: String, CaseIterable {
     case azkarApp = "Azkar"
     case azkarAppTests = "AzkarTests"
+    case azkarAppUITests = "AzkarUITests"
 
     var bundleId: String {
         switch self {
         case .azkarApp: return baseDomain + ".azkar-app"
         case .azkarAppTests: return baseDomain + ".azkar-app.tests"
+        case .azkarAppUITests: return baseDomain + ".azkar-app.uitests"
         }
     }
 
@@ -135,7 +137,28 @@ enum AzkarTarget: String, CaseIterable {
                 ),
                 launchArguments: []
             )
-
+        case .azkarAppUITests:
+            return Target(
+                name: rawValue,
+                platform: Platform.iOS,
+                product: Product.uiTests,
+                productName: rawValue,
+                bundleId: bundleId,
+                deploymentTarget: deploymentTarget,
+                infoPlist: "AzkarUITests/Info.plist",
+                sources: "AzkarUITests/Sources/**",
+                resources: [
+                    "Azkar/Resources/en.lproj/Localizable.strings",
+                    "Azkar/Resources/ru.lproj/Localizable.strings"
+                ],
+                dependencies: [
+                    .target(name: AzkarTarget.azkarApp.rawValue),
+                ],
+                settings: Settings(
+                    base: baseSettingsDictionary
+                ),
+                launchArguments: []
+            )
         }
     }
 }
@@ -189,6 +212,13 @@ let project = Project(
             name: AzkarTarget.azkarApp.rawValue,
             shared: true,
             buildAction: BuildAction(targets: ["Azkar"]),
+            runAction: RunAction(executable: "Azkar")
+        ),
+        Scheme(
+            name: AzkarTarget.azkarAppUITests.rawValue,
+            shared: true,
+            buildAction: BuildAction(targets: ["AzkarUITests"]),
+            testAction: TestAction(targets: ["AzkarUITests"]),
             runAction: RunAction(executable: "Azkar")
         )
     ],
