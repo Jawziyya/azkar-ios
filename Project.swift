@@ -180,7 +180,7 @@ let packages: [Package] = [
     .local(path: AzkarPackage.audioPlayer.path),
 
     // MARK: Services.
-    .remote(url: "https://github.com/RevenueCat/purchases-ios.git", requirement: .revision("09c9d4d2ceb41c471d5e3110ac1a97e3de9defb4")),
+    .remote(url: "https://github.com/RevenueCat/purchases-ios.git", requirement: .upToNextMajor(from: "4.16.0")),
 
     // MARK: Network.
     .remote(url: "https://github.com/Alamofire/Alamofire", requirement: .upToNextMajor(from: "5.0.0")),
@@ -194,7 +194,7 @@ let packages: [Package] = [
     .remote(url: "https://github.com/radianttap/Coordinator", requirement: .upToNextMajor(from: "6.4.2")),
     .remote(url: "https://github.com/airbnb/lottie-ios", requirement: .upToNextMajor(from: "3.0.0")),
     .remote(url: "https://github.com/kean/NukeUI", requirement: .upToNextMajor(from: "0.7.0")),
-    .remote(url: "https://github.com/SwiftUIX/SwiftUIX", requirement: .upToNextMajor(from: "0.1.1")),
+    .remote(url: "https://github.com/SwiftUIX/SwiftUIX", requirement: .upToNextMajor(from: "0.1.3")),
     .remote(url: "https://github.com/siteline/SwiftUI-Introspect", requirement: .upToNextMajor(from: "0.1.3")),
     .remote(url: "https://github.com/SwiftUI-Plus/ActivityView", requirement: .upToNextMajor(from: "1.0.0")),
     .remote(url: "https://github.com/demharusnam/SwiftUIDrag", requirement: .revision("0686318a")),

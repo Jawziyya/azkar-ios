@@ -69,7 +69,6 @@ struct MainMenuView: View {
         ScrollView(showsIndicators: false) {
             menuContent
         }
-        .fixFlickering()
         .navigationBarTitle(viewModel.title)
     }
 

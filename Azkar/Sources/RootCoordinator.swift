@@ -15,7 +15,7 @@ enum RootSection: Equatable {
     case root
     case category(ZikrCategory)
     case zikr(_ zikr: Zikr, index: Int? = nil)
-    case zikrPages(_ vm: ZikrPagesViewModel, page: Int?)
+    case zikrPages(_ vm: ZikrPagesViewModel)
     case goToPage(Int)
     case modalSettings(SettingsViewModel.SettingsMode)
     case settings(SettingsSection)
@@ -52,8 +52,8 @@ final class RootCoordinator: NavigationCoordinator, RootRouter {
         self.player = player
 
         let navigationController = UINavigationController()
-        navigationController.navigationItem.largeTitleDisplayMode = .automatic
-        navigationController.navigationBar.prefersLargeTitles = true
+        navigationController.navigationItem.largeTitleDisplayMode = .never
+        navigationController.navigationBar.prefersLargeTitles = false
 
         super.init(rootViewController: navigationController)
         
@@ -160,7 +160,8 @@ private extension RootCoordinator {
                 title: category.title,
                 azkar: azkar,
                 preferences: preferences,
-                selectedPagePublisher: selectedZikrPageIndex.eraseToAnyPublisher()
+                selectedPagePublisher: selectedZikrPageIndex.eraseToAnyPublisher(),
+                page: 0
             )
 
             if rootViewController.isPadInterface || category == .other {
@@ -184,9 +185,9 @@ private extension RootCoordinator {
                 show(viewController)
             }
 
-        case .zikrPages(let vm, let page):
+        case .zikrPages(let vm):
             let viewController = ZikrPagesViewController(viewModel: vm)
-            selectedZikrPageIndex.send(page ?? 0)
+            selectedZikrPageIndex.send(vm.page)
             show(viewController)
 
         case .zikr(let zikr, let index):
@@ -219,7 +220,7 @@ private extension RootCoordinator {
             case .root:
                 let viewController = view.wrapped
                 viewController.title = L10n.Settings.title
-                viewController.navigationItem.largeTitleDisplayMode = .always
+                viewController.navigationItem.largeTitleDisplayMode = .never
                 showDetailViewController(viewController)
 
             case .icons:

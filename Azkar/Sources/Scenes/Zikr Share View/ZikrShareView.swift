@@ -14,6 +14,7 @@ struct ZikrShareView: View {
     var backgroundColor = Color.background
     var arabicTextAlignment = TextAlignment.trailing
     var otherTextAlignment = TextAlignment.leading
+    var useFullScreen: Bool
 
     @Environment(\.colorScheme)
     var colorScheme
@@ -21,8 +22,8 @@ struct ZikrShareView: View {
     var body: some View {
         ScrollView {
             content
-                .frame(minHeight: UIScreen.main.bounds.height)
-                .background(backgroundColor)
+                .frame(minHeight: useFullScreen ? UIScreen.main.bounds.height : 100)
+                .background(useFullScreen ? backgroundColor : Color.clear)
         }
         .edgesIgnoringSafeArea(.all)
         .environment(\.dynamicTypeSize, .large)
@@ -97,6 +98,7 @@ struct ZikrShareView: View {
                         .font(Font.system(size: 12, weight: .regular, design: .rounded).smallCaps())
                 }
                 .opacity(0.5)
+                .background(backgroundColor)
             }
         }
         .padding(.horizontal)
@@ -113,7 +115,8 @@ struct ZikrShareView_Previews: PreviewProvider {
                 hadith: Hadith.placeholder,
                 preferences: Preferences.shared,
                 player: Player.test
-            )
+            ),
+            useFullScreen: true
         )
         .previewLayout(.fixed(width: 380, height: 1200))
         .environment(\.locale, Locale(identifier: "ru_RU"))

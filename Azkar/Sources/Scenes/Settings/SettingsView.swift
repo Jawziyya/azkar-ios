@@ -28,12 +28,10 @@ struct SettingsView: View {
                     remindersSection
                 }
             }
-            .listRowBackground(Color.contentBackground)
         }
         .accentColor(Color.accent)
         .toggleStyle(SwitchToggleStyle(tint: Color.accent))
         .horizontalPaddingForLargeScreen()
-        .background(Color.background.edgesIgnoringSafeArea(.all))
     }
     
     func getHeader(symbolName: String, title: String) -> some View {
@@ -47,6 +45,7 @@ struct SettingsView: View {
                 .font(Font.system(.caption, design: .rounded))
                 .foregroundColor(Color.secondaryText)
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 
     // MARK: - Appearance
@@ -56,10 +55,20 @@ struct SettingsView: View {
                 .accentColor(Color.accent)
                 .foregroundColor(Color.white)
         ) {
-            PickerView(label: L10n.Settings.Theme.title, titleDisplayMode: .inline, subtitle: viewModel.themeTitle, destination: themePicker)
+            PickerView(
+                label: L10n.Settings.Theme.title,
+                titleDisplayMode: .inline,
+                subtitle: viewModel.themeTitle,
+                destination: themePicker
+            )
 
             if viewModel.canChangeIcon {
-                PickerView(label: L10n.Settings.Icon.title, titleDisplayMode: .inline, subtitle: viewModel.preferences.appIcon.title, destination: iconPicker)
+                PickerView(
+                    label: L10n.Settings.Icon.title,
+                    titleDisplayMode: .inline,
+                    subtitle: viewModel.preferences.appIcon.title,
+                    destination: iconPicker
+                )
             }
 
             Toggle(isOn: $viewModel.preferences.enableFunFeatures) {
