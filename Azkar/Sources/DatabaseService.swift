@@ -8,7 +8,7 @@ extension Hadith: FetchableRecord, PersistableRecord {
 }
 
 extension Zikr: FetchableRecord, PersistableRecord {
-    static let databaseTableName = "azkar"
+    public static let databaseTableName = "azkar"
 }
 
 extension Fadl: FetchableRecord, PersistableRecord {
