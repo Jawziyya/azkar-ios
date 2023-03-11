@@ -3,6 +3,7 @@
 
 import Foundation
 import Entities
+import Library
 
 typealias Hadith = Entities.Hadith
 typealias Zikr = Entities.Zikr
@@ -13,3 +14,5 @@ typealias AudioTiming = Entities.AudioTiming
 var languageIdentifier: LangId {
     Entities.languageIdentifier
 }
+
+typealias DatabaseService = Library.DatabaseService
