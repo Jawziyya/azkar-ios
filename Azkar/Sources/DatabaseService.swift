@@ -4,7 +4,7 @@ import GRDB
 import Foundation
 
 extension Hadith: FetchableRecord, PersistableRecord {
-    static let databaseTableName = "ahadith"
+    public static let databaseTableName = "ahadith"
 }
 
 extension Zikr: FetchableRecord, PersistableRecord {
@@ -12,7 +12,7 @@ extension Zikr: FetchableRecord, PersistableRecord {
 }
 
 extension Fadl: FetchableRecord, PersistableRecord {
-    static let databaseTableName = "fudul"
+    public static let databaseTableName = "fudul"
 }
 
 extension AudioTiming: FetchableRecord, PersistableRecord {
