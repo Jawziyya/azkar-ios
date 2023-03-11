@@ -68,6 +68,7 @@ enum AzkarTarget: String, CaseIterable {
                 sources: "Azkar/Sources/**",
                 resources: "Azkar/Resources/**",
                 actions: [
+                    TargetAction.post(path: "./scripts/swiftlint.sh", name: "SwiftLint")
                 ],
                 dependencies: [
                     .sdk(name: "SwiftUI.framework"),
