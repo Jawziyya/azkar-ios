@@ -137,7 +137,14 @@ enum AzkarTarget: String, CaseIterable {
                 deploymentTarget: deploymentTarget,
                 infoPlist: .file(path: "AzkarWidgets/Info.plist"),
                 sources: "AzkarWidgets/Sources/**",
-                resources: "AzkarWidgets/Resources/**",
+                resources: [
+                    "AzkarWidgets/Resources/**",
+                    "Azkar/Resources/azkar.db",
+                    "Azkar/Resources/ru.lproj/Localizable.strings",
+                    "Azkar/Resources/ru.lproj/Localizable.stringsdict",
+                    "Azkar/Resources/en.lproj/Localizable.strings",
+                    "Azkar/Resources/en.lproj/Localizable.stringsdict",
+                ],
                 entitlements: "AzkarWidgets/AzkarWidgets.entitlements",
                 dependencies: [
                     .package(product: AzkarPackage.library.name),
