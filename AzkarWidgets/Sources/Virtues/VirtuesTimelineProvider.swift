@@ -14,15 +14,26 @@ struct VirtuesProvider: TimelineProvider {
         return fadail ?? []
     }()
     
+    func getVirtue(at index: Int) -> Fadl {
+        guard fadail.count < index else {
+            return Fadl.placeholder
+        }
+        return fadail[index]
+    }
+    
+    func getRandomVirtue() -> Fadl {
+        getVirtue(at: Int.random(in: 0..<fadail.count))
+    }
+    
     func placeholder(in context: Context) -> VirtueEntry {
-        VirtueEntry.placeholder
+        VirtueEntry(date: Date(), fadl: getRandomVirtue())
     }
 
     func getSnapshot(
         in context: Context,
         completion: @escaping (VirtueEntry) -> ()
     ) {
-        let entry = VirtueEntry(date: Date(), fadl: fadail[1])
+        let entry = VirtueEntry(date: Date(), fadl: getRandomVirtue())
         completion(entry)
     }
 
