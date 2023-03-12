@@ -30,4 +30,14 @@ public struct Fadl: Codable, Identifiable {
         return source
     }
     
+    public static var placeholder: Fadl {
+        Fadl(
+            id: -1,
+            textRu: "Text Ru",
+            textEn: "Text En",
+            _source: "Source",
+            sourceExtension: "source_ext"
+        )
+    }
+    
 }
