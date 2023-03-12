@@ -152,16 +152,14 @@ enum AzkarTarget: String, CaseIterable {
                             settings: getDefaultSettings(
                                 bundleId: "io.jawziyya.azkar-app.widgets",
                                 isDistribution: false
-                            ),
-                            xcconfig: "./Azkar.xcconfig"
+                            )
                         ),
                         .release(
                             name: "Release",
                             settings: getDefaultSettings(
                                 bundleId: "io.jawziyya.azkar-app.widgets",
                                 isDistribution: true
-                            ),
-                            xcconfig: "./Azkar.xcconfig"
+                            )
                         )
                     ]
                 )
