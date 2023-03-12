@@ -17,11 +17,12 @@ private func getDefaultSettings(
     bundleId: String,
     isDistribution: Bool
 ) -> [String: SettingValue] {
+    let provisioningProfileType = isDistribution ? "AppStore" : "Development"
     return [
         "CODE_SIGN_IDENTITY": isDistribution ? "iPhone Distribution" : "iPhone Developer",
         "CODE_SIGN_IDENTITY[sdk=macosx*]": isDistribution ? "Apple Distribution" : "Mac Developer",
-        "PROVISIONING_PROFILE_SPECIFIER": "match AppStore \(bundleId)",
-        "PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]": "match AppStore \(bundleId) catalyst",
+        "PROVISIONING_PROFILE_SPECIFIER": "match \(provisioningProfileType) \(bundleId)",
+        "PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]": "match \(provisioningProfileType) \(bundleId) catalyst",
     ]
 }
 
@@ -135,8 +136,8 @@ enum AzkarTarget: String, CaseIterable {
                 bundleId: bundleId,
                 deploymentTarget: deploymentTarget,
                 infoPlist: .file(path: "AzkarWidgets/Info.plist"),
-                sources: "AzkarWidgets/Sources/*",
-                resources: "AzkarWidgets/Resources/*",
+                sources: "AzkarWidgets/Sources/**",
+                resources: "AzkarWidgets/Resources/**",
                 entitlements: "AzkarWidgets/AzkarWidgets.entitlements",
                 dependencies: [
                     .package(product: AzkarPackage.library.name),
