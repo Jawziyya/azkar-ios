@@ -241,7 +241,7 @@ let packages: [Package] = [
     .local(path: AzkarPackage.library.path),
 
     // MARK: Services.
-    .remote(url: "https://github.com/RevenueCat/purchases-ios.git", requirement: .upToNextMajor(from: "4.16.0")),
+    .remote(url: "https://github.com/RevenueCat/purchases-ios.git", requirement: .upToNextMajor(from: "4.17.7")),
 
     // MARK: Network.
     .remote(url: "https://github.com/Alamofire/Alamofire", requirement: .upToNextMajor(from: "5.0.0")),
