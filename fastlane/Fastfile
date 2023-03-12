@@ -99,9 +99,7 @@ platform :ios do
   lane :closed_beta do
     setup_ci
 
-    match_configuration(
-      type: 'appstore'
-    )
+    sync_signing
     
     increment_build_number_in_plist(
       xcodeproj: project_name,
