@@ -137,6 +137,7 @@ enum AzkarTarget: String, CaseIterable {
                 infoPlist: .file(path: "AzkarWidgets/Info.plist"),
                 sources: "AzkarWidgets/Sources/*",
                 resources: "AzkarWidgets/Resources/*",
+                entitlements: "AzkarWidgets/AzkarWidgets.entitlements",
                 dependencies: [
                     .package(product: AzkarPackage.library.name),
                     .package(product: AzkarPackage.entities.name),
