@@ -7,6 +7,6 @@ import SwiftUI
 @main
 struct AzkarWidgetsBundle: WidgetBundle {
     var body: some Widget {
-        AzkarVirtuesWidgets()
+        VirtuesWidgets()
     }
 }

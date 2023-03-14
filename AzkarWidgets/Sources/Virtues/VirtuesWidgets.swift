@@ -6,7 +6,7 @@ import SwiftUI
 import Entities
 import Library
 
-struct AzkarVirtuesWidgets: Widget {
+struct VirtuesWidgets: Widget {
     let kind: String = "AzkarVirtuesWidgets"
 
     var body: some WidgetConfiguration {
@@ -14,7 +14,7 @@ struct AzkarVirtuesWidgets: Widget {
             kind: kind,
             provider: VirtuesProvider()
         ) { entry in
-            WidgetsEntryView(entry: entry)
+            VirtueView(fadl: entry.fadl)
         }
         .supportedFamilies([.systemMedium])
         .configurationDisplayName(NSLocalizedString("widgets.virtues.title", comment: "Virtues of adhkar widget name"))
@@ -26,13 +26,11 @@ struct AzkarVirtuesWidgets: Widget {
 struct AzkarVirtuesWidgets_Previews: PreviewProvider {
     static var previews: some View {
         let databaseService = DatabaseService.shared
-        let fadail = try? databaseService.getFudul()
+        let fadail = try! databaseService.getFudul()
         
-        return WidgetsEntryView(
-            entry: VirtueEntry(
-                date: Date(),
-                fadl: fadail!.first!
-            ))
-            .previewContext(WidgetPreviewContext(family: .systemMedium))
+        return VirtueView(
+            fadl: fadail.randomElement()!
+        )
+        .previewContext(WidgetPreviewContext(family: .systemMedium))
     }
 }
