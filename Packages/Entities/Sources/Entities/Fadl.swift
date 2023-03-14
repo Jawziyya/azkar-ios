@@ -32,11 +32,11 @@ public struct Fadl: Codable, Identifiable {
     
     public static var placeholder: Fadl {
         Fadl(
-            id: -1,
-            textRu: "Text Ru",
-            textEn: "Text En",
-            _source: "Source",
-            sourceExtension: "source_ext"
+            id: Int.random(in: -999 ... -1),
+            textRu: faker.lorem.paragraphs(amount: Int.random(in: 1...2)),
+            textEn: faker.lorem.paragraphs(amount: Int.random(in: 1...2)),
+            _source: faker.lorem.words(amount: Int.random(in: 1...2)),
+            sourceExtension: faker.lorem.word()
         )
     }
     

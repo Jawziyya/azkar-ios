@@ -14,11 +14,14 @@ let package = Package(
         ),
     ],
     dependencies: [
+        .package(url: "https://github.com/vadymmarkov/Fakery", from: "5.1.0"),
     ],
     targets: [
         .target(
             name: "Entities",
-            dependencies: []
+            dependencies: [
+                "Fakery",
+            ]
         ),
     ]
 )
