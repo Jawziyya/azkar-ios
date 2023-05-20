@@ -72,8 +72,8 @@ platform :ios do
 
   desc 'Synchronizes certificates / profiles and optionally creates new ones.'
   lane :sync_signing do
-    match_configuration(type: 'appstore', bundle_id: APP_ID)
-    match_configuration(type: 'appstore', bundle_id: WIDGETS_ID)
+    bundle_ids = "#{APP_ID},#{WIDGETS_ID}"
+    match_configuration(type: 'appstore', bundle_id: bundle_ids)
   end
 
   desc "Push a new release build to the App Store"
