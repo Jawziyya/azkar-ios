@@ -41,19 +41,19 @@ struct ZikrShareView: View {
                     .multilineTextAlignment(arabicTextAlignment)
                     .padding()
 
-                if includeTranslation, let text = viewModel.translation.joined(separator: "\n") {
+                if includeTranslation {
                     Divider()
 
-                    Text(.init(text))
+                    Text(viewModel.translation.joined(separator: "\n"))
                         .font(Font.customFont(viewModel.preferences.preferredTranslationFont, style: .body, sizeCategory: .large))
                         .multilineTextAlignment(otherTextAlignment)
                         .padding()
                 }
 
-                if includeTransliteration, let text = viewModel.transliteration.joined(separator: "\n") {
+                if includeTransliteration {
                     Divider()
 
-                    Text(.init(text))
+                    Text(viewModel.transliteration.joined(separator: "\n"))
                         .font(Font.customFont(viewModel.preferences.preferredTranslationFont, style: .body, sizeCategory: .large))
                         .multilineTextAlignment(.leading)
                         .padding()
