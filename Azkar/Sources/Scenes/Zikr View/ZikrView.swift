@@ -1,15 +1,16 @@
-//
-//  ZikrView.swift
-//  Azkar
-//
-//  Created by Al Jawziyya on 06.04.2020.
 //  Copyright © 2020 Al Jawziyya. All rights reserved.
-//
 
 import SwiftUI
 import Combine
 import SwiftUIDrag
 
+/**
+ This view shows contents of Zikr object:
+    - title
+    - text
+    - transliteration and translation
+    - source
+ */
 struct ZikrView: View {
 
     @AppStorage("kDidDisplayCounterOnboardingTip", store: UserDefaults.standard)
@@ -354,7 +355,7 @@ struct ZikrView: View {
     private func getInfoStack(label: String, text: String, underline: Bool = false) -> some View {
         VStack(alignment: .leading, spacing: 0) {
             self.getCaption(label)
-            Text(text.firstWord())
+            Text(text)
                 .if(underline, transform: { text in
                     text.underline()
                 })

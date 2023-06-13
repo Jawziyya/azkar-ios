@@ -1,31 +1,32 @@
 // Copyright © 2022 Al Jawziyya. All rights reserved. 
 
+import Entities
 import GRDB
 import Foundation
 
 extension Hadith: FetchableRecord, PersistableRecord {
-    static let databaseTableName = "ahadith"
+    public static let databaseTableName = "ahadith"
 }
 
 extension Zikr: FetchableRecord, PersistableRecord {
-    static let databaseTableName = "azkar"
+    public static let databaseTableName = "azkar"
 }
 
 extension Fadl: FetchableRecord, PersistableRecord {
-    static let databaseTableName = "fudul"
+    public static let databaseTableName = "fudul"
 }
 
 extension AudioTiming: FetchableRecord, PersistableRecord {
-    static let databaseTableName = "audio_timings"
+    public static let databaseTableName = "audio_timings"
 }
 
-enum DatabaseServiceError: Error {
+public enum DatabaseServiceError: Error {
     case databaseFileAccesingError
 }
 
-final class DatabaseService {
+public final class DatabaseService {
 
-    static let shared = DatabaseService()
+    public static let shared = DatabaseService()
 
     private init() { }
 
@@ -42,37 +43,37 @@ final class DatabaseService {
         return try DatabaseQueue(path: getDatabasePath(), configuration: config)
     }
 
-    func getAhadith() throws -> [Hadith] {
+    public func getAhadith() throws -> [Hadith] {
         return try getDatabaseQueue().read { db in
             try Hadith.fetchAll(db)
         }
     }
 
-    func getHadith(_ id: Int) throws -> Hadith? {
+    public func getHadith(_ id: Int) throws -> Hadith? {
         return try getDatabaseQueue().read { db in
             try Hadith.fetchOne(db, id: id)
         }
     }
 
-    func getFudulCount() throws -> Int {
+    public func getFudulCount() throws -> Int {
         return try getDatabaseQueue().read { db in
             try Fadl.fetchCount(db)
         }
     }
 
-    func getFadl(_ id: Int) throws -> Fadl? {
+    public func getFadl(_ id: Int) throws -> Fadl? {
         return try getDatabaseQueue().read { db in
             try Fadl.fetchOne(db, id: id)
         }
     }
 
-    func getRandomFadl() throws -> Fadl? {
+    public func getRandomFadl() throws -> Fadl? {
         let count = try getFudulCount()
         let id = Int.random(in: 1...count)
         return try getFadl(id)
     }
 
-    func getFudul() throws -> [Fadl] {
+    public func getFudul() throws -> [Fadl] {
         return try getDatabaseQueue().read { db in
             try Fadl.fetchAll(db)
         }
@@ -81,7 +82,7 @@ final class DatabaseService {
 }
 
 // MARK: - Adhkar
-extension DatabaseService {
+public extension DatabaseService {
 
     func getZikr(_ id: Int) throws -> Zikr? {
         return try getDatabaseQueue().read { db in

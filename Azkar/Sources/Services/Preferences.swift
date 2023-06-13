@@ -123,9 +123,6 @@ final class Preferences: ObservableObject {
     @Preference(Keys.preferredJumuahReminderSound, defaultValue: ReminderSound.standard)
     var jumuahDuaReminderSound: ReminderSound
     
-    @Preference(Keys.enableProFeatures, defaultValue: false)
-    var enableProFeatures: Bool
-
     // MARK: - Counter
     @Preference(Keys.enableCounter, defaultValue: true)
     var enableCounter: Bool

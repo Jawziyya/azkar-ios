@@ -1,11 +1,6 @@
-//
-//  AppInfoView.swift
-//  Azkar
-//
-//  Created by Abdurahim Jauzee on 01.05.2020.
 //  Copyright © 2020 Al Jawziyya. All rights reserved.
-//
 
+import UIKit
 import SwiftUI
 import Introspect
 import SwiftUIX
@@ -21,20 +16,16 @@ struct AppInfoView: View {
     @State private var activityItem: ActivityItem?
 
     var body: some View {
-        Form {
-            self.iconAndVersion.background(
-                Color.background.padding(-20)
-            )
-
-            ForEach(viewModel.sections) { section in
-                Section(header: Text(section.header ?? ""), footer: Text(section.footer ?? "")) {
-                    ForEach(section.items) { item in
-                        self.viewForItem(item)
-                    }
-                }
+        ScrollView {
+            LazyVStack(alignment: .center, spacing: 0) {
+                self.iconAndVersion.background(
+                    Color.background.padding(-20)
+                )
+                .padding()
+                
+                ForEach(viewModel.sections, content: sectionView)
+                    .saturation(viewModel.preferences.colorTheme == .ink ? 0 : 1)
             }
-            .listRowBackground(Color.contentBackground)
-            .saturation(viewModel.preferences.colorTheme == .ink ? 0 : 1)
         }
         .toolbar {
             ToolbarItem(placement: ToolbarItemPlacement.navigationBarTrailing) {
@@ -46,9 +37,6 @@ struct AppInfoView: View {
                 })
             }
         }
-        .listStyle(GroupedListStyle())
-        .environment(\.horizontalSizeClass, .regular)
-        .environment(\.verticalSizeClass, .regular)
         .navigationTitle(Text("about.title", comment: "About app screen title."))
         .supportedOrientations(.portrait)
         .activitySheet($activityItem)
@@ -96,6 +84,29 @@ struct AppInfoView: View {
             }
         }
     }
+    
+    private func sectionView(_ section: ItemSection) -> some View {
+        Section(
+            header: Group {
+                section.header.flatMap { header in
+                    Text(header)
+                        .padding(16)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+            },
+            footer: Group {
+                section.footer.flatMap { footer in
+                    Text(footer)
+                        .padding(16)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+            }
+        ) {
+            ForEach(section.items) { item in
+                self.viewForItem(item)
+            }
+        }
+    }
 
     private func viewForItem(_ item: SourceInfo.Item) -> some View {
         Button(action: {
@@ -113,11 +124,10 @@ struct AppInfoView: View {
             .background(Color.contentBackground)
             .clipShape(Rectangle())
         })
-        .introspectTableViewCell { cell in
-            viewModel.presentationSources[item.id] = cell
-        }
         .buttonStyle(PlainButtonStyle())
-        .padding(.vertical, 8)
+        .padding(.vertical, 12)
+        .padding(.horizontal, 16)
+        .background(Color.contentBackground)
     }
 
 }

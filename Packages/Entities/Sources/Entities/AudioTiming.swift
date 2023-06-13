@@ -2,12 +2,12 @@
 
 import Foundation
 
-struct AudioTiming: Hashable, Codable {
+public struct AudioTiming: Hashable, Codable {
     enum CodingKeys: String, CodingKey {
         case audioId = "audio_id"
         case time
     }
 
-    let audioId: Int
-    let time: Double
+    public let audioId: Int
+    public let time: Double
 }

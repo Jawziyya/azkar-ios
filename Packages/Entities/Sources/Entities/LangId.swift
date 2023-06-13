@@ -13,7 +13,7 @@ extension Bundle {
     
 }
 
-var languageIdentifier: LangId {
+public var languageIdentifier: LangId {
     let id = Bundle.main.currentLocalizedUILanguageCode.lowercased()
     switch id {
     case _ where id.hasPrefix("ar"): return .ar
@@ -23,6 +23,6 @@ var languageIdentifier: LangId {
     }
 }
 
-enum LangId: String {
+public enum LangId: String {
     case ar, tr, en, ru
 }

@@ -17,6 +17,10 @@ jobs:
     runs-on: macOS-latest
     
     steps:
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+
       - name: Checkout repository
         uses: actions/checkout@v1
   
@@ -33,6 +37,7 @@ jobs:
         env:
           APPLE_ID: '${{ secrets.APPLE_ID }}'
           APP_ID: '${{ secrets.APP_ID }}'
+          WIDGETS_ID: '${{ secrets.WIDGETS_ID }}'
           APP_APPLE_ID: '${{ secrets.APP_APPLE_ID }}'
           AUTH_KEY_CONTENT: '${{ secrets.AUTH_KEY_CONTENT }}'
           AUTH_KEY_ID: '${{ secrets.AUTH_KEY_ID }}'
