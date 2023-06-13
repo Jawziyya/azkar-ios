@@ -1,23 +1,10 @@
-//
-//  Zikr.swift
-//  Azkar
-//
 //  Created by Al Jawziyya on 06.04.2020.
 //  Copyright © 2020 Al Jawziyya. All rights reserved.
-//
 
 import Foundation
 import AVFoundation
 
-enum ZikrCategory: String, Codable, Equatable {
-    case morning, evening, afterSalah = "after-salah", other
-
-    var title: String {
-        return NSLocalizedString("category." + rawValue, comment: "")
-    }
-}
-
-struct Zikr: Identifiable, Hashable, Equatable, Codable {
+public struct Zikr: Identifiable, Hashable, Equatable, Codable {
     
     enum CodingKeys: String, CodingKey {
         case id, hadith
@@ -53,14 +40,14 @@ struct Zikr: Identifiable, Hashable, Equatable, Codable {
         case _source = "source"
     }
     
-    let id: Int
-    let hadith: Int?
-    let rowInCategory: Int
-    let text: String
-    let category: ZikrCategory
-    let audioFileName: String?
-    let repeats: Int
-    let audioId: Int?
+    public let id: Int
+    public let hadith: Int?
+    public let rowInCategory: Int
+    public let text: String
+    public let category: ZikrCategory
+    public let audioFileName: String?
+    public let repeats: Int
+    public let audioId: Int?
     
     private let _title: String?
     private let titleRU: String?
@@ -87,7 +74,7 @@ struct Zikr: Identifiable, Hashable, Equatable, Codable {
     private let benefitEN: String?
     private let benefitTR: String?
     
-    var title: String? {
+    public var title: String? {
         switch languageIdentifier {
         case .ar: return _title
         case .ru: return titleRU
@@ -96,7 +83,7 @@ struct Zikr: Identifiable, Hashable, Equatable, Codable {
         }
     }
     
-    var translation: String? {
+    public var translation: String? {
         switch languageIdentifier {
         case .ar: return nil
         case .ru: return translationRU
@@ -105,7 +92,7 @@ struct Zikr: Identifiable, Hashable, Equatable, Codable {
         }
     }
     
-    var transliteration: String? {
+    public var transliteration: String? {
         switch languageIdentifier {
         case .ar: return nil
         case .ru: return transliterationRU
@@ -114,7 +101,7 @@ struct Zikr: Identifiable, Hashable, Equatable, Codable {
         }
     }
     
-    var notes: String? {
+    public var notes: String? {
         switch languageIdentifier {
         case .ar: return nil
         case .ru: return notesRU
@@ -123,7 +110,7 @@ struct Zikr: Identifiable, Hashable, Equatable, Codable {
         }
     }
     
-    var benefit: String? {
+    public var benefit: String? {
         switch languageIdentifier {
         case .ar: return nil
         case .ru: return benefitRU
@@ -132,14 +119,14 @@ struct Zikr: Identifiable, Hashable, Equatable, Codable {
         }
     }
     
-    var source: String {
+    public var source: String {
         return _source.components(separatedBy: ", ").map {
             NSLocalizedString("text.source." + $0.lowercased(), comment: "")
         }
         .joined(separator: ", ")
     }
 
-    var audioURL: URL? {
+    public var audioURL: URL? {
         if let name = audioFileName {
             return Bundle.main.url(forAuxiliaryExecutable: name)
         } else {
@@ -147,7 +134,7 @@ struct Zikr: Identifiable, Hashable, Equatable, Codable {
         }
     }
     
-    var audioDuration: Double? {
+    public var audioDuration: Double? {
         guard let url = audioURL else {
             return nil
         }
@@ -155,7 +142,7 @@ struct Zikr: Identifiable, Hashable, Equatable, Codable {
         return Double(CMTimeGetSeconds(asset.duration))
     }
 
-    static var placeholder: Zikr {
+    public static var placeholder: Zikr {
         Zikr(
             id: 1,
             hadith: 1,

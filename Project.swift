@@ -13,6 +13,19 @@ let teamId = "486STKKP6Y"
 let projectName = "Azkar"
 let baseDomain = "io.jawziyya"
 
+private func getDefaultSettings(
+    bundleId: String,
+    isDistribution: Bool
+) -> [String: SettingValue] {
+    let provisioningProfileType = isDistribution ? "AppStore" : "Development"
+    return [
+        "CODE_SIGN_IDENTITY": isDistribution ? "iPhone Distribution" : "iPhone Developer",
+        "CODE_SIGN_IDENTITY[sdk=macosx*]": isDistribution ? "Apple Distribution" : "Mac Developer",
+        "PROVISIONING_PROFILE_SPECIFIER": "match \(provisioningProfileType) \(bundleId)",
+        "PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]": "match \(provisioningProfileType) \(bundleId) catalyst",
+    ]
+}
+
 let baseSettingsDictionary = SettingsDictionary()
     .bitcodeEnabled(false)
     .merging([kDevelopmentTeam: SettingValue(stringLiteral: teamId)])
@@ -43,12 +56,14 @@ extension SettingsDictionary {
 
 enum AzkarTarget: String, CaseIterable {
     case azkarApp = "Azkar"
+    case azkarWidgets = "Widgets"
     case azkarAppTests = "AzkarTests"
     case azkarAppUITests = "AzkarUITests"
 
     var bundleId: String {
         switch self {
         case .azkarApp: return baseDomain + ".azkar-app"
+        case .azkarWidgets: return baseDomain + ".azkar-app.widgets"
         case .azkarAppTests: return baseDomain + ".azkar-app.tests"
         case .azkarAppUITests: return baseDomain + ".azkar-app.uitests"
         }
@@ -71,8 +86,11 @@ enum AzkarTarget: String, CaseIterable {
                     TargetAction.post(path: "./scripts/swiftlint.sh", name: "SwiftLint")
                 ],
                 dependencies: [
+                    .target(name: "AzkarWidgets"),
                     .sdk(name: "SwiftUI.framework"),
                     .package(product: AzkarPackage.audioPlayer.name),
+                    .package(product: AzkarPackage.library.name),
+                    .package(product: AzkarPackage.entities.name),
                     .package(product: "SwiftyStoreKit"),
                     .package(product: "Coordinator"),
                     .package(product: "Lottie"),
@@ -85,7 +103,6 @@ enum AzkarTarget: String, CaseIterable {
                     .package(product: "ActivityView"),
                     .package(product: "SwiftUIDrag"),
                     .package(product: "Popovers"),
-                    .package(product: "GRDB"),
                 ],
                 settings: Settings(
                     base: baseSettingsDictionary
@@ -94,23 +111,64 @@ enum AzkarTarget: String, CaseIterable {
                     configurations: [
                         .debug(
                             name: "Debug",
-                            settings: [
-                                "CODE_SIGN_IDENTITY": "iPhone Developer",
-                                "CODE_SIGN_IDENTITY[sdk=macosx*]": "Mac Developer",
-                                "PROVISIONING_PROFILE_SPECIFIER": "match Development io.jawziyya.azkar-app",
-                                "PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]": "match Development io.jawziyya.azkar-app catalyst",
-                            ],
+                            settings: getDefaultSettings(
+                                bundleId: "io.jawziyya.azkar-app",
+                                isDistribution: false
+                            ),
                             xcconfig: "./Azkar.xcconfig"
                         ),
                         .release(
                             name: "Release",
-                            settings: [
-                                "CODE_SIGN_IDENTITY": "iPhone Distribution",
-                                "CODE_SIGN_IDENTITY[sdk=macosx*]": "Apple Distribution",
-                                "PROVISIONING_PROFILE_SPECIFIER": "match AppStore io.jawziyya.azkar-app",
-                                "PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]": "match AppStore io.jawziyya.azkar-app catalyst",
-                            ],
+                            settings: getDefaultSettings(
+                                bundleId: "io.jawziyya.azkar-app",
+                                isDistribution: true
+                            ),
                             xcconfig: "./Azkar.xcconfig"
+                        )
+                    ]
+                )
+            )
+            
+        case .azkarWidgets:
+            return Target(
+                name: "AzkarWidgets",
+                platform: .iOS,
+                product: .appExtension,
+                bundleId: bundleId,
+                deploymentTarget: deploymentTarget,
+                infoPlist: .file(path: "AzkarWidgets/Info.plist"),
+                sources: "AzkarWidgets/Sources/**",
+                resources: [
+                    "AzkarWidgets/Resources/**",
+                    "Azkar/Resources/azkar.db",
+                    "Azkar/Resources/ru.lproj/Localizable.strings",
+                    "Azkar/Resources/ru.lproj/Localizable.stringsdict",
+                    "Azkar/Resources/en.lproj/Localizable.strings",
+                    "Azkar/Resources/en.lproj/Localizable.stringsdict",
+                ],
+                entitlements: "AzkarWidgets/AzkarWidgets.entitlements",
+                dependencies: [
+                    .package(product: AzkarPackage.library.name),
+                    .package(product: AzkarPackage.entities.name),
+                ],
+                settings: Settings(
+                    base: baseSettingsDictionary
+                        .merging(["DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER": "NO"])
+                    ,
+                    configurations: [
+                        .debug(
+                            name: "Debug",
+                            settings: getDefaultSettings(
+                                bundleId: "io.jawziyya.azkar-app.widgets",
+                                isDistribution: false
+                            )
+                        ),
+                        .release(
+                            name: "Release",
+                            settings: getDefaultSettings(
+                                bundleId: "io.jawziyya.azkar-app.widgets",
+                                isDistribution: true
+                            )
                         )
                     ]
                 )
@@ -166,6 +224,7 @@ enum AzkarTarget: String, CaseIterable {
 
 enum AzkarPackage: String {
     case entities = "Entities"
+    case library = "Library"
     case databaseClient = "DatabaseClient"
     case audioPlayer = "AudioPlayer"
 
@@ -179,9 +238,11 @@ enum AzkarPackage: String {
 let packages: [Package] = [
     // MARK: Internal depedencies.
     .local(path: AzkarPackage.audioPlayer.path),
+    .local(path: AzkarPackage.entities.path),
+    .local(path: AzkarPackage.library.path),
 
     // MARK: Services.
-    .remote(url: "https://github.com/RevenueCat/purchases-ios.git", requirement: .upToNextMajor(from: "4.16.0")),
+    .remote(url: "https://github.com/RevenueCat/purchases-ios.git", requirement: .upToNextMajor(from: "4.19.0")),
 
     // MARK: Network.
     .remote(url: "https://github.com/Alamofire/Alamofire", requirement: .upToNextMajor(from: "5.0.0")),
@@ -189,7 +250,6 @@ let packages: [Package] = [
     // MARK: Utilities.
     .remote(url: "https://github.com/weichsel/ZIPFoundation", requirement: .upToNextMajor(from: "0.9.0")),
     .remote(url: "https://github.com/bizz84/SwiftyStoreKit", requirement: .upToNextMajor(from: "0.16.3")),
-    .remote(url: "https://github.com/groue/GRDB.swift", requirement: .upToNextMajor(from: "5.0.0")),
 
     // MARK: UI.
     .remote(url: "https://github.com/radianttap/Coordinator", requirement: .upToNextMajor(from: "6.4.2")),

@@ -29,6 +29,15 @@
         }
       },
       {
+        "package": "Fakery",
+        "repositoryURL": "https://github.com/vadymmarkov/Fakery",
+        "state": {
+          "branch": null,
+          "revision": "71cb3bf36a808534659d1248780c2bf3c4c4fc91",
+          "version": "5.1.0"
+        }
+      },
+      {
         "package": "Gifu",
         "repositoryURL": "https://github.com/kaishin/Gifu",
         "state": {
@@ -87,8 +96,8 @@
         "repositoryURL": "https://github.com/RevenueCat/purchases-ios.git",
         "state": {
           "branch": null,
-          "revision": "9cfb6adb41dc40d80c104b2ef6e9a84bca03ea48",
-          "version": "4.16.0"
+          "revision": "f5d45ee9a2bc98bea2930ace47936a782fc06848",
+          "version": "4.19.0"
         }
       },
       {

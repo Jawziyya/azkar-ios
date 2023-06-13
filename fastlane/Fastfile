@@ -2,6 +2,7 @@ default_platform(:ios)
 
 APPLE_ID = ENV['APPLE_ID']
 APP_ID = ENV['APP_ID']
+WIDGETS_ID = ENV['WIDGETS_ID']
 APP_APPLE_ID = ENV['APP_APPLE_ID']
 AUTH_KEY_CONTENT = ENV['AUTH_KEY_CONTENT']
 AUTH_KEY_ID = ENV['AUTH_KEY_ID']
@@ -57,7 +58,7 @@ desc 'Synchronizes certificates / profiles using via the App Store Connect API. 
 private_lane :match_configuration do |options|
   match(
     type: options[:type] || 'appstore',
-    app_identifier: "#{APP_ID}",
+    app_identifier: options[:bundle_id],
     git_basic_authorization: Base64.strict_encode64(MATCH_GIT_AUTH),
     readonly: options[:force] == false,
     keychain_name: options[:keychain_user],
@@ -71,8 +72,8 @@ platform :ios do
 
   desc 'Synchronizes certificates / profiles and optionally creates new ones.'
   lane :sync_signing do
-    match_configuration(type: 'appstore')
-    match_configuration(type: 'development')
+    bundle_ids = "#{APP_ID},#{WIDGETS_ID}"
+    match_configuration(type: 'appstore', bundle_id: bundle_ids)
   end
 
   desc "Push a new release build to the App Store"
@@ -92,19 +93,17 @@ platform :ios do
     )
 
     build_app(project: project_name, scheme: 'Azkar')
-    testflight(api_key_path: api_key_path, changelog: changelog)
+    testflight(api_key: get_api_key, changelog: changelog)
   end
 
   lane :closed_beta do
     setup_ci
 
-    match_configuration(
-      type: 'appstore'
-    )
+    sync_signing
     
     increment_build_number_in_plist(
       xcodeproj: project_name,
-      build_number: ENV['GITHUB_RUN_NUMBER'], 
+      build_number: ENV['GITHUB_RUN_ID'], 
       target: app_name
     )
 
@@ -150,7 +149,7 @@ platform :mac do
     )
 
     build_app(project: project_name, scheme: 'Azkar')
-    testflight(api_key_path: api_key_path, changelog: changelog)
+    testflight(api_key: get_api_key, changelog: changelog)
   end
 
 end
