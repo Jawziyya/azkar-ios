@@ -303,6 +303,8 @@ internal enum L10n {
         internal static let maccinzMountains = L10n.tr("Localizable", "settings.icon.list.maccinz_mountains")
         /// Ramadan night
         internal static let maccinzRamadanNight = L10n.tr("Localizable", "settings.icon.list.maccinz_ramadan_night")
+        /// 
+        internal static let midjourney001 = L10n.tr("Localizable", "settings.icon.list.midjourney001")
         /// Ramadan
         internal static let ramadan = L10n.tr("Localizable", "settings.icon.list.ramadan")
       }
@@ -428,6 +430,10 @@ internal enum L10n {
   internal enum Subscribe {
     /// Cancel subscription
     internal static let cancel = L10n.tr("Localizable", "subscribe.cancel")
+    /// Purchase for %@
+    internal static func purchaseFor(_ p1: Any) -> String {
+      return L10n.tr("Localizable", "subscribe.purchase-for", String(describing: p1))
+    }
     /// Continue
     internal static let purchaseTitle = L10n.tr("Localizable", "subscribe.purchase-title")
     /// Restore
