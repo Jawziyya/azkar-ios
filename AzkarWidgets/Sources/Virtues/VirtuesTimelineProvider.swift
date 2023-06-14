@@ -10,7 +10,7 @@ struct VirtuesProvider: TimelineProvider {
     
     let fadail: [Fadl] = {
         let databaseService = DatabaseService.shared
-        let fadail = try? databaseService.getFudul()
+        let fadail = try? databaseService.getFadail()
         return fadail ?? []
     }()
     

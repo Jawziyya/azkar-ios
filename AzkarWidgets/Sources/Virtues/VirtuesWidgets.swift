@@ -26,7 +26,7 @@ struct VirtuesWidgets: Widget {
 struct AzkarVirtuesWidgets_Previews: PreviewProvider {
     static var previews: some View {
         let databaseService = DatabaseService.shared
-        let fadail = try! databaseService.getFudul()
+        let fadail = try! databaseService.getFadail()
         
         return VirtueView(
             fadl: fadail.randomElement()!
