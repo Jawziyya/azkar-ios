@@ -22,9 +22,15 @@ extension UNNotificationRequest: UserNotification {
             ?? Date()
     }
     
+    var soundInfo: String? {
+        return content.sound?.description
+    }
+    
     var details: String {
-        let triggerInfo = trigger!.debugDescription
-        return triggerInfo + "\n\n" + debugDescription
+        return """
+        Body: \(body ?? "n/a")
+        Sound: \(soundInfo ?? "n/a")
+        """
     }
     
 }
@@ -38,6 +44,10 @@ struct DummyUserNotification: UserNotification {
 
 final class NotificationsListViewModel: ObservableObject {
     @Published var notifications: [NotificationsRowViewModel] = []
+    
+    var numberOfNotifications: String {
+        "Total scheduled notifications: \(notifications.count)"
+    }
     
     init(notifications: @escaping (() async -> [UserNotification])) {
         Task(priority: .userInitiated) {
@@ -98,12 +108,10 @@ private struct NotificationsRowView: View {
                     Spacer()
                 }
                 
-                vm.body.flatMap { body in
-                    Text(body)
-                        .foregroundColor(.primary)
-                        .font(.caption)
-                        .multilineTextAlignment(.leading)
-                }
+                Text(vm.details)
+                    .foregroundColor(.primary)
+                    .font(.caption)
+                    .multilineTextAlignment(.leading)
             }
         }
         .padding(16)
@@ -129,7 +137,7 @@ struct NotificationsListView: View {
                             VStack(alignment: .leading) {
                                 Text("Notifications")
                                     .font(.largeTitle.bold())
-                                Text(viewModel.notifications.count.description)
+                                Text(viewModel.numberOfNotifications)
                                     .foregroundColor(.secondary)
                                     .font(.callout)
                             }
@@ -149,6 +157,7 @@ struct NotificationsListView: View {
                         } else {
                             ForEach(viewModel.notifications, id: \.row) { vm in
                                 NotificationsRowView(vm: vm)
+                                    .background(Color.contentBackground)
                             }
                         }
                     }

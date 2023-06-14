@@ -36,7 +36,7 @@ enum ReminderSound: String, Identifiable, Equatable, Codable {
         }
     }
     
-    var fileName: String { rawValue }
+    var fileName: String { rawValue + "." + soundFileFormat }
     
     var soundFileFormat: String {
         switch self {
@@ -78,7 +78,12 @@ enum ReminderSound: String, Identifiable, Equatable, Codable {
 extension ReminderSound {
     
     var notificationSound: UNNotificationSound {
-        return UNNotificationSound.default
+        switch self {
+        case .standard:
+            return UNNotificationSound.default
+        default:
+            return UNNotificationSound(named: UNNotificationSoundName(fileName))
+        }
     }
     
 }
