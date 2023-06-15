@@ -133,7 +133,7 @@ final class Preferences: ObservableObject {
     @Preference(Keys.enableCounterHapticFeedback, defaultValue: true)
     var enableCounterHapticFeedback: Bool
 
-    @Preference(Keys.enableGoToNextZikrOnCounterFinished, defaultValue: true)
+    @Preference(Keys.enableGoToNextZikrOnCounterFinished, defaultValue: false)
     var enableGoToNextZikrOnCounterFinished: Bool
 
     @Preference(Keys.azkarCounteType, defaultValue: CounterType.floatingButton)

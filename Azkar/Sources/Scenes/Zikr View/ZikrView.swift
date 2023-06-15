@@ -48,8 +48,8 @@ struct ZikrView: View {
 
     func incrementZikrCounter() {
         isIncrementActionPerformed = true
-        withAnimation(.spring()) {
-            viewModel.incrementZikrCount()
+        Task {
+            await viewModel.incrementZikrCount()
         }
         if viewModel.remainingRepeatsNumber > 0, viewModel.preferences.enableCounterHapticFeedback {
             Haptic.toggleFeedback()
@@ -61,12 +61,20 @@ struct ZikrView: View {
             getContent()
                 .largeScreenPadding()
         }
-        .onAppear(perform: viewModel.updateRemainingRepeats)
+        .onAppear {
+            Task {
+                await viewModel.updateRemainingRepeats()
+            }
+        }
         .saturation(viewModel.preferences.colorTheme == .ink ? 0 : 1)
         .background(Color.background.edgesIgnoringSafeArea(.all))
         .onKeyboardShortcut("+", modifiers: [.command], perform: viewModel.increaseFontSize)
         .onKeyboardShortcut("-", modifiers: [.command], perform: viewModel.decreaseFontSize)
-        .onKeyboardShortcut(.return, modifiers: [.command], perform: viewModel.incrementZikrCount)
+        .onKeyboardShortcut(.return, modifiers: [.command], perform: {
+            Task {
+                await viewModel.incrementZikrCount()
+            }
+        })
         .onReceive(incrementAction, perform: incrementZikrCounter)
         .onTapGesture(count: 2, perform: {
             guard viewModel.preferences.counterType == .tap else {
