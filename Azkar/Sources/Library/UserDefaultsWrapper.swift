@@ -27,7 +27,7 @@ public struct Preference<Value: Codable> {
     public var wrappedValue: Value {
         get {
             // Read value from UserDefaults
-            guard let data = UserDefaults.standard.object(forKey: key) as? Data else {
+            guard let data = defaults.object(forKey: key) as? Data else {
                 // Return defaultValue when no data in UserDefaults
                 return defaultValue
             }
@@ -40,7 +40,7 @@ public struct Preference<Value: Codable> {
             let data = try? JSONEncoder().encode(newValue)
 
             // Set value to UserDefaults
-            UserDefaults.standard.set(data, forKey: key)
+            defaults.set(data, forKey: key)
             NotificationCenter.default.post(name: notificationName, object: newValue)
         }
     }
