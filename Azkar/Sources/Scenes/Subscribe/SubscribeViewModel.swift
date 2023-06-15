@@ -56,6 +56,15 @@ final class SubscribeViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     private let subscriptionManager: SubscriptionManagerType
     
+    var purchaseButtonTitle: String {
+        if options.count == 1 {
+            let price = options[0].priceInfo
+            return L10n.Subscribe.purchaseFor(price)
+        } else {
+            return L10n.Subscribe.purchaseTitle
+        }
+    }
+    
     init(
         subscriptionManager: SubscriptionManagerType = SubscriptionManagerFactory.create()
     ) {
@@ -76,6 +85,10 @@ final class SubscribeViewModel: ObservableObject {
     }
     
     func purchase() {
+        if options.count == 1 {
+            selectedOption = options.first
+        }
+        
         guard let option = selectedOption else {
             return
         }

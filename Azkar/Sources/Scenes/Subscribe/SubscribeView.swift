@@ -57,7 +57,7 @@ struct SubscribeView: View {
             .overlay(
                 VStack(spacing: 8) {
                     purchaseButton
-                        .disabled(viewModel.selectedOption == nil)
+                        .disabled(viewModel.selectedOption == nil && viewModel.options.count > 1)
                         .background(viewModel.isPurchased ? Color.clear : Color.contentBackground)
                         .opacity(viewModel.isPurchasing || viewModel.isPurchased ? 0 : 1)
                         .overlay(
@@ -182,13 +182,9 @@ struct SubscribeView: View {
                 }
                     
                 ForEach(features) { feature in
-                    if #available(iOS 15, *) {
-                        featureView(feature)
-                            .symbolRenderingMode(.multicolor)
-                    } else {
-                        featureView(feature)
-                    }
+                    featureView(feature)
                 }
+                .symbolRenderingMode(.multicolor)
             }
             .frame(alignment: .center)
             .padding()
@@ -197,16 +193,18 @@ struct SubscribeView: View {
             
             Spacer()
             
-            VStack(spacing: 20) {
-                ForEach(viewModel.options) { option in
-                    planCard(option: option)
-                        .redacted(reason: viewModel.didLoadData ? [] : .placeholder)
-                        .allowsHitTesting(viewModel.didLoadData && viewModel.selectedOption != option)
+            if viewModel.options.count > 1 {
+                VStack(spacing: 20) {
+                    ForEach(viewModel.options) { option in
+                        planCard(option: option)
+                            .redacted(reason: viewModel.didLoadData ? [] : .placeholder)
+                            .allowsHitTesting(viewModel.didLoadData && viewModel.selectedOption != option)
+                    }
                 }
+                .padding(.horizontal, 30)
+                
+                Color.clear.frame(height: 20)
             }
-            .padding(.horizontal, 30)
-            
-            Color.clear.frame(height: 20)
             
             subscriptionInfo
             
@@ -224,7 +222,7 @@ struct SubscribeView: View {
     
     var purchaseButton: some View {
         Button(action: viewModel.purchase) {
-            Text(L10n.Subscribe.purchaseTitle)
+            Text(viewModel.purchaseButtonTitle)
                 .frame(maxWidth: .infinity)
                 .padding()
                 .background(Color.blue)

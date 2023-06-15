@@ -13,7 +13,7 @@ extension Zikr: FetchableRecord, PersistableRecord {
 }
 
 extension Fadl: FetchableRecord, PersistableRecord {
-    public static let databaseTableName = "fudul"
+    public static let databaseTableName = "fadail"
 }
 
 extension AudioTiming: FetchableRecord, PersistableRecord {
@@ -55,7 +55,7 @@ public final class DatabaseService {
         }
     }
 
-    public func getFudulCount() throws -> Int {
+    public func getFadailCount() throws -> Int {
         return try getDatabaseQueue().read { db in
             try Fadl.fetchCount(db)
         }
@@ -68,12 +68,12 @@ public final class DatabaseService {
     }
 
     public func getRandomFadl() throws -> Fadl? {
-        let count = try getFudulCount()
+        let count = try getFadailCount()
         let id = Int.random(in: 1...count)
         return try getFadl(id)
     }
 
-    public func getFudul() throws -> [Fadl] {
+    public func getFadail() throws -> [Fadl] {
         return try getDatabaseQueue().read { db in
             try Fadl.fetchAll(db)
         }

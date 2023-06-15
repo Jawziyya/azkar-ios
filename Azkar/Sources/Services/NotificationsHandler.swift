@@ -10,6 +10,8 @@ import UIKit
 import SwiftUI
 import Combine
 
+private let notificationCenter = UNUserNotificationCenter.current()
+
 final class NotificationsHandler: NSObject {
     
     enum NotificationsPermissionState: Equatable {
@@ -79,7 +81,6 @@ final class NotificationsHandler: NSObject {
             .eraseToAnyPublisher()
     }
 
-    private let notificationCenter = UNUserNotificationCenter.current()
     private var cancellables = Set<AnyCancellable>()
 
     private override init() {
@@ -92,7 +93,7 @@ final class NotificationsHandler: NSObject {
     
     private func readNotificationSettings() -> AnyPublisher<UNNotificationSettings, Never> {
         Future { observer in
-            UNUserNotificationCenter.current()
+            notificationCenter
                 .getNotificationSettings { settings in
                     observer(.success(settings))
                 }
@@ -108,17 +109,30 @@ final class NotificationsHandler: NSObject {
         notificationCenter.removeAllPendingNotificationRequests()
     }
 
-    func scheduleNotification(id: String, date: Date, titleKey: String, categoryId: String, sound: ReminderSound) {
-        let content = UNMutableNotificationContent()
-        content.title = NSString.localizedUserNotificationString(forKey: titleKey, arguments: nil)
-        content.sound = sound.notificationSound
-        content.categoryIdentifier = categoryId
-        let trigger = UNCalendarNotificationTrigger(dateMatching: Calendar.current.dateComponents([.hour, .minute], from: date), repeats: true)
-        let request = UNNotificationRequest(identifier: id, content: content, trigger: trigger)
-        notificationCenter.add(request)
+    func scheduleNotification(
+        id: String,
+        date: Date,
+        titleKey: String,
+        categoryId: String,
+        sound: ReminderSound
+    ) {
+        let dateComponents = Calendar.current.dateComponents([.hour, .minute], from: date)
+        scheduleNotification(
+            id: id,
+            titleKey: titleKey,
+            dateComponents: dateComponents,
+            categoryId: categoryId,
+            sound: sound
+        )
     }
     
-    func scheduleNotification(id: String, titleKey: String, dateComponents: DateComponents, categoryId: String, sound: ReminderSound) {
+    func scheduleNotification(
+        id: String,
+        titleKey: String,
+        dateComponents: DateComponents,
+        categoryId: String,
+        sound: ReminderSound
+    ) {
         let content = UNMutableNotificationContent()
         content.title = NSString.localizedUserNotificationString(forKey: titleKey, arguments: nil)
         content.sound = sound.notificationSound
@@ -128,16 +142,20 @@ final class NotificationsHandler: NSObject {
         notificationCenter.add(request)
     }
 
-    func getNotificationsAuthorizationStatus(completion: @escaping ((UNAuthorizationStatus) -> Void)) {
-        UNUserNotificationCenter.current().getNotificationSettings { settings
+    func getNotificationsAuthorizationStatus(
+        completion: @escaping ((UNAuthorizationStatus) -> Void)
+    ) {
+        notificationCenter.getNotificationSettings { settings
             in
             completion(settings.authorizationStatus)
         }
     }
 
-    func requestNotificationsPermission(completion: @escaping ((Result<Bool, Error>) -> Void)) {
-        UNUserNotificationCenter.current()
-            .requestAuthorization(options: [.alert, .sound, ]) { (granted, error) in
+    func requestNotificationsPermission(
+        completion: @escaping ((Result<Bool, Error>) -> Void)
+    ) {
+        notificationCenter
+            .requestAuthorization(options: [.alert, .sound]) { (granted, error) in
                 if let error = error {
                     completion(.failure(error))
                 } else {
@@ -150,16 +168,27 @@ final class NotificationsHandler: NSObject {
 
 extension NotificationsHandler: UNUserNotificationCenterDelegate {
 
-    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+    func userNotificationCenter(
+        _ center: UNUserNotificationCenter,
+        willPresent notification: UNNotification,
+        withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void
+    ) {
         // Just present the notification as it comes.
         completionHandler([.list, .sound, .banner])
     }
 
-    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+    func userNotificationCenter(
+        _ center: UNUserNotificationCenter,
+        didReceive response: UNNotificationResponse,
+        withCompletionHandler completionHandler: @escaping () -> Void
+    ) {
         handleNotification(request: response.notification.request, completionHandler: completionHandler)
     }
 
-    private func handleNotification(request: UNNotificationRequest, completionHandler: @escaping () -> Void) {
+    private func handleNotification(
+        request: UNNotificationRequest,
+        completionHandler: @escaping () -> Void
+    ) {
         let category = request.content.categoryIdentifier
         selectedNotificationCategory.send(category)
         completionHandler()
