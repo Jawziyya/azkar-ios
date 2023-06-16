@@ -13,6 +13,12 @@ actor ZikrCounterService: ZikrCounterServiceType {
     struct AzkarCounterData: Codable {
         var data: [Zikr.ID: Int]
     }
+    
+    init() {
+        Task {
+            await resetCounterIfNeeded()
+        }
+    }
 
     @Preference(Keys.azkarCounter, defaultValue: AzkarCounterData(data: [:]))
     var counter: AzkarCounterData
