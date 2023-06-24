@@ -9,7 +9,6 @@
 import UIKit
 import SwiftUI
 import Combine
-import UIKit
 import AudioPlayer
 
 final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
@@ -53,7 +52,7 @@ final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
     @Published var textSettingsToken = UUID()
 
     @Published var remainingRepeatsFormatted: String = ""
-    @Published var remainingRepeatsNumber: Int {
+    @Published var remainingRepeatsNumber: Int = 0 {
         didSet {
             updateRemainingRepeatsText()
         }
@@ -64,8 +63,9 @@ final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
         }
     }
 
-    func updateRemainingRepeats() {
-        remainingRepeatsNumber = counter.getRemainingRepeats(for: zikr)
+    @MainActor
+    func updateRemainingRepeats() async {
+        remainingRepeatsNumber = await counter.getRemainingRepeats(for: zikr)
     }
 
     func updateRemainingRepeatsText() {
@@ -90,7 +90,6 @@ final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
         self.counter = counter
         self.zikr = zikr
         self.preferences = preferences
-        self.remainingRepeatsNumber = counter.getRemainingRepeats(for: zikr)
         self.textProcessor = textProcessor
         title = zikr.title ?? "\(L10n.Common.zikr) №\(zikr.rowInCategory)"
         text = textProcessor.processArabicText(zikr.text)
@@ -102,6 +101,10 @@ final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
         translation = zikr.translation?.textOrNil.flatMap(textProcessor.processTranslationText) ?? []
         transliteration = zikr.transliteration?.textOrNil.flatMap(textProcessor.processTransliterationText) ?? []
         source = zikr.source.firstWord()
+        
+        Task {
+            self.remainingRepeatsNumber = await counter.getRemainingRepeats(for: zikr)
+        }
 
         if let url = zikr.audioURL {
             let playerViewModel = PlayerViewModel(title: title, subtitle: zikr.category.title, audioURL: url, player: player)
@@ -204,17 +207,23 @@ final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
         preferences.sizeCategory = preferences.sizeCategory.smaller()
     }
 
-    func incrementZikrCount() {
+    @MainActor
+    func incrementZikrCount() async {
         guard remainingRepeatsNumber > 0 else {
             return
         }
         showRemainingCounter = true
-        counter.incrementCounter(for: zikr)
-        remainingRepeatsNumber = counter.getRemainingRepeats(for: zikr)
+        await counter.incrementCounter(for: zikr)
+        let remainingRepeatsNumber = await counter.getRemainingRepeats(for: zikr)
+        
+        withAnimation(.spring()) {
+            self.remainingRepeatsNumber = remainingRepeatsNumber
+        }
 
-        guard preferences.enableCounterTicker else { return }
-        DispatchQueue.global(qos: .userInitiated).async {
-            self.playTickerSound()
+        if preferences.enableCounterTicker {
+            DispatchQueue.global(qos: .userInitiated).async {
+                self.playTickerSound()
+            }
         }
     }
 

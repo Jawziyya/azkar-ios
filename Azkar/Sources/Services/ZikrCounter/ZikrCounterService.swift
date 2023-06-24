@@ -3,17 +3,21 @@
 import Foundation
 import SwiftUI
 
-typealias ZikrID = Int
-
-protocol ZikrCounterServiceType {
-    func getRemainingRepeats(for zikr: Zikr) -> Int
-    func incrementCounter(for zikr: Zikr)
+protocol ZikrCounterServiceType: AnyObject {
+    func getRemainingRepeats(for zikr: Zikr) async -> Int
+    func incrementCounter(for zikr: Zikr) async
 }
 
-final class ZikrCounterService: ZikrCounterServiceType {
+actor ZikrCounterService: ZikrCounterServiceType {
 
     struct AzkarCounterData: Codable {
-        var data: [ZikrID: Int]
+        var data: [Zikr.ID: Int]
+    }
+    
+    init() {
+        Task {
+            await resetCounterIfNeeded()
+        }
     }
 
     @Preference(Keys.azkarCounter, defaultValue: AzkarCounterData(data: [:]))
@@ -28,16 +32,15 @@ final class ZikrCounterService: ZikrCounterServiceType {
         if calendar.isDateInToday(lastChangeTimestamp) == false {
             counter = .init(data: [:])
         }
-        lastChangeTimestamp = .init()
+        lastChangeTimestamp = Date()
     }
 
-    func getRemainingRepeats(for zikr: Zikr) -> Int {
-        resetCounterIfNeeded()
+    func getRemainingRepeats(for zikr: Zikr) async -> Int {
         let completedRepeats = counter.data[zikr.id, default: 0]
         return max(0, zikr.repeats - completedRepeats)
     }
 
-    func incrementCounter(for zikr: Zikr) {
+    func incrementCounter(for zikr: Zikr) async {
         resetCounterIfNeeded()
         let old = counter.data[zikr.id, default: 0]
         counter.data[zikr.id] = old + 1
