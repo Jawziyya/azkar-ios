@@ -22,20 +22,24 @@ public struct Zikr: Identifiable, Hashable, Equatable, Codable {
         case titleRU = "title_ru"
         case titleEN = "title_en"
         case titleTR = "title_tr"
+        case titleKA = "title_ka"
         
         case translationRU = "translation_ru"
         case translationEN = "translation_en"
         case translationTR = "translation_tr"
+        case translationKA = "translation_ka"
         
         case _notes = "notes"
         case notesRU = "notes_ru"
         case notesEN = "notes_en"
         case notesTR = "notes_tr"
+        case notesKA = "notes_ka"
         
         case _benefit = "benefit"
         case benefitRU = "benefit_ru"
         case benefitEN = "benefit_en"
         case benefitTR = "benefit_tr"
+        case benefitKA = "benefit_ka"
         
         case _source = "source"
     }
@@ -53,10 +57,12 @@ public struct Zikr: Identifiable, Hashable, Equatable, Codable {
     private let titleRU: String?
     private let titleEN: String?
     private let titleTR: String?
+    private let titleKA: String?
     
     private let translationRU: String?
     private let translationEN: String?
     private let translationTR: String?
+    private let translationKA: String?
     
     private let _source: String
     
@@ -68,17 +74,20 @@ public struct Zikr: Identifiable, Hashable, Equatable, Codable {
     private let notesRU: String?
     private let notesEN: String?
     private let notesTR: String?
+    private let notesKA: String?
     
     private let _benefit: String?
     private let benefitRU: String?
     private let benefitEN: String?
     private let benefitTR: String?
+    private let benefitKA: String?
     
     public var title: String? {
         switch languageIdentifier {
         case .ar: return _title
         case .ru: return titleRU
         case .tr: return titleTR
+        case .ka: return titleKA
         default: return titleEN
         }
     }
@@ -88,6 +97,7 @@ public struct Zikr: Identifiable, Hashable, Equatable, Codable {
         case .ar: return nil
         case .ru: return translationRU
         case .tr: return translationTR
+        case .ka: return translationKA
         default: return translationEN
         }
     }
@@ -106,6 +116,7 @@ public struct Zikr: Identifiable, Hashable, Equatable, Codable {
         case .ar: return nil
         case .ru: return notesRU
         case .tr: return notesTR
+        case .ka: return notesKA
         default: return notesEN
         }
     }
@@ -115,6 +126,7 @@ public struct Zikr: Identifiable, Hashable, Equatable, Codable {
         case .ar: return nil
         case .ru: return benefitRU
         case .tr: return benefitTR
+        case .ka: return benefitKA
         default: return benefitEN
         }
     }
@@ -156,9 +168,11 @@ public struct Zikr: Identifiable, Hashable, Equatable, Codable {
             titleRU: "Title RU",
             titleEN: "Title EN",
             titleTR: "Title TR",
+            titleKA: "Title KA",
             translationRU: "Translation RU",
             translationEN: "Translation EN",
             translationTR: "Translation TR",
+            translationKA: "Translation KA",
             _source: "Source",
             transliterationEN: "Transliteration EN",
             transliterationRU: "Transliteration RU",
@@ -167,10 +181,12 @@ public struct Zikr: Identifiable, Hashable, Equatable, Codable {
             notesRU: "Notes RU",
             notesEN: "Notes EN",
             notesTR: "Notes TR",
+            notesKA: "Notes KA",
             _benefit: "Benefit",
             benefitRU: "Benifit RU",
             benefitEN: "Benefit EN",
-            benefitTR: "Benefit TR"
+            benefitTR: "Benefit TR",
+            benefitKA: "Benefit KA"
         )
     }
     
