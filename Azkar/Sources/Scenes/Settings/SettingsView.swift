@@ -370,48 +370,19 @@ struct SettingsView: View {
 
 }
 
-struct PickerView<T: View>: View {
-
-    var label: String
-    var navigationTitle: String?
-    var titleDisplayMode: NavigationBarItem.TitleDisplayMode = .automatic
-    var subtitle: String
-    var destination: T
-
-    var body: some View {
-        NavigationLink(
-            destination: destination.navigationBarTitle(navigationTitle ?? label, displayMode: titleDisplayMode)
-            )
-        {
-            HStack(spacing: 8) {
-                Text(label)
-                    .font(Font.system(.body, design: .rounded))
-                    .foregroundColor(Color.text)
-                Spacer()
-                Text(subtitle)
-                    .multilineTextAlignment(.trailing)
-                    .font(Font.system(.body, design: .rounded))
-                    .foregroundColor(Color.secondary)
-            }
-            .padding(.vertical, 10)
-            .buttonStyle(PlainButtonStyle())
-        }
-    }
-
-}
-
 struct SettingsView_Previews: PreviewProvider {
     static var previews: some View {
-        SettingsView(
-            viewModel: SettingsViewModel(
-                preferences: Preferences.shared,
-                router: RootCoordinator(
+        NavigationView {
+            SettingsView(
+                viewModel: SettingsViewModel(
                     preferences: Preferences.shared,
-                    deeplinker: Deeplinker(),
-                    player: Player.test
+                    router: RootCoordinator(
+                        preferences: Preferences.shared,
+                        deeplinker: Deeplinker(),
+                        player: Player.test
+                    )
                 )
             )
-        )
-        .environment(\.colorScheme, .dark)
+        }
     }
 }
