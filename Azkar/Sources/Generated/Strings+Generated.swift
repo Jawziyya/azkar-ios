@@ -366,6 +366,8 @@ internal enum L10n {
       internal static let arabicTextFont = L10n.tr("Localizable", "settings.text.arabic-text-font")
       /// Text size
       internal static let fontSize = L10n.tr("Localizable", "settings.text.font-size")
+      /// Language
+      internal static let language = L10n.tr("Localizable", "settings.text.language")
       /// Line spacing
       internal static let lineSpacing = L10n.tr("Localizable", "settings.text.line-spacing")
       /// Show tashkeel
