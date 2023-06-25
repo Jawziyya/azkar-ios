@@ -2,6 +2,7 @@
 
 import SwiftUI
 import Popovers
+import Entities
 
 enum SettingsSection: Equatable {
     case root, themes, arabicFonts, fonts, icons
@@ -18,17 +19,20 @@ struct SettingsView: View {
     @ObservedObject var viewModel: SettingsViewModel
 
     var body: some View {
-        Form {
+        List {
             Group {
-                appearanceSection
-                counterSection
-                textSettingsSection
-                
-                if viewModel.mode != .textAndAppearance {
+                switch viewModel.mode {
+                case .standart:
+                    appearanceSection
+                    counterSection
+                    textSettingsSection
                     remindersSection
+                case .text:
+                    textSettingsSection
                 }
             }
         }
+        .listStyle(.insetGrouped)
         .accentColor(Color.accent)
         .toggleStyle(SwitchToggleStyle(tint: Color.accent))
         .horizontalPaddingForLargeScreen()
@@ -173,6 +177,9 @@ struct SettingsView: View {
                 .foregroundColor(Color.background)
                 .symbolRenderingMode(.multicolor)
         ) {
+            if viewModel.canChangeLanguage {
+                languagePicker
+            }
             
             NavigationLink {
                 arabicFontsPicker
@@ -282,8 +289,21 @@ struct SettingsView: View {
         }
         .padding(.vertical, 8)
     }
+    
+    var languagePicker: some View {
+        Picker(
+            selection: $viewModel.preferences.contentLanguage,
+            label: Text(L10n.Settings.Text.language)
+                .font(Font.system(.body, design: .rounded))
+                .padding(.vertical, 8)
+        ) {
+            ForEach(Language.allCases) { lang in
+                Text(lang.title)
+                    .font(Font.system(.body, design: .rounded))
+                    .tag(lang)
             }
         }
+        .pickerStyle(.menu)
     }
     
     var sizePicker: some View {
