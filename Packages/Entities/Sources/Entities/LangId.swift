@@ -16,13 +16,28 @@ extension Bundle {
 public var languageIdentifier: LangId {
     let id = Bundle.main.currentLocalizedUILanguageCode.lowercased()
     switch id {
-    case _ where id.hasPrefix("ar"): return .ar
-    case _ where id.hasPrefix("tr"): return .tr
-    case _ where id.hasPrefix("ru"): return .ru
-    default: return .en
+    case _ where id.hasPrefix("ar"):
+        return .ar
+    case _ where id.hasPrefix("tr"):
+        return .tr
+    case _ where id.hasPrefix("ru"):
+        return .ru
+    case _ where id.hasPrefix("ka"):
+        return .ka
+    default:
+        return .en
     }
 }
 
 public enum LangId: String {
-    case ar, tr, en, ru
+    /// Arabic
+    case ar
+    /// Turkish
+    case tr
+    /// English
+    case en
+    /// Russian
+    case ru
+    /// Georgian
+    case ka
 }

@@ -117,7 +117,7 @@ struct ZikrView: View {
 
     private func getContent() -> some View {
         VStack(alignment: .leading, spacing: 0) {
-            titleView
+            titleView(viewModel.title)
             textView
             
             if !viewModel.translation.isEmpty {
@@ -144,7 +144,7 @@ struct ZikrView: View {
                     self.getNoteView(notes)
                 }
 
-                viewModel.zikr.benefit.flatMap { text in
+                viewModel.zikr.benefits.flatMap { text in
                     HStack(alignment: .top, spacing: 8) {
                         Text("💎")
                             .minimumScaleFactor(0.1)
@@ -198,10 +198,10 @@ struct ZikrView: View {
     }
 
     // MARK: - Title
-    private var titleView: some View {
+    private func titleView(_ title: String) -> some View {
         HStack {
             Spacer()
-            Text(viewModel.title)
+            Text(title)
                 .equatable()
                 .font(Font.system(.headline, design: .rounded))
                 .foregroundColor(Color.secondaryText)
@@ -412,7 +412,12 @@ struct ZikrView_Previews: PreviewProvider {
         let prefs = Preferences.shared
         prefs.colorTheme = .sea
         return ZikrView(
-            viewModel: ZikrViewModel(zikr: Zikr.placeholder, hadith: Hadith.placeholder, preferences: prefs, player: .test),
+            viewModel: ZikrViewModel(
+                zikr: Zikr.placeholder,
+                hadith: Hadith.placeholder,
+                preferences: prefs,
+                player: .test
+            ),
             incrementAction: Empty().eraseToAnyPublisher()
         )
         .environment(\.colorScheme, .dark)

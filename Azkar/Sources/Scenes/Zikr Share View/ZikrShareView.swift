@@ -59,7 +59,7 @@ struct ZikrShareView: View {
                         .padding()
                 }
 
-                if includeBenefits, let text = viewModel.zikr.benefit {
+                if includeBenefits, let text = viewModel.zikr.benefits {
                     Divider()
 
                     HStack(alignment: .top, spacing: 8) {
