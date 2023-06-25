@@ -12,6 +12,7 @@ public enum Language: String, Codable, CaseIterable, Identifiable {
     case georgian = "ka"
     case chechen = "che"
     case ingush = "inh"
+    case uzbek = "uz"
     
     /// ISO 639-1 identifier
     public var id: String {
@@ -35,6 +36,8 @@ public enum Language: String, Codable, CaseIterable, Identifiable {
             return "Нохчийн мотт"
         case .ingush:
             return "Гӏалгӏай мотт"
+        case .uzbek:
+            return "Оʻzbek tili"
         }
     }
 }
