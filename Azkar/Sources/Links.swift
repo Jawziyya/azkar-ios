@@ -12,3 +12,4 @@ typealias Fadl = Entities.Fadl
 typealias AudioTiming = Entities.AudioTiming
 
 typealias DatabaseService = Library.DatabaseService
+typealias Preference = Library.Preference

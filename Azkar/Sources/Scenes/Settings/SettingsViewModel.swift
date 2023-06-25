@@ -165,8 +165,4 @@ final class SettingsViewModel: ObservableObject {
         }
     }
     
-    func selectLanguage(_ language: Language) {
-        preferences.contentLanguage = language
-    }
-
 }

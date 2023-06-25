@@ -6,11 +6,11 @@ import WidgetKit
 import Entities
 
 struct VirtueView : View {
-    var fadl: Fadl
+    let fadl: Fadl
 
     var body: some View {
         VStack(spacing: 8) {
-            Text(fadl.text ?? "")
+            Text(fadl.text)
                 .font(Font.title3)
                 .tracking(1.2)
                 .foregroundColor(Color.primary.opacity(0.7))

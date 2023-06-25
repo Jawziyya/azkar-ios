@@ -81,7 +81,7 @@ final class MainMenuViewModel: ObservableObject {
         self.player = player
 
         fastingDua = try? databaseService.getZikr(51)
-
+        
         otherAzkarModels = [
             AzkarMenuItem(
                 category: .afterSalah,
