@@ -1,43 +1,33 @@
 import Foundation
 
-public struct Fadl: Codable, Identifiable {
-    
-    enum CodingKeys: String, CodingKey {
-        case id
-        case _source = "source", sourceExtension = "source_ext"
-        case textRu = "text_ru", textEn = "text_en"
-    }
-    
+public struct Fadl: Identifiable {
+        
     public let id: Int
-    private let textRu: String?
-    private let textEn: String?
-    private let _source: String
-    private let sourceExtension: String?
-    
-    public var text: String? {
-        switch languageIdentifier {
-        case .ru: return textRu
-        case .en: return textEn
-        default: return nil
-        }
-    }
-    
-    public var source: String {
-        var source = NSLocalizedString("text.source." + _source.lowercased(), comment: "")
-        if let ext = sourceExtension {
-            source += ", " + ext
-        }
-        return source
-    }
+    public let text: String
+    public let source: String
     
     public static var placeholder: Fadl {
         Fadl(
             id: Int.random(in: -999 ... -1),
-            textRu: faker.lorem.paragraphs(amount: Int.random(in: 1...2)),
-            textEn: faker.lorem.paragraphs(amount: Int.random(in: 1...2)),
-            _source: faker.lorem.words(amount: Int.random(in: 1...2)),
-            sourceExtension: faker.lorem.word()
+            text: faker.lorem.paragraphs(amount: Int.random(in: 1...2)),
+            source: faker.lorem.words(amount: Int.random(in: 1...2))
         )
     }
     
+}
+
+extension Fadl {
+    public init?(
+        id: Int,
+        text: String?,
+        source: String
+    ) {
+        guard let text else {
+            return nil
+        }
+        
+        self.id = id
+        self.text = text
+        self.source = source
+    }
 }

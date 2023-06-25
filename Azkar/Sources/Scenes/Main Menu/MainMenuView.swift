@@ -9,6 +9,7 @@
 import SwiftUI
 import AudioPlayer
 import UserNotifications
+import Entities
 
 enum Constants {
     static var cornerRadius: CGFloat = 12
@@ -170,9 +171,9 @@ struct MainMenuView: View {
             }
             .shadow(color: Color.black.opacity(0.05), radius: 10, x: 0, y: 1)
 
-            if let fadl = viewModel.fadl, let text = fadl.text {
+            if let fadl = viewModel.fadl {
                 VStack(spacing: 8) {
-                    Text(text)
+                    Text(fadl.text)
                         .font(Font.customFont(viewModel.preferences.preferredTranslationFont, style: .caption1))
                         .tracking(1.2)
                         .foregroundColor(Color.text.opacity(0.7))
@@ -194,7 +195,17 @@ struct MainMenuView: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        MainMenuView(viewModel: MainMenuViewModel(router: RootCoordinator(preferences: Preferences.shared, deeplinker: Deeplinker(), player: Player.init(player: AudioPlayer())), preferences: Preferences.shared, player: .test))
-            .environment(\.colorScheme, .light)
+        MainMenuView(
+            viewModel: MainMenuViewModel(
+                databaseService: DatabaseService(language: Language.getSystemLanguage()),
+                router: RootCoordinator(
+                    preferences: Preferences.shared,
+                    deeplinker: Deeplinker(),
+                    player: Player(player: AudioPlayer())
+                ),
+                preferences: Preferences.shared,
+                player: .test)
+        )
+        .environment(\.colorScheme, .light)
     }
 }

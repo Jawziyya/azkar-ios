@@ -9,6 +9,7 @@
 import SwiftUI
 import AudioPlayer
 import Combine
+import Entities
 
 final class MainMenuViewModel: ObservableObject {
 
@@ -70,7 +71,7 @@ final class MainMenuViewModel: ObservableObject {
     }()
 
     init(
-        databaseService: DatabaseService = DatabaseService.shared,
+        databaseService: DatabaseService,
         router: RootRouter,
         preferences: Preferences,
         player: Player

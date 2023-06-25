@@ -146,8 +146,8 @@ final class Preferences: ObservableObject {
     @Preference(Keys.enableLineBreaks, defaultValue: true)
     var enableLineBreaks
     
-    @Preference(Keys.contentLanguage, defaultValue: LangId.getSystemLanguage())
-    var contentLanguage: LangId
+    @Preference(Keys.contentLanguage, defaultValue: Language.getSystemLanguage())
+    var contentLanguage: Language
     
     private func getFont<T: AppFont & Decodable>(_ key: String) -> T? {
         guard

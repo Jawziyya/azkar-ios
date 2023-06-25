@@ -1,6 +1,7 @@
 // Copyright © 2021 Al Jawziyya. All rights reserved. 
 
 import SwiftUI
+import Entities
 
 struct AppFontViewModel: Identifiable, Equatable {
     
@@ -18,7 +19,7 @@ struct AppFontViewModel: Identifiable, Equatable {
     let supportsTashkeel: Bool?
     let supportsCyrillicCharacters: Bool?
     
-    init(font: AppFont) {
+    init(font: AppFont, language: Language) {
         self.font = font
         name = font.name
         var supportsTashkeel: Bool?
@@ -30,9 +31,9 @@ struct AppFontViewModel: Identifiable, Equatable {
             supportsTashkeel = arabicFont.hasTashkeelSupport
         } else if let translationFont = font as? TranslationFont {
             supportsCyrillicCharacters = translationFont.supportsCyryllicCharacters
-            switch languageIdentifier {
-            case .ar: langIdSuffix = "_en"
-            default: langIdSuffix = "_" + languageIdentifier.rawValue
+            switch language {
+            case .arabic: langIdSuffix = "_en"
+            default: langIdSuffix = "_" + language.id
             }
         }
         
@@ -48,4 +49,5 @@ struct AppFontViewModel: Identifiable, Equatable {
             zipFileURL = nil
         }
     }
+    
 }

@@ -25,7 +25,7 @@ struct VirtuesWidgets: Widget {
 
 struct AzkarVirtuesWidgets_Previews: PreviewProvider {
     static var previews: some View {
-        let databaseService = DatabaseService.shared
+        let databaseService = DatabaseService(language: Language.getSystemLanguage())
         let fadail = try! databaseService.getFadail()
         
         return VirtueView(

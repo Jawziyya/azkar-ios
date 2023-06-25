@@ -4,7 +4,7 @@ import Foundation
 
 /// Represents content language
 /// .rawValue is ISO 639-1 identifier.
-public enum LangId: String, Codable {
+public enum Language: String, Codable, CaseIterable, Identifiable {
     case arabic = "ar"
     case turkish = "tr"
     case english = "en"
@@ -39,8 +39,8 @@ public enum LangId: String, Codable {
     }
 }
 
-public extension LangId {
-    static func getSystemLanguage() -> LangId {
+public extension Language {
+    static func getSystemLanguage() -> Language {
         let code: String
         if let preffedLocalizationCode = Bundle.main.preferredLocalizations.first?.components(separatedBy: "-").first {
             code = preffedLocalizationCode
@@ -48,6 +48,6 @@ public extension LangId {
             code = Locale.current.languageCode ?? "en"
         }
         let id = String(code.lowercased().prefix(2))
-        return LangId(rawValue: id) ?? .english
+        return Language(rawValue: id) ?? .english
     }
 }

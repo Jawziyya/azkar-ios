@@ -9,7 +9,7 @@ import Library
 struct VirtuesProvider: TimelineProvider {
     
     let fadail: [Fadl] = {
-        let databaseService = DatabaseService.shared
+        let databaseService = DatabaseService(language: Language.getSystemLanguage())
         let fadail = try? databaseService.getFadail()
         return fadail ?? []
     }()

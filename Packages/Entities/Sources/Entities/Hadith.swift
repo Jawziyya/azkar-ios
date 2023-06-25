@@ -3,51 +3,31 @@
 
 import Foundation
 
-public struct Hadith: Codable, Identifiable {
-    
-    enum CodingKeys: String, CodingKey {
-        case id, text
-        case _translation = "translation"
-        case translationEN = "translation_en"
-        case translationTR = "translation_tr"
-        case _source = "source"
-        case sourceExtension = "source_ext"
-    }
-    
+public struct Hadith: Identifiable {
+   
     public let id: Int
     public let text: String
-    private let _translation: String?
-    private let translationEN: String?
-    private let translationTR: String?
-    private let _source: String
-    private let sourceExtension: String?
+    public let translation: String?
+    public let source: String
     
-    public var translation: String? {
-        switch languageIdentifier {
-        case .ar: return nil
-        case .ru: return _translation
-        case .tr: return translationTR
-        default: return translationEN
-        }
-    }
-    
-    public var source: String {
-        var source = NSLocalizedString("text.source." + _source.lowercased(), comment: "")
-        if let ext = sourceExtension {
-            source += ", " + ext
-        }
-        return source
+    public init(
+        id: Int,
+        text: String,
+        translation: String?,
+        source: String
+    ) {
+        self.id = id
+        self.text = text
+        self.translation = translation
+        self.source = source
     }
 
     public static var placeholder: Hadith {
         Hadith(
             id: 1,
             text: "Text",
-            _translation: "Translatioin",
-            translationEN: "Translation EN",
-            translationTR: "Translation TR",
-            _source: "Source",
-            sourceExtension: "123"
+            translation: "Translatioin",
+            source: "Source 123"
         )
     }
 
