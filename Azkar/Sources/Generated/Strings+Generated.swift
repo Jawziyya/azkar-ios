@@ -521,6 +521,15 @@ internal enum L10n {
       internal static let tirmidhi = L10n.tr("Localizable", "text.source.tirmidhi")
     }
   }
+
+  internal enum Widgets {
+    internal enum Virtues {
+      /// Different Ayas and ahadith describing virtues of remembering Allah Almighty
+      internal static let description = L10n.tr("Localizable", "widgets.virtues.description")
+      /// Virtues of dhikr
+      internal static let title = L10n.tr("Localizable", "widgets.virtues.title")
+    }
+  }
 }
 // swiftlint:enable explicit_type_interface function_parameter_count identifier_name line_length
 // swiftlint:enable nesting type_body_length type_name vertical_whitespace_opening_braces
