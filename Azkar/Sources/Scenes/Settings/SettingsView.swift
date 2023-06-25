@@ -120,10 +120,13 @@ struct SettingsView: View {
                         )
                         .pickerStyle(.segmented)
                     }
+                    .padding(.vertical, 3)
 
                     Toggle(L10n.Settings.Counter.counterTicker, isOn: $viewModel.preferences.enableCounterTicker)
+                        .padding(.vertical, 3)
 
                     Toggle(L10n.Settings.Counter.counterHaptics, isOn: $viewModel.preferences.enableCounterHapticFeedback)
+                        .padding(.vertical, 3)
 
                     Toggle(isOn: $viewModel.preferences.enableGoToNextZikrOnCounterFinished) {
                         HStack {
@@ -134,13 +137,12 @@ struct SettingsView: View {
 
                             Templates.Menu {
                                 Text(L10n.Settings.Counter.goToNextDhikrTip)
-                                    .padding()
                             } label: { _ in
                                 Image(systemName: "info.circle")
                                     .foregroundColor(Color.accent.opacity(0.75))
                             }
                         }
-                        .padding(.vertical, 8)
+                        .padding(.vertical, 3)
                     }
                 }
             }
@@ -171,34 +173,23 @@ struct SettingsView: View {
                 .foregroundColor(Color.background)
                 .symbolRenderingMode(.multicolor)
         ) {
+            
             NavigationLink {
                 arabicFontsPicker
             } label: {
-                HStack {
-                    Text(L10n.Settings.Text.arabicTextFont)
-                        .font(Font.system(.body, design: .rounded))
-                        .foregroundColor(Color.text)
-                    Spacer()
-                    Text(viewModel.preferences.preferredArabicFont.name)
-                        .multilineTextAlignment(.trailing)
-                        .font(Font.system(.body, design: .rounded))
-                        .foregroundColor(Color.secondary)
-                }
+                createNavigationPickerLabel(
+                    label: L10n.Settings.Text.arabicTextFont,
+                    value: viewModel.preferences.preferredArabicFont.name
+                )
             }
             
             NavigationLink {
                 translationFontsPicker
             } label: {
-                HStack {
-                    Text(L10n.Settings.Text.translationTextFont)
-                        .font(Font.system(.body, design: .rounded))
-                        .foregroundColor(Color.text)
-                    Spacer()
-                    Text(viewModel.preferences.preferredTranslationFont.name)
-                        .multilineTextAlignment(.trailing)
-                        .font(Font.system(.body, design: .rounded))
-                        .foregroundColor(Color.secondary)
-                }
+                createNavigationPickerLabel(
+                    label: L10n.Settings.Text.translationTextFont,
+                    value: viewModel.preferences.preferredTranslationFont.name
+                )
             }
 
             Toggle(isOn: .init(get: {
@@ -247,8 +238,8 @@ struct SettingsView: View {
             if viewModel.preferences.useSystemFontSize == false {
                 self.sizePicker
             }
-
-            NavigationLink(L10n.Settings.Text.lineSpacing) {
+            
+            NavigationLink {
                 Form {
                     Group {
                         Section(L10n.Settings.Text.arabicLineSpacing) {
@@ -264,6 +255,33 @@ struct SettingsView: View {
                 .accentColor(Color.accent)
                 .horizontalPaddingForLargeScreen()
                 .background(Color.background.edgesIgnoringSafeArea(.all))
+            } label: {
+                createNavigationPickerLabel(
+                    label: L10n.Settings.Text.lineSpacing,
+                    value: ""
+                )
+            }
+        }
+    }
+    
+    private func createNavigationPickerLabel(
+        label: String,
+        value: String?
+    ) -> some View {
+        HStack {
+            Text(label)
+                .font(Font.system(.body, design: .rounded))
+                .foregroundColor(Color.text)
+            Spacer()
+            if let value {
+                Text(value)
+                    .multilineTextAlignment(.trailing)
+                    .font(Font.system(.body, design: .rounded))
+                    .foregroundColor(Color.secondary)
+            }
+        }
+        .padding(.vertical, 8)
+    }
             }
         }
     }
@@ -283,6 +301,7 @@ struct SettingsView: View {
             }
         }
         .pickerStyle(SegmentedPickerStyle())
+        .padding(.vertical, 8)
     }
 
     var lineSpacingPicker: some View {
@@ -342,7 +361,7 @@ struct SettingsView: View {
             if UIApplication.shared.inDebugMode {
                 Button(action: viewModel.navigateToNotificationsList) {
                     Text("[DEBUG] Scheduled notifications")
-                        .padding()
+                        .padding(.vertical, 8)
                 }
             }
         }

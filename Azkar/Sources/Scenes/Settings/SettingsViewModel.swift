@@ -14,7 +14,7 @@ import UserNotifications
 final class SettingsViewModel: ObservableObject {
     
     enum SettingsMode {
-        case standart, textAndAppearance
+        case standart, text
     }
     
     private let notificationsHandler: NotificationsHandler
