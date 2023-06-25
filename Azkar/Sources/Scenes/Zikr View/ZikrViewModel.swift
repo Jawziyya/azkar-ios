@@ -10,6 +10,7 @@ import UIKit
 import SwiftUI
 import Combine
 import AudioPlayer
+import AVFoundation
 
 final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
 
@@ -78,9 +79,25 @@ final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
 
     private var cancellables: Set<AnyCancellable> = []
     private lazy var player = AudioPlayer()
+    
+    public var audioURL: URL? {
+        if let link = zikr.audio?.link {
+            return Bundle.main.url(forAuxiliaryExecutable: link)
+        }
+        return nil
+    }
+    
+    public var audioDuration: Double? {
+        guard let url = audioURL else {
+            return nil
+        }
+        let asset = AVURLAsset(url: url)
+        return Double(CMTimeGetSeconds(asset.duration))
+    }
 
     init(
         zikr: Zikr,
+        row: Int? = nil,
         hadith: Hadith?,
         preferences: Preferences,
         player: Player,
@@ -91,7 +108,15 @@ final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
         self.zikr = zikr
         self.preferences = preferences
         self.textProcessor = textProcessor
-        title = zikr.title ?? "\(L10n.Common.zikr) №\(zikr.rowInCategory)"
+        
+        if let zikrTitle = zikr.title {
+            title = zikrTitle
+        } else if let row {
+            title = "\(L10n.Common.zikr) №\(row)"
+        } else {
+            title = L10n.Common.zikr
+        }
+        
         text = textProcessor.processArabicText(zikr.text)
         
         expandTranslation = preferences.expandTranslation
@@ -106,35 +131,36 @@ final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
             self.remainingRepeatsNumber = await counter.getRemainingRepeats(for: zikr)
         }
 
-        if let url = zikr.audioURL {
-            let playerViewModel = PlayerViewModel(title: title, subtitle: zikr.category.title, audioURL: url, player: player)
+        if let url = audioURL {
+            let playerViewModel = PlayerViewModel(
+                title: title,
+                subtitle: zikr.category.title,
+                audioURL: url,
+                player: player
+            )
             self.playerViewModel = playerViewModel
 
-            do {
-                let timings = try DatabaseService.shared.getAudioTimings(audioId: zikr.audioId ?? -1)
-                playerViewModel
-                    .$progressInSeconds
-                    .filter { $0 > 0 }
-                    .compactMap { time -> AudioTiming? in
-                        return timings.last(where: { $0.time == time || $0.time < time })
-                    }
-                    .removeDuplicates()
-                    .sink { [weak self] timing in
-                        self?.indexToHighlight = timings.firstIndex(of: timing) ?? 0
-                    }
-                    .store(in: &cancellables)
+            let timings = zikr.audioTimings
+            playerViewModel
+                .$progressInSeconds
+                .filter { $0 > 0 }
+                .compactMap { time -> AudioTiming? in
+                    return timings.last(where: { $0.time == time || $0.time < time })
+                }
+                .removeDuplicates()
+                .sink { [weak self] timing in
+                    self?.indexToHighlight = timings.firstIndex(of: timing) ?? 0
+                }
+                .store(in: &cancellables)
 
-                playerViewModel
-                    .$progress
-                    .sink { [weak self] progress in
-                        if progress == 0 {
-                            self?.indexToHighlight = nil
-                        }
+            playerViewModel
+                .$progress
+                .sink { [weak self] progress in
+                    if progress == 0 {
+                        self?.indexToHighlight = nil
                     }
-                    .store(in: &cancellables)
-            } catch {
-                print(error.localizedDescription)
-            }
+                }
+                .store(in: &cancellables)
         }
 
         if let hadith = hadith {
@@ -192,7 +218,7 @@ final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
         
         text += "\n\n\(zikr.source)"
         
-        if includeBenefits, let benefit = zikr.benefit {
+        if includeBenefits, let benefit = zikr.benefits {
             text += "\n\n[\(benefit)]"
         }
         

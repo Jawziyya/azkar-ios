@@ -88,9 +88,10 @@ final class RootCoordinator: NavigationCoordinator, RootRouter {
 
     func azkarForCategory(_ category: ZikrCategory) throws -> [ZikrViewModel] {
         let adhkar = try databaseService.getAdhkar(category)
-        let viewModels = try adhkar.map { zikr in
+        let viewModels = try adhkar.enumerated().map { idx, zikr in
             try ZikrViewModel(
                 zikr: zikr,
+                row: idx + 1,
                 hadith: zikr.hadith.flatMap(databaseService.getHadith),
                 preferences: preferences,
                 player: player
@@ -198,7 +199,12 @@ private extension RootCoordinator {
             }
 
             let hadith = try? zikr.hadith.flatMap(databaseService.getHadith)
-            let viewModel = ZikrViewModel(zikr: zikr, hadith: hadith, preferences: preferences, player: player)
+            let viewModel = ZikrViewModel(
+                zikr: zikr,
+                hadith: hadith,
+                preferences: preferences,
+                player: player
+            )
             let view = ZikrView(viewModel: viewModel, incrementAction: Empty().eraseToAnyPublisher())
             let viewController = UIHostingController(rootView: view)
 

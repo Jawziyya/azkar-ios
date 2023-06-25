@@ -80,10 +80,15 @@ struct PlayerView: View, Equatable {
 
 struct PlayerView_Previews: PreviewProvider {
     static var previews: some View {
-        PlayerView(viewModel: PlayerViewModel(title: "", subtitle: "", audioURL: Zikr.placeholder.audioURL!, player: .test))
-            .previewDevice(.init(stringLiteral: "iPhone 11 Pro"))
-            .environment(\.sizeCategory, .accessibilityLarge)
-            .background(Color.background)
-            .environment(\.colorScheme, .dark)
+        PlayerView(viewModel: PlayerViewModel(
+            title: "",
+            subtitle: "",
+            audioURL: URL(string: "https://google.com")!,
+            player: .test
+        ))
+        .previewDevice(.init(stringLiteral: "iPhone 11 Pro"))
+        .environment(\.sizeCategory, .accessibilityLarge)
+        .background(Color.background)
+        .environment(\.colorScheme, .dark)
     }
 }

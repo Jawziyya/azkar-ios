@@ -1,15 +1,33 @@
 // Copyright © 2022 Al Jawziyya. All rights reserved. 
 
+import Foundation
 import Entities
 import GRDB
-import Foundation
+
+extension Audio: FetchableRecord, TableRecord {
+    public static let databaseTableName = "audios"
+}
 
 extension Hadith: FetchableRecord, PersistableRecord {
     public static let databaseTableName = "ahadith"
 }
 
-extension Zikr: FetchableRecord, PersistableRecord {
+extension ZikrOrigin: FetchableRecord, TableRecord {
     public static let databaseTableName = "azkar"
+    public static let databaseColumnDecodingStrategy = DatabaseColumnDecodingStrategy.convertFromSnakeCase
+}
+
+extension ZikrTranslation: FetchableRecord {
+    public init(row: Row) {
+        self.init(
+            id: row["id"],
+            title: row["title"],
+            text: row["text"],
+            benefits: row["benefits"],
+            notes: row["notes"],
+            transliteration: row["transliteration"]
+        )
+    }
 }
 
 extension Fadl: FetchableRecord, PersistableRecord {
@@ -85,29 +103,83 @@ public final class DatabaseService {
 public extension DatabaseService {
 
     func getZikr(_ id: Int) throws -> Zikr? {
+        let langId = languageIdentifier
         return try getDatabaseQueue().read { db in
-            try Zikr.fetchOne(db, id: id)
+            let record = try ZikrOrigin.fetchOne(db, id: id)
+            let translation = try ZikrTranslation.fetchOne(
+                db,
+                sql: "SELECT * FROM azkar_\(langId) WHERE id = ?",
+                arguments: [id]
+            )
+            guard let record, let translation else {
+                return nil
+            }
+            
+            return Zikr(
+                origin: record,
+                translation: translation,
+                audio: nil,
+                audioTimings: []
+            )
         }
     }
 
     func getAllAdhkar() throws -> [Zikr] {
         return try getDatabaseQueue().read { db in
-            try Zikr.order(sql: "row_in_category").fetchAll(db)
+            let records = try ZikrOrigin.fetchAll(db, sql: "SELECT * FROM azkar")
+            let translations = try ZikrTranslation.fetchAll(
+                db,
+                sql: "SELECT * FROM azkar_\(languageIdentifier)"
+            )
+            return zip(records, translations).map { zikr, translation in
+                Zikr(
+                    origin: zikr,
+                    translation: translation,
+                    audio: nil,
+                    audioTimings: []
+                )
+            }
         }
     }
 
     func getAdhkar(_ category: ZikrCategory) throws -> [Zikr] {
         return try getDatabaseQueue().read { db in
-            try Zikr
-                .order(sql: "row_in_category")
-                .filter(sql: "category = ?", arguments: [category.rawValue])
-                .fetchAll(db)
+            let records = try ZikrOrigin.fetchAll(
+                db,
+                sql: "SELECT * FROM azkar WHERE category = ?",
+                arguments: [category.rawValue]
+            )
+            let translationTableName = "azkar_\(languageIdentifier)"
+            let translations = try ZikrTranslation.fetchAll(
+                db,
+                sql: """
+                SELECT * FROM \(translationTableName)
+                WHERE \(translationTableName).id IN (
+                  SELECT id FROM azkar WHERE azkar.category = ?
+                )
+                """,
+                arguments: [category.rawValue]
+            )
+            
+            let audios = try Audio.fetchAll(db)
+            let audioTimings = try AudioTiming.fetchAll(db)
+
+            return zip(records, translations).map { zikr, translation -> Zikr in
+                let audio = audios.first(where: { $0.id == zikr.audioId })
+                
+                return Zikr(
+                    origin: zikr,
+                    translation: translation,
+                    audio: audio,
+                    audioTimings: audioTimings.filter { $0.audioId == audio?.id }
+                )
+            }
         }
     }
 
     func getAdhkarCount(_ category: ZikrCategory) throws -> Int {
         return try getDatabaseQueue().read { db in
-            try Zikr
+            try ZikrOrigin
                 .filter(sql: "category = ?", arguments: [category.rawValue])
                 .fetchCount(db)
         }
