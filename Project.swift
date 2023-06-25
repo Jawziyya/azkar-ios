@@ -236,7 +236,6 @@ let packages: [Package] = [
     // MARK: Internal depedencies.
     .local(path: AzkarPackage.audioPlayer.path),
     .local(path: AzkarPackage.core.path),
-    .local(path: AzkarPackage.library.path),
 
     // MARK: Services.
     .remote(url: "https://github.com/RevenueCat/purchases-ios.git", requirement: .upToNextMajor(from: "4.19.0")),
