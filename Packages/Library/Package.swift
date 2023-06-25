@@ -14,14 +14,14 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(path: "../Entities"),
+        .package(path: "../Core"),
         .package(url: "https://github.com/groue/GRDB.swift", from: "5.0.0"),
     ],
     targets: [
         .target(
             name: "Library",
             dependencies: [
-                "Entities",
+                .product(name: "Entities", package: "Core"),
                 .product(name: "GRDB", package: "GRDB.swift"),
             ]
         ),

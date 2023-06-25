@@ -3,7 +3,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "Entities",
+    name: "Core",
     platforms: [
         .iOS(.v15),
     ],

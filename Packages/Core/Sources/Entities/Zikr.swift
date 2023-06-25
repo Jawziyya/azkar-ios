@@ -84,12 +84,12 @@ extension Zikr {
                 NSLocalizedString("text.source." + $0.lowercased(), comment: "")
             }
             .joined(separator: ", ")
-        title = translation?.title
-        transliteration = translation?.transliteration
-        notes = translation?.notes
-        benefits = translation?.benefits
+        title = translation?.title?.textOrNil
+        transliteration = translation?.transliteration?.textOrNil
+        notes = translation?.notes?.textOrNil
+        benefits = translation?.benefits?.textOrNil
         self.audio = audio
-        self.translation = translation?.text
+        self.translation = translation?.text.textOrNil
         self.audioTimings = audioTimings
     }
 }
