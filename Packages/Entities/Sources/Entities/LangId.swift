@@ -2,42 +2,52 @@
 
 import Foundation
 
-extension Bundle {
+/// Represents content language
+/// .rawValue is ISO 639-1 identifier.
+public enum LangId: String, Codable {
+    case arabic = "ar"
+    case turkish = "tr"
+    case english = "en"
+    case russian = "ru"
+    case georgian = "ka"
+    case chechen = "che"
+    case ingush = "inh"
     
-    var currentLocalizedUILanguageCode: String {
-        guard let code = Bundle.main.preferredLocalizations.first?.components(separatedBy: "-").first else {
-            return Locale.current.languageCode ?? "en"
+    /// ISO 639-1 identifier
+    public var id: String {
+        rawValue
+    }
+    
+    /// Non-localized language title.
+    public var title: String {
+        switch self {
+        case .arabic:
+            return "اللغة العربية"
+        case .turkish:
+            return "Türk dili"
+        case .russian:
+            return "Русский язык"
+        case .english:
+            return "English language"
+        case .georgian:
+            return "ქართული ენა"
+        case .chechen:
+            return "Нохчийн мотт"
+        case .ingush:
+            return "Гӏалгӏай мотт"
         }
-        return code
-    }
-    
-}
-
-public var languageIdentifier: LangId {
-    let id = Bundle.main.currentLocalizedUILanguageCode.lowercased()
-    switch id {
-    case _ where id.hasPrefix("ar"):
-        return .ar
-    case _ where id.hasPrefix("tr"):
-        return .tr
-    case _ where id.hasPrefix("ru"):
-        return .ru
-    case _ where id.hasPrefix("ka"):
-        return .ka
-    default:
-        return .en
     }
 }
 
-public enum LangId: String {
-    /// Arabic
-    case ar
-    /// Turkish
-    case tr
-    /// English
-    case en
-    /// Russian
-    case ru
-    /// Georgian
-    case ka
+public extension LangId {
+    static func getSystemLanguage() -> LangId {
+        let code: String
+        if let preffedLocalizationCode = Bundle.main.preferredLocalizations.first?.components(separatedBy: "-").first {
+            code = preffedLocalizationCode
+        } else {
+            code = Locale.current.languageCode ?? "en"
+        }
+        let id = String(code.lowercased().prefix(2))
+        return LangId(rawValue: id) ?? .english
+    }
 }
