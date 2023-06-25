@@ -24,6 +24,8 @@ struct VirtuesWidgets: Widget {
             )
         ) { entry in
             VirtueView(fadl: entry.fadl)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .background(Color("WidgetBackground").edgesIgnoringSafeArea(.all))
         }
         .supportedFamilies([.systemMedium])
         .configurationDisplayName(L10n.Widgets.Virtues.title)
