@@ -505,6 +505,8 @@ internal enum L10n {
       internal static let abudaud = L10n.tr("Localizable", "text.source.abudaud")
       /// Ahmad
       internal static let ahmad = L10n.tr("Localizable", "text.source.ahmad")
+      /// Beyhaqi
+      internal static let beyhaqi = L10n.tr("Localizable", "text.source.beyhaqi")
       /// al-Bukhari
       internal static let bukhari = L10n.tr("Localizable", "text.source.bukhari")
       /// ad-Darimi
