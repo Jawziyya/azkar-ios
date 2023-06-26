@@ -81,6 +81,7 @@ enum AzkarTarget: String, CaseIterable {
                 infoPlist: .file(path: "\(rawValue)/Info.plist"),
                 sources: "Azkar/Sources/**",
                 resources: "Azkar/Resources/**",
+                entitlements: "Azkar/Azkar.entitlements",
                 actions: [
                     TargetAction.post(path: "./scripts/swiftlint.sh", name: "SwiftLint")
                 ],
