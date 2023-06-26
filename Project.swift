@@ -135,7 +135,10 @@ enum AzkarTarget: String, CaseIterable {
                 bundleId: bundleId,
                 deploymentTarget: deploymentTarget,
                 infoPlist: .file(path: "AzkarWidgets/Info.plist"),
-                sources: "AzkarWidgets/Sources/**",
+                sources: [
+                    "AzkarWidgets/Sources/**",
+                    "Azkar/Sources/Generated/Strings+Generated.swift",
+                ],
                 resources: [
                     "AzkarWidgets/Resources/**",
                     "Azkar/Resources/azkar.db",
