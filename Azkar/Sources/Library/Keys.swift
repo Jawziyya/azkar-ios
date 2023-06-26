@@ -27,6 +27,8 @@ enum Keys {
     
     static let enableProFeatures = "kIsProFeaturesEnabled"
     
+    static let contentLanguage = "kContentLanguage"
+    
     // MARK: Reminders
     static let enableReminders = "kEnableNotifications"
     static let enableAdhkarReminder = "kEnableAdhkarReminder"

@@ -6,16 +6,23 @@ import SwiftUI
 import Entities
 import Library
 
+let APP_GROUP_USER_DEFAULTS = UserDefaults(suiteName: "group.io.jawziyya.azkar-app") ?? .standard
+
 struct VirtuesProvider: TimelineProvider {
     
-    let fadail: [Fadl] = {
-        let databaseService = DatabaseService.shared
-        let fadail = try? databaseService.getFadail()
-        return fadail ?? []
-    }()
+    private var fadail: [Fadl]
+    
+    init(
+        databaseService: DatabaseService
+    ) {
+        fadail = (try? databaseService.getFadail()) ?? []
+        if fadail.isEmpty {
+            fadail = (try? databaseService.getFadail(language: databaseService.language.fallbackLanguage)) ?? []
+        }
+    }
     
     func getVirtue(at index: Int) -> Fadl {
-        guard fadail.count < index else {
+        guard index < fadail.count else {
             return Fadl.placeholder
         }
         return fadail[index]
@@ -45,8 +52,12 @@ struct VirtuesProvider: TimelineProvider {
         
         // Generate a timeline consisting of five entries an hour apart, starting from the current date.
         let currentDate = Date()
-        for (index, fadl) in fadail.enumerated() {
-            let entryDate = Calendar.current.date(byAdding: .hour, value: index, to: currentDate)!
+        for (index, fadl) in fadail.shuffled().enumerated() {
+            let entryDate = Calendar.current.date(
+                byAdding: .minute,
+                value: (index + 1) * 15,
+                to: currentDate
+            )!
             let entry = VirtueEntry(
                 date: entryDate,
                 fadl: fadl

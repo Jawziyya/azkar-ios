@@ -157,7 +157,7 @@ final class ZikrPagesViewController: UIHostingController<ZikrPagesView> {
     }
     
     @objc private func goToSettings(_ sender: UIBarButtonItem) {
-        viewModel.navigateToSettings()
+        viewModel.navigateToTextSettings()
     }
     
     private func presentMailComposer() {

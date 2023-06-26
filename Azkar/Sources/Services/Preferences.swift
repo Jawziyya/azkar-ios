@@ -9,6 +9,7 @@
 import UIKit
 import Combine
 import SwiftUI
+import Entities
 
 enum CounterType: Int, Codable, CaseIterable, Identifiable {
     case floatingButton, tap
@@ -144,6 +145,13 @@ final class Preferences: ObservableObject {
 
     @Preference(Keys.enableLineBreaks, defaultValue: true)
     var enableLineBreaks
+    
+    @Preference(
+        Keys.contentLanguage,
+        defaultValue: Language.getSystemLanguage(),
+        userDefaults: .appGroup
+    )
+    var contentLanguage: Language
     
     private func getFont<T: AppFont & Decodable>(_ key: String) -> T? {
         guard

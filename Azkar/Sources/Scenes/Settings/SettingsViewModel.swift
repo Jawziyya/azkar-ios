@@ -10,11 +10,12 @@ import SwiftUI
 import Combine
 import UIKit
 import UserNotifications
+import Entities
 
 final class SettingsViewModel: ObservableObject {
     
     enum SettingsMode {
-        case standart, textAndAppearance
+        case standart, text
     }
     
     private let notificationsHandler: NotificationsHandler
@@ -22,6 +23,10 @@ final class SettingsViewModel: ObservableObject {
 
     var canChangeIcon: Bool {
         return !UIDevice.current.isMac
+    }
+    
+    var canChangeLanguage: Bool {
+        return mode == .standart
     }
 
     var appIconPackListViewModel: AppIconPackListViewModel {
@@ -159,5 +164,5 @@ final class SettingsViewModel: ObservableObject {
             )
         }
     }
-
+    
 }

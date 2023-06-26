@@ -94,8 +94,8 @@ final class ZikrPagesViewModel: ObservableObject, Equatable {
         }
     }
     
-    func navigateToSettings() {
-        router.trigger(.modalSettings(.textAndAppearance))
+    func navigateToTextSettings() {
+        router.trigger(.modalSettings(.text))
     }
 
     func goToNextZikrIfNeeded() {

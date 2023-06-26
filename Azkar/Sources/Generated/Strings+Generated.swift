@@ -366,6 +366,8 @@ internal enum L10n {
       internal static let arabicTextFont = L10n.tr("Localizable", "settings.text.arabic-text-font")
       /// Text size
       internal static let fontSize = L10n.tr("Localizable", "settings.text.font-size")
+      /// Language
+      internal static let language = L10n.tr("Localizable", "settings.text.language")
       /// Line spacing
       internal static let lineSpacing = L10n.tr("Localizable", "settings.text.line-spacing")
       /// Show tashkeel
@@ -503,6 +505,8 @@ internal enum L10n {
       internal static let abudaud = L10n.tr("Localizable", "text.source.abudaud")
       /// Ahmad
       internal static let ahmad = L10n.tr("Localizable", "text.source.ahmad")
+      /// Beyhaqi
+      internal static let beyhaqi = L10n.tr("Localizable", "text.source.beyhaqi")
       /// al-Bukhari
       internal static let bukhari = L10n.tr("Localizable", "text.source.bukhari")
       /// ad-Darimi
@@ -517,6 +521,15 @@ internal enum L10n {
       internal static let quran = L10n.tr("Localizable", "text.source.quran")
       /// at-Tirmidhi
       internal static let tirmidhi = L10n.tr("Localizable", "text.source.tirmidhi")
+    }
+  }
+
+  internal enum Widgets {
+    internal enum Virtues {
+      /// Different Ayas and ahadith describing virtues of remembering Allah Almighty
+      internal static let description = L10n.tr("Localizable", "widgets.virtues.description")
+      /// Virtues of dhikr
+      internal static let title = L10n.tr("Localizable", "widgets.virtues.title")
     }
   }
 }

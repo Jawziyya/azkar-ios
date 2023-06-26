@@ -8,24 +8,35 @@ import Library
 
 struct VirtuesWidgets: Widget {
     let kind: String = "AzkarVirtuesWidgets"
+    
+    @Preference(
+        "kContentLanguage",
+        defaultValue: Language.getSystemLanguage(),
+        userDefaults: APP_GROUP_USER_DEFAULTS
+    )
+    var language: Language
 
     var body: some WidgetConfiguration {
         StaticConfiguration(
             kind: kind,
-            provider: VirtuesProvider()
+            provider: VirtuesProvider(
+                databaseService: DatabaseService(language: language)
+            )
         ) { entry in
             VirtueView(fadl: entry.fadl)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .background(Color("WidgetBackground").edgesIgnoringSafeArea(.all))
         }
         .supportedFamilies([.systemMedium])
-        .configurationDisplayName(NSLocalizedString("widgets.virtues.title", comment: "Virtues of adhkar widget name"))
-        .description(NSLocalizedString("widgets.virtues.description", comment: "Virtues of adhkar widget description"))
+        .configurationDisplayName(L10n.Widgets.Virtues.title)
+        .description(L10n.Widgets.Virtues.description)
     }
     
 }
 
 struct AzkarVirtuesWidgets_Previews: PreviewProvider {
     static var previews: some View {
-        let databaseService = DatabaseService.shared
+        let databaseService = DatabaseService(language: Language.getSystemLanguage())
         let fadail = try! databaseService.getFadail()
         
         return VirtueView(

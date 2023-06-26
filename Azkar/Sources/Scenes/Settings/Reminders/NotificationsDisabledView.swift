@@ -6,7 +6,6 @@ import Combine
 final class NotificationsDisabledViewModel: ObservableObject {
     
     @Published private(set) var notificationAccessTitle = ""
-    @Published private(set) var notificationAccessMessage = ""
     private(set) var symbolName = ""
     @Published var isAccessGranted = true
     
@@ -82,17 +81,12 @@ struct NotificationsDisabledView: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
-            Divider()
-            
             HStack {
                 Image(systemName: viewModel.symbolName)
                     .foregroundColor(Color.orange)
                 Text(viewModel.notificationAccessTitle)
                     .font(Font.system(.body, design: .rounded).bold())
             }
-            
-            Text(viewModel.notificationAccessMessage)
-                .font(Font.system(.body, design: .rounded))
             
             Divider()
             

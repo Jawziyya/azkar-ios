@@ -8,10 +8,6 @@ extension Audio: FetchableRecord, TableRecord {
     public static let databaseTableName = "audios"
 }
 
-extension Hadith: FetchableRecord, PersistableRecord {
-    public static let databaseTableName = "ahadith"
-}
-
 extension ZikrOrigin: FetchableRecord, TableRecord {
     public static let databaseTableName = "azkar"
     public static let databaseColumnDecodingStrategy = DatabaseColumnDecodingStrategy.convertFromSnakeCase
@@ -30,8 +26,39 @@ extension ZikrTranslation: FetchableRecord {
     }
 }
 
-extension Fadl: FetchableRecord, PersistableRecord {
-    public static let databaseTableName = "fadail"
+extension Hadith {
+    init(row: Row, language: Language) {
+        let sourceRaw: String = row["source"]
+        var source = NSLocalizedString("text.source." + sourceRaw.lowercased(), comment: "")
+        if let ext = row["source_ext"] as? String {
+            source += ", " + ext
+        }
+        
+        self.init(
+            id: row["id"],
+            text: row["text"],
+            translation: row["translation_\(language.id)"],
+            source: source
+        )
+    }
+}
+
+extension Fadl {
+    init?(row: Row, language: Language) {
+        let sourceRaw: String = row["source"]
+        var source = NSLocalizedString("text.source." + sourceRaw.lowercased(), comment: "")
+        if let ext = row["source_ext"] as? String {
+            source += ", " + ext
+        }
+        
+        let text: String? = row["text_\(language.id)"]
+        
+        self.init(
+            id: row["id"],
+            text: text,
+            source: source
+        )
+    }
 }
 
 extension AudioTiming: FetchableRecord, PersistableRecord {
@@ -43,10 +70,14 @@ public enum DatabaseServiceError: Error {
 }
 
 public final class DatabaseService {
+    
+    public let language: Language
 
-    public static let shared = DatabaseService()
-
-    private init() { }
+    public init(
+        language: Language
+    ) {
+        self.language = language
+    }
 
     private func getDatabasePath() throws -> String {
         guard let path = Bundle.main.path(forResource: "azkar", ofType: "db") else {
@@ -63,37 +94,52 @@ public final class DatabaseService {
 
     public func getAhadith() throws -> [Hadith] {
         return try getDatabaseQueue().read { db in
-            try Hadith.fetchAll(db)
+            let ahadith = try Row.fetchAll(db, sql: "SELECT * FROM ahadith")
+            return ahadith.map { row in
+                Hadith(row: row, language: language)
+            }
         }
     }
 
     public func getHadith(_ id: Int) throws -> Hadith? {
         return try getDatabaseQueue().read { db in
-            try Hadith.fetchOne(db, id: id)
+            if let hadith = try Row.fetchOne(db, sql: "SELECT * FROM ahadith WHERE id = ?", arguments: [id]) {
+                return Hadith(row: hadith, language: language)
+            }
+            return nil
         }
     }
 
     public func getFadailCount() throws -> Int {
         return try getDatabaseQueue().read { db in
-            try Fadl.fetchCount(db)
+            if let row = try Row.fetchOne(db, sql: "SELECT COUNT(*) as count FROM fadail") {
+                return row["count"]
+            }
+            return 0
         }
     }
 
-    public func getFadl(_ id: Int) throws -> Fadl? {
+    public func getFadl(_ id: Int, language: Language? = nil) throws -> Fadl? {
         return try getDatabaseQueue().read { db in
-            try Fadl.fetchOne(db, id: id)
+            if let fadl = try Row.fetchOne(db, sql: "SELECT * FROM fadail WHERE id = ?", arguments: [id]) {
+                return Fadl(row: fadl, language: language ?? self.language)
+            }
+            return nil
         }
     }
 
-    public func getRandomFadl() throws -> Fadl? {
+    public func getRandomFadl(language: Language? = nil) throws -> Fadl? {
         let count = try getFadailCount()
         let id = Int.random(in: 1...count)
-        return try getFadl(id)
+        return try getFadl(id, language: language)
     }
 
-    public func getFadail() throws -> [Fadl] {
+    public func getFadail(language: Language? = nil) throws -> [Fadl] {
         return try getDatabaseQueue().read { db in
-            try Fadl.fetchAll(db)
+            let fadail = try Row.fetchAll(db, sql: "SELECT * FROM fadail")
+            return fadail.compactMap { row in
+                Fadl(row: row, language: language ?? self.language)
+            }
         }
     }
 
@@ -103,12 +149,11 @@ public final class DatabaseService {
 public extension DatabaseService {
 
     func getZikr(_ id: Int) throws -> Zikr? {
-        let langId = languageIdentifier
         return try getDatabaseQueue().read { db in
             let record = try ZikrOrigin.fetchOne(db, id: id)
             let translation = try ZikrTranslation.fetchOne(
                 db,
-                sql: "SELECT * FROM azkar_\(langId) WHERE id = ?",
+                sql: "SELECT * FROM azkar_\(language.id) WHERE id = ?",
                 arguments: [id]
             )
             guard let record, let translation else {
@@ -129,7 +174,7 @@ public extension DatabaseService {
             let records = try ZikrOrigin.fetchAll(db, sql: "SELECT * FROM azkar")
             let translations = try ZikrTranslation.fetchAll(
                 db,
-                sql: "SELECT * FROM azkar_\(languageIdentifier)"
+                sql: "SELECT * FROM azkar_\(language.id)"
             )
             return zip(records, translations).map { zikr, translation in
                 Zikr(
@@ -149,7 +194,7 @@ public extension DatabaseService {
                 sql: "SELECT * FROM azkar WHERE category = ?",
                 arguments: [category.rawValue]
             )
-            let translationTableName = "azkar_\(languageIdentifier)"
+            let translationTableName = "azkar_\(language.id)"
             let translations = try ZikrTranslation.fetchAll(
                 db,
                 sql: """

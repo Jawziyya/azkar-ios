@@ -1,4 +1,3 @@
-import Foundation
 import ProjectDescription
 
 // MARK: - Constants
@@ -87,10 +86,9 @@ enum AzkarTarget: String, CaseIterable {
                 ],
                 dependencies: [
                     .target(name: "AzkarWidgets"),
-                    .sdk(name: "SwiftUI.framework"),
-                    .package(product: AzkarPackage.audioPlayer.name),
-                    .package(product: AzkarPackage.library.name),
-                    .package(product: AzkarPackage.entities.name),
+                    .package(product: "Entities"),
+                    .package(product: "Library"),
+                    .package(product: "AudioPlayer"),
                     .package(product: "SwiftyStoreKit"),
                     .package(product: "Coordinator"),
                     .package(product: "Lottie"),
@@ -137,7 +135,10 @@ enum AzkarTarget: String, CaseIterable {
                 bundleId: bundleId,
                 deploymentTarget: deploymentTarget,
                 infoPlist: .file(path: "AzkarWidgets/Info.plist"),
-                sources: "AzkarWidgets/Sources/**",
+                sources: [
+                    "AzkarWidgets/Sources/**",
+                    "Azkar/Sources/Generated/Strings+Generated.swift",
+                ],
                 resources: [
                     "AzkarWidgets/Resources/**",
                     "Azkar/Resources/azkar.db",
@@ -148,8 +149,8 @@ enum AzkarTarget: String, CaseIterable {
                 ],
                 entitlements: "AzkarWidgets/AzkarWidgets.entitlements",
                 dependencies: [
-                    .package(product: AzkarPackage.library.name),
-                    .package(product: AzkarPackage.entities.name),
+                    .package(product: "Entities"),
+                    .package(product: "Library"),
                 ],
                 settings: Settings(
                     base: baseSettingsDictionary
@@ -223,9 +224,8 @@ enum AzkarTarget: String, CaseIterable {
 }
 
 enum AzkarPackage: String {
-    case entities = "Entities"
+    case core = "Core"
     case library = "Library"
-    case databaseClient = "DatabaseClient"
     case audioPlayer = "AudioPlayer"
 
     var name: String { rawValue }
@@ -238,8 +238,7 @@ enum AzkarPackage: String {
 let packages: [Package] = [
     // MARK: Internal depedencies.
     .local(path: AzkarPackage.audioPlayer.path),
-    .local(path: AzkarPackage.entities.path),
-    .local(path: AzkarPackage.library.path),
+    .local(path: AzkarPackage.core.path),
 
     // MARK: Services.
     .remote(url: "https://github.com/RevenueCat/purchases-ios.git", requirement: .upToNextMajor(from: "4.19.0")),

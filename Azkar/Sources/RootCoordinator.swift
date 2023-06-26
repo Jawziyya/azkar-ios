@@ -32,7 +32,9 @@ protocol RootRouter: AnyObject {
 final class RootCoordinator: NavigationCoordinator, RootRouter {
 
     let preferences: Preferences
-    let databaseService: DatabaseService
+    var databaseService: DatabaseService {
+        DatabaseService(language: preferences.contentLanguage)
+    }
     let deeplinker: Deeplinker
     let player: Player
 
@@ -41,12 +43,10 @@ final class RootCoordinator: NavigationCoordinator, RootRouter {
     private var cancellables = Set<AnyCancellable>()
 
     init(
-        databaseService: DatabaseService = DatabaseService.shared,
         preferences: Preferences,
         deeplinker: Deeplinker,
         player: Player
     ) {
-        self.databaseService = databaseService
         self.preferences = preferences
         self.deeplinker = deeplinker
         self.player = player
@@ -92,7 +92,9 @@ final class RootCoordinator: NavigationCoordinator, RootRouter {
             try ZikrViewModel(
                 zikr: zikr,
                 row: idx + 1,
-                hadith: zikr.hadith.flatMap(databaseService.getHadith),
+                hadith: zikr.hadith.flatMap { id in
+                    try databaseService.getHadith(id)
+                },
                 preferences: preferences,
                 player: player
             )
@@ -137,6 +139,7 @@ private extension RootCoordinator {
 
         case .root:
             let viewModel = MainMenuViewModel(
+                databaseService: databaseService,
                 router: self,
                 preferences: preferences,
                 player: player
@@ -198,7 +201,9 @@ private extension RootCoordinator {
                 return
             }
 
-            let hadith = try? zikr.hadith.flatMap(databaseService.getHadith)
+            let hadith = try? zikr.hadith.flatMap { id in
+                try databaseService.getHadith(id)
+            }
             let viewModel = ZikrViewModel(
                 zikr: zikr,
                 hadith: hadith,
