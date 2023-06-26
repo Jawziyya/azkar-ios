@@ -10,12 +10,15 @@ let APP_GROUP_USER_DEFAULTS = UserDefaults(suiteName: "group.io.jawziyya.azkar-a
 
 struct VirtuesProvider: TimelineProvider {
     
-    private let fadail: [Fadl]
+    private var fadail: [Fadl]
     
     init(
         databaseService: DatabaseService
     ) {
         fadail = (try? databaseService.getFadail()) ?? []
+        if fadail.isEmpty {
+            fadail = (try? databaseService.getFadail(language: databaseService.language.fallbackLanguage)) ?? []
+        }
     }
     
     func getVirtue(at index: Int) -> Fadl {

@@ -14,6 +14,16 @@ public enum Language: String, Codable, CaseIterable, Identifiable {
     case ingush = "inh"
     case uzbek = "uz"
     
+    /// A language to use in certain cases when content is not available for selected language.
+    public var fallbackLanguage: Language {
+        switch self {
+        case .chechen, .ingush: return .russian
+        case .georgian, .turkish: return .english
+        case .uzbek: return .turkish
+        default: return self
+        }
+    }
+    
     /// ISO 639-1 identifier
     public var id: String {
         rawValue

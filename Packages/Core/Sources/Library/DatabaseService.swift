@@ -71,7 +71,7 @@ public enum DatabaseServiceError: Error {
 
 public final class DatabaseService {
     
-    private let language: Language
+    public let language: Language
 
     public init(
         language: Language
@@ -119,26 +119,26 @@ public final class DatabaseService {
         }
     }
 
-    public func getFadl(_ id: Int) throws -> Fadl? {
+    public func getFadl(_ id: Int, language: Language? = nil) throws -> Fadl? {
         return try getDatabaseQueue().read { db in
             if let fadl = try Row.fetchOne(db, sql: "SELECT * FROM fadail WHERE id = ?", arguments: [id]) {
-                return Fadl(row: fadl, language: language)
+                return Fadl(row: fadl, language: language ?? self.language)
             }
             return nil
         }
     }
 
-    public func getRandomFadl() throws -> Fadl? {
+    public func getRandomFadl(language: Language? = nil) throws -> Fadl? {
         let count = try getFadailCount()
         let id = Int.random(in: 1...count)
-        return try getFadl(id)
+        return try getFadl(id, language: language)
     }
 
-    public func getFadail() throws -> [Fadl] {
+    public func getFadail(language: Language? = nil) throws -> [Fadl] {
         return try getDatabaseQueue().read { db in
             let fadail = try Row.fetchAll(db, sql: "SELECT * FROM fadail")
             return fadail.compactMap { row in
-                Fadl(row: row, language: language)
+                Fadl(row: row, language: language ?? self.language)
             }
         }
     }

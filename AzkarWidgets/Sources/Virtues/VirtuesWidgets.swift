@@ -14,7 +14,7 @@ struct VirtuesWidgets: Widget {
         defaultValue: Language.getSystemLanguage(),
         userDefaults: APP_GROUP_USER_DEFAULTS
     )
-    var language: Language 
+    var language: Language
 
     var body: some WidgetConfiguration {
         StaticConfiguration(
