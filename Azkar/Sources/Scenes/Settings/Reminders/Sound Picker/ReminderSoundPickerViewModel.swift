@@ -136,7 +136,7 @@ final class ReminderSoundPickerViewModel: ObservableObject {
     
     func playSound(_ sound: ReminderSound) {
         guard
-            let url = Bundle.main.url(forResource: sound.fileName, withExtension: sound.soundFileFormat),
+            let url = Bundle.main.url(forResource: sound.fileName, withExtension: ""),
             let audioItem = AudioItem(soundURLs: [.high: url]) else {
             return
         }
