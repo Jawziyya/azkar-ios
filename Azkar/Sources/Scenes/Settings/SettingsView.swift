@@ -178,7 +178,10 @@ struct SettingsView: View {
                 .symbolRenderingMode(.multicolor)
         ) {
             if viewModel.canChangeLanguage {
-                languagePicker
+                languagePicker(
+                    title: L10n.Settings.Text.language,
+                    binding: $viewModel.preferences.contentLanguage
+                )
             }
             
             NavigationLink {
@@ -290,10 +293,13 @@ struct SettingsView: View {
         .padding(.vertical, 8)
     }
     
-    var languagePicker: some View {
+    func languagePicker(
+        title: String,
+        binding: Binding<Language>
+    ) -> some View {
         Picker(
-            selection: $viewModel.preferences.contentLanguage,
-            label: Text(L10n.Settings.Text.language)
+            selection: binding,
+            label: Text(title)
                 .font(Font.system(.body, design: .rounded))
                 .padding(.vertical, 8)
         ) {

@@ -149,7 +149,7 @@ final class Preferences: ObservableObject {
     @Preference(
         Keys.contentLanguage,
         defaultValue: Language.getSystemLanguage(),
-        userDefaults: UserDefaults(suiteName: "group.io.jawziyya.azkar-app") ?? .standard
+        userDefaults: .appGroup
     )
     var contentLanguage: Language
     
