@@ -36,7 +36,7 @@ final class MainMenuViewModel: ObservableObject {
     let otherAzkarModels: [AzkarMenuItem]
     let infoModels: [AzkarMenuOtherItem]
     
-    let fadl: Fadl?
+    @Published var fadl: Fadl?
 
     @Published var additionalMenuItems: [AzkarMenuOtherItem] = []
     @Published var enableEidBackground = false
@@ -105,8 +105,6 @@ final class MainMenuViewModel: ObservableObject {
             AzkarMenuOtherItem(groupType: .settings, imageName: "gear", title: L10n.Root.settings, color: Color.init(.systemGray)),
         ]
         
-        fadl = try? databaseService.getRandomFadl()
-
         var year = "\(Date().hijriYear) г.х."
         switch Calendar.current.identifier {
         case .islamic, .islamicCivil, .islamicTabular, .islamicUmmAlQura:
@@ -145,6 +143,13 @@ final class MainMenuViewModel: ObservableObject {
                 self.objectWillChange.send()
             }
             .store(in: &cancellables)
+        
+        preferences
+            .$contentLanguage
+            .map { language in
+                try? databaseService.getRandomFadl(language: language)
+            }
+            .assign(to: &$fadl)
     }
 
     private func hideIconPacksMessage() {
