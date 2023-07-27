@@ -191,17 +191,24 @@ public extension DatabaseService {
         return try getDatabaseQueue().read { db in
             let records = try ZikrOrigin.fetchAll(
                 db,
-                sql: "SELECT * FROM azkar WHERE category = ?",
+                sql: """
+                SELECT azkar.*
+                FROM azkar
+                JOIN "azkar+azkar_group" ON azkar.id = "azkar+azkar_group"."azkar_id"
+                WHERE "azkar+azkar_group"."group" = ?
+                ORDER BY "azkar+azkar_group"."order"
+                """,
                 arguments: [category.rawValue]
             )
             let translationTableName = "azkar_\(language.id)"
             let translations = try ZikrTranslation.fetchAll(
                 db,
                 sql: """
-                SELECT * FROM \(translationTableName)
-                WHERE \(translationTableName).id IN (
-                  SELECT id FROM azkar WHERE azkar.category = ?
-                )
+                SELECT \(translationTableName).*
+                FROM \(translationTableName)
+                JOIN "azkar+azkar_group" ON \(translationTableName).id = "azkar+azkar_group"."azkar_id"
+                WHERE "azkar+azkar_group"."group" = ?
+                ORDER BY "azkar+azkar_group"."order"
                 """,
                 arguments: [category.rawValue]
             )
