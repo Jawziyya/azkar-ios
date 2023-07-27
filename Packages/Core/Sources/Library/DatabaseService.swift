@@ -224,9 +224,19 @@ public extension DatabaseService {
 
     func getAdhkarCount(_ category: ZikrCategory) throws -> Int {
         return try getDatabaseQueue().read { db in
-            try ZikrOrigin
-                .filter(sql: "category = ?", arguments: [category.rawValue])
-                .fetchCount(db)
+            guard let row = try Row
+                .fetchOne(
+                    db,
+                    sql: """
+                    SELECT COUNT(*) AS count FROM "azkar+azkar_group"
+                    WHERE "group" = ?
+                    """,
+                    arguments: [category.rawValue]
+                )
+            else {
+                return 0
+            }
+            return row["count"]
         }
     }
 
