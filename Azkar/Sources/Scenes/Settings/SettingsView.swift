@@ -303,7 +303,7 @@ struct SettingsView: View {
                 .font(Font.system(.body, design: .rounded))
                 .padding(.vertical, 8)
         ) {
-            ForEach(Language.allCases) { lang in
+            ForEach(viewModel.getAvailableLanguages()) { lang in
                 Text(lang.title)
                     .font(Font.system(.body, design: .rounded))
                     .tag(lang)
@@ -420,6 +420,7 @@ struct SettingsView_Previews: PreviewProvider {
         NavigationView {
             SettingsView(
                 viewModel: SettingsViewModel(
+                    databaseService: DatabaseService(language: .english),
                     preferences: Preferences.shared,
                     router: RootCoordinator(
                         preferences: Preferences.shared,

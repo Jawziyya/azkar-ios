@@ -223,7 +223,12 @@ private extension RootCoordinator {
             selectedZikrPageIndex.send(page)
 
         case .settings(let section):
-            let viewModel = SettingsViewModel(preferences: preferences, notificationsHandler: NotificationsHandler.shared, router: self)
+            let viewModel = SettingsViewModel(
+                databaseService: databaseService,
+                preferences: preferences,
+                notificationsHandler: NotificationsHandler.shared,
+                router: self
+            )
             let view = SettingsView(viewModel: viewModel)
 
             switch section {
@@ -254,7 +259,13 @@ private extension RootCoordinator {
             }
             
         case .modalSettings(let mode):
-            let viewModel = SettingsViewModel(mode: mode, preferences: preferences, notificationsHandler: NotificationsHandler.shared, router: self)
+            let viewModel = SettingsViewModel(
+                mode: mode,
+                databaseService: databaseService,
+                preferences: preferences,
+                notificationsHandler: NotificationsHandler.shared,
+                router: self
+            )
             let view = SettingsView(viewModel: viewModel)
             let viewController = UIHostingController(rootView: view)
             viewController.title = L10n.Settings.title

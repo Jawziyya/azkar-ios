@@ -91,6 +91,18 @@ public final class DatabaseService {
         config.readonly = true
         return try DatabaseQueue(path: getDatabasePath(), configuration: config)
     }
+    
+    public func isTableExists(for language: Language) -> Bool {
+        do {
+            let tableName = "azkar_\(language.id)"
+            return try getDatabaseQueue().read { db in
+                let result = try Row.fetchAll(db, sql: "SELECT name FROM sqlite_master WHERE type='table' AND name = ?", arguments: [tableName])
+                return result.isEmpty == false
+            }
+        } catch {
+            return false
+        }
+    }
 
     public func getAhadith() throws -> [Hadith] {
         return try getDatabaseQueue().read { db in

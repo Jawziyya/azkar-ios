@@ -64,6 +64,7 @@ final class SettingsViewModel: ObservableObject {
     private let formatter: DateFormatter
 
     var preferences: Preferences
+    private let databaseService: DatabaseService
     
     var themeTitle: String {
         "\(preferences.theme.title), \(preferences.colorTheme.title)"
@@ -75,11 +76,13 @@ final class SettingsViewModel: ObservableObject {
 
     init(
         mode: SettingsMode = .standart,
+        databaseService: DatabaseService,
         preferences: Preferences,
         notificationsHandler: NotificationsHandler = .shared,
         router: RootRouter
     ) {
         self.mode = mode
+        self.databaseService = databaseService
         self.preferences = preferences
         self.notificationsHandler = notificationsHandler
         self.router = router
@@ -163,6 +166,10 @@ final class SettingsViewModel: ObservableObject {
                 sound: preferences.jumuahDuaReminderSound
             )
         }
+    }
+    
+    func getAvailableLanguages() -> [Language] {
+        return Language.allCases.filter(databaseService.isTableExists(for:))
     }
     
 }
