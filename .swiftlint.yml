@@ -7,6 +7,10 @@ disabled_rules:
  - force_try
  - type_name
  - force_cast
+ - line_length
+ - large_tuple
+ - trailing_comma
+ - inclusive_language
 
 opt_in_rules:
  - empty_count
