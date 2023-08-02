@@ -17,13 +17,6 @@ final class MainMenuViewModel: ObservableObject {
 
     unowned let router: RootRouter
 
-    enum Section: CaseIterable {
-        case dayNight
-        case afterSalah
-        case info
-        case notificationsAccess
-    }
-
     let currentYear: String
 
     func getDayNightSectionModels(isDarkModeEnabled: Bool) -> [MainMenuLargeGroupViewModel] {

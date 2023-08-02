@@ -18,8 +18,6 @@ enum Constants {
 
 struct MainMenuView: View {
 
-    typealias MenuSection = MainMenuViewModel.Section
-
     @ObservedObject var viewModel: MainMenuViewModel
     @Environment(\.colorScheme) var colorScheme
 
