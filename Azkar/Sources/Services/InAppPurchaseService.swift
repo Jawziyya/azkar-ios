@@ -65,7 +65,7 @@ final class InAppPurchaseService {
         }
 
         return Future { promise in
-            self.storeKitManager.retrieveProductsInfo(Set(arrayLiteral: id)) { results in
+            self.storeKitManager.retrieveProductsInfo(Set([id])) { results in
                 if let error = results.error {
                     promise(.failure(error))
                 } else {
@@ -83,8 +83,10 @@ final class InAppPurchaseService {
         return Future { promise in
             self.storeKitManager.purchaseProduct(id) { result in
                 switch result {
+                    
                 case .error(let error):
                     promise(.failure(error))
+                    
                 case .success(let purchase):
                     switch purchase.transaction.transactionState {
                     case .purchased, .restored:
@@ -92,10 +94,11 @@ final class InAppPurchaseService {
                     default:
                         promise(.success(false))
                     }
+                    
                 case .deferred(let purchase):
                     // TODO: Handle this case.
                     print(purchase)
-                    break
+                    
                 }
             }
         }

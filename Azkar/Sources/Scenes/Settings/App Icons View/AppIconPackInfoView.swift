@@ -246,7 +246,6 @@ struct AppIconPackInfoView: View {
         }
     }
 
-
 }
 
 struct AppIconPackInfoView_Previews: PreviewProvider {

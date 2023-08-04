@@ -29,7 +29,7 @@ struct AdhkarRemindersView: View {
                         if viewModel.notificationsDisabledViewModel.isAccessGranted {
                             Button(action: {
                                 presentSoundPicker.toggle()
-                            }) {
+                            }, label: {
                                 HStack {
                                     Text(L10n.Settings.Reminders.Sounds.sound)
                                         .foregroundColor(Color.text)
@@ -43,7 +43,7 @@ struct AdhkarRemindersView: View {
                                         .foregroundColor(Color.secondary)
                                 }
                                 .font(Font.system(.body, design: .rounded))
-                            }
+                            })
                         } else {
                             notificationsDisabledView
                         }

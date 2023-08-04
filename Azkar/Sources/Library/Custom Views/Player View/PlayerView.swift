@@ -36,33 +36,33 @@ struct PlayerView: View, Equatable {
             Spacer()
             Button(action: {
                 self.viewModel.play()
-            }) {
+            }, label: {
                 Image(systemName: "gobackward")
                     .resizable()
                     .scaledToFit()
                     .frame(width: 30, height: 20)
-            }
+            })
             Spacer()
             Button(action: {
-                  self.viewModel.togglePlayPause()
-            }) {
+                self.viewModel.togglePlayPause()
+            }, label: {
                 Image(systemName: viewModel.isPlaying ? "pause.fill" : "play.fill")
                     .resizable()
                     .scaledToFit()
                     .frame(width: 30, height: 25)
-            }
+            })
             Spacer()
             Button(action: {
-                  UIImpactFeedbackGenerator(style: .soft).impactOccurred(intensity: 0.6)
-                  self.viewModel.toggleSpeed()
-            }) {
+                UIImpactFeedbackGenerator(style: .soft).impactOccurred(intensity: 0.6)
+                self.viewModel.toggleSpeed()
+            }, label: {
                 Text(viewModel.speed.label)
                     .minimumScaleFactor(0.2)
                     .frame(width: 30, height: 30)
                     .foregroundColor(tintColor)
                     .font(Font.system(.body, design: .monospaced))
                     .minimumScaleFactor(0.5)
-            }
+            })
             Spacer()
             Text(viewModel.timeRemaining)
                 .foregroundColor(.tertiaryText)

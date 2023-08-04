@@ -60,7 +60,7 @@ final class RootCoordinator: NavigationCoordinator, RootRouter {
         preferences.$colorTheme
             .receive(on: RunLoop.main)
             .prepend(preferences.colorTheme)
-            .sink(receiveValue: { theme in
+            .sink(receiveValue: { _ in
                 let color = UIColor(Color.accent)
                 navigationController.navigationBar.tintColor = color
                 UINavigationBar.appearance().tintColor = color

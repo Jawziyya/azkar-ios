@@ -39,6 +39,4 @@ extension PickableItem {
 
 final class ItemPickerViewModel {
 
-    
-
 }

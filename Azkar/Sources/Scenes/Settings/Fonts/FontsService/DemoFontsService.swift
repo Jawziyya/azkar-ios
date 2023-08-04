@@ -12,7 +12,6 @@ struct DemoFontsService: FontsServiceType {
         }
     }
     
-    
     func loadFont(url: URL) async throws -> [URL] {
         return []
     }
