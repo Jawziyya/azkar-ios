@@ -34,7 +34,7 @@ let baseSettingsDictionary = SettingsDictionary()
     // Should be removed when the bug is resolved.
     .merging([kDeadCodeStripping: SettingValue(booleanLiteral: false)])
 
-let settings = Settings(
+let settings = Settings.settings(
     base: baseSettingsDictionary
 )
 
@@ -83,8 +83,8 @@ enum AzkarTarget: String, CaseIterable {
                 sources: "Azkar/Sources/**",
                 resources: "Azkar/Resources/**",
                 entitlements: "Azkar/Azkar.entitlements",
-                actions: [
-                    TargetAction.post(path: "./scripts/swiftlint.sh", name: "SwiftLint")
+                scripts: [
+                    .post(path: "./scripts/swiftlint.sh", name: "SwiftLint")
                 ],
                 dependencies: [
                     .target(name: "AzkarWidgets"),
@@ -104,7 +104,7 @@ enum AzkarTarget: String, CaseIterable {
                     .package(product: "SwiftUIDrag"),
                     .package(product: "Popovers"),
                 ],
-                settings: Settings(
+                settings: Settings.settings(
                     base: baseSettingsDictionary
                         .merging(["DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER": "NO"])
                     ,
@@ -154,7 +154,7 @@ enum AzkarTarget: String, CaseIterable {
                     .package(product: "Entities"),
                     .package(product: "Library"),
                 ],
-                settings: Settings(
+                settings: Settings.settings(
                     base: baseSettingsDictionary
                         .merging(["DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER": "NO"])
                     ,
@@ -194,7 +194,7 @@ enum AzkarTarget: String, CaseIterable {
                 dependencies: [
                     .target(name: AzkarTarget.azkarApp.rawValue),
                 ],
-                settings: Settings(
+                settings: Settings.settings(
                     base: baseSettingsDictionary
                 ),
                 launchArguments: []
@@ -216,7 +216,7 @@ enum AzkarTarget: String, CaseIterable {
                 dependencies: [
                     .target(name: AzkarTarget.azkarApp.rawValue),
                 ],
-                settings: Settings(
+                settings: Settings.settings(
                     base: baseSettingsDictionary
                 ),
                 launchArguments: []
@@ -266,6 +266,10 @@ let packages: [Package] = [
 let project = Project(
     name: projectName,
     organizationName: companyName,
+    options: .options(
+        developmentRegion: "en",
+        disableSynthesizedResourceAccessors: true
+    ),
     packages: packages,
     settings: settings,
     targets: AzkarTarget.allCases.map(\.target),
@@ -274,14 +278,14 @@ let project = Project(
             name: AzkarTarget.azkarApp.rawValue,
             shared: true,
             buildAction: BuildAction(targets: ["Azkar"]),
-            runAction: RunAction(executable: "Azkar")
+            runAction: RunAction.runAction(executable: "Azkar")
         ),
         Scheme(
             name: AzkarTarget.azkarAppUITests.rawValue,
             shared: true,
             buildAction: BuildAction(targets: ["AzkarUITests"]),
-            testAction: TestAction(targets: ["AzkarUITests"]),
-            runAction: RunAction(executable: "Azkar")
+            testAction: TestAction.targets(["AzkarUITests"]),
+            runAction: RunAction.runAction(executable: "Azkar")
         )
     ],
     additionalFiles: []
