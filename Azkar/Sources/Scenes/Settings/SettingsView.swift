@@ -14,6 +14,8 @@ extension URL: Identifiable {
     }
 }
 
+extension Language: PickableItem {}
+
 struct SettingsView: View {
 
     @ObservedObject var viewModel: SettingsViewModel
@@ -169,6 +171,14 @@ struct SettingsView: View {
         AppIconPackListView(viewModel: viewModel.appIconPackListViewModel)
     }
     
+    var contentLanguagePicker: some View {
+        ItemPickerView(
+            selection: $viewModel.preferences.contentLanguage,
+            items: viewModel.getAvailableLanguages(),
+            dismissOnSelect: true
+        )
+    }
+    
     // MARK: - Content Size
     var textSettingsSection: some View {
         Section(
@@ -178,10 +188,20 @@ struct SettingsView: View {
                 .symbolRenderingMode(.multicolor)
         ) {
             if viewModel.canChangeLanguage {
-                languagePicker(
-                    title: L10n.Settings.Text.language,
-                    binding: $viewModel.preferences.contentLanguage
-                )
+                if #available(iOS 16.5, *) {
+                    languagePicker(
+                        title: L10n.Settings.Text.language,
+                        binding: $viewModel.preferences.contentLanguage
+                    )
+                    .pickerStyle(.menu)
+                } else {
+                    PickerView(
+                        label: L10n.Settings.Text.language,
+                        titleDisplayMode: .inline,
+                        subtitle: viewModel.preferences.contentLanguage.title,
+                        destination: contentLanguagePicker
+                    )
+                }
             }
             
             NavigationLink {
@@ -306,10 +326,10 @@ struct SettingsView: View {
             ForEach(viewModel.getAvailableLanguages()) { lang in
                 Text(lang.title)
                     .font(Font.system(.body, design: .rounded))
+                    .id(lang.id)
                     .tag(lang)
             }
         }
-        .pickerStyle(.menu)
     }
     
     var sizePicker: some View {
