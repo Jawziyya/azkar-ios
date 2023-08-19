@@ -58,6 +58,8 @@ internal enum L10n {
     internal static let evening = L10n.tr("Localizable", "category.evening")
     /// Morning
     internal static let morning = L10n.tr("Localizable", "category.morning")
+    /// Bedtime
+    internal static let night = L10n.tr("Localizable", "category.night")
     /// Important adhkar
     internal static let other = L10n.tr("Localizable", "category.other")
   }
