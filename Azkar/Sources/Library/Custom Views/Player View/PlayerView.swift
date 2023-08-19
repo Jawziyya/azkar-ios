@@ -84,6 +84,7 @@ struct PlayerView_Previews: PreviewProvider {
             title: "",
             subtitle: "",
             audioURL: URL(string: "https://google.com")!,
+            timings: [],
             player: .test
         ))
         .previewDevice(.init(stringLiteral: "iPhone 11 Pro"))

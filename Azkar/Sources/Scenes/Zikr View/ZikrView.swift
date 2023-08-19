@@ -222,6 +222,9 @@ struct ZikrView: View {
         VStack(spacing: spacing) {
             ForEach(Array(zip(text.indices, text)), id: \.0) { idx, line in
                 ReadingTextView(
+                    action: !viewModel.preferences.enableLineBreaks ? nil : {
+                        viewModel.playAudio(at: idx)
+                    },
                     text: line,
                     isArabicText: isArabicText,
                     font: font,

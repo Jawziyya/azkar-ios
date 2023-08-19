@@ -132,17 +132,19 @@ final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
         }
 
         if let url = audioURL {
+            let timings = zikr.audioTimings
             let playerViewModel = PlayerViewModel(
                 title: title,
                 subtitle: zikr.category.title,
                 audioURL: url,
+                timings: timings,
                 player: player
             )
             self.playerViewModel = playerViewModel
 
-            let timings = zikr.audioTimings
             playerViewModel
                 .$progressInSeconds
+                .filter { _ in preferences.enableLineBreaks }
                 .filter { $0 > 0 }
                 .compactMap { time -> AudioTiming? in
                     return timings.last(where: { $0.time == time || $0.time < time })
@@ -266,6 +268,10 @@ final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
         player.volume = 0.25
         player.pause()
         player.play(item: audioItem)
+    }
+    
+    func playAudio(at index: Int) {
+        playerViewModel?.goToTiming(at: index)
     }
 
 }
