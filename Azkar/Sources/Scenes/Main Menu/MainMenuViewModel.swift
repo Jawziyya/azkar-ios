@@ -78,7 +78,7 @@ final class MainMenuViewModel: ObservableObject {
         otherAzkarModels = [
             AzkarMenuItem(
                 category: .night,
-                imageName: "bed.double.fill",
+                imageName: "bed.double.circle.fill",
                 title: L10n.Category.night,
                 color: Color.init(uiColor: .systemMint),
                 count: nil

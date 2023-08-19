@@ -1,0 +1,23 @@
+[
+    {
+      "version": "2.4.2",
+      "items": [
+        {
+          "title": "Support for additional languages",
+          "subtitle": "This version adds translations for Georgian, Ingush, Chechen and Uzbek languages.\nCredits: @marginani, Zara ت, 𝔄𝔪𝔦𝔰𝔥𝔨𝔞, زالينة بلييفا, @m5164841",
+          "image": {
+              "type": "symbol",
+              "name": "text.bubble",
+          }
+        },
+        {
+          "title": "New \"bedtime\" adhkar category",
+          "subtitle": "Part of evening adhkar was split into a new category.",
+          "image": {
+              "type": "symbol",
+              "name": "bed.double.circle.fill",
+          }
+        }
+      ]
+    }
+]

@@ -65,6 +65,8 @@ internal enum L10n {
   }
 
   internal enum Common {
+    /// Continue
+    internal static let `continue` = L10n.tr("Localizable", "common.continue")
     /// Default
     internal static let `default` = L10n.tr("Localizable", "common.default")
     /// Done
@@ -524,6 +526,11 @@ internal enum L10n {
       /// at-Tirmidhi
       internal static let tirmidhi = L10n.tr("Localizable", "text.source.tirmidhi")
     }
+  }
+
+  internal enum Updates {
+    /// What's new?
+    internal static let title = L10n.tr("Localizable", "updates.title")
   }
 
   internal enum Widgets {

@@ -23,6 +23,7 @@ enum RootSection: Equatable {
     case subscribe
     case dismissModal
     case notificationsList
+    case whatsNew
 }
 
 protocol RootRouter: AnyObject {
@@ -56,6 +57,10 @@ final class RootCoordinator: NavigationCoordinator, RootRouter {
         navigationController.navigationBar.prefersLargeTitles = false
 
         super.init(rootViewController: navigationController)
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+            self.trigger(.whatsNew)
+        }
         
         preferences.$colorTheme
             .receive(on: RunLoop.main)
@@ -131,7 +136,7 @@ private extension RootCoordinator {
         switch section {
         case .aboutApp, .category, .root, .settings:
             selectedZikrPageIndex.send(0)
-        case .zikr, .subscribe, .dismissModal, .modalSettings, .notificationsList, .zikrPages, .goToPage:
+        case .zikr, .subscribe, .dismissModal, .modalSettings, .notificationsList, .zikrPages, .goToPage, .whatsNew:
             break
         }
         
@@ -304,6 +309,13 @@ private extension RootCoordinator {
             
         case .dismissModal:
             (rootViewController.presentedViewController ?? rootViewController).dismiss(animated: true)
+            
+        case .whatsNew:
+            guard let viewController = getWhatsNewViewController() else {
+                return
+            }
+            
+            present(viewController)
 
         }
     }
