@@ -126,6 +126,9 @@ final class PlayerViewModel: ObservableObject, Equatable {
     }
     
     func goToTiming(at index: Int) {
+        guard index < timings.count else {
+            return
+        }
         let timing = timings[index]
         player.seek(timing.time)
     }
