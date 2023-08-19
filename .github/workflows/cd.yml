@@ -14,12 +14,12 @@ on:
 jobs:
   deploy:
     name: Deploying to Testflight
-    runs-on: macOS-latest
+    runs-on: macos-13
     
     steps:
       - uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: latest-stable
+          xcode-version: 14.3
 
       - name: Checkout repository
         uses: actions/checkout@v1
