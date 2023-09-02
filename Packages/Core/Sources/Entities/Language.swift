@@ -13,11 +13,12 @@ public enum Language: String, Codable, CaseIterable, Identifiable {
     case chechen = "che"
     case ingush = "inh"
     case uzbek = "uz"
+    case kyrgyz = "ky"
     
     /// A language to use in certain cases when content is not available for selected language.
     public var fallbackLanguage: Language {
         switch self {
-        case .chechen, .ingush: return .russian
+        case .chechen, .ingush, .kyrgyz: return .russian
         case .georgian, .turkish: return .english
         case .uzbek: return .turkish
         default: return self
@@ -48,6 +49,8 @@ public enum Language: String, Codable, CaseIterable, Identifiable {
             return "Гӏалгӏай мотт"
         case .uzbek:
             return "Оʻzbek tili"
+        case .kyrgyz:
+            return "Кыргыз тили"
         }
     }
 }
