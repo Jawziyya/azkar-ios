@@ -102,9 +102,16 @@ struct ZikrView: View {
         Group {
             Text("1")
                 .foregroundColor(Color.accent)
-                .font(Font.system(size: 14, weight: .regular, design: .monospaced).monospacedDigit())
-                .frame(minWidth: 20, minHeight: 20)
+                .font(Font.system(
+                    size: viewModel.preferences.counterSize.value / 3,
+                    weight: .regular,
+                    design: .monospaced).monospacedDigit()
+                )
                 .padding()
+                .frame(
+                    width: viewModel.preferences.counterSize.value,
+                    height: viewModel.preferences.counterSize.value
+                )
                 .foregroundColor(Color.white)
                 .background(Color.accent)
                 .clipShape(Capsule())

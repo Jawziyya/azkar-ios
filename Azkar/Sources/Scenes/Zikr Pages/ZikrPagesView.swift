@@ -40,6 +40,10 @@ struct ZikrPagesView: View, Equatable {
             alignment: viewModel.alignZikrCounterByLeadingSide ? .bottomLeading : .bottomTrailing,
             floating: [.bottom],
             collapse: [],
+            visibleSize: CGSize(
+                width: viewModel.preferences.counterSize.value,
+                height: viewModel.preferences.counterSize.value
+            ),
             content: { geo, state in
                 ExecuteCallView {
                     if state != .expanded {
@@ -49,12 +53,20 @@ struct ZikrPagesView: View, Equatable {
                 let number = viewModel.currentZikrRemainingRepeatNumber
                 if viewModel.showCounterButton, number > 0 {
                     Text(number.description)
-                        .font(Font.system(size: 14, weight: .regular, design: .monospaced).monospacedDigit())
-                        .frame(minWidth: 20, minHeight: 20)
+                        .font(Font.system(
+                            size: viewModel.preferences.counterSize.value / 3,
+                            weight: .regular,
+                            design: .monospaced).monospacedDigit()
+                        )
+                        .minimumScaleFactor(0.25)
                         .padding()
+                        .frame(
+                            width: viewModel.preferences.counterSize.value,
+                            height: viewModel.preferences.counterSize.value
+                        )
                         .foregroundColor(Color.white)
                         .background(Color.accent)
-                        .clipShape(Capsule())
+                        .clipShape(Circle())
                         .padding(.horizontal)
                         .onTapGesture {
                             withAnimation(.easeInOut) {

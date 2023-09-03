@@ -250,6 +250,8 @@ internal enum L10n {
     internal enum Counter {
       /// Enable counter haptic feedback
       internal static let counterHaptics = L10n.tr("Localizable", "settings.counter.counter-haptics")
+      /// Size of counter
+      internal static let counterSizeTitle = L10n.tr("Localizable", "settings.counter.counter-size-title")
       /// Enable counter ticker sound
       internal static let counterTicker = L10n.tr("Localizable", "settings.counter.counter-ticker")
       /// Counter type

@@ -127,6 +127,22 @@ struct SettingsView: View {
                         .pickerStyle(.segmented)
                     }
                     .padding(.vertical, 3)
+                    
+                    if viewModel.preferences.counterType == .floatingButton {
+                        HStack {
+                            Text(L10n.Settings.Counter.counterSizeTitle)
+                            Spacer()
+                            Picker(
+                                CounterSize.allCases,
+                                id: \.self,
+                                selection: $viewModel.preferences.counterSize,
+                                content: { size in
+                                    Text(size.title)
+                                }
+                            )
+                            .pickerStyle(.segmented)
+                        }
+                    }
 
                     Toggle(L10n.Settings.Counter.counterTicker, isOn: $viewModel.preferences.enableCounterTicker)
                         .padding(.vertical, 3)
