@@ -169,7 +169,7 @@ final class SettingsViewModel: ObservableObject {
     }
     
     func getAvailableLanguages() -> [Language] {
-        return Language.allCases.filter(databaseService.isTableExists(for:))
+        return Language.allCases.filter(databaseService.translationExists(for:))
     }
     
 }

@@ -11,6 +11,7 @@ import SwiftUI
 import Combine
 import AudioPlayer
 import AVFoundation
+import Library
 
 final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
 
@@ -101,7 +102,12 @@ final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
         hadith: Hadith?,
         preferences: Preferences,
         player: Player,
-        counter: ZikrCounterServiceType = ZikrCounterService(),
+        counter: ZikrCounterServiceType = CounterDatabaseService(
+            databasePath: FileManager.default
+                .appGroupContainerURL
+                .appendingPathComponent("counter.db")
+                .absoluteString
+        ),
         textProcessor: TextProcessor = TextProcessor(preferences: Preferences.shared)
     ) {
         self.counter = counter
@@ -241,7 +247,11 @@ final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
             return
         }
         showRemainingCounter = true
-        await counter.incrementCounter(for: zikr)
+        do {
+            try await counter.incrementCounter(for: zikr)
+        } catch {
+            return
+        }
         let remainingRepeatsNumber = await counter.getRemainingRepeats(for: zikr)
         
         withAnimation(.spring()) {

@@ -13,7 +13,7 @@ struct VirtuesProvider: TimelineProvider {
     private var fadail: [Fadl]
     
     init(
-        databaseService: DatabaseService
+        databaseService: AdhkarDatabaseService
     ) {
         fadail = (try? databaseService.getFadail()) ?? []
         if fadail.isEmpty {

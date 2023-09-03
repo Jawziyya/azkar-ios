@@ -4,72 +4,7 @@ import Foundation
 import Entities
 import GRDB
 
-extension Audio: FetchableRecord, TableRecord {
-    public static let databaseTableName = "audios"
-}
-
-extension ZikrOrigin: FetchableRecord, TableRecord {
-    public static let databaseTableName = "azkar"
-    public static let databaseColumnDecodingStrategy = DatabaseColumnDecodingStrategy.convertFromSnakeCase
-}
-
-extension ZikrTranslation: FetchableRecord {
-    public init(row: Row) {
-        self.init(
-            id: row["id"],
-            title: row["title"],
-            text: row["text"],
-            benefits: row["benefits"],
-            notes: row["notes"],
-            transliteration: row["transliteration"]
-        )
-    }
-}
-
-extension Hadith {
-    init(row: Row, language: Language) {
-        let sourceRaw: String = row["source"]
-        var source = NSLocalizedString("text.source." + sourceRaw.lowercased(), comment: "")
-        if let ext = row["source_ext"] as? String {
-            source += ", " + ext
-        }
-        
-        self.init(
-            id: row["id"],
-            text: row["text"],
-            translation: row["translation_\(language.id)"],
-            source: source
-        )
-    }
-}
-
-extension Fadl {
-    init?(row: Row, language: Language) {
-        let sourceRaw: String = row["source"]
-        var source = NSLocalizedString("text.source." + sourceRaw.lowercased(), comment: "")
-        if let ext = row["source_ext"] as? String {
-            source += ", " + ext
-        }
-        
-        let text: String? = row["text_\(language.id)"]
-        
-        self.init(
-            id: row["id"],
-            text: text,
-            source: source
-        )
-    }
-}
-
-extension AudioTiming: FetchableRecord, PersistableRecord {
-    public static let databaseTableName = "audio_timings"
-}
-
-public enum DatabaseServiceError: Error {
-    case databaseFileAccesingError
-}
-
-public final class DatabaseService {
+public final class AdhkarDatabaseService {
     
     public let language: Language
 
@@ -92,13 +27,10 @@ public final class DatabaseService {
         return try DatabaseQueue(path: getDatabasePath(), configuration: config)
     }
     
-    public func isTableExists(for language: Language) -> Bool {
+    public func translationExists(for language: Language) -> Bool {
         do {
             let tableName = "azkar_\(language.id)"
-            return try getDatabaseQueue().read { db in
-                let result = try Row.fetchAll(db, sql: "SELECT name FROM sqlite_master WHERE type='table' AND name = ?", arguments: [tableName])
-                return result.isEmpty == false
-            }
+            return try DatabaseHelper.tableExists(tableName, databaseQueue: getDatabaseQueue())
         } catch {
             return false
         }
@@ -158,7 +90,7 @@ public final class DatabaseService {
 }
 
 // MARK: - Adhkar
-public extension DatabaseService {
+public extension AdhkarDatabaseService {
 
     func getZikr(_ id: Int) throws -> Zikr? {
         return try getDatabaseQueue().read { db in
