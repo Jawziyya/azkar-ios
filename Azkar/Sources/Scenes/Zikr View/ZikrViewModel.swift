@@ -79,7 +79,7 @@ final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
     }
 
     private var cancellables: Set<AnyCancellable> = []
-    private lazy var player = AudioPlayer()
+    private let player: Player
     
     public var audioURL: URL? {
         if let link = zikr.audio?.link {
@@ -114,6 +114,7 @@ final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
         self.zikr = zikr
         self.preferences = preferences
         self.textProcessor = textProcessor
+        self.player = player
         
         if let zikrTitle = zikr.title {
             title = zikrTitle
@@ -258,7 +259,7 @@ final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
             self.remainingRepeatsNumber = remainingRepeatsNumber
         }
 
-        if preferences.enableCounterTicker {
+        if preferences.enableCounterTicker, !player.isPlaying {
             DispatchQueue.global(qos: .userInitiated).async {
                 self.playTickerSound()
             }
@@ -275,9 +276,7 @@ final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
             let audioItem = AudioItem(soundURLs: [.high: url]) else {
             return
         }
-        player.volume = 0.25
-        player.pause()
-        player.play(item: audioItem)
+        player.playItem(audioItem, atVolume: 0.25)
     }
     
     func playAudio(at index: Int) {
