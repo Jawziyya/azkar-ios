@@ -54,10 +54,10 @@ enum AppIconPack: String, CaseIterable, Identifiable, Codable {
 enum AppIcon: String, Codable, CaseIterable, Identifiable {
 
     case gold, ink, darkNight = "dark_night"
-    case midjourney001, midjourney002
+    case midjourney001
 
     static var standardIcons: [AppIcon] {
-        [gold, ink, darkNight, midjourney001, midjourney002]
+        [gold, ink, darkNight, midjourney001]
     }
 
     case maccinz_house, maccinz_mountains, maccinz_ramadan_night, maccinz_day
@@ -77,8 +77,6 @@ enum AppIcon: String, Codable, CaseIterable, Identifiable {
     var title: String {
         switch self {
         case .midjourney001:
-            return "MidJourney x Azkar 0.0.1"
-        case .midjourney002:
             return "MidJourney x Azkar 0.0.1"
         default:
             return NSLocalizedString("settings.icon.list.\(rawValue)", comment: "")
