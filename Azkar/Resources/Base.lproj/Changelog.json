@@ -1,6 +1,6 @@
 [
     {
-      "version": "2.4.2",
+      "version": "2.5.0",
       "items": [
         {
           "title": "Support for additional languages",
@@ -11,11 +11,19 @@
           }
         },
         {
+            "title": "«Virtues of dhikr» widget",
+            "subtitle": "Azkar now has a widget which displays different virtues of remembrance of Allah.",
+            "image": {
+                "type": "symbol",
+                "name": "crown"
+            }
+        },
+        {
           "title": "New \"bedtime\" adhkar category",
           "subtitle": "Part of evening adhkar was split into a new category.",
           "image": {
               "type": "symbol",
-              "name": "bed.double.circle.fill",
+              "name": "bed.double.circle",
           }
         },
         {
@@ -23,7 +31,7 @@
           "subtitle": "Now you can pick size of the counter in Settings menu.",
           "image": {
               "type": "symbol",
-              "name": "infinity.circle.fill",
+              "name": "infinity.circle",
           }
         }
       ]

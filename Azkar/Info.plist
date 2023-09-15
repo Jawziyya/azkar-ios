@@ -15,7 +15,7 @@
 	<key>CFBundlePackageType</key>
 	<string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
 	<key>CFBundleShortVersionString</key>
-	<string>2.4.2</string>
+	<string>2.5</string>
 	<key>CFBundleVersion</key>
 	<string>83</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
@@ -30,7 +30,7 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string/>
+	<string></string>
 	<key>REVENUCE_CAT_API_KEY</key>
 	<string>gpAMTUYnTxQzRSbPszKrFTOekbEVzsXk</string>
 	<key>UIAppFonts</key>
