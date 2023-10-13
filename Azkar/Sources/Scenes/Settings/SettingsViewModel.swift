@@ -11,6 +11,7 @@ import Combine
 import UIKit
 import UserNotifications
 import Entities
+import Library
 
 final class SettingsViewModel: ObservableObject {
     

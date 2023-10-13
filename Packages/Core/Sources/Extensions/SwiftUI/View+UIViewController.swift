@@ -3,7 +3,7 @@
 import UIKit
 import SwiftUI
 
-extension View {
+public extension View {
 
     var wrapped: UIHostingController<Self> {
         UIHostingController(rootView: self)

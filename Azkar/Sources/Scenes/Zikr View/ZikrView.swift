@@ -3,6 +3,8 @@
 import SwiftUI
 import Combine
 import SwiftUIDrag
+import Extensions
+import Library
 
 /**
  This view shows contents of Zikr object:

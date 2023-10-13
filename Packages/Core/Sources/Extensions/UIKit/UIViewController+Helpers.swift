@@ -2,7 +2,7 @@
 
 import UIKit
 
-extension UIViewController {
+public extension UIViewController {
 
     var isPadInterface: Bool {
         traitCollection.userInterfaceIdiom == .pad || traitCollection.userInterfaceIdiom == .mac

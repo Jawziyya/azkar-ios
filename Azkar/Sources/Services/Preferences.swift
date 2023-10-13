@@ -10,6 +10,7 @@ import UIKit
 import Combine
 import SwiftUI
 import Entities
+import Library
 
 enum CounterType: Int, Codable, CaseIterable, Identifiable {
     case floatingButton, tap

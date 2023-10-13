@@ -11,6 +11,7 @@ import AudioPlayer
 import Combine
 import SwiftUIX
 import SwiftUIDrag
+import Extensions
 
 struct ZikrPagesView: View, Equatable {
 
