@@ -41,12 +41,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         application.beginReceivingRemoteControlEvents()
         InAppPurchaseService.shared.completeTransactions()
         registerUserDefaults()
-
-        UITableViewCell.appearance().selectionStyle = .none
-        UITableView.appearance().allowsSelection = false
-        UITableView.appearance().separatorColor = .clear
-        UITableView.appearance().backgroundColor = .clear
-        UISwitch.appearance().onTintColor = UIColor(named: "accent")
         
         Purchases.logLevel = .debug
         Purchases.configure(withAPIKey: Bundle.main.object(forInfoDictionaryKey: "REVENUCE_CAT_API_KEY") as! String)
