@@ -37,18 +37,13 @@ struct MainMenuLargeGroup: View {
 	}
 }
 
-struct GroupLarge_Previews: PreviewProvider {
-	static var previews: some View {
-		ZStack {
-            MainMenuLargeGroup(
-                viewModel: MainMenuLargeGroupViewModel(
-                    category: .morning,
-                    title: "Test",
-                    animationName: "sun",
-                    animationSpeed: 1
-                )
-            )
-		}
-        .previewLayout(.fixed(width: 200, height: 150))
-	}
+#Preview("Main Menu Large Group item demo.") {
+    MainMenuLargeGroup(
+        viewModel: MainMenuLargeGroupViewModel(
+            category: .morning,
+            title: "Test",
+            animationName: "sun",
+            animationSpeed: 1
+        )
+    )
 }

@@ -46,15 +46,13 @@ struct MainMenuSmallGroup: View {
 
 }
 
-struct GroupSmall_Previews: PreviewProvider {
-	static var previews: some View {
-        Group {
-            MainMenuSmallGroup(item: AzkarMenuItem.demo)
-            MainMenuSmallGroup(item: AzkarMenuItem.noCountDemo)
-            MainMenuSmallGroup(item: AzkarMenuItem.noCountDemo, flip: true)
-            MainMenuSmallGroup(item: AzkarMenuOtherItem(groupType: .notificationsAccess, imageName: "🌍", title: "Title", color: Color.red, iconType: .emoji), flip: false)
-            MainMenuSmallGroup(item: AzkarMenuOtherItem(groupType: .notificationsAccess, imageName: "🌗", title: "Священный месяц рамадан 1442 г.х. (2021 г.)", color: Color.red, iconType: .emoji), flip: true)
-        }
-        .previewLayout(.fixed(width: 300, height: 400))
-	}
+#Preview("Main Menu Small Group items demo.") {
+    List {
+        MainMenuSmallGroup(item: AzkarMenuItem.demo)
+        MainMenuSmallGroup(item: AzkarMenuItem.noCountDemo)
+        MainMenuSmallGroup(item: AzkarMenuItem.noCountDemo, flip: true)
+        MainMenuSmallGroup(item: AzkarMenuOtherItem(groupType: .notificationsAccess, imageName: "🌍", title: "Title", color: Color.red, iconType: .emoji), flip: false)
+        MainMenuSmallGroup(item: AzkarMenuOtherItem(groupType: .notificationsAccess, imageName: "🌗", title: "Священный месяц рамадан 1442 г.х. (2021 г.)", color: Color.red, iconType: .emoji), flip: true)
+    }
+    .listStyle(.plain)
 }
