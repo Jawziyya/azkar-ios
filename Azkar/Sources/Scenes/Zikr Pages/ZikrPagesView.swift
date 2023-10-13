@@ -44,7 +44,7 @@ struct ZikrPagesView: View, Equatable {
                 width: viewModel.preferences.counterSize.value,
                 height: viewModel.preferences.counterSize.value
             ),
-            content: { geo, state in
+            content: { _, state in
                 ExecuteCallView {
                     if state != .expanded {
                         viewModel.setZikrCounterAlignment(byLeftSide: state.isLeading)
