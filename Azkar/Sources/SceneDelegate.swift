@@ -48,6 +48,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 window = GSTouchesShowingWindow(windowScene: windowScene)
             } else {
                 window = UIWindow(windowScene: windowScene)
+                window.backgroundColor = UIColor.systemBackground
             }
 
             let rootCoordinator = RootCoordinator(
@@ -68,9 +69,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
             window.rootViewController = rootViewController
             self.rootCoordinator = rootCoordinator
-            rootCoordinator.start { }
-
             window.makeKeyAndVisible()
+            rootCoordinator.start { }
 
             preferences.$theme
                 .receive(on: RunLoop.main)
