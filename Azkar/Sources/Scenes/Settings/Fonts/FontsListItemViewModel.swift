@@ -2,6 +2,7 @@
 
 import SwiftUI
 import Entities
+import Library
 
 struct AppFontViewModel: Identifiable, Equatable {
     

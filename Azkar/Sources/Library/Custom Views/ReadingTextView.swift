@@ -1,6 +1,7 @@
 // Copyright © 2022 Al Jawziyya. All rights reserved. 
 
 import SwiftUI
+import Library
 
 struct ReadingTextView: View {
 
