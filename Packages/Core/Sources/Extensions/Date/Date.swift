@@ -9,20 +9,21 @@
 import Foundation
 
 private let hijriCalendar = Calendar(identifier: .islamicUmmAlQura)
-let muharram = 1
-let safar = 2
-let rabiAwwal = 3
-let rabiSani = 4
-let jumadaUla = 5
-let jumadaAkhira = 6
-let rajab = 7
-let shaban = 8
-let ramadan = 9
-let shawwal = 10
-let zulQada = 11
-let zulHijja = 12
 
-extension Date {
+public let muharram = 1
+public let safar = 2
+public let rabiAwwal = 3
+public let rabiSani = 4
+public let jumadaUla = 5
+public let jumadaAkhira = 6
+public let rajab = 7
+public let shaban = 8
+public let ramadan = 9
+public let shawwal = 10
+public let zulQada = 11
+public let zulHijja = 12
+
+public extension Date {
 
     var year: Int {
         Calendar.current.component(.year, from: self)

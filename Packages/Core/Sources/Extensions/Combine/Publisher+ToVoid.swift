@@ -3,7 +3,7 @@
 import Combine
 import Foundation
 
-extension AnyPublisher {
+public extension AnyPublisher {
     
     func toVoid() -> AnyPublisher<Void, Failure> {
         self

@@ -2,12 +2,12 @@
 
 import SwiftUI
 
-struct ExecuteCallView: View {
-    init(_ call: () -> Void) {
+public struct ExecuteCallView: View {
+    public init(_ call: () -> Void) {
         call()
     }
 
-    var body: some View {
+    public var body: some View {
         return EmptyView()
     }
 }

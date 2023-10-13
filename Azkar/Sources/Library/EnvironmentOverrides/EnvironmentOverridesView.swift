@@ -1,5 +1,8 @@
 import SwiftUI
 import Combine
+import Extensions
+
+extension ContentSizeCategory: Comparable {}
 
 extension EnvironmentValues {
     struct Diff: OptionSet {

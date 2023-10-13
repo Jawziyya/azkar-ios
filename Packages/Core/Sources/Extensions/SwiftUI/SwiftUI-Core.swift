@@ -8,7 +8,8 @@
 
 import SwiftUI
 
-extension View {
+public extension View {
+    
     func embedInNavigation() -> some View {
         NavigationView { self }
     }
@@ -26,4 +27,5 @@ extension View {
             return self.padding(.horizontal, otherDevicesPadding)
         }
     }
+    
 }

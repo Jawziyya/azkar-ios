@@ -116,6 +116,7 @@ enum AzkarTarget: String, CaseIterable {
                 dependencies: [
                     .target(name: "AzkarWidgets"),
                     .package(product: "Entities"),
+                    .package(product: "Extensions"),
                     .package(product: "Library"),
                     .package(product: "AudioPlayer"),
                     .package(product: "SwiftyStoreKit"),
@@ -180,6 +181,7 @@ enum AzkarTarget: String, CaseIterable {
                 entitlements: "AzkarWidgets/AzkarWidgets.entitlements",
                 dependencies: [
                     .package(product: "Entities"),
+                    .package(product: "Extensions"),
                     .package(product: "Library"),
                 ],
                 settings: Settings.settings(
@@ -255,7 +257,6 @@ enum AzkarTarget: String, CaseIterable {
 
 enum AzkarPackage: String {
     case core = "Core"
-    case library = "Library"
     case audioPlayer = "AudioPlayer"
 
     var name: String { rawValue }

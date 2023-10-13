@@ -2,37 +2,37 @@
 
 import Foundation
 
-struct TranslationFont: Codable, Identifiable, Hashable, AppFont {
+public struct TranslationFont: Codable, Identifiable, Hashable, AppFont {
     
-    enum FontType: Int, Codable, Equatable, AppFontStyle {
+    public enum FontType: Int, Codable, Equatable, AppFontStyle {
         case serif, sansSerif, handwritten, decorative, additional
         
-        var key: String {
+        public var key: String {
             "\(self)"
         }
     }
     
-    var id: String {
+    public var id: String {
         postscriptName
     }
     
-    var style: AppFontStyle {
+    public var style: AppFontStyle {
         type
     }
     
-    let name: String
-    var referenceName: String = STANDARD_FONT_REFERENCE_NAME
-    let postscriptName: String
-    var type: FontType = .serif
+    public let name: String
+    public var referenceName: String = STANDARD_FONT_REFERENCE_NAME
+    public let postscriptName: String
+    public var type: FontType = .serif
     private var isCyrillic: Int?
-    var sizeAdjustment: Float?
-    var lineAdjustment: Float?
+    public var sizeAdjustment: Float?
+    public var lineAdjustment: Float?
     
-    var supportsCyryllicCharacters: Bool {
+    public var supportsCyryllicCharacters: Bool {
         isCyrillic == 1
     }
     
-    static var placeholder: TranslationFont {
+    public static var placeholder: TranslationFont {
         return TranslationFont(
             name: UUID().uuidString,
             referenceName: UUID().uuidString,
@@ -43,14 +43,19 @@ struct TranslationFont: Codable, Identifiable, Hashable, AppFont {
     }
 }
 
-extension TranslationFont {
+public extension TranslationFont {
     
     static var standardFonts: [TranslationFont] {
         [systemFont, courier, iowanOldStyle, baskerville]
     }
     
     static var systemFont: TranslationFont {
-        TranslationFont(name: L10n.Fonts.standardFont, postscriptName: "", type: .sansSerif, isCyrillic: 1)
+        TranslationFont(
+            name: NSLocalizedString("settings.text.standard-font-name", comment: "Standard font name string."),
+            postscriptName: "",
+            type: .sansSerif,
+            isCyrillic: 1
+        )
     }
     
     static var courier: TranslationFont {
