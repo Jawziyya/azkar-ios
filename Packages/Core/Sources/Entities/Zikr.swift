@@ -7,7 +7,6 @@ public struct ZikrOrigin: Identifiable, Hashable, Codable {
     public let id: Int
     public let text: String
     public let hadith: Int?
-    public let category: ZikrCategory
     public let repeats: Int
     public let audioId: Int?
     public let source: String
@@ -36,7 +35,7 @@ public struct Zikr: Identifiable, Hashable {
     public let id: Int
     public let hadith: Int?
     public let text: String
-    public let category: ZikrCategory
+    public let category: ZikrCategory?
     public let repeats: Int
     public let title: String?
     public let translation: String?
@@ -70,6 +69,7 @@ public struct Zikr: Identifiable, Hashable {
 extension Zikr {
     public init(
         origin: ZikrOrigin,
+        category: ZikrCategory? = nil,
         translation: ZikrTranslation? = nil,
         audio: Audio? = nil,
         audioTimings: [AudioTiming]
@@ -77,7 +77,7 @@ extension Zikr {
         id = origin.id
         hadith = origin.hadith
         text = origin.text
-        category = origin.category
+        self.category = category
         repeats = origin.repeats
         source = origin.source
             .components(separatedBy: ", ").map {
