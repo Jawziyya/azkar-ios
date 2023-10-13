@@ -12,10 +12,7 @@ public final class CounterDatabaseService {
     public init(
         databasePath: String,
         createDatabaseFileIfNeeded: Bool = true,
-        getKey: @escaping () -> Int = {
-            let startOfDay = Calendar.current.startOfDay(for: Date())
-            return Int(startOfDay.timeIntervalSince1970)
-        }
+        getKey: @escaping () -> Int
     ) {
         self.databasePath = databasePath
         self.getKey = getKey
@@ -36,6 +33,7 @@ public final class CounterDatabaseService {
                         t.autoIncrementedPrimaryKey("id").notNull()
                         t.column("key", .integer).notNull()
                         t.column("zikr_id", .integer).notNull()
+                        t.column("category", .text)
                     }
                 }
             }
@@ -52,10 +50,10 @@ public final class CounterDatabaseService {
         let key = getKey()
         do {
             return try await getDatabaseQueue().read { db in
-                if let row = try Row.fetchOne(
+                if let category = zikr.category, let row = try Row.fetchOne(
                     db,
-                    sql: "SELECT COUNT(*) as count FROM counters WHERE key = ? AND zikr_id = ?",
-                    arguments: [key, zikr.id]
+                    sql: "SELECT COUNT(*) as count FROM counters WHERE key = ? AND zikr_id = ? AND category = ?",
+                    arguments: [key, zikr.id, category.rawValue]
                 ) {
                     let count: Int = row["count"]
                     return max(0, zikr.repeats - count)
@@ -68,7 +66,7 @@ public final class CounterDatabaseService {
     }
 
     public func incrementCounter(for zikr: Zikr) async throws {
-        let newRecord = ZikrCounter(key: getKey(), zikrId: zikr.id)
+        let newRecord = ZikrCounter(key: getKey(), zikrId: zikr.id, category: zikr.category)
         try await getDatabaseQueue().write { db in
             try newRecord.insert(db)
         }

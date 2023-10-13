@@ -106,7 +106,11 @@ final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
             databasePath: FileManager.default
                 .appGroupContainerURL
                 .appendingPathComponent("counter.db")
-                .absoluteString
+                .absoluteString,
+            getKey: {
+                let startOfDay = Calendar.current.startOfDay(for: Date())
+                return Int(startOfDay.timeIntervalSince1970)
+            }
         ),
         textProcessor: TextProcessor = TextProcessor(preferences: Preferences.shared)
     ) {
@@ -142,7 +146,7 @@ final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
             let timings = zikr.audioTimings
             let playerViewModel = PlayerViewModel(
                 title: title,
-                subtitle: zikr.category.title,
+                subtitle: zikr.category?.title,
                 audioURL: url,
                 timings: timings,
                 player: player
