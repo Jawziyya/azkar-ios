@@ -55,11 +55,11 @@ public class OrientationLockedController<Content: View>: UIHostingController<Ori
         fatalError("init(coder:) has not been implemented")
     }
 
-    public struct _Root<Content: View>: View {
-        private let contentView: Content
+    public struct _Root<ContentView: View>: View {
+        private let contentView: ContentView
         private let box: Box
 
-        fileprivate init(contentView: Content, box: Box) {
+        fileprivate init(contentView: ContentView, box: Box) {
             self.contentView = contentView
             self.box = box
         }
