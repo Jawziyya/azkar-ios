@@ -11,8 +11,5 @@ typealias ZikrCategory = Entities.ZikrCategory
 typealias Fadl = Entities.Fadl
 typealias AudioTiming = Entities.AudioTiming
 
-var languageIdentifier: LangId {
-    Entities.languageIdentifier
-}
-
-typealias DatabaseService = Library.DatabaseService
+typealias DatabaseService = Library.AdhkarDatabaseService
+typealias Preference = Library.Preference

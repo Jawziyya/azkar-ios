@@ -1,0 +1,39 @@
+[
+    {
+      "version": "2.5.0",
+      "items": [
+        {
+          "title": "Support for additional languages",
+          "subtitle": "This version adds translations for Georgian, Ingush, Chechen, Uzbek and Kyrgyz languages.\nCredits: @marginani, Zara ت, 𝔄𝔪𝔦𝔰𝔥𝔨𝔞, زالينة بلييفا, @m5164841, Айдана К.",
+          "image": {
+              "type": "symbol",
+              "name": "text.bubble",
+          }
+        },
+        {
+            "title": "«Virtues of dhikr» widget",
+            "subtitle": "Azkar now has a widget which displays different virtues of remembrance of Allah.",
+            "image": {
+                "type": "symbol",
+                "name": "crown"
+            }
+        },
+        {
+          "title": "New \"bedtime\" adhkar category",
+          "subtitle": "Part of evening adhkar was split into a new category.",
+          "image": {
+              "type": "symbol",
+              "name": "bed.double.circle",
+          }
+        },
+        {
+          "title": "Adhkar Counter functionality improvements.",
+          "subtitle": "Now you can pick size of the counter in Settings menu.",
+          "image": {
+              "type": "symbol",
+              "name": "infinity.circle",
+          }
+        }
+      ]
+    }
+]

@@ -30,15 +30,23 @@ final class PlayerViewModel: ObservableObject, Equatable {
     let audioURL: URL
     let title: String
     let subtitle: String
+    let timings: [AudioTiming]
 
     private let player: Player
     private var cancellabels = Set<AnyCancellable>()
 
-    init(title: String, subtitle: String, audioURL: URL, player: Player) {
+    init(
+        title: String,
+        subtitle: String,
+        audioURL: URL,
+        timings: [AudioTiming],
+        player: Player
+    ) {
         self.audioURL = audioURL
         self.title = title
         self.subtitle = subtitle
         self.player = player
+        self.timings = timings
         isPlaying = player.isPlaying
         speed = player.speed
 
@@ -115,6 +123,14 @@ final class PlayerViewModel: ObservableObject, Equatable {
 
     func toggleSpeed() {
         player.setPlayingSpeed(speed.next)
+    }
+    
+    func goToTiming(at index: Int) {
+        guard index < timings.count else {
+            return
+        }
+        let timing = timings[index]
+        player.seek(timing.time)
     }
 
 }

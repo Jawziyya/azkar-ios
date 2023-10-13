@@ -2,6 +2,7 @@
 
 import SwiftUI
 import Popovers
+import Entities
 
 enum SettingsSection: Equatable {
     case root, themes, arabicFonts, fonts, icons
@@ -13,22 +14,27 @@ extension URL: Identifiable {
     }
 }
 
+extension Language: PickableItem {}
+
 struct SettingsView: View {
 
     @ObservedObject var viewModel: SettingsViewModel
 
     var body: some View {
-        Form {
+        List {
             Group {
-                appearanceSection
-                counterSection
-                textSettingsSection
-                
-                if viewModel.mode != .textAndAppearance {
+                switch viewModel.mode {
+                case .standart:
+                    appearanceSection
+                    counterSection
+                    textSettingsSection
                     remindersSection
+                case .text:
+                    textSettingsSection
                 }
             }
         }
+        .listStyle(.insetGrouped)
         .accentColor(Color.accent)
         .toggleStyle(SwitchToggleStyle(tint: Color.accent))
         .horizontalPaddingForLargeScreen()
@@ -120,10 +126,29 @@ struct SettingsView: View {
                         )
                         .pickerStyle(.segmented)
                     }
+                    .padding(.vertical, 3)
+                    
+                    if viewModel.preferences.counterType == .floatingButton {
+                        HStack {
+                            Text(L10n.Settings.Counter.counterSizeTitle)
+                            Spacer()
+                            Picker(
+                                CounterSize.allCases,
+                                id: \.self,
+                                selection: $viewModel.preferences.counterSize,
+                                content: { size in
+                                    Text(size.title)
+                                }
+                            )
+                            .pickerStyle(.segmented)
+                        }
+                    }
 
                     Toggle(L10n.Settings.Counter.counterTicker, isOn: $viewModel.preferences.enableCounterTicker)
+                        .padding(.vertical, 3)
 
                     Toggle(L10n.Settings.Counter.counterHaptics, isOn: $viewModel.preferences.enableCounterHapticFeedback)
+                        .padding(.vertical, 3)
 
                     Toggle(isOn: $viewModel.preferences.enableGoToNextZikrOnCounterFinished) {
                         HStack {
@@ -134,13 +159,12 @@ struct SettingsView: View {
 
                             Templates.Menu {
                                 Text(L10n.Settings.Counter.goToNextDhikrTip)
-                                    .padding()
                             } label: { _ in
                                 Image(systemName: "info.circle")
                                     .foregroundColor(Color.accent.opacity(0.75))
                             }
                         }
-                        .padding(.vertical, 8)
+                        .padding(.vertical, 3)
                     }
                 }
             }
@@ -163,6 +187,14 @@ struct SettingsView: View {
         AppIconPackListView(viewModel: viewModel.appIconPackListViewModel)
     }
     
+    var contentLanguagePicker: some View {
+        ItemPickerView(
+            selection: $viewModel.preferences.contentLanguage,
+            items: viewModel.getAvailableLanguages(),
+            dismissOnSelect: true
+        )
+    }
+    
     // MARK: - Content Size
     var textSettingsSection: some View {
         Section(
@@ -171,34 +203,39 @@ struct SettingsView: View {
                 .foregroundColor(Color.background)
                 .symbolRenderingMode(.multicolor)
         ) {
+            if viewModel.canChangeLanguage {
+                if #available(iOS 16.5, *) {
+                    languagePicker(
+                        title: L10n.Settings.Text.language,
+                        binding: $viewModel.preferences.contentLanguage
+                    )
+                    .pickerStyle(.menu)
+                } else {
+                    PickerView(
+                        label: L10n.Settings.Text.language,
+                        titleDisplayMode: .inline,
+                        subtitle: viewModel.preferences.contentLanguage.title,
+                        destination: contentLanguagePicker
+                    )
+                }
+            }
+            
             NavigationLink {
                 arabicFontsPicker
             } label: {
-                HStack {
-                    Text(L10n.Settings.Text.arabicTextFont)
-                        .font(Font.system(.body, design: .rounded))
-                        .foregroundColor(Color.text)
-                    Spacer()
-                    Text(viewModel.preferences.preferredArabicFont.name)
-                        .multilineTextAlignment(.trailing)
-                        .font(Font.system(.body, design: .rounded))
-                        .foregroundColor(Color.secondary)
-                }
+                createNavigationPickerLabel(
+                    label: L10n.Settings.Text.arabicTextFont,
+                    value: viewModel.preferences.preferredArabicFont.name
+                )
             }
             
             NavigationLink {
                 translationFontsPicker
             } label: {
-                HStack {
-                    Text(L10n.Settings.Text.translationTextFont)
-                        .font(Font.system(.body, design: .rounded))
-                        .foregroundColor(Color.text)
-                    Spacer()
-                    Text(viewModel.preferences.preferredTranslationFont.name)
-                        .multilineTextAlignment(.trailing)
-                        .font(Font.system(.body, design: .rounded))
-                        .foregroundColor(Color.secondary)
-                }
+                createNavigationPickerLabel(
+                    label: L10n.Settings.Text.translationTextFont,
+                    value: viewModel.preferences.preferredTranslationFont.name
+                )
             }
 
             Toggle(isOn: .init(get: {
@@ -247,8 +284,8 @@ struct SettingsView: View {
             if viewModel.preferences.useSystemFontSize == false {
                 self.sizePicker
             }
-
-            NavigationLink(L10n.Settings.Text.lineSpacing) {
+            
+            NavigationLink {
                 Form {
                     Group {
                         Section(L10n.Settings.Text.arabicLineSpacing) {
@@ -264,6 +301,49 @@ struct SettingsView: View {
                 .accentColor(Color.accent)
                 .horizontalPaddingForLargeScreen()
                 .background(Color.background.edgesIgnoringSafeArea(.all))
+            } label: {
+                createNavigationPickerLabel(
+                    label: L10n.Settings.Text.lineSpacing,
+                    value: ""
+                )
+            }
+        }
+    }
+    
+    private func createNavigationPickerLabel(
+        label: String,
+        value: String?
+    ) -> some View {
+        HStack {
+            Text(label)
+                .font(Font.system(.body, design: .rounded))
+                .foregroundColor(Color.text)
+            Spacer()
+            if let value {
+                Text(value)
+                    .multilineTextAlignment(.trailing)
+                    .font(Font.system(.body, design: .rounded))
+                    .foregroundColor(Color.secondary)
+            }
+        }
+        .padding(.vertical, 8)
+    }
+    
+    func languagePicker(
+        title: String,
+        binding: Binding<Language>
+    ) -> some View {
+        Picker(
+            selection: binding,
+            label: Text(title)
+                .font(Font.system(.body, design: .rounded))
+                .padding(.vertical, 8)
+        ) {
+            ForEach(viewModel.getAvailableLanguages()) { lang in
+                Text(lang.title)
+                    .font(Font.system(.body, design: .rounded))
+                    .id(lang.id)
+                    .tag(lang)
             }
         }
     }
@@ -283,6 +363,7 @@ struct SettingsView: View {
             }
         }
         .pickerStyle(SegmentedPickerStyle())
+        .padding(.vertical, 8)
     }
 
     var lineSpacingPicker: some View {
@@ -342,7 +423,7 @@ struct SettingsView: View {
             if UIApplication.shared.inDebugMode {
                 Button(action: viewModel.navigateToNotificationsList) {
                     Text("[DEBUG] Scheduled notifications")
-                        .padding()
+                        .padding(.vertical, 8)
                 }
             }
         }
@@ -370,48 +451,21 @@ struct SettingsView: View {
 
 }
 
-struct PickerView<T: View>: View {
-
-    var label: String
-    var navigationTitle: String?
-    var titleDisplayMode: NavigationBarItem.TitleDisplayMode = .automatic
-    var subtitle: String
-    var destination: T
-
-    var body: some View {
-        NavigationLink(
-            destination: destination.navigationBarTitle(navigationTitle ?? label, displayMode: titleDisplayMode)
-            )
-        {
-            HStack(spacing: 8) {
-                Text(label)
-                    .font(Font.system(.body, design: .rounded))
-                    .foregroundColor(Color.text)
-                Spacer()
-                Text(subtitle)
-                    .multilineTextAlignment(.trailing)
-                    .font(Font.system(.body, design: .rounded))
-                    .foregroundColor(Color.secondary)
-            }
-            .padding(.vertical, 10)
-            .buttonStyle(PlainButtonStyle())
-        }
-    }
-
-}
-
 struct SettingsView_Previews: PreviewProvider {
     static var previews: some View {
-        SettingsView(
-            viewModel: SettingsViewModel(
-                preferences: Preferences.shared,
-                router: RootCoordinator(
+        NavigationView {
+            SettingsView(
+                viewModel: SettingsViewModel(
+                    databaseService: DatabaseService(language: .english),
                     preferences: Preferences.shared,
-                    deeplinker: Deeplinker(),
-                    player: Player.test
+                    router: RootCoordinator(
+                        preferences: Preferences.shared,
+                        deeplinker: Deeplinker(),
+                        player: Player.test
+                    )
                 )
             )
-        )
-        .environment(\.colorScheme, .dark)
+        }
     }
+    
 }

@@ -7,6 +7,11 @@ disabled_rules:
  - force_try
  - type_name
  - force_cast
+ - line_length
+ - large_tuple
+ - trailing_comma
+ - inclusive_language
+ - missing_docs
 
 opt_in_rules:
  - empty_count
@@ -20,20 +25,16 @@ excluded:
 included:
  - Azkar
 
-line_length:
- warning: 300
- error: 500
-
 file_length:
- warning: 200
- error: 500
+ warning: 500
+ error: 800
 
 type_body_length:
- warning: 200
+ warning: 300
  error: 500
  
 function_body_length:
- warning: 50
+ warning: 150
  error: 200
 
 reporter: xcode
@@ -46,3 +47,6 @@ warning_threshold: 200
 
 cyclomatic_complexity:
  ignores_case_statements: true
+
+nesting:
+ type_level: 3

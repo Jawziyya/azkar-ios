@@ -28,7 +28,6 @@ struct ActivityIndicator: UIViewRepresentable {
 
 }
 
-
 struct ActivityIndicatorView<Content> : View where Content : View {
 
     @Binding var isDisplayed : Bool

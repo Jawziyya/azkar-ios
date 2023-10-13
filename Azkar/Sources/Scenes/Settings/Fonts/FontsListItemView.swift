@@ -3,6 +3,7 @@
 import SwiftUI
 import Nuke
 import NukeUI
+import Entities
 
 struct FontsListItemView: View {
     
@@ -73,7 +74,10 @@ struct FontsListItemView: View {
 struct FontsListItemView_Previews: PreviewProvider {
     static var previews: some View {
         FontsListItemView(
-            vm: AppFontViewModel(font: ArabicFont.noto),
+            vm: AppFontViewModel(
+                font: ArabicFont.noto,
+                language: Language.english
+            ),
             isArabicFontsType: false,
             isLoadingFont: false,
             isSelectedFont: false,

@@ -12,4 +12,8 @@ extension FileManager {
         applicationSupportDirectoryURL.appendingPathComponent("fonts")
     }
     
+    var appGroupContainerURL: URL {
+        containerURL(forSecurityApplicationGroupIdentifier: "group.io.jawziyya.azkar-app")!
+    }
+    
 }

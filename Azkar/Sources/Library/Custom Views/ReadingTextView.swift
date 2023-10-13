@@ -4,6 +4,7 @@ import SwiftUI
 
 struct ReadingTextView: View {
 
+    let action: (() -> Void)?
     let text: String
     let isArabicText: Bool
     let font: AppFont
@@ -11,18 +12,23 @@ struct ReadingTextView: View {
     var sizeCategory: ContentSizeCategory? = Preferences.shared.sizeCategory
 
     var body: some View {
-        Group {
-            if isArabicText {
-                Text(.init(text))
-                    .font(Font.customFont(font, style: .title1, sizeCategory: sizeCategory))
-                    .lineSpacing(lineSpacing)
-            } else {
-                Text(.init(text))
-                    .font(Font.customFont(font, style: .body).leading(.tight))
-                    .lineSpacing(lineSpacing)
+        Button(
+            action: { action?() },
+            label: {
+                if isArabicText {
+                    Text(.init(text))
+                        .font(Font.customFont(font, style: .title1, sizeCategory: sizeCategory))
+                        .lineSpacing(lineSpacing)
+                } else {
+                    Text(.init(text))
+                        .font(Font.customFont(font, style: .body).leading(.tight))
+                        .lineSpacing(lineSpacing)
+                }
             }
-        }
+        )
+        .allowsHitTesting(action != nil)
         .multilineTextAlignment(isArabicText ? .trailing : .leading)
+        .buttonStyle(.plain)
     }
 
 }

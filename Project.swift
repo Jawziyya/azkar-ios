@@ -1,4 +1,3 @@
-import Foundation
 import ProjectDescription
 
 // MARK: - Constants
@@ -19,12 +18,40 @@ private func getDefaultSettings(
 ) -> [String: SettingValue] {
     let provisioningProfileType = isDistribution ? "AppStore" : "Development"
     return [
+        "ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS": "YES",
         "CODE_SIGN_IDENTITY": isDistribution ? "iPhone Distribution" : "iPhone Developer",
         "CODE_SIGN_IDENTITY[sdk=macosx*]": isDistribution ? "Apple Distribution" : "Mac Developer",
         "PROVISIONING_PROFILE_SPECIFIER": "match \(provisioningProfileType) \(bundleId)",
         "PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]": "match \(provisioningProfileType) \(bundleId) catalyst",
     ]
 }
+
+let packages: [Package] = [
+    // MARK: Internal depedencies.
+    .local(path: AzkarPackage.audioPlayer.path),
+    .local(path: AzkarPackage.core.path),
+
+    // MARK: Services.
+    .remote(url: "https://github.com/RevenueCat/purchases-ios.git", requirement: .upToNextMajor(from: "4.19.0")),
+
+    // MARK: Network.
+    .remote(url: "https://github.com/Alamofire/Alamofire", requirement: .upToNextMajor(from: "5.0.0")),
+
+    // MARK: Utilities.
+    .remote(url: "https://github.com/weichsel/ZIPFoundation", requirement: .upToNextMajor(from: "0.9.0")),
+    .remote(url: "https://github.com/bizz84/SwiftyStoreKit", requirement: .upToNextMajor(from: "0.16.3")),
+
+    // MARK: UI.
+    .remote(url: "https://github.com/radianttap/Coordinator", requirement: .upToNextMajor(from: "6.4.2")),
+    .remote(url: "https://github.com/airbnb/lottie-ios", requirement: .upToNextMajor(from: "3.0.0")),
+    .remote(url: "https://github.com/kean/NukeUI", requirement: .upToNextMajor(from: "0.7.0")),
+    .remote(url: "https://github.com/SwiftUIX/SwiftUIX", requirement: .upToNextMajor(from: "0.1.3")),
+    .remote(url: "https://github.com/siteline/SwiftUI-Introspect", requirement: .upToNextMajor(from: "0.1.3")),
+    .remote(url: "https://github.com/SwiftUI-Plus/ActivityView", requirement: .upToNextMajor(from: "1.0.0")),
+    .remote(url: "https://github.com/demharusnam/SwiftUIDrag", requirement: .revision("0686318a")),
+    .remote(url: "https://github.com/aheze/Popovers", requirement: .upToNextMajor(from: "1.3.2")),
+    .remote(url: "https://github.com/SvenTiigi/WhatsNewKit", requirement: .upToNextMajor(from: "2.0.0")),
+]
 
 let baseSettingsDictionary = SettingsDictionary()
     .bitcodeEnabled(false)
@@ -34,7 +61,7 @@ let baseSettingsDictionary = SettingsDictionary()
     // Should be removed when the bug is resolved.
     .merging([kDeadCodeStripping: SettingValue(booleanLiteral: false)])
 
-let settings = Settings(
+let settings = Settings.settings(
     base: baseSettingsDictionary
 )
 
@@ -82,15 +109,15 @@ enum AzkarTarget: String, CaseIterable {
                 infoPlist: .file(path: "\(rawValue)/Info.plist"),
                 sources: "Azkar/Sources/**",
                 resources: "Azkar/Resources/**",
-                actions: [
-                    TargetAction.post(path: "./scripts/swiftlint.sh", name: "SwiftLint")
+                entitlements: "Azkar/Azkar.entitlements",
+                scripts: [
+                    .post(path: "./scripts/swiftlint.sh", name: "SwiftLint")
                 ],
                 dependencies: [
                     .target(name: "AzkarWidgets"),
-                    .sdk(name: "SwiftUI.framework"),
-                    .package(product: AzkarPackage.audioPlayer.name),
-                    .package(product: AzkarPackage.library.name),
-                    .package(product: AzkarPackage.entities.name),
+                    .package(product: "Entities"),
+                    .package(product: "Library"),
+                    .package(product: "AudioPlayer"),
                     .package(product: "SwiftyStoreKit"),
                     .package(product: "Coordinator"),
                     .package(product: "Lottie"),
@@ -103,8 +130,9 @@ enum AzkarTarget: String, CaseIterable {
                     .package(product: "ActivityView"),
                     .package(product: "SwiftUIDrag"),
                     .package(product: "Popovers"),
+                    .package(product: "WhatsNewKit"),
                 ],
-                settings: Settings(
+                settings: Settings.settings(
                     base: baseSettingsDictionary
                         .merging(["DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER": "NO"])
                     ,
@@ -137,7 +165,10 @@ enum AzkarTarget: String, CaseIterable {
                 bundleId: bundleId,
                 deploymentTarget: deploymentTarget,
                 infoPlist: .file(path: "AzkarWidgets/Info.plist"),
-                sources: "AzkarWidgets/Sources/**",
+                sources: [
+                    "AzkarWidgets/Sources/**",
+                    "Azkar/Sources/Generated/Strings+Generated.swift",
+                ],
                 resources: [
                     "AzkarWidgets/Resources/**",
                     "Azkar/Resources/azkar.db",
@@ -148,10 +179,10 @@ enum AzkarTarget: String, CaseIterable {
                 ],
                 entitlements: "AzkarWidgets/AzkarWidgets.entitlements",
                 dependencies: [
-                    .package(product: AzkarPackage.library.name),
-                    .package(product: AzkarPackage.entities.name),
+                    .package(product: "Entities"),
+                    .package(product: "Library"),
                 ],
-                settings: Settings(
+                settings: Settings.settings(
                     base: baseSettingsDictionary
                         .merging(["DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER": "NO"])
                     ,
@@ -191,7 +222,7 @@ enum AzkarTarget: String, CaseIterable {
                 dependencies: [
                     .target(name: AzkarTarget.azkarApp.rawValue),
                 ],
-                settings: Settings(
+                settings: Settings.settings(
                     base: baseSettingsDictionary
                 ),
                 launchArguments: []
@@ -213,7 +244,7 @@ enum AzkarTarget: String, CaseIterable {
                 dependencies: [
                     .target(name: AzkarTarget.azkarApp.rawValue),
                 ],
-                settings: Settings(
+                settings: Settings.settings(
                     base: baseSettingsDictionary
                 ),
                 launchArguments: []
@@ -223,9 +254,8 @@ enum AzkarTarget: String, CaseIterable {
 }
 
 enum AzkarPackage: String {
-    case entities = "Entities"
+    case core = "Core"
     case library = "Library"
-    case databaseClient = "DatabaseClient"
     case audioPlayer = "AudioPlayer"
 
     var name: String { rawValue }
@@ -235,36 +265,13 @@ enum AzkarPackage: String {
     }
 }
 
-let packages: [Package] = [
-    // MARK: Internal depedencies.
-    .local(path: AzkarPackage.audioPlayer.path),
-    .local(path: AzkarPackage.entities.path),
-    .local(path: AzkarPackage.library.path),
-
-    // MARK: Services.
-    .remote(url: "https://github.com/RevenueCat/purchases-ios.git", requirement: .upToNextMajor(from: "4.19.0")),
-
-    // MARK: Network.
-    .remote(url: "https://github.com/Alamofire/Alamofire", requirement: .upToNextMajor(from: "5.0.0")),
-
-    // MARK: Utilities.
-    .remote(url: "https://github.com/weichsel/ZIPFoundation", requirement: .upToNextMajor(from: "0.9.0")),
-    .remote(url: "https://github.com/bizz84/SwiftyStoreKit", requirement: .upToNextMajor(from: "0.16.3")),
-
-    // MARK: UI.
-    .remote(url: "https://github.com/radianttap/Coordinator", requirement: .upToNextMajor(from: "6.4.2")),
-    .remote(url: "https://github.com/airbnb/lottie-ios", requirement: .upToNextMajor(from: "3.0.0")),
-    .remote(url: "https://github.com/kean/NukeUI", requirement: .upToNextMajor(from: "0.7.0")),
-    .remote(url: "https://github.com/SwiftUIX/SwiftUIX", requirement: .upToNextMajor(from: "0.1.3")),
-    .remote(url: "https://github.com/siteline/SwiftUI-Introspect", requirement: .upToNextMajor(from: "0.1.3")),
-    .remote(url: "https://github.com/SwiftUI-Plus/ActivityView", requirement: .upToNextMajor(from: "1.0.0")),
-    .remote(url: "https://github.com/demharusnam/SwiftUIDrag", requirement: .revision("0686318a")),
-    .remote(url: "https://github.com/aheze/Popovers", requirement: .upToNextMajor(from: "1.3.2")),
-]
-
 let project = Project(
     name: projectName,
     organizationName: companyName,
+    options: .options(
+        developmentRegion: "en",
+        disableSynthesizedResourceAccessors: true
+    ),
     packages: packages,
     settings: settings,
     targets: AzkarTarget.allCases.map(\.target),
@@ -273,14 +280,14 @@ let project = Project(
             name: AzkarTarget.azkarApp.rawValue,
             shared: true,
             buildAction: BuildAction(targets: ["Azkar"]),
-            runAction: RunAction(executable: "Azkar")
+            runAction: RunAction.runAction(executable: "Azkar")
         ),
         Scheme(
             name: AzkarTarget.azkarAppUITests.rawValue,
             shared: true,
             buildAction: BuildAction(targets: ["AzkarUITests"]),
-            testAction: TestAction(targets: ["AzkarUITests"]),
-            runAction: RunAction(executable: "Azkar")
+            testAction: TestAction.targets(["AzkarUITests"]),
+            runAction: RunAction.runAction(executable: "Azkar")
         )
     ],
     additionalFiles: []

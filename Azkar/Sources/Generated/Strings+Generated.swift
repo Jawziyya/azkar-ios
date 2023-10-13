@@ -58,11 +58,15 @@ internal enum L10n {
     internal static let evening = L10n.tr("Localizable", "category.evening")
     /// Morning
     internal static let morning = L10n.tr("Localizable", "category.morning")
+    /// Bedtime
+    internal static let night = L10n.tr("Localizable", "category.night")
     /// Important adhkar
     internal static let other = L10n.tr("Localizable", "category.other")
   }
 
   internal enum Common {
+    /// Continue
+    internal static let `continue` = L10n.tr("Localizable", "common.continue")
     /// Default
     internal static let `default` = L10n.tr("Localizable", "common.default")
     /// Done
@@ -246,6 +250,8 @@ internal enum L10n {
     internal enum Counter {
       /// Enable counter haptic feedback
       internal static let counterHaptics = L10n.tr("Localizable", "settings.counter.counter-haptics")
+      /// Size of counter
+      internal static let counterSizeTitle = L10n.tr("Localizable", "settings.counter.counter-size-title")
       /// Enable counter ticker sound
       internal static let counterTicker = L10n.tr("Localizable", "settings.counter.counter-ticker")
       /// Counter type
@@ -366,6 +372,8 @@ internal enum L10n {
       internal static let arabicTextFont = L10n.tr("Localizable", "settings.text.arabic-text-font")
       /// Text size
       internal static let fontSize = L10n.tr("Localizable", "settings.text.font-size")
+      /// Language
+      internal static let language = L10n.tr("Localizable", "settings.text.language")
       /// Line spacing
       internal static let lineSpacing = L10n.tr("Localizable", "settings.text.line-spacing")
       /// Show tashkeel
@@ -503,6 +511,8 @@ internal enum L10n {
       internal static let abudaud = L10n.tr("Localizable", "text.source.abudaud")
       /// Ahmad
       internal static let ahmad = L10n.tr("Localizable", "text.source.ahmad")
+      /// Beyhaqi
+      internal static let beyhaqi = L10n.tr("Localizable", "text.source.beyhaqi")
       /// al-Bukhari
       internal static let bukhari = L10n.tr("Localizable", "text.source.bukhari")
       /// ad-Darimi
@@ -517,6 +527,20 @@ internal enum L10n {
       internal static let quran = L10n.tr("Localizable", "text.source.quran")
       /// at-Tirmidhi
       internal static let tirmidhi = L10n.tr("Localizable", "text.source.tirmidhi")
+    }
+  }
+
+  internal enum Updates {
+    /// What's new?
+    internal static let title = L10n.tr("Localizable", "updates.title")
+  }
+
+  internal enum Widgets {
+    internal enum Virtues {
+      /// Different Ayas and ahadith describing virtues of remembering Allah Almighty
+      internal static let description = L10n.tr("Localizable", "widgets.virtues.description")
+      /// Virtues of dhikr
+      internal static let title = L10n.tr("Localizable", "widgets.virtues.title")
     }
   }
 }

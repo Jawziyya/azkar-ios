@@ -23,6 +23,7 @@ enum RootSection: Equatable {
     case subscribe
     case dismissModal
     case notificationsList
+    case whatsNew
 }
 
 protocol RootRouter: AnyObject {
@@ -32,7 +33,9 @@ protocol RootRouter: AnyObject {
 final class RootCoordinator: NavigationCoordinator, RootRouter {
 
     let preferences: Preferences
-    let databaseService: DatabaseService
+    var databaseService: DatabaseService {
+        DatabaseService(language: preferences.contentLanguage)
+    }
     let deeplinker: Deeplinker
     let player: Player
 
@@ -41,12 +44,10 @@ final class RootCoordinator: NavigationCoordinator, RootRouter {
     private var cancellables = Set<AnyCancellable>()
 
     init(
-        databaseService: DatabaseService = DatabaseService.shared,
         preferences: Preferences,
         deeplinker: Deeplinker,
         player: Player
     ) {
-        self.databaseService = databaseService
         self.preferences = preferences
         self.deeplinker = deeplinker
         self.player = player
@@ -57,10 +58,14 @@ final class RootCoordinator: NavigationCoordinator, RootRouter {
 
         super.init(rootViewController: navigationController)
         
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+            self.trigger(.whatsNew)
+        }
+        
         preferences.$colorTheme
             .receive(on: RunLoop.main)
             .prepend(preferences.colorTheme)
-            .sink(receiveValue: { theme in
+            .sink(receiveValue: { _ in
                 let color = UIColor(Color.accent)
                 navigationController.navigationBar.tintColor = color
                 UINavigationBar.appearance().tintColor = color
@@ -88,10 +93,13 @@ final class RootCoordinator: NavigationCoordinator, RootRouter {
 
     func azkarForCategory(_ category: ZikrCategory) throws -> [ZikrViewModel] {
         let adhkar = try databaseService.getAdhkar(category)
-        let viewModels = try adhkar.map { zikr in
+        let viewModels = try adhkar.enumerated().map { idx, zikr in
             try ZikrViewModel(
                 zikr: zikr,
-                hadith: zikr.hadith.flatMap(databaseService.getHadith),
+                row: idx + 1,
+                hadith: zikr.hadith.flatMap { id in
+                    try databaseService.getHadith(id)
+                },
                 preferences: preferences,
                 player: player
             )
@@ -128,7 +136,7 @@ private extension RootCoordinator {
         switch section {
         case .aboutApp, .category, .root, .settings:
             selectedZikrPageIndex.send(0)
-        case .zikr, .subscribe, .dismissModal, .modalSettings, .notificationsList, .zikrPages, .goToPage:
+        case .zikr, .subscribe, .dismissModal, .modalSettings, .notificationsList, .zikrPages, .goToPage, .whatsNew:
             break
         }
         
@@ -136,6 +144,7 @@ private extension RootCoordinator {
 
         case .root:
             let viewModel = MainMenuViewModel(
+                databaseService: databaseService,
                 router: self,
                 preferences: preferences,
                 player: player
@@ -197,8 +206,15 @@ private extension RootCoordinator {
                 return
             }
 
-            let hadith = try? zikr.hadith.flatMap(databaseService.getHadith)
-            let viewModel = ZikrViewModel(zikr: zikr, hadith: hadith, preferences: preferences, player: player)
+            let hadith = try? zikr.hadith.flatMap { id in
+                try databaseService.getHadith(id)
+            }
+            let viewModel = ZikrViewModel(
+                zikr: zikr,
+                hadith: hadith,
+                preferences: preferences,
+                player: player
+            )
             let view = ZikrView(viewModel: viewModel, incrementAction: Empty().eraseToAnyPublisher())
             let viewController = UIHostingController(rootView: view)
 
@@ -212,7 +228,12 @@ private extension RootCoordinator {
             selectedZikrPageIndex.send(page)
 
         case .settings(let section):
-            let viewModel = SettingsViewModel(preferences: preferences, notificationsHandler: NotificationsHandler.shared, router: self)
+            let viewModel = SettingsViewModel(
+                databaseService: databaseService,
+                preferences: preferences,
+                notificationsHandler: NotificationsHandler.shared,
+                router: self
+            )
             let view = SettingsView(viewModel: viewModel)
 
             switch section {
@@ -243,7 +264,13 @@ private extension RootCoordinator {
             }
             
         case .modalSettings(let mode):
-            let viewModel = SettingsViewModel(mode: mode, preferences: preferences, notificationsHandler: NotificationsHandler.shared, router: self)
+            let viewModel = SettingsViewModel(
+                mode: mode,
+                databaseService: databaseService,
+                preferences: preferences,
+                notificationsHandler: NotificationsHandler.shared,
+                router: self
+            )
             let view = SettingsView(viewModel: viewModel)
             let viewController = UIHostingController(rootView: view)
             viewController.title = L10n.Settings.title
@@ -282,6 +309,13 @@ private extension RootCoordinator {
             
         case .dismissModal:
             (rootViewController.presentedViewController ?? rootViewController).dismiss(animated: true)
+            
+        case .whatsNew:
+            guard let viewController = getWhatsNewViewController() else {
+                return
+            }
+            
+            present(viewController)
 
         }
     }

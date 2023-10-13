@@ -41,7 +41,14 @@ struct CollapsableSection: View, Equatable {
 
             ZStack {
                 if isExpanded {
-                    ReadingTextView(text: text, isArabicText: isArabicText, font: font, lineSpacing: lineSpacing, sizeCategory: sizeCategory)
+                    ReadingTextView(
+                        action: nil,
+                        text: text,
+                        isArabicText: isArabicText,
+                        font: font,
+                        lineSpacing: lineSpacing,
+                        sizeCategory: sizeCategory
+                    )
                     .clipped()
                     .transition(.move(edge: .top).combined(with: .opacity))
                 }

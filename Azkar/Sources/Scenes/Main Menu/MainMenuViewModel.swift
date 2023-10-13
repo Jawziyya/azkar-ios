@@ -9,19 +9,13 @@
 import SwiftUI
 import AudioPlayer
 import Combine
+import Entities
 
 final class MainMenuViewModel: ObservableObject {
 
     @Published var title = ""
 
     unowned let router: RootRouter
-
-    enum Section: CaseIterable {
-        case dayNight
-        case afterSalah
-        case info
-        case notificationsAccess
-    }
 
     let currentYear: String
 
@@ -35,7 +29,7 @@ final class MainMenuViewModel: ObservableObject {
     let otherAzkarModels: [AzkarMenuItem]
     let infoModels: [AzkarMenuOtherItem]
     
-    let fadl: Fadl?
+    @Published var fadl: Fadl?
 
     @Published var additionalMenuItems: [AzkarMenuOtherItem] = []
     @Published var enableEidBackground = false
@@ -70,7 +64,7 @@ final class MainMenuViewModel: ObservableObject {
     }()
 
     init(
-        databaseService: DatabaseService = DatabaseService.shared,
+        databaseService: DatabaseService,
         router: RootRouter,
         preferences: Preferences,
         player: Player
@@ -80,8 +74,15 @@ final class MainMenuViewModel: ObservableObject {
         self.player = player
 
         fastingDua = try? databaseService.getZikr(51)
-
+        
         otherAzkarModels = [
+            AzkarMenuItem(
+                category: .night,
+                imageName: "bed.double.circle.fill",
+                title: L10n.Category.night,
+                color: Color.init(uiColor: .systemMint),
+                count: nil
+            ),
             AzkarMenuItem(
                 category: .afterSalah,
                 imageName: "mosque",
@@ -104,8 +105,6 @@ final class MainMenuViewModel: ObservableObject {
             AzkarMenuOtherItem(groupType: .settings, imageName: "gear", title: L10n.Root.settings, color: Color.init(.systemGray)),
         ]
         
-        fadl = try? databaseService.getRandomFadl()
-
         var year = "\(Date().hijriYear) г.х."
         switch Calendar.current.identifier {
         case .islamic, .islamicCivil, .islamicTabular, .islamicUmmAlQura:
@@ -144,6 +143,13 @@ final class MainMenuViewModel: ObservableObject {
                 self.objectWillChange.send()
             }
             .store(in: &cancellables)
+        
+        preferences
+            .$contentLanguage
+            .map { language in
+                try? databaseService.getRandomFadl(language: language)
+            }
+            .assign(to: &$fadl)
     }
 
     private func hideIconPacksMessage() {

@@ -1,15 +1,28 @@
 // Copyright © 2021 Al Jawziyya. All rights reserved. 
 
 import SwiftUI
+import Entities
 
 final class FontsViewModel: ObservableObject {
     
     @Published var didLoadData = false
     @Published var fonts: [FontsSection] = [
-        FontsSection(type: .appFont(TranslationFont.FontType.serif), fonts: [TranslationFont.placeholder, TranslationFont.placeholder, TranslationFont.placeholder].map(AppFontViewModel.init)),
-        FontsSection(type: .appFont(TranslationFont.FontType.sansSerif), fonts: [TranslationFont.placeholder, TranslationFont.placeholder].map(AppFontViewModel.init)),
-        FontsSection(type: .appFont(TranslationFont.FontType.handwritten), fonts: [TranslationFont.placeholder, TranslationFont.placeholder, TranslationFont.placeholder].map(AppFontViewModel.init)),
-        FontsSection(type: .appFont(TranslationFont.FontType.decorative), fonts: [TranslationFont.placeholder].map(AppFontViewModel.init)),
+        FontsSection(
+            type: .appFont(TranslationFont.FontType.serif),
+            fonts: [TranslationFont.placeholder, TranslationFont.placeholder, TranslationFont.placeholder].map { AppFontViewModel(font: $0, language: Language.getSystemLanguage()) }
+        ),
+        FontsSection(
+            type: .appFont(TranslationFont.FontType.sansSerif),
+            fonts: [TranslationFont.placeholder, TranslationFont.placeholder].map { AppFontViewModel(font: $0, language: Language.getSystemLanguage()) }
+        ),
+        FontsSection(
+            type: .appFont(TranslationFont.FontType.handwritten),
+            fonts: [TranslationFont.placeholder, TranslationFont.placeholder, TranslationFont.placeholder].map { AppFontViewModel(font: $0, language: Language.getSystemLanguage()) }
+        ),
+        FontsSection(
+            type: .appFont(TranslationFont.FontType.decorative),
+            fonts: [TranslationFont.placeholder].map { AppFontViewModel(font: $0, language: Language.getSystemLanguage()) }
+        ),
     ]
     @Published var preferredFont: AppFont
     @Published var loadingFonts = Set<UUID>()
@@ -127,7 +140,7 @@ final class FontsViewModel: ObservableObject {
     }
     
     private func loadFonts() async throws {
-        let showNonCyrillicFonts = languageIdentifier != .ru
+        let showNonCyrillicFonts = preferences.contentLanguage != .russian
         let isArabicFonts = fontsType == .arabic
         let fonts: [AppFont]
         if isArabicFonts {
@@ -153,12 +166,16 @@ final class FontsViewModel: ObservableObject {
                             }
                             return true
                         }
-                        .map(AppFontViewModel.init)
+                        .map { font in
+                            AppFontViewModel(font: font, language: self.preferences.contentLanguage)
+                        }
                     return FontsSection(type: FontsSection.FontsSectionType(from: style), fonts: fontViewModels)
                 }
             sections.insert(FontsSection(
                 type: .stantard,
-                fonts: standardFonts.map { AppFontViewModel(font: $0) }
+                fonts: standardFonts.map { font in
+                    AppFontViewModel(font: font, language: self.preferences.contentLanguage)
+                }
             ), at: 0)
             self.fonts = sections
             self.didLoadData = true

@@ -105,6 +105,13 @@ final class Player: NSObject, ObservableObject {
         item.artist = subtitle
         playItem(item)
     }
+    
+    func playItem(_ item: AudioItem, atVolume volume: Float) {
+        let previousVolume = audioPlayer.volume
+        audioPlayer.volume = volume
+        playItem(item)
+        audioPlayer.volume = previousVolume
+    }
 
     func playItem(_ item: AudioItem) {
         audioPlayer.play(item: item)

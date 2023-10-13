@@ -9,6 +9,7 @@
 import UIKit
 import Combine
 import SwiftUI
+import Entities
 
 enum CounterType: Int, Codable, CaseIterable, Identifiable {
     case floatingButton, tap
@@ -21,6 +22,30 @@ enum CounterType: Int, Codable, CaseIterable, Identifiable {
         switch self {
         case .floatingButton: return L10n.Settings.Counter.counterTypeButton
         case .tap: return L10n.Settings.Counter.counterTypeTap
+        }
+    }
+}
+
+enum CounterSize: String, Codable, CaseIterable, Identifiable {
+    case small, medium, large
+    
+    var id: String {
+        rawValue
+    }
+    
+    var value: CGFloat {
+        switch self {
+        case .small: return 45
+        case .medium: return 55
+        case .large: return 65
+        }
+    }
+    
+    var title: String {
+        switch self {
+        case .small: return "S"
+        case .medium: return "M"
+        case .large: return "L"
         }
     }
 }
@@ -132,8 +157,11 @@ final class Preferences: ObservableObject {
 
     @Preference(Keys.enableCounterHapticFeedback, defaultValue: true)
     var enableCounterHapticFeedback: Bool
+    
+    @Preference(Keys.counterSize, defaultValue: CounterSize.medium)
+    var counterSize: CounterSize
 
-    @Preference(Keys.enableGoToNextZikrOnCounterFinished, defaultValue: true)
+    @Preference(Keys.enableGoToNextZikrOnCounterFinished, defaultValue: false)
     var enableGoToNextZikrOnCounterFinished: Bool
 
     @Preference(Keys.azkarCounteType, defaultValue: CounterType.floatingButton)
@@ -144,6 +172,13 @@ final class Preferences: ObservableObject {
 
     @Preference(Keys.enableLineBreaks, defaultValue: true)
     var enableLineBreaks
+    
+    @Preference(
+        Keys.contentLanguage,
+        defaultValue: Language.getSystemLanguage(),
+        userDefaults: .appGroup
+    )
+    var contentLanguage: Language
     
     private func getFont<T: AppFont & Decodable>(_ key: String) -> T? {
         guard

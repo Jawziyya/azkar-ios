@@ -17,6 +17,7 @@ final class Deeplinker: ObservableObject {
         case settings(SettingsSection)
         case azkar(ZikrCategory)
     }
+    
 }
 
 struct RouteKey: EnvironmentKey {
@@ -24,13 +25,13 @@ struct RouteKey: EnvironmentKey {
         return nil
     }
 }
+
 extension EnvironmentValues {
     var route: Deeplinker.Route? {
         get {
-            self[RouteKey]
-        }
-        set {
-            self[RouteKey] = newValue
+            self[RouteKey.self]
+        } set {
+            self[RouteKey.self] = newValue
         }
     }
 }

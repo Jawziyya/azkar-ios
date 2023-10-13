@@ -13,8 +13,7 @@ struct SupportedOrientationsPreferenceKey: PreferenceKey {
     static var defaultValue: UIInterfaceOrientationMask {
         if UIDevice.current.userInterfaceIdiom == .pad {
             return .all
-        }
-        else {
+        } else {
             return .allButUpsideDown
         }
     }

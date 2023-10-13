@@ -74,7 +74,7 @@ final class AppInfoViewModel: ObservableObject {
         
         Timer.publish(every: 3, on: .main, in: .default)
             .autoconnect()
-            .scan(0, { time, output in
+            .scan(0, { time, _ in
                 time + 1
             })
             .receive(on: RunLoop.main)
