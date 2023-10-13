@@ -1,16 +1,17 @@
 // Copyright © 2022 Al Jawziyya. All rights reserved. 
 
 import Foundation
+import Extensions
 
-struct TextProcessor {
+public struct TextProcessor {
 
-    private let preferences: Preferences
+    private let preferences: TextProcessingPreferences
 
-    init(preferences: Preferences) {
+    public init(preferences: TextProcessingPreferences) {
         self.preferences = preferences
     }
 
-    func processArabicText(_ text: String) -> [String] {
+    public func processArabicText(_ text: String) -> [String] {
         var t = text
 
         if !preferences.showTashkeel || !preferences.preferredArabicFont.hasTashkeelSupport {
@@ -24,7 +25,7 @@ struct TextProcessor {
         }
     }
 
-    func processTranslationText(_ text: String) -> [String] {
+    public func processTranslationText(_ text: String) -> [String] {
         let t = text
 
         if preferences.enableLineBreaks {
@@ -34,7 +35,7 @@ struct TextProcessor {
         }
     }
 
-    func processTransliterationText(_ text: String) -> [String] {
+    public func processTransliterationText(_ text: String) -> [String] {
         let t = text
 
         if preferences.enableLineBreaks {
