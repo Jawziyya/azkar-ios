@@ -76,19 +76,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     private func registerUserDefaults() {
         let defaults: [String: Any] = [
-            Keys.enableReminders: true,
             Keys.expandTranslation: true,
-            Keys.expandTransliteration: true,
+            Keys.expandTransliteration: false,
             Keys.showTashkeel: true,
+            
+            Keys.enableGoToNextZikrOnCounterFinished: true,
+            Keys.alignCounterByLeadingSide: true,
+            
+            Keys.enableReminders: true,
             Keys.morningNotificationsTime: defaultMorningNotificationTime,
             Keys.eveningNotificationsTime: defaultEveningNotificationTime,
+            
             Keys.appIcon: AppIcon.gold.rawValue,
+            
             Keys.useSystemFontSize: true,
             Keys.sizeCategory: ContentSizeCategory.medium.floatValue,
-            Keys.azkarCounterLastChangeDate: Date(),
             Keys.lineSpacing: LineSpacing.s.rawValue,
             Keys.translationLineSpacing: LineSpacing.s.rawValue,
-            Keys.alignCounterByLeadingSide: true,
         ]
 
         UserDefaults.standard.register(defaults: defaults)
