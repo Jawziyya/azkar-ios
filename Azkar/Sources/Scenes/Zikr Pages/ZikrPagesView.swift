@@ -24,9 +24,6 @@ struct ZikrPagesView: View, Equatable {
     var body: some View {
         pagerView
             .background(Color.background.edgesIgnoringSafeArea(.all))
-            .onReceive(viewModel.selectedPage) { page in
-                self.viewModel.page = page
-            }
             .overlay(
                 Group {
                     if viewModel.canUseCounter, viewModel.preferences.counterType == .floatingButton {
@@ -93,6 +90,7 @@ struct ZikrPagesView: View, Equatable {
                 )
             }
         }
+        .initialPageIndex(viewModel.initialPage)
         .currentPageIndex($viewModel.page)
         .edgesIgnoringSafeArea(.bottom)
     }
