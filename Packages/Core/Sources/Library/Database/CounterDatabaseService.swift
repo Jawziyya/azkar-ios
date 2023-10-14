@@ -11,34 +11,45 @@ public final class CounterDatabaseService {
     
     public init(
         databasePath: String,
-        createDatabaseFileIfNeeded: Bool = true,
         getKey: @escaping () -> Int
     ) {
         self.databasePath = databasePath
         self.getKey = getKey
         
-        if createDatabaseFileIfNeeded {
-            let fileManager = FileManager.default
-            if fileManager.fileExists(atPath: databasePath) == false {
-                fileManager.createFile(atPath: databasePath, contents: Data())
-            }
-        }
-        
         do {
-            let queue = try getDatabaseQueue()
             let tableName = ZikrCounter.databaseTableName
+            
+            var migrator = DatabaseMigrator()
+            migrator.registerMigration("Add category column") { db in
+                do {
+                    try db.alter(table: tableName) { t in
+                        t.add(column: "category")
+                    }
+                    try db.execute(
+                        sql: "UPDATE counters SET category = ?",
+                        arguments: ["morning"]
+                    )
+                } catch {
+                    print(error.localizedDescription)
+                }
+            }
+            
+            let queue = try DatabaseQueue(path: databasePath)
+            try migrator.migrate(queue)
+            
             if DatabaseHelper.tableExists(tableName, databaseQueue: queue) == false {
                 try queue.write { db in
-                    try db.create(table: "counters") { t in
+                    try db.create(table: tableName) { t in
                         t.autoIncrementedPrimaryKey("id").notNull()
                         t.column("key", .integer).notNull()
                         t.column("zikr_id", .integer).notNull()
-                        t.column("category", .text)
+                        t.column("category", .text).notNull()
                     }
                 }
             }
         } catch {
             // TODO: Handle errors.
+            print(error)
         }
     }
 
