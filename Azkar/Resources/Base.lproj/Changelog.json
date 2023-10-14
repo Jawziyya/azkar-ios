@@ -4,7 +4,7 @@
       "items": [
         {
           "title": "Support for additional languages",
-          "subtitle": "This version adds translations for Georgian, Ingush, Chechen, Uzbek and Kyrgyz languages.\nCredits: @marginani, Zara ت, 𝔄𝔪𝔦𝔰𝔥𝔨𝔞, زالينة بلييفا, @m5164841, Айдана К.",
+          "subtitle": "This version adds translations for Georgian, Ingush, Chechen, Uzbek, Kyrgyz and Kazakh languages.\nCredits: @marginani, Zara ت, 𝔄𝔪𝔦𝔰𝔥𝔨𝔞, زالينة بلييفا, @m5164841, Айдана К., @maukibunnuri",
           "image": {
               "type": "symbol",
               "name": "text.bubble",
@@ -27,7 +27,7 @@
           }
         },
         {
-          "title": "Adhkar Counter functionality improvements.",
+          "title": "Adhkar Counter functionality improvements and fixes.",
           "subtitle": "Now you can pick size of the counter in Settings menu.",
           "image": {
               "type": "symbol",
