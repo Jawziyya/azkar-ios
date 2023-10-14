@@ -169,8 +169,8 @@ private extension RootCoordinator {
                 title: category.title,
                 azkar: azkar,
                 preferences: preferences,
-                selectedPagePublisher: selectedZikrPageIndex.eraseToAnyPublisher(),
-                page: 0
+                selectedPagePublisher: selectedZikrPageIndex.removeDuplicates().eraseToAnyPublisher(),
+                initialPage: selectedZikrPageIndex.value
             )
 
             if rootViewController.isPadInterface || category == .other {
