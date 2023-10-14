@@ -6,11 +6,11 @@ import WhatsNewKit
 
 func getWhatsNewViewController() -> UIViewController? {
     let whatsNewVersionStore: WhatsNewVersionStore = {
-        #if DEBUG
-        InMemoryWhatsNewVersionStore()
-        #else
-        UserDefaultsWhatsNewVersionStore()
-        #endif
+        if CommandLine.arguments.contains("ALWAYS_SHOW_CHANGELOG") {
+            InMemoryWhatsNewVersionStore()
+        } else {
+            UserDefaultsWhatsNewVersionStore()
+        }
     }()
     
     let currentAppVersion = WhatsNew.Version.current()
