@@ -2,9 +2,7 @@ name: CD
 on:
   push:
     branches:
-      - 'fix/**'
-      - 'feature/**'
-      - 'releases/**'
+      - 'release/**'
   pull_request:
     branches: [ main ]
 
@@ -19,7 +17,7 @@ jobs:
     steps:
       - uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: 14.3
+          xcode-version: 15.0
 
       - name: Checkout repository
         uses: actions/checkout@v1

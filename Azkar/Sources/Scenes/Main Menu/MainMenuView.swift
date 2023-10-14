@@ -191,19 +191,7 @@ struct MainMenuView: View {
 
 }
 
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        MainMenuView(
-            viewModel: MainMenuViewModel(
-                databaseService: DatabaseService(language: Language.getSystemLanguage()),
-                router: RootCoordinator(
-                    preferences: Preferences.shared,
-                    deeplinker: Deeplinker(),
-                    player: Player(player: AudioPlayer())
-                ),
-                preferences: Preferences.shared,
-                player: .test)
-        )
+#Preview {
+    MainMenuView(viewModel: MainMenuViewModel.placeholder)
         .environment(\.colorScheme, .light)
-    }
 }
