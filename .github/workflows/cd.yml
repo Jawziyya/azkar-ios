@@ -2,9 +2,7 @@ name: CD
 on:
   push:
     branches:
-      - 'fix/**'
-      - 'feature/**'
-      - 'releases/**'
+      - 'release/**'
   pull_request:
     branches: [ main ]
 
