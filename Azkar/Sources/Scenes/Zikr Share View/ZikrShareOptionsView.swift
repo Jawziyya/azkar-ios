@@ -97,25 +97,22 @@ struct ZikrShareOptionsView: View {
         Form {
             Section {
                 ForEach(ShareType.availableCases) { type in
-                    Button(
-                        action: {
-                            selectedShareType = type
-                        },
-                        label: {
-                            HStack {
-                                Text(type.title)
-                                Spacer()
-                                if type == selectedShareType {
-                                    Image(systemName: "checkmark")
-                                        .resizable()
-                                        .aspectRatio(contentMode: .fit)
-                                        .frame(width: 15, height: 15)
-                                        .foregroundColor(Color.accent)
-                                }
+                    Button(action: {
+                        selectedShareType = type
+                    }, label: {
+                        HStack {
+                            Text(type.title)
+                            Spacer()
+                            if type == selectedShareType {
+                                Image(systemName: "checkmark")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .frame(width: 15, height: 15)
+                                    .foregroundColor(Color.accent)
                             }
-                            .contentShape(Rectangle())
                         }
-                    )
+                        .contentShape(Rectangle())
+                    })
                     .buttonStyle(.plain)
                 }
             }

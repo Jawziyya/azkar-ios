@@ -56,6 +56,15 @@
         }
       },
       {
+        "package": "IGStoryKit",
+        "repositoryURL": "https://github.com/SwapnanilDhol/IGStoryKit",
+        "state": {
+          "branch": null,
+          "revision": "7378998c7feff7cdb44d79ca675c69b541bcafa7",
+          "version": "1.1.1"
+        }
+      },
+      {
         "package": "Lottie",
         "repositoryURL": "https://github.com/airbnb/lottie-ios",
         "state": {
