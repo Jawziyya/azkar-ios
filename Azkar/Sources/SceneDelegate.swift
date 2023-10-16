@@ -48,7 +48,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 window = GSTouchesShowingWindow(windowScene: windowScene)
             } else {
                 window = UIWindow(windowScene: windowScene)
-                window.backgroundColor = UIColor.systemBackground
+                window.backgroundColor = UIColor.black
             }
 
             let rootCoordinator = RootCoordinator(
