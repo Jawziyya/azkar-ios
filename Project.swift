@@ -40,6 +40,7 @@ let packages: [Package] = [
     // MARK: Utilities.
     .remote(url: "https://github.com/weichsel/ZIPFoundation", requirement: .upToNextMajor(from: "0.9.0")),
     .remote(url: "https://github.com/bizz84/SwiftyStoreKit", requirement: .upToNextMajor(from: "0.16.3")),
+    .remote(url: "https://github.com/SwapnanilDhol/IGStoryKit", requirement: .upToNextMajor(from: "1.1.1")),
 
     // MARK: UI.
     .remote(url: "https://github.com/radianttap/Coordinator", requirement: .upToNextMajor(from: "6.4.2")),
@@ -132,6 +133,7 @@ enum AzkarTarget: String, CaseIterable {
                     .package(product: "SwiftUIDrag"),
                     .package(product: "Popovers"),
                     .package(product: "WhatsNewKit"),
+                    .package(product: "IGStoryKit"),
                 ],
                 settings: Settings.settings(
                     base: baseSettingsDictionary
