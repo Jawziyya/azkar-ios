@@ -3,6 +3,8 @@
 import UIKit
 import SwiftUI
 import MessageUI
+import Library
+import IGStoryKit
 
 let INSTAGRAM_STORIES_URL = URL(string: "instagram-stories://share")!
 
@@ -110,21 +112,9 @@ final class ZikrPagesViewController: UIHostingController<ZikrPagesView> {
                 try? image.pngData()?.write(to: tempImagePath)
                 activityItems = [tempImagePath]
             } else if options.shareType == .instagramStories {
-                guard let data = image.pngData() else {
-                    return
-                }
-                let isDarkModeEnabled = self.traitCollection.userInterfaceStyle == .dark
-                let bgColor = isDarkModeEnabled ? "#111111" : "#F7F7F7"
-                let pasteboardItems: [String: Any] = [
-                    "com.instagram.sharedSticker.stickerImage": data,
-                    "com.instagram.sharedSticker.backgroundTopColor": bgColor,
-                    "com.instagram.sharedSticker.backgroundBottomColor": bgColor
-                ]
-                let pasteboardOptions = [
-                    UIPasteboard.OptionsKey.expirationDate: Date().addingTimeInterval(300)
-                ]
-                UIPasteboard.general.setItems([pasteboardItems], options: pasteboardOptions)
-                UIApplication.shared.open(INSTAGRAM_STORIES_URL, options: [:], completionHandler: nil)
+                let story = IGStory(contentSticker: image, background: .color(color: UIColor(Color.background)))
+                let dispatcher = IGDispatcher(story: story, facebookAppID: "n/a")
+                dispatcher.start()
                 return
             } else {
                 return

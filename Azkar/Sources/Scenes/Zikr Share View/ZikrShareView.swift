@@ -89,7 +89,7 @@ struct ZikrShareView: View {
 
             if includeLogo {
                 VStack {
-                    Image(uiImage: UIImage(named: "ic_ink.png")!)
+                    Image(uiImage: UIImage(named: "ink")!)
                         .resizable()
                         .frame(width: 30, height: 30)
                         .cornerRadius(6)

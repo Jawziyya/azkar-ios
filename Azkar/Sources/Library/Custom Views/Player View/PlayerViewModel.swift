@@ -29,7 +29,7 @@ final class PlayerViewModel: ObservableObject, Equatable {
 
     let audioURL: URL
     let title: String
-    let subtitle: String
+    let subtitle: String?
     let timings: [AudioTiming]
 
     private let player: Player
@@ -37,7 +37,7 @@ final class PlayerViewModel: ObservableObject, Equatable {
 
     init(
         title: String,
-        subtitle: String,
+        subtitle: String?,
         audioURL: URL,
         timings: [AudioTiming],
         player: Player

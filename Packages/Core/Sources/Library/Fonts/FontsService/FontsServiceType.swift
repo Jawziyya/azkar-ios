@@ -2,10 +2,10 @@
 
 import Foundation
 
-enum FontsType {
+public enum FontsType {
     case arabic, translation
     
-    var url: String {
+    public var url: String {
         switch self {
         case .arabic:
             return "https://azkar.ams3.digitaloceanspaces.com/media/fonts/arabic_fonts.json"
@@ -15,7 +15,7 @@ enum FontsType {
     }
 }
 
-protocol FontsServiceType {
+public protocol FontsServiceType {
     func loadFonts<T: AppFont & Decodable>(of type: FontsType) async throws -> [T]
     func loadFont(url: URL) async throws -> [URL]
 }

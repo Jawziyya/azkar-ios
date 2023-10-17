@@ -12,30 +12,30 @@
     import UIKit
 
     /// A `BackgroundTaskCreator` serves the purpose of creating background tasks.
-    protocol BackgroundTaskCreator: class {
-        /// Marks the beginning of a new long-running background task.
-        ///
-        /// - Parameter handler: A handler to be called shortly before the app’s remaining background time reaches 0.
-        ///     You should use this handler to clean up and mark the end of the background task. Failure to end the task
-        ///     explicitly will result in the termination of the app. The handler is called synchronously on the main
-        ///     thread, blocking the app’s suspension momentarily while the app is notified.
-        /// - Returns: A unique identifier for the new background task. You must pass this value to the
-        ///     `endBackgroundTask:` method to mark the end of this task. This method returns `UIBackgroundTaskInvalid`
-        ///     if running in the background is not possible.
-        func beginBackgroundTask(expirationHandler handler: (() -> Void)?) -> UIBackgroundTaskIdentifier
+protocol BackgroundTaskCreator: AnyObject {
+    /// Marks the beginning of a new long-running background task.
+    ///
+    /// - Parameter handler: A handler to be called shortly before the app’s remaining background time reaches 0.
+    ///     You should use this handler to clean up and mark the end of the background task. Failure to end the task
+    ///     explicitly will result in the termination of the app. The handler is called synchronously on the main
+    ///     thread, blocking the app’s suspension momentarily while the app is notified.
+    /// - Returns: A unique identifier for the new background task. You must pass this value to the
+    ///     `endBackgroundTask:` method to mark the end of this task. This method returns `UIBackgroundTaskInvalid`
+    ///     if running in the background is not possible.
+    func beginBackgroundTask(expirationHandler handler: (() -> Void)?) -> UIBackgroundTaskIdentifier
+    
+    /// Marks the end of a specific long-running background task.
+    ///
+    /// You must call this method to end a task that was started using the `beginBackgroundTask(expirationHandler:)`
+    /// method. If you do not, the system may kill your app.
+    ///
+    /// This method can be safely called on a non-main thread.
+    ///
+    /// - Parameter identifier: An identifier returned by the `beginBackgroundTask(expirationHandler:)` method.
+    func endBackgroundTask(_ identifier: UIBackgroundTaskIdentifier)
+}
 
-        /// Marks the end of a specific long-running background task.
-        ///
-        /// You must call this method to end a task that was started using the `beginBackgroundTask(expirationHandler:)`
-        /// method. If you do not, the system may kill your app.
-        ///
-        /// This method can be safely called on a non-main thread.
-        ///
-        /// - Parameter identifier: An identifier returned by the `beginBackgroundTask(expirationHandler:)` method.
-        func endBackgroundTask(_ identifier: UIBackgroundTaskIdentifier)
-    }
-
-    extension UIApplication: BackgroundTaskCreator {}
+extension UIApplication: BackgroundTaskCreator {}
 #endif
 
 /// A `BackgroundHandler` handles background.

@@ -3,6 +3,8 @@
 import SwiftUI
 import Combine
 import SwiftUIDrag
+import Extensions
+import Library
 
 /**
  This view shows contents of Zikr object:
@@ -177,7 +179,7 @@ struct ZikrView: View {
                             if viewModel.preferences.enableCounterHapticFeedback {
                                 Haptic.successFeedback()
                             }
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                                 counterFinishedCallback?()
                                 counterFeedbackCompleted.toggle()
                             }
@@ -218,14 +220,13 @@ struct ZikrView: View {
         }
     }
 
+    @ViewBuilder
     private func getReadingTextView(
         text: [String],
-        isArabicText: Bool,
-        font: AppFont,
-        spacing: CGFloat,
-        lineSpacing: CGFloat,
-        alignment: Alignment
+        isArabicText: Bool
     ) -> some View {
+        let prefs = viewModel.preferences
+        let spacing = isArabicText ? prefs.arabicLineAdjustment : prefs.translationLineAdjustment
         VStack(spacing: spacing) {
             ForEach(Array(zip(text.indices, text)), id: \.0) { idx, line in
                 ReadingTextView(
@@ -234,8 +235,8 @@ struct ZikrView: View {
                     },
                     text: line,
                     isArabicText: isArabicText,
-                    font: font,
-                    lineSpacing: lineSpacing
+                    font: isArabicText ? prefs.preferredArabicFont : prefs.preferredTranslationFont,
+                    lineSpacing: prefs.enableLineBreaks ? spacing : 0
                 )
                 .background(
                     Group {
@@ -247,7 +248,7 @@ struct ZikrView: View {
                         }
                     }
                 )
-                .frame(maxWidth: .infinity, alignment: alignment)
+                .frame(maxWidth: .infinity, alignment: isArabicText ? .trailing : .leading)
             }
         }
     }
@@ -255,16 +256,9 @@ struct ZikrView: View {
     // MARK: - Text
     private var textView: some View {
         VStack(spacing: 10) {
-            getReadingTextView(
-                text: viewModel.text,
-                isArabicText: true,
-                font: viewModel.preferences.preferredArabicFont,
-                spacing: viewModel.preferences.arabicLineAdjustment,
-                lineSpacing: viewModel.preferences.enableLineBreaks ? 0 : viewModel.preferences.arabicLineAdjustment,
-                alignment: .trailing
-            )
-            .id(viewModel.textSettingsToken)
-            .padding([.leading, .trailing, .bottom])
+            getReadingTextView(text: viewModel.text, isArabicText: true)
+                .id(viewModel.textSettingsToken)
+                .padding([.leading, .trailing, .bottom])
 
             viewModel.playerViewModel.flatMap { vm in
                 self.playerView(viewModel: vm)
@@ -290,14 +284,7 @@ struct ZikrView: View {
                 )
             },
             content: {
-                getReadingTextView(
-                    text: text,
-                    isArabicText: false,
-                    font: viewModel.preferences.preferredTranslationFont,
-                    spacing: viewModel.preferences.translationLineAdjustment,
-                    lineSpacing: viewModel.preferences.enableLineBreaks ? 0 : viewModel.preferences.translationLineAdjustment,
-                    alignment: .leading
-                )
+                getReadingTextView(text: text, isArabicText: false)
             }
         )
         .id(viewModel.textSettingsToken)
@@ -322,14 +309,7 @@ struct ZikrView: View {
                 )
             },
             content: {
-                getReadingTextView(
-                    text: text,
-                    isArabicText: false,
-                    font: viewModel.preferences.preferredTranslationFont,
-                    spacing: viewModel.preferences.translationLineAdjustment,
-                    lineSpacing: viewModel.preferences.enableLineBreaks ? 0 : viewModel.preferences.translationLineAdjustment,
-                    alignment: .leading
-                )
+                getReadingTextView(text: text, isArabicText: false)
             }
         )
         .id(viewModel.textSettingsToken)

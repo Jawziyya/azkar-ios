@@ -3,7 +3,7 @@
 import SwiftUI
 import UIKit
 
-extension UIViewController {
+public extension UIViewController {
     func snapshot(size: CGSize? = nil) -> UIImage {
         let targetSize = size ?? self.view.intrinsicContentSize
         view?.bounds = CGRect(origin: .zero, size: targetSize)
@@ -17,7 +17,7 @@ extension UIViewController {
     }
 }
 
-extension View {
+public extension View {
     func snapshot(size: CGSize? = nil) -> UIImage {
         let controller = UIHostingController(rootView: self)
         return controller.snapshot(size: size)

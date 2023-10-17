@@ -99,7 +99,7 @@ struct ZikrShareOptionsView: View {
                 ForEach(ShareType.availableCases) { type in
                     Button(action: {
                         selectedShareType = type
-                    }) {
+                    }, label: {
                         HStack {
                             Text(type.title)
                             Spacer()
@@ -112,7 +112,7 @@ struct ZikrShareOptionsView: View {
                             }
                         }
                         .contentShape(Rectangle())
-                    }
+                    })
                     .buttonStyle(.plain)
                 }
             }

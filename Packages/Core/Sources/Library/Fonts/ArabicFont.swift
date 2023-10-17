@@ -2,12 +2,12 @@
 
 import SwiftUI
 
-struct ArabicFont: AppFont, Identifiable, Codable, Hashable {
+public struct ArabicFont: AppFont, Identifiable, Codable, Hashable {
     
-    enum FontType: Int, Codable, AppFontStyle {
+    public enum FontType: Int, Codable, AppFontStyle {
         case naskh = 0, riqa = 1, thuluth = 2, kufi = 3, maghribi = 4, modern = 5, other = 6
         
-        var key: String {
+        public var key: String {
             switch self {
             case .naskh: return "arabic.naskh"
             case .riqa: return "arabic.riqa"
@@ -20,42 +20,45 @@ struct ArabicFont: AppFont, Identifiable, Codable, Hashable {
         }
     }
     
-    var id: String {
+    public var id: String {
         postscriptName
     }
     
-    var style: AppFontStyle {
+    public var style: AppFontStyle {
         type
     }
     
-    var name: String
+    public var name: String
     
-    var referenceName: String = STANDARD_FONT_REFERENCE_NAME
+    public var referenceName: String = STANDARD_FONT_REFERENCE_NAME
     
-    var postscriptName: String
+    public var postscriptName: String
     
-    var sizeAdjustment: Float?
+    public var sizeAdjustment: Float?
     
-    var lineAdjustment: Float?
+    public var lineAdjustment: Float?
     
-    var type: FontType = .naskh
+    public var type: FontType = .naskh
     
     private var supportsTashkeel: Int? = 1
     
-    var hasTashkeelSupport: Bool {
+    public var hasTashkeelSupport: Bool {
         supportsTashkeel == 1
     }
     
 }
 
-extension ArabicFont {
+public extension ArabicFont {
     
     static var standardFonts: [AppFont] {
         [systemArabic, adobe, KFGQP, noto]
     }
     
     static var systemArabic: ArabicFont {
-        ArabicFont(name: L10n.Settings.Text.standardFontName, postscriptName: "")
+        ArabicFont(
+            name: NSLocalizedString("settings.text.standard-font-name", comment: "Standard font name string."),
+            postscriptName: ""
+        )
     }
     
     static var adobe: ArabicFont {

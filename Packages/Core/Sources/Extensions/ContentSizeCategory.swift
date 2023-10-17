@@ -9,11 +9,9 @@
 import UIKit
 import SwiftUI
 
-extension ContentSizeCategory: PickableItem, Comparable { }
-
 extension ContentSizeCategory: Codable {
 
-    var uiContentSizeCategory: UIContentSizeCategory {
+    public var uiContentSizeCategory: UIContentSizeCategory {
         switch self {
         case .extraSmall: return .extraSmall
         case .small: return .small
@@ -42,21 +40,21 @@ extension ContentSizeCategory: Codable {
         try container.encode(floatValue)
     }
 
-    static var stride: CGFloat {
+    public static var stride: CGFloat {
         return 1 / CGFloat(allCases.count - 1)
     }
 
-    var floatValue: CGFloat {
+    public var floatValue: CGFloat {
         let index = CGFloat(ContentSizeCategory.allCases.firstIndex(of: self) ?? 0)
         return index * ContentSizeCategory.stride
     }
 
-    init(floatValue: CGFloat) {
+    public init(floatValue: CGFloat) {
         let index = Int(round(floatValue / ContentSizeCategory.stride))
         self = ContentSizeCategory.allCases[index]
     }
 
-    var name: String {
+    public var name: String {
         switch self {
         case .extraSmall: return "XS"
         case .small: return "S"
@@ -74,11 +72,11 @@ extension ContentSizeCategory: Codable {
         }
     }
 
-    var title: String {
+    public var title: String {
         return name
     }
 
-    static var availableCases: [Self] {
+    public static var availableCases: [Self] {
         return [
             .small,
             .medium,
@@ -90,14 +88,14 @@ extension ContentSizeCategory: Codable {
         ]
     }
     
-    func bigger() -> ContentSizeCategory {
+    public func bigger() -> ContentSizeCategory {
         let all = ContentSizeCategory.availableCases
         let index = all.firstIndex(of: self)!
         let nextIndex = min(all.count - 1, index + 1)
         return all[nextIndex]
     }
     
-    func smaller() -> ContentSizeCategory {
+    public func smaller() -> ContentSizeCategory {
         let all = ContentSizeCategory.availableCases
         let index = all.firstIndex(of: self)!
         let prevIndex = max(0, index - 1)

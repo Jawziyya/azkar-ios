@@ -3,7 +3,7 @@
 
 import Foundation
 
-extension UserDefaults {
+public extension UserDefaults {
     
     static var appGroup: UserDefaults {
         UserDefaults(suiteName: "group.io.jawziyya.azkar-app") ?? .standard
