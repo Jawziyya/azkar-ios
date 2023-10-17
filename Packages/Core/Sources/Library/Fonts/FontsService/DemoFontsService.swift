@@ -2,9 +2,11 @@
 
 import Foundation
 
-struct DemoFontsService: FontsServiceType {
+public struct DemoFontsService: FontsServiceType {
     
-    func loadFonts<T>(of type: FontsType) async throws -> [T] where T : AppFont, T : Decodable {
+    public init() {}
+    
+    public func loadFonts<T>(of type: FontsType) async throws -> [T] where T : AppFont, T : Decodable {
         await withCheckedContinuation { continuation in
             DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
                 continuation.resume(returning: [])
@@ -12,7 +14,7 @@ struct DemoFontsService: FontsServiceType {
         }
     }
     
-    func loadFont(url: URL) async throws -> [URL] {
+    public func loadFont(url: URL) async throws -> [URL] {
         return []
     }
     

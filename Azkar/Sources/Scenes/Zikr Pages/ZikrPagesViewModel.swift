@@ -22,6 +22,8 @@ final class ZikrPagesViewModel: ObservableObject, Equatable {
     let preferences: Preferences
     let selectedPage: AnyPublisher<Int, Never>
     let canUseCounter: Bool
+    let initialPage: Int
+    
     @Published var page = 0
     @Published var currentZikrRemainingRepeatNumber = 0
 
@@ -42,7 +44,7 @@ final class ZikrPagesViewModel: ObservableObject, Equatable {
         azkar: [ZikrViewModel],
         preferences: Preferences,
         selectedPagePublisher: AnyPublisher<Int, Never>,
-        page: Int
+        initialPage: Int
     ) {
         self.router = router
         self.category = category
@@ -50,7 +52,8 @@ final class ZikrPagesViewModel: ObservableObject, Equatable {
         self.preferences = preferences
         self.azkar = azkar
         self.selectedPage = selectedPagePublisher
-        self.page = page
+        self.initialPage = initialPage
+        self.page = initialPage
         canUseCounter = category == .morning || category == .evening
 
         alignZikrCounterByLeadingSide = preferences.alignCounterButtonByLeadingSide
@@ -75,7 +78,7 @@ final class ZikrPagesViewModel: ObservableObject, Equatable {
             .sink(receiveValue: objectWillChange.send)
             .store(in: &cancellables)
         
-        selectedPagePublisher.assign(to: &$page)
+        selectedPagePublisher.dropFirst().assign(to: &$page)
     }
 
     func navigateToZikr(_ vm: ZikrViewModel, index: Int) {
@@ -89,7 +92,7 @@ final class ZikrPagesViewModel: ObservableObject, Equatable {
                 azkar: azkar,
                 preferences: preferences,
                 selectedPagePublisher: selectedPage.eraseToAnyPublisher(),
-                page: index
+                initialPage: index
             )))
         }
     }
@@ -116,7 +119,7 @@ final class ZikrPagesViewModel: ObservableObject, Equatable {
             azkar: [],
             preferences: Preferences.shared,
             selectedPagePublisher: PassthroughSubject<Int, Never>().eraseToAnyPublisher(),
-            page: 0
+            initialPage: 0
         )
     }
 

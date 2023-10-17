@@ -10,6 +10,7 @@ import UIKit
 import Combine
 import SwiftUI
 import Entities
+import Library
 
 enum CounterType: Int, Codable, CaseIterable, Identifiable {
     case floatingButton, tap
@@ -65,7 +66,7 @@ let defaultJumuaReminderTime: Date = {
     return components.date ?? Date()
 }()
 
-final class Preferences: ObservableObject {
+final class Preferences: ObservableObject, TextProcessingPreferences {
     
     private let defaults: UserDefaults
     private let textSettingsChangePublishSubject = PassthroughSubject<UUID, Never>()
@@ -161,7 +162,7 @@ final class Preferences: ObservableObject {
     @Preference(Keys.counterSize, defaultValue: CounterSize.medium)
     var counterSize: CounterSize
 
-    @Preference(Keys.enableGoToNextZikrOnCounterFinished, defaultValue: false)
+    @Preference(Keys.enableGoToNextZikrOnCounterFinished, defaultValue: true)
     var enableGoToNextZikrOnCounterFinished: Bool
 
     @Preference(Keys.azkarCounteType, defaultValue: CounterType.floatingButton)

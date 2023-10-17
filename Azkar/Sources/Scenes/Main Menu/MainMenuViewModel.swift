@@ -21,8 +21,8 @@ final class MainMenuViewModel: ObservableObject {
 
     func getDayNightSectionModels(isDarkModeEnabled: Bool) -> [MainMenuLargeGroupViewModel] {
         [
-            MainMenuLargeGroupViewModel(category: .morning, title: MainMenuItem.morning.localizedTitle, animationName: "sun", animationSpeed: 0.3),
-            MainMenuLargeGroupViewModel(category: .evening, title: MainMenuItem.evening.localizedTitle, animationName: isDarkModeEnabled ? "moon" : "moon2", animationSpeed: 0.2),
+            MainMenuLargeGroupViewModel(category: .morning, title: L10n.Category.morning, animationName: "sun", animationSpeed: 0.3),
+            MainMenuLargeGroupViewModel(category: .evening, title: L10n.Category.evening, animationName: isDarkModeEnabled ? "moon" : "moon2", animationSpeed: 0.2),
         ]
     }
 
@@ -191,4 +191,21 @@ final class MainMenuViewModel: ObservableObject {
         }
     }
 
+}
+
+extension MainMenuViewModel {
+    
+    static var placeholder: MainMenuViewModel {
+        MainMenuViewModel(
+            databaseService: DatabaseService(language: Language.getSystemLanguage()),
+            router: RootCoordinator(
+                preferences: Preferences.shared,
+                deeplinker: Deeplinker(),
+                player: Player(player: AudioPlayer())
+            ),
+            preferences: Preferences.shared,
+            player: .test
+        )
+    }
+    
 }

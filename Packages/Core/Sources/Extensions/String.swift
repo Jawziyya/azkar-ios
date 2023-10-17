@@ -19,7 +19,7 @@ extension String: Identifiable {
     }
 }
 
-extension String {
+public extension String {
 
     var nsRange: NSRange {
       return NSRange(range(of: self)!, in: self)
@@ -43,7 +43,7 @@ extension String {
     }
 }
 
-extension String {
+public extension String {
 
     func imageWith(font: UIFont, color: UIColor, size: CGSize) -> UIImage? {
         let nsstring = (self as NSString)

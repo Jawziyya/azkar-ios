@@ -2,7 +2,7 @@
 
 import Foundation
 
-extension FileManager {
+public extension FileManager {
     
     var applicationSupportDirectoryURL: URL {
         urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]

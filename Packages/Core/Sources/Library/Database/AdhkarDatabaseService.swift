@@ -106,6 +106,7 @@ public extension AdhkarDatabaseService {
             
             return Zikr(
                 origin: record,
+                category: nil,
                 translation: translation,
                 audio: nil,
                 audioTimings: []
@@ -123,6 +124,7 @@ public extension AdhkarDatabaseService {
             return zip(records, translations).map { zikr, translation in
                 Zikr(
                     origin: zikr,
+                    category: nil,
                     translation: translation,
                     audio: nil,
                     audioTimings: []
@@ -165,6 +167,7 @@ public extension AdhkarDatabaseService {
                 
                 return Zikr(
                     origin: zikr,
+                    category: category,
                     translation: translation,
                     audio: audio,
                     audioTimings: audioTimings.filter { $0.audioId == audio?.id }

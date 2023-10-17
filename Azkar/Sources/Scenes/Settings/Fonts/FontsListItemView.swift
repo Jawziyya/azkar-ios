@@ -4,6 +4,7 @@ import SwiftUI
 import Nuke
 import NukeUI
 import Entities
+import Library
 
 struct FontsListItemView: View {
     

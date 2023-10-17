@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import Library
 
 struct CollapsableSection: View, Equatable {
 
