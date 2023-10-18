@@ -30,24 +30,8 @@
         ]
     },
     {
-        "title": "credits.graphics",
+        "title": "credits.fonts",
         "items": [
-            {
-                "title": "Moon",
-                "link": "https://flaticon.com/free-icon/moon_414942?term=moon&page=1&position=17"
-            },
-            {
-                "title": "Sunny",
-                "link": "https://lottiefiles.com/50649-sunny"
-            },
-            {
-                "title": "Moon & Stars",
-                "link": "https://lottiefiles.com/12572-moon-stars"
-            },
-            {
-                "title": "Weather Night",
-                "link": "https://lottiefiles.com/4799-weather-night"
-            },
             {
                 "title": "Adobe Arabic",
                 "link": "https://fonts.adobe.com/fonts/adobe-arabic"
@@ -91,6 +75,27 @@
             {
                 "title": "Harmattan",
                 "link": "https://fonts.google.com/specimen/Harmattan?subset=arabic"
+            },
+        ]
+    },
+    {
+        "title": "credits.graphics",
+        "items": [
+            {
+                "title": "Moon",
+                "link": "https://flaticon.com/free-icon/moon_414942?term=moon&page=1&position=17"
+            },
+            {
+                "title": "Sunny",
+                "link": "https://lottiefiles.com/50649-sunny"
+            },
+            {
+                "title": "Moon & Stars",
+                "link": "https://lottiefiles.com/12572-moon-stars"
+            },
+            {
+                "title": "Weather Night",
+                "link": "https://lottiefiles.com/4799-weather-night"
             },
         ]
     },
