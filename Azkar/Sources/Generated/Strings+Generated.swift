@@ -96,6 +96,8 @@ internal enum L10n {
     }
     /// Russian translation, transcription, audiofiles (azkar.ru)
     internal static let azkarRu = L10n.tr("Localizable", "credits.azkar-ru")
+    /// ✏️ Fonts
+    internal static let fonts = L10n.tr("Localizable", "credits.fonts")
     /// 🎨 Graphic materials and fonts
     internal static let graphics = L10n.tr("Localizable", "credits.graphics")
     /// 🧱 Open source libraries

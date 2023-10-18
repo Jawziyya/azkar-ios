@@ -13,7 +13,7 @@ struct SourceInfo: Decodable {
     
     let sections: [Section]
     
-    struct Item: Decodable, Identifiable {
+    struct Item: Decodable, Identifiable, Hashable {
         var id: String {
             return title
         }
@@ -42,10 +42,9 @@ final class AppInfoViewModel: ObservableObject {
 
     var sections: [Section] = []
 
-    struct Section: Identifiable {
+    struct Section: Identifiable, Hashable {
         let id = UUID().uuidString
-        var header: String?
-        var footer: String?
+        var title: String
         let items: [SourceInfo.Item]
     }
 
@@ -68,8 +67,19 @@ final class AppInfoViewModel: ObservableObject {
         let build = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion")!
 
         appVersion = "\(L10n.Common.version) \(version) (\(build))"
+        configureIconChanger()
         
-        let allIcons = AppIcon.allCases.shuffled()
+        let url = Bundle.main.url(forResource: "credits", withExtension: "json")!
+        let data = try! Data(contentsOf: url)
+        let sections = try! JSONDecoder().decode([SourceInfo.Section].self, from: data)
+        
+        self.sections = sections.map { section in
+            Section(title: NSLocalizedString(section.title, comment: ""), items: section.items)
+        }
+    }
+    
+    func configureIconChanger() {
+        let allIcons = (AppIcon.standardIcons + AppIcon.darsigovaIcons).shuffled()
         let allIconsCount = allIcons.count
         
         Timer.publish(every: 3, on: .main, in: .default)
@@ -85,14 +95,6 @@ final class AppInfoViewModel: ObservableObject {
                 }
             }
             .store(in: &cancellables)
-        
-        let url = Bundle.main.url(forResource: "credits", withExtension: "json")!
-        let data = try! Data(contentsOf: url)
-        let sections = try! JSONDecoder().decode([SourceInfo.Section].self, from: data)
-        
-        self.sections = sections.map { section in
-            Section(header: NSLocalizedString(section.title, comment: ""), footer: nil, items: section.items)
-        }
     }
-
+    
 }
