@@ -38,7 +38,7 @@ final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
     @Published private(set) var indexToHighlight: Int?
 
     let preferences: Preferences
-    let counter: ZikrCounterServiceType
+    let counter: ZikrCounterType
     let textProcessor: TextProcessor
 
     let source: String
@@ -102,16 +102,7 @@ final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
         hadith: Hadith?,
         preferences: Preferences,
         player: Player,
-        counter: ZikrCounterServiceType = CounterDatabaseService(
-            databasePath: FileManager.default
-                .appGroupContainerURL
-                .appendingPathComponent("counter.db")
-                .absoluteString,
-            getKey: {
-                let startOfDay = Calendar.current.startOfDay(for: Date())
-                return Int(startOfDay.timeIntervalSince1970)
-            }
-        ),
+        counter: ZikrCounterType = ZikrCounter.shared,
         textProcessor: TextProcessor = TextProcessor(preferences: Preferences.shared)
     ) {
         self.counter = counter
