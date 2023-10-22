@@ -27,13 +27,11 @@ struct FontsView: View {
             .redacted(reason: viewModel.didLoadData ? [] : .placeholder)
             .listRowBackground(Color.contentBackground)
         }
-        .listStyle(InsetGroupedListStyle())
-        .environment(\.horizontalSizeClass, .regular)
-        .horizontalPaddingForLargeScreen()
-        .background(Color.background.edgesIgnoringSafeArea(.all))
+        .customScrollContentBackground()
+        .listStyle(.insetGrouped)
+        .background(Color.background, ignoresSafeAreaEdges: .all)
         .onAppear(perform: viewModel.loadData)
         .navigationTitle(L10n.Fonts.title)
-        .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 if viewModel.fontsType == .arabic {

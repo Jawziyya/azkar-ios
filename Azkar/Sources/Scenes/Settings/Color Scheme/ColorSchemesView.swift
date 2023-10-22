@@ -24,9 +24,7 @@ final class ColorSchemesViewModel: ObservableObject {
         preferences
             .storageChangesPublisher()
             .receive(on: RunLoop.main)
-            .sink(receiveValue: { [unowned self] in
-                objectWillChange.send()
-            })
+            .sink(receiveValue: objectWillChange.send)
             .store(in: &cancellables)
     }
     
@@ -39,7 +37,10 @@ final class ColorSchemesViewModel: ObservableObject {
     }
     
     static var placeholder: ColorSchemesViewModel {
-        ColorSchemesViewModel(preferences: Preferences.shared, subscribeScreenTrigger: {})
+        ColorSchemesViewModel(
+            preferences: Preferences.shared,
+            subscribeScreenTrigger: {}
+        )
     }
     
 }
@@ -49,34 +50,35 @@ struct ColorSchemesView: View {
     @ObservedObject var viewModel: ColorSchemesViewModel
     
     var body: some View {
-        ScrollView {
-            VStack(spacing: 0) {
-                ItemPickerView(
-                    selection: $viewModel.preferences.theme,
-                    header: L10n.Settings.Theme.colorScheme,
-                    items: Theme.allCases,
-                    dismissOnSelect: false
-                )
-                
-                ItemPickerView(
-                    selection: .init(get: {
-                        viewModel.preferences.colorTheme
-                    }, set: { newValue in
-                        viewModel.setColorTheme(newValue)
-                    }),
-                    header: L10n.Settings.Theme.ColorTheme.header,
-                    items: ColorTheme.allCases,
-                    dismissOnSelect: false
-                )
+        List {
+            Group {
+                Section(header: L10n.Settings.Theme.colorScheme) {
+                    ItemPickerView(
+                        selection: $viewModel.preferences.theme,
+                        items: Theme.allCases,
+                        dismissOnSelect: false
+                    )
+                }
+                 
+                Section(header: L10n.Settings.Theme.ColorTheme.header) {
+                    ItemPickerView(
+                        selection: .init(get: {
+                            viewModel.preferences.colorTheme
+                        }, set: { newValue in
+                            viewModel.setColorTheme(newValue)
+                        }),
+                        items: ColorTheme.allCases,
+                        dismissOnSelect: false
+                    )
+                }
             }
+            .listRowBackground(Color.contentBackground)
         }
-        .horizontalPaddingForLargeScreen()
-        .background(Color.background.edgesIgnoringSafeArea(.all))
+        .customScrollContentBackground()
+        .background(Color.background, ignoresSafeAreaEdges: .all)
     }
 }
 
-struct ColorSchemesView_Previews: PreviewProvider {
-    static var previews: some View {
-        ColorSchemesView(viewModel: .placeholder)
-    }
+#Preview("Color Schemes") {
+    ColorSchemesView(viewModel: .placeholder)
 }

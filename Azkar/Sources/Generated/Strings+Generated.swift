@@ -270,8 +270,10 @@ internal enum L10n {
       internal static let goToNextDhikr = L10n.tr("Localizable", "settings.counter.go-to-next-dhikr")
       /// If this option is enabled whenever you finish repeating a dhikr Azkar will show the next one
       internal static let goToNextDhikrTip = L10n.tr("Localizable", "settings.counter.go-to-next-dhikr-tip")
+      /// Fine-tuning adhkar counter
+      internal static let subtitle = L10n.tr("Localizable", "settings.counter.subtitle")
       /// Counter
-      internal static let sectionTitle = L10n.tr("Localizable", "settings.counter.section-title")
+      internal static let title = L10n.tr("Localizable", "settings.counter.title")
     }
     internal enum Icon {
       /// Icon
@@ -324,6 +326,8 @@ internal enum L10n {
       internal static let header = L10n.tr("Localizable", "settings.reminders.header")
       /// Reminder types
       internal static let reminderTypesSectionTitle = L10n.tr("Localizable", "settings.reminders.reminder-types-section-title")
+      /// Morning and evening adhkar reminders
+      internal static let subtitle = L10n.tr("Localizable", "settings.reminders.subtitle")
       /// Time
       internal static let time = L10n.tr("Localizable", "settings.reminders.time")
       /// Reminders
@@ -382,6 +386,8 @@ internal enum L10n {
       internal static let showTashkeel = L10n.tr("Localizable", "settings.text.show-tashkeel")
       /// Standard iOS
       internal static let standardFontName = L10n.tr("Localizable", "settings.text.standard-font-name")
+      /// Fonts, line spacing, text size
+      internal static let subtitle = L10n.tr("Localizable", "settings.text.subtitle")
       /// Text
       internal static let title = L10n.tr("Localizable", "settings.text.title")
       /// Line spacing (translation)
@@ -403,6 +409,10 @@ internal enum L10n {
       internal static let dark = L10n.tr("Localizable", "settings.theme.dark")
       /// Light
       internal static let light = L10n.tr("Localizable", "settings.theme.light")
+      /// Themes and app icons
+      internal static let subtitle = L10n.tr("Localizable", "settings.theme.subtitle")
+      /// Themes
+      internal static let themesTitle = L10n.tr("Localizable", "settings.theme.themes-title")
       /// Appearance
       internal static let title = L10n.tr("Localizable", "settings.theme.title")
       internal enum ColorTheme {

@@ -15,7 +15,7 @@ final class MainMenuViewModel: ObservableObject {
 
     @Published var title = ""
 
-    unowned let router: RootRouter
+    let router: UnownedRouteTrigger<RootSection>
 
     let currentYear: String
 
@@ -65,7 +65,7 @@ final class MainMenuViewModel: ObservableObject {
 
     init(
         databaseService: DatabaseService,
-        router: RootRouter,
+        router: UnownedRouteTrigger<RootSection>,
         preferences: Preferences,
         player: Player
     ) {
@@ -173,11 +173,11 @@ final class MainMenuViewModel: ObservableObject {
     }
 
     func navigateToSettings() {
-        router.trigger(.settings(.root))
+        router.trigger(.settings())
     }
 
     func navigateToIconPacksList() {
-        router.trigger(.settings(.icons))
+        router.trigger(.settings(.appearance))
     }
 
     func navigateToMenuItem(_ item: AzkarMenuOtherItem) {
@@ -198,11 +198,7 @@ extension MainMenuViewModel {
     static var placeholder: MainMenuViewModel {
         MainMenuViewModel(
             databaseService: DatabaseService(language: Language.getSystemLanguage()),
-            router: RootCoordinator(
-                preferences: Preferences.shared,
-                deeplinker: Deeplinker(),
-                player: Player(player: AudioPlayer())
-            ),
+            router: .empty,
             preferences: Preferences.shared,
             player: .test
         )

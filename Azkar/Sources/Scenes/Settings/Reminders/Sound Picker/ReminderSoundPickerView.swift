@@ -23,12 +23,11 @@ struct ReminderSoundPickerView: View {
             }
             .listRowBackground(Color.contentBackground)
         }
-        .listStyle(InsetGroupedListStyle())
+        .listStyle(.insetGrouped)
         .environment(\.horizontalSizeClass, .regular)
-        .horizontalPaddingForLargeScreen()
+        .customScrollContentBackground()
         .background(Color.background.edgesIgnoringSafeArea(.all))
         .navigationTitle(L10n.Settings.Reminders.Sounds.sound)
-        .navigationBarTitleDisplayMode(.inline)
     }
     
     private func soundView(_ sound: ReminderSound) -> some View {
@@ -48,8 +47,6 @@ struct ReminderSoundPickerView: View {
     
 }
 
-struct ReminderSoundPickerView_Previews: PreviewProvider {
-    static var previews: some View {
-        ReminderSoundPickerView(viewModel: .placeholder)
-    }
+#Preview("Reminder Sound Picker") {
+    ReminderSoundPickerView(viewModel: .placeholder)
 }

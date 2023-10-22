@@ -20,48 +20,11 @@ final class SettingsViewModel: ObservableObject {
     }
     
     private let notificationsHandler: NotificationsHandler
-    lazy var notificationsDisabledViewModel: NotificationsDisabledViewModel = .init(observationType: .generalAccess, didChangeCallback: objectWillChange.send)
-
-    var canChangeIcon: Bool {
-        return !UIDevice.current.isMac
-    }
     
     var canChangeLanguage: Bool {
         return mode == .standart
     }
-
-    var appIconPackListViewModel: AppIconPackListViewModel {
-        .init(preferences: preferences)
-    }
-    
-    func getFontsViewModel(fontsType: FontsType) -> FontsViewModel {
-        FontsViewModel(fontsType: fontsType, service: FontsService(), subscribeScreenTrigger: { [unowned self] in
-            self.router.trigger(.subscribe)
-        })
-    }
-    
-    var colorSchemeViewModel: ColorSchemesViewModel {
-        ColorSchemesViewModel(preferences: preferences, subscribeScreenTrigger: { [unowned self] in
-            self.router.trigger(.subscribe)
-        })
-    }
-    
-    var adhkarRemindersViewModel: AdhkarRemindersViewModel {
-        AdhkarRemindersViewModel(preferences: preferences, subscribeScreenTrigger: { [unowned self] in
-            self.router.trigger(.subscribe)
-        })
-    }
-    
-    var jumuaRemindersViewModel: JumuaRemindersViewModel {
-        JumuaRemindersViewModel(preferences: preferences, subscribeScreenTrigger: { [unowned self] in
-            self.router.trigger(.subscribe)
-        })
-    }
-
-    var selectedArabicFontSupportsVowels: Bool {
-        return preferences.preferredArabicFont.hasTashkeelSupport
-    }
-    
+   
     private let formatter: DateFormatter
 
     var preferences: Preferences
@@ -72,7 +35,7 @@ final class SettingsViewModel: ObservableObject {
     }
 
     private var cancellables = Set<AnyCancellable>()
-    private unowned let router: RootRouter
+    private let router: UnownedRouteTrigger<SettingsRoute>
     let mode: SettingsMode
 
     init(
@@ -80,7 +43,7 @@ final class SettingsViewModel: ObservableObject {
         databaseService: DatabaseService,
         preferences: Preferences,
         notificationsHandler: NotificationsHandler = .shared,
-        router: RootRouter
+        router: UnownedRouteTrigger<SettingsRoute>
     ) {
         self.mode = mode
         self.databaseService = databaseService
@@ -104,6 +67,22 @@ final class SettingsViewModel: ObservableObject {
 
         setupNotificationsRescheduler()
     }
+    
+    func navigateToAppearanceSettings() {
+        router.trigger(.appearance)
+    }
+    
+    func navigateToTextSettings() {
+        router.trigger(.text)
+    }
+    
+    func navigateToCounterSettings() {
+        router.trigger(.counter)
+    }
+    
+    func navigateToRemindersSettings() {
+        router.trigger(.reminders)
+    }
 
     /// Observes some preferences to reschedule notifications if needed.
     private func setupNotificationsRescheduler() {
@@ -124,14 +103,6 @@ final class SettingsViewModel: ObservableObject {
                 self.scheduleNotifications()
             })
             .store(in: &cancellables)
-    }
-    
-    func enableReminders(_ flag: Bool) {
-        preferences.enableNotifications = flag
-    }
-
-    func navigateToNotificationsList() {
-        router.trigger(.notificationsList)
     }
 
     private func scheduleNotifications() {
@@ -167,10 +138,6 @@ final class SettingsViewModel: ObservableObject {
                 sound: preferences.jumuahDuaReminderSound
             )
         }
-    }
-    
-    func getAvailableLanguages() -> [Language] {
-        return Language.allCases.filter(databaseService.translationExists(for:))
     }
     
 }
