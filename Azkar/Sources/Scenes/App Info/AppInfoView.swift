@@ -108,7 +108,10 @@ struct AppInfoView: View {
     private func sectionItemsView(_ section: ItemSection) -> some View {
         List(section.items) { item in
             viewForItem(item)
+                .listRowBackground(Color.contentBackground)
         }
+        .customScrollContentBackground()
+        .background(Color.background, ignoresSafeAreaEdges: .all)
         .listStyle(.grouped)
         .navigationBarTitle(section.title)
     }
@@ -132,7 +135,6 @@ struct AppInfoView: View {
         .buttonStyle(PlainButtonStyle())
         .padding(.vertical, 8)
         .padding(.horizontal, 12)
-        .background(Color.contentBackground)
     }
 
 }

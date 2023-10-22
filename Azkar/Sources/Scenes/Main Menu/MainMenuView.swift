@@ -45,23 +45,22 @@ struct MainMenuView: View {
     }
     
     private var content: some View {
-        ZStack {
-            Color.background.edgesIgnoringSafeArea(.all)
-                .overlay(
-                    ZStack {
-                        if viewModel.enableEidBackground {
-                            Image("eid_background")
-                                .resizable()
-                                .aspectRatio(contentMode: ContentMode.fill)
-                                .edgesIgnoringSafeArea(.all)
-                                .blendMode(.overlay)
+        scrollView
+            .background(
+                Color.background
+                    .edgesIgnoringSafeArea(.all)
+                    .overlay(
+                        ZStack {
+                            if viewModel.enableEidBackground {
+                                Image("eid_background")
+                                    .resizable()
+                                    .aspectRatio(contentMode: ContentMode.fill)
+                                    .edgesIgnoringSafeArea(.all)
+                                    .blendMode(.overlay)
+                            }
                         }
-                    }
-                )
-            
-            scrollView
-                .navigationTitle("")
-        }
+                    )
+            )
     }
 
     private var scrollView: some View {

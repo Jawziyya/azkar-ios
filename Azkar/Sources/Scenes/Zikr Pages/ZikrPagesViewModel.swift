@@ -15,7 +15,7 @@ final class ZikrPagesViewModel: ObservableObject, Equatable {
         lhs.category == rhs.category && lhs.title == rhs.title
     }
 
-    unowned let router: RootRouter
+    let router: UnownedRouteTrigger<RootSection>
     let category: ZikrCategory
     let title: String
     let azkar: [ZikrViewModel]
@@ -38,7 +38,7 @@ final class ZikrPagesViewModel: ObservableObject, Equatable {
     private var cancellables = Set<AnyCancellable>()
 
     init(
-        router: RootRouter,
+        router: UnownedRouteTrigger<RootSection>,
         category: ZikrCategory,
         title: String,
         azkar: [ZikrViewModel],
@@ -98,7 +98,7 @@ final class ZikrPagesViewModel: ObservableObject, Equatable {
     }
     
     func navigateToTextSettings() {
-        router.trigger(.modalSettings(.text))
+        router.trigger(.settings(.text, presentModally: true))
     }
 
     func goToNextZikrIfNeeded() {
@@ -111,9 +111,7 @@ final class ZikrPagesViewModel: ObservableObject, Equatable {
     
     static var placeholder: ZikrPagesViewModel {
         AzkarListViewModel(
-            router: RootCoordinator(
-                preferences: Preferences.shared, deeplinker: Deeplinker(),
-                player: Player(player: AppDelegate.shared.player)),
+            router: .empty,
             category: .other,
             title: ZikrCategory.morning.title,
             azkar: [],

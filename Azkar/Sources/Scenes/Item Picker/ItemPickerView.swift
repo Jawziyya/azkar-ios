@@ -19,32 +19,24 @@ struct ItemPickerView<SelectionValue>: View where SelectionValue: Hashable & Pic
     var enableHapticFeedback = true
 
     var body: some View {
-        ScrollView(.vertical, showsIndicators: false) {
-            VStack(alignment: .leading, spacing: 16) {
-                if let header = header {
-                    Text(header)
-                        .font(Font.callout.smallCaps())
-                        .foregroundColor(Color.text)
-                }
-                
-                VStack {
-                    content
-                        .padding(16)
-                }
-                .background(Color.contentBackground)
-                .cornerRadius(10)
-                
-                if let footer = footer {
-                    Text(footer)
-                        .font(.caption)
-                        .foregroundColor(Color.secondaryText)
-                }
+        VStack(alignment: .leading, spacing: 16) {
+            if let header {
+                Text(header)
+                    .font(Font.callout.smallCaps())
+                    .foregroundColor(Color.text)
             }
-            .padding()
+            
+            VStack {
+                content
+                    .padding(12)
+            }
+            
+            if let footer {
+                Text(footer)
+                    .font(.caption)
+                    .foregroundColor(Color.secondaryText)
+            }
         }
-        .environment(\.horizontalSizeClass, .regular)
-        .horizontalPaddingForLargeScreen()
-        .background(Color.background.edgesIgnoringSafeArea(.all))
     }
 
     var content: some View {
@@ -83,7 +75,7 @@ struct ItemPickerView<SelectionValue>: View where SelectionValue: Hashable & Pic
                 }
                 .contentShape(Rectangle())
             }
-            .buttonStyle(PlainButtonStyle())
+            .buttonStyle(.plain)
             .foregroundColor(Color.text)
         }
     }
@@ -113,6 +105,7 @@ struct ItemPickerView_Previews: PreviewProvider {
             items: items,
             footer: "Footer"
         )
+        .background(Color.background.edgesIgnoringSafeArea(.all))
         .environment(\.colorScheme, .dark)
     }
     
