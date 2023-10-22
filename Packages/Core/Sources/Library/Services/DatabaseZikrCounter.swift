@@ -4,7 +4,7 @@ import Foundation
 import Entities
 import GRDB
 
-public final class CounterDatabaseService {
+public final class DatabaseZikrCounter: ZikrCounterType {
     
     private let databasePath: String
     private let getKey: () -> Int

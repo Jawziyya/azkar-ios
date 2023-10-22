@@ -86,26 +86,31 @@ struct AppInfoView: View {
     }
     
     private func sectionView(_ section: ItemSection) -> some View {
-        Section(
-            header: Group {
-                section.header.flatMap { header in
-                    Text(header)
-                        .padding(16)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                }
-            },
-            footer: Group {
-                section.footer.flatMap { footer in
-                    Text(footer)
-                        .padding(16)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                }
-            }
-        ) {
-            ForEach(section.items) { item in
-                self.viewForItem(item)
-            }
+        NavigationLink {
+            sectionItemsView(section)
+        } label: {
+            sectionHeader(section)
         }
+    }
+    
+    private func sectionHeader(_ section: ItemSection) -> some View {
+        HStack {
+            Text(section.title)
+                .foregroundStyle(Color.text)
+            Spacer()
+            Image(systemName: "chevron.right")
+                .foregroundColor(Color.accent)
+        }
+        .padding(16)
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+    
+    private func sectionItemsView(_ section: ItemSection) -> some View {
+        List(section.items) { item in
+            viewForItem(item)
+        }
+        .listStyle(.grouped)
+        .navigationBarTitle(section.title)
     }
 
     private func viewForItem(_ item: SourceInfo.Item) -> some View {
@@ -125,16 +130,13 @@ struct AppInfoView: View {
             .clipShape(Rectangle())
         })
         .buttonStyle(PlainButtonStyle())
-        .padding(.vertical, 12)
-        .padding(.horizontal, 16)
+        .padding(.vertical, 8)
+        .padding(.horizontal, 12)
         .background(Color.contentBackground)
     }
 
 }
 
-struct LegalInfoView_Previews: PreviewProvider {
-    static var previews: some View {
-        AppInfoView(viewModel: AppInfoViewModel(preferences: Preferences.shared))
-            .colorScheme(.dark)
-    }
+#Preview("App Info") {
+    AppInfoView(viewModel: AppInfoViewModel(preferences: Preferences.shared))
 }
