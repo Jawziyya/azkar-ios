@@ -17,7 +17,7 @@ struct VirtuesWidgets: Widget {
     var language: Language
     
     var body: some WidgetConfiguration {
-        if #available(iOS 16, *) {
+        if #available(iOS 17, *) {
             config
                 .supportedFamilies([.systemMedium, .accessoryRectangular])
         } else {
