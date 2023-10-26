@@ -8,7 +8,7 @@ struct AdhkarRemindersView: View {
     @State private(set) var presentSoundPicker = false
     
     var body: some View {
-        Form {
+        List {
             Group {
                 Section {
                     Toggle(isOn: $viewModel.isNotificationsEnabled.animation(), label: {
@@ -59,10 +59,9 @@ struct AdhkarRemindersView: View {
         }
         .accentColor(Color.accent)
         .toggleStyle(SwitchToggleStyle(tint: Color.accent))
-        .horizontalPaddingForLargeScreen()
+        .customScrollContentBackground()
         .background(Color.background.edgesIgnoringSafeArea(.all))
         .navigationTitle(L10n.Settings.Reminders.MorningEvening.label)
-        .navigationBarTitleDisplayMode(.inline)
     }
     
     @ViewBuilder

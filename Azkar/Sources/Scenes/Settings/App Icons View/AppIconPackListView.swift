@@ -132,9 +132,8 @@ struct AppIconPackListView: View {
             }
             .listRowBackground(Color.contentBackground)
         }
-        .listStyle(InsetGroupedListStyle())
-        .environment(\.horizontalSizeClass, .regular)
-        .horizontalPaddingForLargeScreen()
+        .listStyle(.insetGrouped)
+        .customScrollContentBackground()
         .background(Color.background.edgesIgnoringSafeArea(.all))
     }
 
@@ -142,10 +141,9 @@ struct AppIconPackListView: View {
         Section(
             header:
                 VStack(spacing: 0) {
-                    Spacer(minLength: 8)
                     HStack {
                         Text(iconPack.title)
-                            .font(Font.system(.caption, design: .rounded))
+
                         Spacer()
 
                         iconPack.link.flatMap { link in
@@ -156,11 +154,11 @@ struct AppIconPackListView: View {
                             })
                         }
                     }
-                }
-            ,
+                }, 
             content: {
                 self.content(for: iconPack)
-            })
+            }
+        )
     }
 
     func content(for pack: AppIconPack) -> some View {
@@ -169,18 +167,20 @@ struct AppIconPackListView: View {
                 Image(uiImage: UIImage(named: icon.imageName)!)
                     .resizable()
                     .scaledToFit()
-                    .frame(width: 50, height: 50)
+                    .frame(width: 45, height: 45)
                     .clipShape(RoundedRectangle(cornerRadius: 10))
                     .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 1)
 
                 Text(icon.title)
                     .font(Font.system(.body, design: .rounded))
+                
                 Spacer()
+                
                 CheckboxView(isCheked:  .constant(self.viewModel.icon.referenceName == icon.referenceName))
                     .frame(width: 20, height: 20)
             }
             .contentShape(Rectangle())
-            .padding(.vertical, 10)
+            .padding(.vertical, 8)
             .onTapGesture {
                 DispatchQueue.main.async {
                     guard self.viewModel.isPackPurchased(pack) else {

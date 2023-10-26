@@ -36,7 +36,13 @@ enum ReminderSound: String, Identifiable, Equatable, Codable {
         }
     }
     
-    var fileName: String { rawValue + "." + soundFileFormat }
+    var fileName: String {
+        if #available(iOS 17, *), self == .standard {
+            return "rebound.mp3"
+        } else {
+            return rawValue + "." + soundFileFormat
+        }
+    }
     
     var soundFileFormat: String {
         switch self {

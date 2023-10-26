@@ -17,6 +17,7 @@ final class ZikrPagesViewController: UIHostingController<ZikrPagesView> {
     init(viewModel: ZikrPagesViewModel) {
         self.viewModel = viewModel
         super.init(rootView: ZikrPagesView(viewModel: viewModel))
+        setupNavigationBarItems()
     }
     
     @MainActor @objc required dynamic init?(coder aDecoder: NSCoder) {
@@ -25,7 +26,15 @@ final class ZikrPagesViewController: UIHostingController<ZikrPagesView> {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        updateStyle()
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        updateStyle()
+    }
+    
+    private func setupNavigationBarItems() {
         func getAction(for type: ShareType) -> UIMenuElement {
             UIAction(title: type.title, image: UIImage(systemName: type.imageName), handler: { _ in
                 self.share(options: .init(shareType: type))
@@ -58,12 +67,6 @@ final class ZikrPagesViewController: UIHostingController<ZikrPagesView> {
 
         self.shareMenuItem = shareBarButtonItem
         navigationItem.rightBarButtonItems = [shareBarButtonItem, settingsMenuItem]
-        updateStyle()
-    }
-    
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-        updateStyle()
     }
     
     private func updateStyle() {

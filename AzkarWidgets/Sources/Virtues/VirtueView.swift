@@ -5,37 +5,70 @@ import SwiftUI
 import WidgetKit
 import Entities
 
-struct VirtueView : View {
+struct VirtueView: View {
     let fadl: Fadl
-
+    
+    @Environment(\.widgetFamily) var family
+    
     var body: some View {
-        VStack(spacing: 8) {
-            Text(fadl.text)
-                .font(Font.title3)
-                .tracking(1.2)
-                .foregroundColor(Color.primary.opacity(0.7))
-                .minimumScaleFactor(0.5)
-
-            Text(fadl.source)
-                .font(Font.caption)
-                .foregroundColor(Color.secondary.opacity(0.5))
+        if #available(iOS 17, *) {
+            content
+                .containerBackground(for: .widget) {
+                    Color("WidgetBackground")
+                }
+        } else {
+            content
+                .shadow(
+                    color: Color.primary.opacity(0.5),
+                    radius: 0.5,
+                    x: 0,
+                    y: 0.05
+                )
         }
-        .shadow(
-            color: Color.primary.opacity(0.5),
-            radius: 0.5,
-            x: 0,
-            y: 0.05
-        )
-        .multilineTextAlignment(.center)
-        .padding()
+    }
+
+    @ViewBuilder
+    var content: some View {
+        switch family {
+        case .accessoryRectangular:
+            Text(fadl.text + "\n" + fadl.source)
+                .minimumScaleFactor(0.1)
+        case .systemMedium:
+            VStack(spacing: 8) {
+                Text(fadl.text)
+                    .font(Font.title3)
+                    .tracking(1.2)
+                    .foregroundColor(Color.primary.opacity(0.7))
+                    .minimumScaleFactor(0.5)
+                
+                Text(fadl.source)
+                    .font(Font.caption)
+                    .foregroundColor(Color.secondary.opacity(0.5))
+            }
+            .multilineTextAlignment(.center)
+            .padding()
+        default:
+            Color.red
+        }
+        
     }
 }
 
+@available(iOS 16, *)
 struct VirtueView_Previews: PreviewProvider {
     
     static var previews: some View {
-        VirtueView(fadl: Fadl.placeholder)
-            .previewContext(WidgetPreviewContext(family: .systemMedium))
+        Group {
+            VirtueView(fadl: Fadl.placeholder)
+                .previewContext(WidgetPreviewContext(family: .systemMedium))
+                .previewDisplayName("System Medium")
+            
+            VirtueView(fadl: Fadl.placeholder)
+                .previewContext(WidgetPreviewContext(family: .accessoryRectangular))
+                .previewDisplayName("Accessory Rectangular")
+            
+        }
+        
     }
     
 }

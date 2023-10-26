@@ -11,26 +11,21 @@ import SwiftUI
 import Coordinator
 import Combine
 
-enum RootSection: Equatable {
+enum RootSection: Equatable, Route {
     case root
     case category(ZikrCategory)
     case zikr(_ zikr: Zikr, index: Int? = nil)
     case zikrPages(_ vm: ZikrPagesViewModel)
     case goToPage(Int)
-    case modalSettings(SettingsViewModel.SettingsMode)
-    case settings(SettingsSection)
+    case settings(_ intitialRoute: SettingsRoute? = nil, presentModally: Bool = false)
     case aboutApp
     case subscribe
-    case dismissModal
-    case notificationsList
     case whatsNew
 }
 
-protocol RootRouter: AnyObject {
-    func trigger(_ route: RootSection)
-}
-
-final class RootCoordinator: NavigationCoordinator, RootRouter {
+final class RootCoordinator: NavigationCoordinator, RouteTrigger {
+    
+    typealias RouteType = RootSection
 
     let preferences: Preferences
     var databaseService: DatabaseService {
@@ -53,8 +48,8 @@ final class RootCoordinator: NavigationCoordinator, RootRouter {
         self.player = player
 
         let navigationController = UINavigationController()
-        navigationController.navigationItem.largeTitleDisplayMode = .never
-        navigationController.navigationBar.prefersLargeTitles = false
+        navigationController.navigationItem.largeTitleDisplayMode = .automatic
+        navigationController.navigationBar.prefersLargeTitles = true
 
         super.init(rootViewController: navigationController)
         
@@ -125,7 +120,7 @@ final class RootCoordinator: NavigationCoordinator, RootRouter {
     }
 
     func goToSettings() {
-        section = .settings(.root)
+        section = .settings()
     }
 
 }
@@ -136,7 +131,7 @@ private extension RootCoordinator {
         switch section {
         case .aboutApp, .category, .root, .settings:
             selectedZikrPageIndex.send(0)
-        case .zikr, .subscribe, .dismissModal, .modalSettings, .notificationsList, .zikrPages, .goToPage, .whatsNew:
+        case .zikr, .subscribe, .zikrPages, .goToPage, .whatsNew:
             break
         }
         
@@ -145,7 +140,7 @@ private extension RootCoordinator {
         case .root:
             let viewModel = MainMenuViewModel(
                 databaseService: databaseService,
-                router: self,
+                router: UnownedRouteTrigger(router: self),
                 preferences: preferences,
                 player: player
             )
@@ -164,7 +159,7 @@ private extension RootCoordinator {
             }
 
             let viewModel = ZikrPagesViewModel(
-                router: self,
+                router: UnownedRouteTrigger(router: self),
                 category: category,
                 title: category.title,
                 azkar: azkar,
@@ -226,61 +221,27 @@ private extension RootCoordinator {
 
         case .goToPage(let page):
             selectedZikrPageIndex.send(page)
-
-        case .settings(let section):
-            let viewModel = SettingsViewModel(
-                databaseService: databaseService,
-                preferences: preferences,
-                notificationsHandler: NotificationsHandler.shared,
-                router: self
-            )
-            let view = SettingsView(viewModel: viewModel)
-
-            switch section {
-
-            case .root:
-                let viewController = view.wrapped
-                viewController.title = L10n.Settings.title
-                viewController.navigationItem.largeTitleDisplayMode = .never
-                showDetailViewController(viewController)
-
-            case .icons:
-                let viewController = view.iconPicker.wrapped
-                viewController.title = L10n.Settings.Icon.title
-                showDetailViewController(viewController)
-
-            case .themes:
-                let viewController = view.themePicker.wrapped
-                viewController.title = L10n.Settings.Theme.title
-                showDetailViewController(viewController)
-
-            case .arabicFonts:
-                let viewController = view.textSettingsSection.wrapped
-                showDetailViewController(viewController)
-                
-            case .fonts:
-                break
-
-            }
             
-        case .modalSettings(let mode):
-            let viewModel = SettingsViewModel(
-                mode: mode,
-                databaseService: databaseService,
-                preferences: preferences,
-                notificationsHandler: NotificationsHandler.shared,
-                router: self
-            )
-            let view = SettingsView(viewModel: viewModel)
-            let viewController = UIHostingController(rootView: view)
-            viewController.title = L10n.Settings.title
-            let navigationController = UINavigationController(rootViewController: viewController)
-            if UIDevice.current.isIpadInterface {
-                navigationController.modalPresentationStyle = .formSheet
-            } else {
-                navigationController.modalPresentationStyle = .popover
+        case .settings(let initialRoute, let presentModally):
+            var navigationController = rootViewController
+            if presentModally {
+                navigationController = UINavigationController()
+                navigationController.navigationBar.prefersLargeTitles = true
             }
-            present(navigationController)
+            let coordinator = SettingsCoordinator(
+                rootViewController: navigationController,
+                initialRoute: initialRoute
+            )
+            startChild(coordinator: coordinator)
+            if presentModally {
+                navigationController.topViewController?.navigationItem.rightBarButtonItem = UIBarButtonItem(
+                    systemItem: .done,
+                    primaryAction: UIAction(handler: { _ in
+                        self.dismissModal()
+                    })
+                )
+                present(navigationController)
+            }
 
         case .aboutApp:
             let viewModel = AppInfoViewModel(preferences: preferences)
@@ -291,7 +252,7 @@ private extension RootCoordinator {
             
         case .subscribe:
             let view = SubscribeView(viewModel: SubscribeViewModel(), closeButtonAction: { [unowned self] in
-                self.trigger(.dismissModal)
+                self.dismissModal()
             })
             let viewController = UIHostingController(rootView: view)
             if UIDevice.current.isIpadInterface {
@@ -300,15 +261,6 @@ private extension RootCoordinator {
                 viewController.modalPresentationStyle = .fullScreen
             }
             (rootViewController.presentedViewController ?? rootViewController).present(viewController, animated: true)
-
-        case .notificationsList:
-            let viewModel = NotificationsListViewModel(notifications: UNUserNotificationCenter.current().pendingNotificationRequests)
-            let view = NotificationsListView(viewModel: viewModel)
-            let viewController = UIHostingController(rootView: view)
-            show(viewController)
-            
-        case .dismissModal:
-            (rootViewController.presentedViewController ?? rootViewController).dismiss(animated: true)
             
         case .whatsNew:
             guard let viewController = getWhatsNewViewController() else {

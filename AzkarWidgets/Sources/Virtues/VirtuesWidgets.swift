@@ -15,8 +15,18 @@ struct VirtuesWidgets: Widget {
         userDefaults: APP_GROUP_USER_DEFAULTS
     )
     var language: Language
-
+    
     var body: some WidgetConfiguration {
+        if #available(iOS 17, *) {
+            config
+                .supportedFamilies([.systemMedium, .accessoryRectangular])
+        } else {
+            config
+                .supportedFamilies([.systemMedium])
+        }
+    }
+
+    var config: some WidgetConfiguration {
         StaticConfiguration(
             kind: kind,
             provider: VirtuesProvider(
@@ -25,9 +35,7 @@ struct VirtuesWidgets: Widget {
         ) { entry in
             VirtueView(fadl: entry.fadl)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .background(Color("WidgetBackground").edgesIgnoringSafeArea(.all))
         }
-        .supportedFamilies([.systemMedium])
         .configurationDisplayName(L10n.Widgets.Virtues.title)
         .description(L10n.Widgets.Virtues.description)
     }

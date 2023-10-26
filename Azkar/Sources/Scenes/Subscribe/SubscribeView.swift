@@ -4,6 +4,22 @@ import SwiftUI
 import Lottie
 import StoreKit
 
+func createSubscribeViewController(
+    onCloseButtonTap: @escaping () -> Void
+) -> UIViewController {
+    let view = SubscribeView(
+        viewModel: SubscribeViewModel(),
+        closeButtonAction: onCloseButtonTap
+    )
+    let viewController = UIHostingController(rootView: view)
+    if UIDevice.current.isIpadInterface {
+        viewController.modalPresentationStyle = .pageSheet
+    } else {
+        viewController.modalPresentationStyle = .fullScreen
+    }
+    return viewController
+}
+
 struct SubscribeView: View {
     
     @ObservedObject var viewModel: SubscribeViewModel
