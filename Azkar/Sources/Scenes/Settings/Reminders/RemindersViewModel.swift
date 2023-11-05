@@ -25,20 +25,16 @@ final class RemindersViewModel: ObservableObject {
         router.trigger(.notificationsList)
     }
     
+    func navigateToAdhkarReminders() {
+        router.trigger(.adhkarReminders)
+    }
+    
+    func navigateToJumuaReminders() {
+        router.trigger(.jumuaReminders)
+    }
+    
     func enableReminders(_ flag: Bool) {
         preferences.enableNotifications = flag
     }
-    
-    var adhkarRemindersViewModel: AdhkarRemindersViewModel {
-        AdhkarRemindersViewModel(preferences: preferences, subscribeScreenTrigger: { [unowned self] in
-            self.router.trigger(.subscribe)
-        })
-    }
-    
-    var jumuaRemindersViewModel: JumuaRemindersViewModel {
-        JumuaRemindersViewModel(preferences: preferences, subscribeScreenTrigger: { [unowned self] in
-            self.router.trigger(.subscribe)
-        })
-    }
-    
+        
 }

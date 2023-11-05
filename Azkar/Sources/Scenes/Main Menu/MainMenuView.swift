@@ -11,11 +11,6 @@ import AudioPlayer
 import UserNotifications
 import Entities
 
-enum Constants {
-    static var cornerRadius: CGFloat = 12
-    static var windowSafeAreaInsets: EdgeInsets = .zero
-}
-
 struct MainMenuView: View {
 
     @ObservedObject var viewModel: MainMenuViewModel
@@ -191,6 +186,8 @@ struct MainMenuView: View {
 }
 
 #Preview {
-    MainMenuView(viewModel: MainMenuViewModel.placeholder)
-        .environment(\.colorScheme, .light)
+    MainMenuView(
+        viewModel: MainMenuViewModel.placeholder
+    )
+    .environment(\.colorScheme, .light)
 }

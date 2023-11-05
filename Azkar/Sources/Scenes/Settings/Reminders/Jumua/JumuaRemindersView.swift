@@ -3,60 +3,6 @@
 import SwiftUI
 import Combine
 
-final class JumuaRemindersViewModel: ObservableObject {
-    
-    @Published var isNotificationsEnabled = true
-    
-    let soundPickerViewModel: ReminderSoundPickerViewModel
-    lazy var notificationsDisabledViewModel: NotificationsDisabledViewModel = .init(observationType: .soundAccess, didChangeCallback: objectWillChange.send)
-    var preferences: Preferences
-    private var cancellables = Set<AnyCancellable>()
-    
-    init(
-        preferences: Preferences = Preferences.shared,
-        subscriptionManager: SubscriptionManagerType = SubscriptionManagerFactory.create(),
-        subscribeScreenTrigger: @escaping Action
-    ) {
-        self.preferences = preferences
-        isNotificationsEnabled = preferences.enableJumuaReminder
-        soundPickerViewModel = ReminderSoundPickerViewModel(
-            preferredSound: preferences.jumuahDuaReminderSound,
-            subscriptionManager: subscriptionManager,
-            subscribeScreenTrigger: subscribeScreenTrigger
-        )
-        
-        $isNotificationsEnabled
-            .assign(to: \.enableJumuaReminder, on: preferences)
-            .store(in: &cancellables)
-        
-        soundPickerViewModel.$preferredSound
-            .assign(to: \.jumuahDuaReminderSound, on: preferences)
-            .store(in: &cancellables)
-        
-        soundPickerViewModel.$preferredSound.eraseToAnyPublisher().toVoid()
-            .sink(receiveValue: { [weak self] in
-                self?.objectWillChange.send()
-            })
-            .store(in: &cancellables)
-    }
-    
-    var notificationDateRange: ClosedRange<Date> {
-        let minDate = DateComponents(calendar: Calendar.current, hour: 10, minute: 0).date ?? Date()
-        let maxDate = DateComponents(calendar: Calendar.current, hour: 18, minute: 0).date ?? Date()
-        return minDate ... maxDate
-    }
-
-    func getDatesRange(fromHour hour: Int, hours: Int) -> [Date] {
-        let now = DateComponents(calendar: Calendar.current, hour: hour, minute: 0).date ?? Date()
-        return (1...(hours * 2)).reduce(into: [now]) { (dates, multiplier) in
-            let duration = DateComponents(calendar: Calendar.current, minute: multiplier * 30)
-            let newDate = Calendar.current.date(byAdding: duration, to: now) ?? now
-            dates.append(newDate)
-        }
-    }
-    
-}
-
 struct JumuaRemindersView: View {
     
     @StateObject var viewModel: JumuaRemindersViewModel
@@ -82,23 +28,24 @@ struct JumuaRemindersView: View {
                         timePicker
                         
                         if viewModel.notificationsDisabledViewModel.isAccessGranted {
-                            Button(action: {
-                                presentSoundPicker.toggle()
-                            }, label: {
-                                HStack {
-                                    Text(L10n.Settings.Reminders.Sounds.sound)
-                                        .foregroundColor(Color.text)
-                                    
-                                    Spacer()
-                                    
-                                    Text(viewModel.soundPickerViewModel.preferredSound.title)
-                                        .foregroundColor(Color.secondary)
-                                    
-                                    Image(systemName: "chevron.right")
-                                        .foregroundColor(Color.secondary)
+                            Button(
+                                action: viewModel.presentSoundPicker,
+                                label: {
+                                    HStack {
+                                        Text(L10n.Settings.Reminders.Sounds.sound)
+                                            .foregroundColor(Color.text)
+                                        
+                                        Spacer()
+                                        
+                                        Text(viewModel.soundPickerViewModel.preferredSound.title)
+                                            .foregroundColor(Color.secondary)
+                                        
+                                        Image(systemName: "chevron.right")
+                                            .foregroundColor(Color.secondary)
+                                    }
+                                    .font(Font.system(.body, design: .rounded))
                                 }
-                                .font(Font.system(.body, design: .rounded))
-                            })
+                            )
                         } else {
                             notificationsDisabledView
                         }
@@ -112,8 +59,6 @@ struct JumuaRemindersView: View {
                 ReminderSoundPickerView(viewModel: viewModel.soundPickerViewModel)
             }
         }
-        .accentColor(Color.accent)
-        .toggleStyle(SwitchToggleStyle(tint: Color.accent))
         .customScrollContentBackground()
         .background(Color.background.edgesIgnoringSafeArea(.all))
         .navigationTitle(L10n.Settings.Reminders.Jumua.label)
@@ -151,8 +96,6 @@ struct JumuaRemindersView: View {
  
 }
 
-struct JumuaRemindersView_Previews: PreviewProvider {
-    static var previews: some View {
-        JumuaRemindersView(viewModel: JumuaRemindersViewModel(subscribeScreenTrigger: {}))
-    }
+#Preview("JumuaRemindersView") {
+    JumuaRemindersView(viewModel: JumuaRemindersViewModel(router: .empty))
 }

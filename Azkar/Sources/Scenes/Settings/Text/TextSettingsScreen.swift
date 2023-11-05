@@ -16,6 +16,7 @@ struct TextSettingsScreen: View {
         }
         .customScrollContentBackground()
         .background(Color.background, ignoresSafeAreaEdges: .all)
+        .navigationTitle(L10n.Settings.Text.title)
     }
     
     var content: some View {
@@ -192,7 +193,6 @@ struct TextSettingsScreen: View {
             }
             .customScrollContentBackground()
             .navigationBarTitle(L10n.Settings.Text.lineSpacing)
-            .accentColor(Color.accent)
             .background(Color.background, ignoresSafeAreaEdges: .all)
         } label: {
             createNavigationPickerLabel(

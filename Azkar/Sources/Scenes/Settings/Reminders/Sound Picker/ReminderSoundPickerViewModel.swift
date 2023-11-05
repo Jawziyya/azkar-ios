@@ -4,7 +4,7 @@ import Foundation
 import UserNotifications
 import AudioPlayer
 
-enum ReminderSound: String, Identifiable, Equatable, Codable {
+enum ReminderSound: String, Identifiable, Hashable, Codable {
     
     case standard, glass, bamboo, note
     case forSure, beyondDoubt, purr, twitter, pristine, deduction, timeIsNow, quiteImpressed
@@ -120,7 +120,7 @@ final class ReminderSoundPickerViewModel: ObservableObject {
     
     init(
         preferredSound: ReminderSound,
-        subscriptionManager: SubscriptionManagerType,
+        subscriptionManager: SubscriptionManagerType = SubscriptionManager.shared,
         subscribeScreenTrigger: @escaping Action
     ) {
         self.preferredSound = preferredSound

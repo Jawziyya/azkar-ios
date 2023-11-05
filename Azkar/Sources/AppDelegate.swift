@@ -12,18 +12,21 @@ import UserNotifications
 import SwiftUI
 import RevenueCat
 
-@UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
-
-    static var shared: AppDelegate {
-        return UIApplication.shared.delegate as! AppDelegate
-    }
+final class AppDelegate: UIResponder, UIApplicationDelegate {
 
     let player = AudioPlayer()
     let notificationsHandler = NotificationsHandler.shared
+    
+    func application(
+        _ application: UIApplication,
+        didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil
+    ) -> Bool {
+        application.beginReceivingRemoteControlEvents()
+        initialize()
+        return true
+    }
 
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        
+    private func initialize() {
         FontsHelper.registerFonts()
 
         notificationsHandler.removeDeliveredNotifications()
@@ -38,22 +41,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 }
             })
 
-        application.beginReceivingRemoteControlEvents()
         InAppPurchaseService.shared.completeTransactions()
         registerUserDefaults()
         
         Purchases.logLevel = .debug
         Purchases.configure(withAPIKey: Bundle.main.object(forInfoDictionaryKey: "REVENUCE_CAT_API_KEY") as! String)
         SubscriptionManager.shared.loadProducts()
-
-        return true
     }
-
-    // MARK: UISceneSession Lifecycle
-    func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
-        return UISceneConfiguration(name: "Default Configuration", sessionRole: connectingSceneSession.role)
-    }
-
+        
     override func remoteControlReceived(with event: UIEvent?) {
         guard let event = event else {
             return
