@@ -1,5 +1,18 @@
 [
     {
+        "version": "2.6.0",
+        "items": [
+            {
+                "title": "Search funtionality",
+                "subtitle": "This version introduces search functionality support. Try it from the main menu.",
+                "image": {
+                    "type": "symbol",
+                    "name": "magnifyingglass"
+                }
+            }
+        ],
+    },
+    {
       "version": "2.5.0",
       "items": [
         {

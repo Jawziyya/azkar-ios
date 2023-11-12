@@ -4,7 +4,7 @@ import Foundation
 import Entities
 import GRDB
 
-public final class AdhkarDatabaseService {
+public final class AdhkarDatabaseService: DatabaseService {
     
     public let language: Language
 
@@ -174,6 +174,69 @@ public extension AdhkarDatabaseService {
                 )
             }
         }
+    }
+    
+    func searchAdhkar(_ query: String) throws -> [Zikr] {
+        return try getDatabaseQueue().read { db in
+            try self.getSearchResults(for: query, from: db)
+        }
+    }
+
+    private func getSearchResults(for query: String, from db: Database) throws -> [Zikr] {
+        let languageTableNames = [Language.russian, .english].map { lang in
+            return "azkar_\(lang.rawValue)"
+        }
+        var azkar = [Zikr]()
+        
+        for tableName in languageTableNames {
+            let translations = try ZikrTranslation.fetchAll(
+                db,
+                sql: """
+                SELECT \(tableName).*
+                FROM \(tableName)
+                WHERE \(tableName).text LIKE ?
+                OR \(tableName).text LIKE ?
+                OR \(tableName).title LIKE ?
+                OR \(tableName).title LIKE ?
+                """,
+                arguments: [
+                    "%\(query)%",
+                    "%\(query.lowercased())%",
+                    "%\(query)%",
+                    "%\(query.lowercased())%"
+                ]
+            )
+            
+            for translation in translations {
+                let zikrId = translation.id
+                guard let origin = try ZikrOrigin.fetchOne(
+                    db,
+                    sql: "SELECT * FROM azkar WHERE id = ?",
+                    arguments: [zikrId]
+                ) else {
+                    continue
+                }
+                let audio = try Audio.fetchOne(
+                    db,
+                    sql: "SELECT * FROM audios WHERE id = ?",
+                    arguments: [origin.audioId]
+                )
+                let audioTimings = try AudioTiming.fetchAll(
+                    db,
+                    sql: "SELECT * FROM audio_timings WHERE audio_id = ?",
+                    arguments: [audio?.id]
+                )
+                azkar.append(Zikr(
+                    origin: origin,
+                    category: nil,
+                    translation: translation,
+                    audio: audio,
+                    audioTimings: audioTimings
+                ))
+            }
+        }
+        
+        return azkar
     }
 
     func getAdhkarCount(_ category: ZikrCategory) throws -> Int {

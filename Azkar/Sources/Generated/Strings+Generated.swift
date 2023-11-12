@@ -69,6 +69,8 @@ internal enum L10n {
     internal static let done = L10n.tr("Localizable", "common.done", fallback: "Done")
     /// Enable
     internal static let enable = L10n.tr("Localizable", "common.enable", fallback: "Enable")
+    /// No search results
+    internal static let noSearchResults = L10n.tr("Localizable", "common.no-search-results", fallback: "No search results")
     /// Report a problem
     internal static let reportProblem = L10n.tr("Localizable", "common.report-problem", fallback: "Report a problem")
     /// Restore
@@ -426,8 +428,8 @@ internal enum L10n {
     internal static let includeBenefit = L10n.tr("Localizable", "share.include-benefit", fallback: "Include text of benefit")
     /// Include title
     internal static let includeTitle = L10n.tr("Localizable", "share.include-title", fallback: "Include title")
-    /// Share as:
-    internal static let shareAs = L10n.tr("Localizable", "share.share-as", fallback: "Share as:")
+    /// Share as
+    internal static let shareAs = L10n.tr("Localizable", "share.share-as", fallback: "Share as")
     /// Shared from Azkar App
     internal static let sharedWithAzkar = L10n.tr("Localizable", "share.shared-with-azkar", fallback: "Shared from Azkar App")
     /// Text
