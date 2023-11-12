@@ -4,29 +4,12 @@ import SwiftUI
 import Lottie
 import StoreKit
 
-func createSubscribeViewController(
-    onCloseButtonTap: @escaping () -> Void
-) -> UIViewController {
-    let view = SubscribeView(
-        viewModel: SubscribeViewModel(),
-        closeButtonAction: onCloseButtonTap
-    )
-    let viewController = UIHostingController(rootView: view)
-    if UIDevice.current.isIpadInterface {
-        viewController.modalPresentationStyle = .pageSheet
-    } else {
-        viewController.modalPresentationStyle = .fullScreen
-    }
-    return viewController
-}
-
 struct SubscribeView: View {
     
     @ObservedObject var viewModel: SubscribeViewModel
     @State private var showWhyMessage = false
-    
-    let closeButtonAction: () -> Void
-    
+    @Environment(\.presentationManager) var presentation
+        
     struct Feature: Equatable, Identifiable {
         var id: String {
             text
@@ -48,13 +31,12 @@ struct SubscribeView: View {
     private let increasedHeaderHeight: CGFloat = 300
     
     var body: some View {
-        if #available(iOS 15.0, *) {
-            Self._printChanges()
-        }
-        return subscribeScrollableContent
+        subscribeScrollableContent
             .overlay(
                 Button(
-                    action: closeButtonAction,
+                    action: {
+                        self.presentation.dismiss()
+                    },
                     label: {
                         Image(systemName: "xmark.circle.fill")
                             .resizable()
@@ -151,14 +133,16 @@ struct SubscribeView: View {
                 .transition(.move(edge: .bottom).combined(with: .opacity))
             Spacer()
             
-            Button(action: closeButtonAction) {
+            Button(action: {
+                presentation.dismiss()
+            }, label: {
                 Text(L10n.Common.done)
                     .frame(maxWidth: .infinity)
                     .padding()
                     .background(Color.blue)
                     .foregroundColor(Color.white)
                     .font(.body.bold())
-            }
+            })
             .cornerRadius(10)
             .padding(.horizontal, 30)
             .buttonStyle(PlainButtonStyle())
@@ -336,13 +320,13 @@ struct SubscribeView_Previews: PreviewProvider {
     static var previews: some View {
         Preferences.shared.colorTheme = .default
         return Group {
-            SubscribeView(viewModel: .placeholder(), closeButtonAction: {})
+            SubscribeView(viewModel: .placeholder())
                 .colorScheme(.light)
 
-            SubscribeView(viewModel: .placeholder(isProUser: true), closeButtonAction: {})
+            SubscribeView(viewModel: .placeholder(isProUser: true))
                 .colorScheme(.light)
             
-            SubscribeView(viewModel: .placeholder(), closeButtonAction: {})
+            SubscribeView(viewModel: .placeholder())
                 .colorScheme(.dark)
         }
     }

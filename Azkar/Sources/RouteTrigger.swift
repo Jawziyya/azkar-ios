@@ -3,18 +3,18 @@
 
 import Foundation
 
-protocol Route {}
+protocol RouteKind {}
 
 protocol RouteTrigger: AnyObject {
-    associatedtype RouteType: Route
+    associatedtype RouteType: RouteKind
     func trigger(_ route: RouteType)
 }
 
-final class EmptyRouteTrigger<T: Route>: RouteTrigger {
+private final class EmptyRouteTrigger<T: RouteKind>: RouteTrigger {
     func trigger(_ route: T) {}
 }
 
-final class UnownedRouteTrigger<RouteType: Route>: RouteTrigger {
+final class UnownedRouteTrigger<RouteType: RouteKind>: RouteTrigger {
     private unowned let router: AnyObject
     private let triggerFunc: (RouteType) -> Void
 

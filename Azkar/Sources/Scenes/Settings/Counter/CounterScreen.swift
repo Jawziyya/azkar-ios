@@ -15,6 +15,7 @@ struct CounterView: View {
         }
         .customScrollContentBackground()
         .background(Color.background, ignoresSafeAreaEdges: .all)
+        .navigationTitle(L10n.Settings.Counter.title)
     }
     
     var content: some View {

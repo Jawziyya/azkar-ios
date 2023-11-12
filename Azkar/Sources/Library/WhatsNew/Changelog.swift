@@ -3,16 +3,17 @@
 
 import UIKit
 import WhatsNewKit
+import SwiftUI
 
-func getWhatsNewViewController() -> UIViewController? {
-    let whatsNewVersionStore: WhatsNewVersionStore = {
-        if CommandLine.arguments.contains("ALWAYS_SHOW_CHANGELOG") {
-            InMemoryWhatsNewVersionStore()
-        } else {
-            UserDefaultsWhatsNewVersionStore()
-        }
-    }()
-    
+func getVersionStore() -> WhatsNewVersionStore {
+    if CommandLine.arguments.contains("ALWAYS_SHOW_CHANGELOG") {
+        InMemoryWhatsNewVersionStore()
+    } else {
+        UserDefaultsWhatsNewVersionStore()
+    }
+}
+
+func getWhatsNew() -> WhatsNew? {
     let currentAppVersion = WhatsNew.Version.current()
     let changelogs: [Changelog]
     
@@ -35,15 +36,22 @@ func getWhatsNewViewController() -> UIViewController? {
         return nil
     }
     
+    return changelog.whatsNew
+}
+
+func getWhatsNewView(_ whatsNew: WhatsNew) -> WhatsNewView {
+    WhatsNewView(
+        whatsNew: whatsNew,
+        versionStore: getVersionStore()
+    )
+}
+
+func getWhatsNewViewController(_ whatsNew: WhatsNew) -> UIViewController? {
     guard let viewController = WhatsNewViewController(
-        whatsNew: changelog.whatsNew,
-        versionStore: whatsNewVersionStore
+        whatsNew: whatsNew,
+        versionStore: getVersionStore()
     ) else {
         return nil
-    }
-    
-    if let sheetController = viewController.presentationController as? UISheetPresentationController {
-        sheetController.detents = changelog.items.count > 1 ? [.large()] : [.medium()]
     }
     return viewController
 }

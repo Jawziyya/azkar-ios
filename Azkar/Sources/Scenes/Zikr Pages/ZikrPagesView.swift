@@ -23,6 +23,17 @@ struct ZikrPagesView: View, Equatable {
 
     var body: some View {
         pagerView
+            .navigationTitle(viewModel.title)
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigation) {
+                    HStack {
+                        Button(systemImage: .squareAndArrowUp, action: viewModel.shareCurrentZikr)
+                        
+                        Button(systemImage: .textformat, action: viewModel.navigateToTextSettings)
+                    }
+                }
+            }
             .background(Color.background.edgesIgnoringSafeArea(.all))
             .overlay(
                 Group {
@@ -97,12 +108,8 @@ struct ZikrPagesView: View, Equatable {
 
 }
 
-struct ZikrPagesView_Previews: PreviewProvider {
-
-    static var previews: some View {
-        ZikrPagesView(
-            viewModel: .placeholder
-        )
+#Preview("ZikrPages") {
+    NavigationView {
+        ZikrPagesView(viewModel: ZikrPagesViewModel.placeholder)
     }
-
 }

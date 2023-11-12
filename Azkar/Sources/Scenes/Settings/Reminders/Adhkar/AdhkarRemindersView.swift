@@ -5,7 +5,6 @@ import SwiftUI
 struct AdhkarRemindersView: View {
     
     @StateObject var viewModel: AdhkarRemindersViewModel
-    @State private(set) var presentSoundPicker = false
     
     var body: some View {
         List {
@@ -27,22 +26,22 @@ struct AdhkarRemindersView: View {
                         timePicker
                         
                         if viewModel.notificationsDisabledViewModel.isAccessGranted {
-                            Button(action: {
-                                presentSoundPicker.toggle()
-                            }, label: {
-                                HStack {
-                                    Text(L10n.Settings.Reminders.Sounds.sound)
-                                        .foregroundColor(Color.text)
-                                    
-                                    Spacer()
-                                    
-                                    Text(viewModel.soundPickerViewModel.preferredSound.title)
-                                        .foregroundColor(Color.secondary)
-                                    
-                                    Image(systemName: "chevron.right")
-                                        .foregroundColor(Color.secondary)
-                                }
-                                .font(Font.system(.body, design: .rounded))
+                            Button(
+                                action: viewModel.presentSoundPicker,
+                                label: {
+                                    HStack {
+                                        Text(L10n.Settings.Reminders.Sounds.sound)
+                                            .foregroundColor(Color.text)
+                                        
+                                        Spacer()
+                                        
+                                        Text(viewModel.preferences.adhkarReminderSound.title)
+                                            .foregroundColor(Color.secondary)
+                                        
+                                        Image(systemName: "chevron.right")
+                                            .foregroundColor(Color.secondary)
+                                    }
+                                    .font(Font.system(.body, design: .rounded))
                             })
                         } else {
                             notificationsDisabledView
@@ -52,13 +51,6 @@ struct AdhkarRemindersView: View {
             }
             .listRowBackground(Color.contentBackground)
         }
-        .sheet(isPresented: $presentSoundPicker) {
-            NavigationView {
-                ReminderSoundPickerView(viewModel: viewModel.soundPickerViewModel)
-            }
-        }
-        .accentColor(Color.accent)
-        .toggleStyle(SwitchToggleStyle(tint: Color.accent))
         .customScrollContentBackground()
         .background(Color.background.edgesIgnoringSafeArea(.all))
         .navigationTitle(L10n.Settings.Reminders.MorningEvening.label)
@@ -144,7 +136,11 @@ struct AdhkarRemindersView: View {
 struct MorningEveningRemindersView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            AdhkarRemindersView(viewModel: AdhkarRemindersViewModel(subscribeScreenTrigger: {}))
+            AdhkarRemindersView(
+                viewModel: AdhkarRemindersViewModel(
+                    router: .empty
+                )
+            )
         }
     }
 }

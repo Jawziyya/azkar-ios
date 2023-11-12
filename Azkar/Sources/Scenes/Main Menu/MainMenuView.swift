@@ -11,11 +11,6 @@ import AudioPlayer
 import UserNotifications
 import Entities
 
-enum Constants {
-    static var cornerRadius: CGFloat = 12
-    static var windowSafeAreaInsets: EdgeInsets = .zero
-}
-
 struct MainMenuView: View {
 
     @ObservedObject var viewModel: MainMenuViewModel
@@ -30,9 +25,10 @@ struct MainMenuView: View {
     }
 
     var body: some View {
-        content
-            .environment(\.horizontalSizeClass, isIpad ? .regular : .compact)
+        displayContent
+            .navigationBarTitle(viewModel.title)
             .saturation(viewModel.preferences.colorTheme == .ink ? 0 : 1)
+            .searchable(text: $viewModel.searchQuery, placement: .navigationBarDrawer(displayMode: .always))
             .attachEnvironmentOverrides(viewModel: EnvironmentOverridesViewModel(preferences: viewModel.preferences))
             .background(
                 GeometryReader { proxy in
@@ -44,153 +40,182 @@ struct MainMenuView: View {
             )
     }
     
-    private var content: some View {
-        scrollView
-            .background(
-                Color.background
-                    .edgesIgnoringSafeArea(.all)
-                    .overlay(
-                        ZStack {
-                            if viewModel.enableEidBackground {
-                                Image("eid_background")
-                                    .resizable()
-                                    .aspectRatio(contentMode: ContentMode.fill)
-                                    .edgesIgnoringSafeArea(.all)
-                                    .blendMode(.overlay)
-                            }
-                        }
-                    )
+    @ViewBuilder
+    var displayContent: some View {
+        if viewModel.searchQuery.isEmpty == false {
+            SearchResultsView(
+                viewModel: viewModel.searchViewModel,
+                onSelect: viewModel.naviateToSearchResult(_:)
             )
+        } else {
+            content
+        }
     }
-
-    private var scrollView: some View {
-        ScrollView(showsIndicators: false) {
+    
+    var content: some View {
+        ScrollView {
             menuContent
         }
-        .navigationBarTitle(viewModel.title)
+        .customScrollContentBackground()
+        .background(
+            Color.background
+                .edgesIgnoringSafeArea(.all)
+                .overlay(
+                    ZStack {
+                        if viewModel.enableEidBackground {
+                            Image("eid_background")
+                                .resizable()
+                                .aspectRatio(contentMode: ContentMode.fill)
+                                .edgesIgnoringSafeArea(.all)
+                                .blendMode(.overlay)
+                        }
+                    }
+                )
+        )
     }
 
     private var menuContent: some View {
         VStack(spacing: 16) {
 
-            Spacer(minLength: 16)
+            dayNightAzkar
 
-            // MARK: - Day & Night Azkar
-            GeometryReader { proxy in
-                HStack(spacing: 16) {
-                    ForEach(viewModel.getDayNightSectionModels(isDarkModeEnabled: colorScheme == .dark)) { item in
-                        Button {
-                            self.viewModel.navigateToCategory(item.category)
-                        } label: {
-                            MainMenuLargeGroup(viewModel: item)
-                        }
-                        .frame(width: (proxy.size.width - 16)/2)
-                        .frame(height: 120)
-                    }
-                    .foregroundColor(Color.text)
-                    .background(itemsBackgroundColor)
-                    .clipShape(RoundedRectangle(cornerRadius: Constants.cornerRadius))
-                    .shadow(color: Color.black.opacity(0.05), radius: 10, x: 0, y: 1)
-                }
-            }
-            .frame(height: 120)
+            otherAzkar
 
-            // MARK: - Other Azkar
-            VStack(spacing: 0) {
-                if Date().isRamadan, let dua = viewModel.fastingDua {
-                    Button(action: {
-                        self.viewModel.navigateToZikr(dua)
-                    }, label: {
-                        HStack {
-                            MainMenuSmallGroup(item: AzkarMenuItem(category: ZikrCategory.other, imageName: "🌕", title: dua.title ?? "", color: Color.blue, count: nil, iconType: .emoji))
-                            Image(systemName: "chevron.right")
-                                .foregroundColor(Color.tertiaryText)
-                                .padding(.trailing)
-                        }
-                        .padding(10)
-                        .background(itemsBackgroundColor)
-                    })
-                }
+            appSections
 
-                ForEach(viewModel.otherAzkarModels) { item in
-                    Button {
-                        self.viewModel.navigateToCategory(item.category)
-                    } label: {
-                        HStack {
-                            MainMenuSmallGroup(item: item)
-                            Image(systemName: "chevron.right")
-                                .foregroundColor(Color.tertiaryText)
-                                .padding(.trailing)
-                        }
-                        .padding(10)
-                        .background(itemsBackgroundColor)
-                    }
-                }
-            }
-            .background(itemsBackgroundColor)
-            .clipShape(RoundedRectangle(cornerRadius: Constants.cornerRadius))
-            .shadow(color: Color.black.opacity(0.05), radius: 10, x: 0, y: 1)
-
-            // MARK: - App Sections
-            VStack(spacing: 0) {
-                ForEach(viewModel.infoModels) { item in
-                    Button {
-                        self.viewModel.navigateToMenuItem(item)
-                    } label: {
-                        HStack {
-                            MainMenuSmallGroup(item: item)
-                            Image(systemName: "chevron.right")
-                                .foregroundColor(Color.tertiaryText)
-                                .padding(.trailing)
-                        }
-                        .padding(10)
-                        .background(itemsBackgroundColor)
-                    }
-                }
-            }
-            .background(itemsBackgroundColor)
-            .clipShape(RoundedRectangle(cornerRadius: Constants.cornerRadius))
-            .shadow(color: Color.black.opacity(0.05), radius: 10, x: 0, y: 1)
-
-            // MARK: - Additional Sections
-            VStack {
-                ForEach(viewModel.additionalMenuItems) { item in
-                    Button {
-                        item.action?()
-                    } label: {
-                        MainMenuSmallGroup(item: item, flip: true)
-                            .padding()
-                    }
-                    .disabled(item.action == nil)
-                    .background(itemsBackgroundColor)
-                    .clipShape(RoundedRectangle(cornerRadius: Constants.cornerRadius))
-                }
-            }
-            .shadow(color: Color.black.opacity(0.05), radius: 10, x: 0, y: 1)
+            additionalItems
 
             if let fadl = viewModel.fadl {
-                VStack(spacing: 8) {
-                    Text(fadl.text)
-                        .font(Font.customFont(viewModel.preferences.preferredTranslationFont, style: .caption1))
-                        .tracking(1.2)
-                        .foregroundColor(Color.text.opacity(0.7))
-
-                    Text(fadl.source)
-                        .font(Font.customFont(viewModel.preferences.preferredTranslationFont, style: .caption2))
-                        .foregroundColor(Color.secondaryText.opacity(0.5))
-                }
-                .shadow(color: Color.text.opacity(0.5), radius: 0.5, x: 0.0, y: 0.05)
-                .multilineTextAlignment(.center)
-                .padding()
-                .shadow(color: Color.black.opacity(0.05), radius: 10, x: 0, y: 1)
+                fadlSection(fadl)
             }
         }
         .padding(.horizontal)
     }
+    
+    // MARK: - Day & Night Azkar
+    private var dayNightAzkar: some View {
+        GeometryReader { proxy in
+            HStack(spacing: 16) {
+                ForEach(viewModel.getDayNightSectionModels(isDarkModeEnabled: colorScheme == .dark)) { item in
+                    Button {
+                        self.viewModel.navigateToCategory(item.category)
+                    } label: {
+                        MainMenuLargeGroup(viewModel: item)
+                    }
+                    .frame(width: (proxy.size.width - 16)/2)
+                    .frame(height: 120)
+                }
+                .foregroundColor(Color.text)
+                .background(itemsBackgroundColor)
+                .clipShape(RoundedRectangle(cornerRadius: Constants.cornerRadius))
+                .shadow(color: Color.black.opacity(0.05), radius: 10, x: 0, y: 1)
+            }
+        }
+        .frame(height: 120)
+    }
+    
+    // MARK: - Other Azkar
+    private var otherAzkar: some View {
+        VStack(spacing: 0) {
+            if Date().isRamadan, let dua = viewModel.fastingDua {
+                Button(action: {
+                    self.viewModel.navigateToZikr(dua)
+                }, label: {
+                    HStack {
+                        MainMenuSmallGroup(item: AzkarMenuItem(category: ZikrCategory.other, imageName: "🌕", title: dua.title ?? "", color: Color.blue, count: nil, iconType: .emoji))
+                        Image(systemName: "chevron.right")
+                            .foregroundColor(Color.tertiaryText)
+                            .padding(.trailing)
+                    }
+                    .padding(10)
+                    .background(itemsBackgroundColor)
+                })
+            }
+
+            ForEach(viewModel.otherAzkarModels) { item in
+                Button {
+                    self.viewModel.navigateToCategory(item.category)
+                } label: {
+                    HStack {
+                        MainMenuSmallGroup(item: item)
+                        Image(systemName: "chevron.right")
+                            .foregroundColor(Color.tertiaryText)
+                            .padding(.trailing)
+                    }
+                    .padding(10)
+                    .background(itemsBackgroundColor)
+                }
+            }
+        }
+        .background(itemsBackgroundColor)
+        .clipShape(RoundedRectangle(cornerRadius: Constants.cornerRadius))
+        .shadow(color: Color.black.opacity(0.05), radius: 10, x: 0, y: 1)
+    }
+    
+    // MARK: - App Sections
+    private var appSections: some View {
+        VStack(spacing: 0) {
+            ForEach(viewModel.infoModels) { item in
+                Button {
+                    self.viewModel.navigateToMenuItem(item)
+                } label: {
+                    HStack {
+                        MainMenuSmallGroup(item: item)
+                        Image(systemName: "chevron.right")
+                            .foregroundColor(Color.tertiaryText)
+                            .padding(.trailing)
+                    }
+                    .padding(10)
+                    .background(itemsBackgroundColor)
+                }
+            }
+        }
+        .background(itemsBackgroundColor)
+        .clipShape(RoundedRectangle(cornerRadius: Constants.cornerRadius))
+        .shadow(color: Color.black.opacity(0.05), radius: 10, x: 0, y: 1)
+    }
+    
+    // MARK: - Additional Sections
+    private var additionalItems: some View {
+        VStack {
+            ForEach(viewModel.additionalMenuItems) { item in
+                Button {
+                    item.action?()
+                } label: {
+                    MainMenuSmallGroup(item: item, flip: true)
+                        .padding()
+                }
+                .disabled(item.action == nil)
+                .background(itemsBackgroundColor)
+                .clipShape(RoundedRectangle(cornerRadius: Constants.cornerRadius))
+            }
+        }
+        .shadow(color: Color.black.opacity(0.05), radius: 10, x: 0, y: 1)
+    }
+    
+    private func fadlSection(_ fadl: Fadl) -> some View {
+        VStack(spacing: 8) {
+            Text(fadl.text)
+                .font(Font.customFont(viewModel.preferences.preferredTranslationFont, style: .caption1))
+                .tracking(1.2)
+                .foregroundColor(Color.text.opacity(0.7))
+
+            Text(fadl.source)
+                .font(Font.customFont(viewModel.preferences.preferredTranslationFont, style: .caption2))
+                .foregroundColor(Color.secondaryText.opacity(0.5))
+        }
+        .shadow(color: Color.text.opacity(0.5), radius: 0.5, x: 0.0, y: 0.05)
+        .multilineTextAlignment(.center)
+        .padding()
+        .shadow(color: Color.black.opacity(0.05), radius: 10, x: 0, y: 1)
+    }
 
 }
 
-#Preview {
-    MainMenuView(viewModel: MainMenuViewModel.placeholder)
-        .environment(\.colorScheme, .light)
+#Preview("Menu") {
+    NavigationView {
+        MainMenuView(
+            viewModel: MainMenuViewModel.placeholder
+        )
+    }
 }

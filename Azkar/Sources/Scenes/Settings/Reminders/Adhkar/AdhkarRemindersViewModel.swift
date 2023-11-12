@@ -11,22 +11,18 @@ final class AdhkarRemindersViewModel: ObservableObject {
     
     var preferences: Preferences
     private let formatter: DateFormatter
+    private let router: UnownedRouteTrigger<SettingsRoute>
     private var cancellables = Set<AnyCancellable>()
-    let soundPickerViewModel: ReminderSoundPickerViewModel
     lazy var notificationsDisabledViewModel: NotificationsDisabledViewModel = .init(observationType: .soundAccess, didChangeCallback: objectWillChange.send)
     
     init(
         preferences: Preferences = .shared,
         subscriptionManager: SubscriptionManagerType = SubscriptionManagerFactory.create(),
-        subscribeScreenTrigger: @escaping Action
+        router: UnownedRouteTrigger<SettingsRoute>
     ) {
         self.preferences = preferences
+        self.router = router
         isNotificationsEnabled = preferences.enableAdhkarReminder
-        soundPickerViewModel = ReminderSoundPickerViewModel(
-            preferredSound: preferences.adhkarReminderSound,
-            subscriptionManager: subscriptionManager,
-            subscribeScreenTrigger: subscribeScreenTrigger
-        )
         let formatter = DateFormatter()
         formatter.dateStyle = .none
         formatter.timeStyle = .short
@@ -39,16 +35,10 @@ final class AdhkarRemindersViewModel: ObservableObject {
         $isNotificationsEnabled
             .assign(to: \.enableAdhkarReminder, on: preferences)
             .store(in: &cancellables)
-        
-        soundPickerViewModel.$preferredSound
-            .assign(to: \.adhkarReminderSound, on: preferences)
-            .store(in: &cancellables)
-        
-        soundPickerViewModel.$preferredSound.eraseToAnyPublisher().toVoid()
-            .sink(receiveValue: { [weak self] in
-                self?.objectWillChange.send()
-            })
-            .store(in: &cancellables)
+    }
+    
+    func presentSoundPicker() {
+        router.trigger(.soundPicker(preferences.adhkarReminderSound))
     }
     
     var morningNotificationDateRange: ClosedRange<Date> {

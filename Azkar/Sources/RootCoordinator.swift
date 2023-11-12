@@ -10,23 +10,37 @@ import UIKit
 import SwiftUI
 import Coordinator
 import Combine
+import Stinsen
+import WhatsNewKit
+import MessageUI
+import IGStoryKit
 
-enum RootSection: Equatable, Route {
-    case root
+enum RootSection: Equatable, RouteKind {
     case category(ZikrCategory)
     case zikr(_ zikr: Zikr, index: Int? = nil)
     case zikrPages(_ vm: ZikrPagesViewModel)
     case goToPage(Int)
     case settings(_ intitialRoute: SettingsRoute? = nil, presentModally: Bool = false)
     case aboutApp
-    case subscribe
     case whatsNew
+    case shareOptions(Zikr)
 }
 
-final class RootCoordinator: NavigationCoordinator, RouteTrigger {
+final class RootCoordinator: NSObject, RouteTrigger, NavigationCoordinatable {
     
-    typealias RouteType = RootSection
-
+    var stack: Stinsen.NavigationStack<RootCoordinator> = .init(initial: \.menu)
+    
+    @Root var menu = makeMainView
+    @Route(.push) var zikrCategory = makeCategoryView
+    @Route(.push) var zikrPages = makeZikrPagesView
+    @Route(.push) var zikr = makeZikrView
+    @Route(.push) var azkarList = makeAzkarListView
+    @Route(.push) var appInfo = makeAppInfoView
+    @Route(.push) var settings = makeSettingsView
+    @Route(.modal) var modalSettings = makeModalSettingsView
+    @Route(.modal) var whatsNew = makeWhatsNewView
+    @Route(.modal) var shareOptions = makeShareOptionsView
+    
     let preferences: Preferences
     var databaseService: DatabaseService {
         DatabaseService(language: preferences.contentLanguage)
@@ -37,7 +51,18 @@ final class RootCoordinator: NavigationCoordinator, RouteTrigger {
     private let selectedZikrPageIndex = CurrentValueSubject<Int, Never>(0)
 
     private var cancellables = Set<AnyCancellable>()
-
+    
+    private var childCoordinators: [any Identifiable] = []
+    
+    private var section: RootSection? {
+        didSet {
+            guard let section else { return }
+            DispatchQueue.main.async {
+                self.handleSelection(section)
+            }
+        }
+    }
+    
     init(
         preferences: Preferences,
         deeplinker: Deeplinker,
@@ -46,12 +71,7 @@ final class RootCoordinator: NavigationCoordinator, RouteTrigger {
         self.preferences = preferences
         self.deeplinker = deeplinker
         self.player = player
-
-        let navigationController = UINavigationController()
-        navigationController.navigationItem.largeTitleDisplayMode = .automatic
-        navigationController.navigationBar.prefersLargeTitles = true
-
-        super.init(rootViewController: navigationController)
+        super.init()
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
             self.trigger(.whatsNew)
@@ -62,7 +82,6 @@ final class RootCoordinator: NavigationCoordinator, RouteTrigger {
             .prepend(preferences.colorTheme)
             .sink(receiveValue: { _ in
                 let color = UIColor(Color.accent)
-                navigationController.navigationBar.tintColor = color
                 UINavigationBar.appearance().tintColor = color
             })
             .store(in: &cancellables)
@@ -85,114 +104,61 @@ final class RootCoordinator: NavigationCoordinator, RouteTrigger {
             })
             .store(in: &cancellables)
     }
-
-    func azkarForCategory(_ category: ZikrCategory) throws -> [ZikrViewModel] {
-        let adhkar = try databaseService.getAdhkar(category)
-        let viewModels = try adhkar.enumerated().map { idx, zikr in
-            try ZikrViewModel(
-                zikr: zikr,
-                row: idx + 1,
-                hadith: zikr.hadith.flatMap { id in
-                    try databaseService.getHadith(id)
-                },
-                preferences: preferences,
-                player: player
-            )
+    
+    func azkarForCategory(_ category: ZikrCategory) -> [ZikrViewModel] {
+        do {
+            let adhkar = try databaseService.getAdhkar(category)
+            let viewModels = try adhkar.enumerated().map { idx, zikr in
+                try ZikrViewModel(
+                    zikr: zikr,
+                    row: idx + 1,
+                    hadith: zikr.hadith.flatMap { id in
+                        try databaseService.getHadith(id)
+                    },
+                    preferences: preferences,
+                    player: player
+                )
+            }
+            return viewModels
+        } catch {
+            return []
         }
-        return viewModels
     }
 
     func trigger(_ route: RootSection) {
         section = route
     }
 
-    private var section = RootSection.root {
-        didSet {
-            DispatchQueue.main.async {
-                self.handleSelection(self.section)
-            }
-        }
-    }
-
-    override func start(with completion: @escaping () -> Void) {
-        super.start(with: completion)
-        section = .root
-    }
-
     func goToSettings() {
         section = .settings()
     }
-
+    
 }
 
 private extension RootCoordinator {
 
     func handleSelection(_ section: RootSection) {
+        
+        let rootViewController = UINavigationController()
+        
         switch section {
-        case .aboutApp, .category, .root, .settings:
+        case .aboutApp, .category, .settings:
             selectedZikrPageIndex.send(0)
-        case .zikr, .subscribe, .zikrPages, .goToPage, .whatsNew:
+        case .zikr, .zikrPages, .goToPage, .whatsNew, .shareOptions:
             break
         }
         
         switch section {
 
-        case .root:
-            let viewModel = MainMenuViewModel(
-                databaseService: databaseService,
-                router: UnownedRouteTrigger(router: self),
-                preferences: preferences,
-                player: player
-            )
-            let view = MainMenuView(viewModel: viewModel)
-            let viewController = UIHostingController(rootView: view)
-            root(viewController)
-
         case .category(let category):
-            let azkar: [ZikrViewModel]
-
-            do {
-                azkar = try azkarForCategory(category)
-            } catch {
-                // TODO: Handle error.
-                return
-            }
-
-            let viewModel = ZikrPagesViewModel(
-                router: UnownedRouteTrigger(router: self),
-                category: category,
-                title: category.title,
-                azkar: azkar,
-                preferences: preferences,
-                selectedPagePublisher: selectedZikrPageIndex.removeDuplicates().eraseToAnyPublisher(),
-                initialPage: selectedZikrPageIndex.value
-            )
-
-            if rootViewController.isPadInterface || category == .other {
-                let listView = AzkarListView(viewModel: viewModel)
-                let listViewController = UIHostingController(rootView: listView)
-                listViewController.title = viewModel.title
-                if rootViewController.isPadInterface {
-                    let viewController = ZikrPagesViewController(viewModel: viewModel)
-                    viewController.title = viewModel.title
-                    show(listViewController)
-                    rootViewController.replaceDetailViewController(with: viewController)
-                } else {
-                    listViewController.title = category.title
-                    listViewController.navigationItem.largeTitleDisplayMode = .never
-                    show(listViewController)
-                }
+            if category == .other {
+                route(to: \.azkarList, category)
             } else {
-                let viewController = ZikrPagesViewController(viewModel: viewModel)
-                viewController.title = category.title
-                viewController.navigationItem.largeTitleDisplayMode = .never
-                show(viewController)
+                route(to: \.zikrCategory, category)
             }
 
         case .zikrPages(let vm):
-            let viewController = ZikrPagesViewController(viewModel: vm)
-            selectedZikrPageIndex.send(vm.page)
-            show(viewController)
+            route(to: \.zikrPages, vm)
 
         case .zikr(let zikr, let index):
             assert(Thread.isMainThread)
@@ -210,80 +176,201 @@ private extension RootCoordinator {
                 preferences: preferences,
                 player: player
             )
-            let view = ZikrView(viewModel: viewModel, incrementAction: Empty().eraseToAnyPublisher())
-            let viewController = UIHostingController(rootView: view)
-
-            if rootViewController.isPadInterface {
-                rootViewController.replaceDetailViewController(with: viewController)
-            } else {
-                show(viewController)
-            }
+            route(to: \.zikr, viewModel)
 
         case .goToPage(let page):
             selectedZikrPageIndex.send(page)
             
         case .settings(let initialRoute, let presentModally):
-            var navigationController = rootViewController
             if presentModally {
-                navigationController = UINavigationController()
-                navigationController.navigationBar.prefersLargeTitles = true
-            }
-            let coordinator = SettingsCoordinator(
-                rootViewController: navigationController,
-                initialRoute: initialRoute
-            )
-            startChild(coordinator: coordinator)
-            if presentModally {
-                navigationController.topViewController?.navigationItem.rightBarButtonItem = UIBarButtonItem(
-                    systemItem: .done,
-                    primaryAction: UIAction(handler: { _ in
-                        self.dismissModal()
-                    })
-                )
-                present(navigationController)
+                route(to: \.modalSettings, initialRoute)
+            } else {
+                route(to: \.settings, initialRoute)
             }
 
         case .aboutApp:
-            let viewModel = AppInfoViewModel(preferences: preferences)
-            let view = AppInfoView(viewModel: viewModel)
-            let viewController = UIHostingController(rootView: view)
-            viewController.title = L10n.About.title
-            show(viewController)
-            
-        case .subscribe:
-            let view = SubscribeView(viewModel: SubscribeViewModel(), closeButtonAction: { [unowned self] in
-                self.dismissModal()
-            })
-            let viewController = UIHostingController(rootView: view)
-            if UIDevice.current.isIpadInterface {
-                viewController.modalPresentationStyle = .pageSheet
-            } else {
-                viewController.modalPresentationStyle = .fullScreen
-            }
-            (rootViewController.presentedViewController ?? rootViewController).present(viewController, animated: true)
+            route(to: \.appInfo)
             
         case .whatsNew:
-            guard let viewController = getWhatsNewViewController() else {
+            guard let whatsNew = getWhatsNew() else {
                 return
             }
+            route(to: \.whatsNew, whatsNew)
             
-            present(viewController)
+        case .shareOptions(let zikr):
+            route(to: \.shareOptions, zikr)
 
         }
     }
 
-    private func showDetailViewController(_ viewController: UIViewController, animated: Bool = true) {
-        if rootViewController.isPadInterface {
-            rootViewController.replaceDetailViewController(with: viewController)
-        } else {
-            if animated {
-                show(viewController)
-            } else {
-                UIView.performWithoutAnimation {
-                    self.show(viewController)
-                }
+}
+
+extension RootCoordinator {
+    
+    func makeMainView() -> some View {
+        MainMenuView(viewModel: MainMenuViewModel(
+            databaseService: databaseService,
+            router: UnownedRouteTrigger(router: self),
+            preferences: preferences,
+            player: player
+        ))
+    }
+    
+    func makeZikrPagesViewModel(_ category: ZikrCategory) -> ZikrPagesViewModel {
+        return ZikrPagesViewModel(
+            router: UnownedRouteTrigger(router: self),
+            category: category,
+            title: category.title,
+            azkar: azkarForCategory(category),
+            preferences: preferences,
+            selectedPagePublisher: selectedZikrPageIndex.removeDuplicates().eraseToAnyPublisher(),
+            initialPage: selectedZikrPageIndex.value
+        )
+    }
+    
+    func makeCategoryView(_ category: ZikrCategory) -> ZikrPagesView {
+        let viewModel = makeZikrPagesViewModel(category)
+        return ZikrPagesView(viewModel: viewModel)
+    }
+    
+    func makeAzkarListView(_ category: ZikrCategory) -> some View {
+        let viewModel = makeZikrPagesViewModel(category)
+        return AzkarListView(viewModel: viewModel)
+    }
+    
+    func makeZikrPagesView(_ viewModel: ZikrPagesViewModel) -> some View {
+        ZikrPagesView(viewModel: viewModel)
+    }
+    
+    func makeZikrView(_ viewModel: ZikrViewModel) -> some View {
+        ZikrView(viewModel: viewModel, incrementAction: Empty().eraseToAnyPublisher())
+    }
+    
+    func makeAppInfoView() -> some View {
+        AppInfoView(viewModel: AppInfoViewModel(preferences: preferences))
+    }
+    
+    func makeSettingsView(_ initialRoute: SettingsRoute?) -> SettingsCoordinator {
+        SettingsCoordinator(
+            databaseService: databaseService,
+            preferences: preferences,
+            initialRoute: initialRoute
+        )
+    }
+    
+    func makeModalSettingsView(_ initialRoute: SettingsRoute?) -> NavigationViewCoordinator<SettingsCoordinator> {
+        NavigationViewCoordinator(
+            SettingsCoordinator(
+                databaseService: databaseService,
+                preferences: preferences,
+                initialRoute: initialRoute
+            )
+        )
+    }
+    
+    func makeWhatsNewView(_ whatsNew: WhatsNew) -> some View {
+        getWhatsNewView(whatsNew)
+    }
+    
+    func makeShareOptionsView(zikr: Zikr) -> some View {
+        ZikrShareOptionsView(zikr: zikr) { [unowned self] options in
+            assert(Thread.isMainThread)
+            guard
+                let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                let window = scene.windows.first,
+                let rootViewController = window.rootViewController?.topmostPresentedViewController
+            else {
+                return
             }
+            self.share(zikr: zikr, options: options, from: rootViewController)
         }
+        .tint(Color.accent)
     }
+    
+}
 
+extension RootCoordinator: MFMailComposeViewControllerDelegate {
+    
+    private func share(
+        zikr: Zikr,
+        options: ZikrShareOptionsView.ShareOptions,
+        from viewController: UIViewController
+    ) {
+        let currentViewModel = ZikrViewModel(zikr: zikr, hadith: nil, preferences: preferences, player: player)
+        let activityItems: [Any]
+
+        switch options.shareType {
+
+        case .image, .instagramStories:
+
+            let view = ZikrShareView(
+                viewModel: currentViewModel,
+                includeTitle: options.includeTitle,
+                includeTranslation: preferences.expandTranslation,
+                includeTransliteration: preferences.expandTransliteration,
+                includeBenefits: options.includeBenefits,
+                includeLogo: options.includeLogo,
+                arabicTextAlignment: options.textAlignment.isCentered ? .center : .trailing,
+                otherTextAlignment: options.textAlignment.isCentered ? .center : .leading,
+                useFullScreen: options.shareType == .image
+            )
+            .frame(width: UIScreen.main.bounds.width)
+            .frame(maxHeight: .infinity)
+            let image = view.snapshot()
+
+            if options.shareType == .image {
+                let tempDir = FileManager.default.temporaryDirectory
+                let imgFileName = "\(currentViewModel.title).png"
+                let tempImagePath = tempDir.appendingPathComponent(imgFileName)
+                try? image.pngData()?.write(to: tempImagePath)
+                activityItems = [tempImagePath]
+            } else if options.shareType == .instagramStories {
+                let story = IGStory(contentSticker: image, background: .color(color: UIColor(Color.background)))
+                let dispatcher = IGDispatcher(story: story, facebookAppID: "n/a")
+                dispatcher.start()
+                return
+            } else {
+                return
+            }
+
+        case .text:
+            let text = currentViewModel.getShareText(
+                includeTitle: options.includeTitle,
+                includeTranslation: preferences.expandTranslation,
+                includeTransliteration: preferences.expandTransliteration,
+                includeBenefits: options.includeBenefits
+            )
+            activityItems = [text]
+
+        }
+
+        let activityController = UIActivityViewController(
+            activityItems: activityItems,
+            applicationActivities: [ZikrFeedbackActivity(prepareAction: { [unowned self] in
+                self.presentMailComposer(from: viewController)
+            })]
+        )
+        activityController.excludedActivityTypes = [
+            .init(rawValue: "com.apple.reminders.sharingextension")
+        ]
+        activityController.completionWithItemsHandler = { (activityType, completed, arguments, error) in
+            guard completed else {
+                return
+            }
+            viewController.dismiss()
+        }
+        viewController.present(activityController, animated: true)
+    }
+    
+    private func presentMailComposer(from viewController: UIViewController) {
+        guard MFMailComposeViewController.canSendMail() else {
+            UIApplication.shared.open(URL(string: "https://t.me/jawziyya_feedback")!)
+            return
+        }
+        let mailComposerViewController = MFMailComposeViewController()
+        mailComposerViewController.setToRecipients(["azkar.app@pm.me"])
+        mailComposerViewController.mailComposeDelegate = self
+        viewController.present(mailComposerViewController, animated: true)
+    }
+    
 }

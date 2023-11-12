@@ -14,7 +14,7 @@ final class ZikrPagesViewModel: ObservableObject, Equatable {
     static func == (lhs: ZikrPagesViewModel, rhs: ZikrPagesViewModel) -> Bool {
         lhs.category == rhs.category && lhs.title == rhs.title
     }
-
+    
     let router: UnownedRouteTrigger<RootSection>
     let category: ZikrCategory
     let title: String
@@ -138,6 +138,14 @@ final class ZikrPagesViewModel: ObservableObject, Equatable {
         } else {
             return Empty().eraseToAnyPublisher()
         }
+    }
+    
+    func shareCurrentZikr() {
+        guard azkar.count > page else {
+            return
+        }
+        let zikr = azkar[page].zikr
+        router.trigger(.shareOptions(zikr))
     }
 
 }
