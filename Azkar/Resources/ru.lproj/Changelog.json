@@ -1,5 +1,18 @@
 [
     {
+        "version": "2.6.0",
+        "items": [
+            {
+                "title": "Поиск",
+                "subtitle": "В этой версии мы добавили функционал поиска по приложению.",
+                "image": {
+                    "type": "symbol",
+                    "name": "magnifyingglass"
+                }
+            }
+        ],
+    },
+    {
       "version": "2.5.0",
       "items": [
         {

@@ -15,6 +15,7 @@ struct AppearanceScreen: View {
         }
         .customScrollContentBackground()
         .background(Color.background, ignoresSafeAreaEdges: .all)
+        .navigationTitle(L10n.Settings.Theme.title)
     }
     
     var content: some View {

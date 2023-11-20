@@ -98,6 +98,7 @@ struct ZikrView: View {
             counterButton,
             alignment: viewModel.preferences.alignCounterButtonByLeadingSide ? .bottomLeading : .bottomTrailing
         )
+        .navigationBarTitleDisplayMode(.inline)
     }
 
     private var counterButton: some View {

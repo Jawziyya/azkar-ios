@@ -14,6 +14,7 @@ struct RemindersScreen: View {
         }
         .customScrollContentBackground()
         .background(Color.background, ignoresSafeAreaEdges: .all)
+        .navigationTitle(L10n.Settings.Reminders.title)
     }
     
     var content: some View {
@@ -49,17 +50,15 @@ struct RemindersScreen: View {
     
     var reminderTypes: some View {
         Group {
-            NavigationLink {
-                AdhkarRemindersView(viewModel: viewModel.adhkarRemindersViewModel)
-            } label: {
-                Text(L10n.Settings.Reminders.MorningEvening.label)
-            }
-
-            NavigationLink {
-                JumuaRemindersView(viewModel: viewModel.jumuaRemindersViewModel)
-            } label: {
-                Text(L10n.Settings.Reminders.Jumua.label)
-            }
+            ChevronButton(
+                title: L10n.Settings.Reminders.MorningEvening.label,
+                action: viewModel.navigateToAdhkarReminders
+            )
+            
+            ChevronButton(
+                title: L10n.Settings.Reminders.Jumua.label,
+                action: viewModel.navigateToJumuaReminders
+            )
         }
     }
     
@@ -69,7 +68,7 @@ struct RemindersScreen: View {
     
 }
 
-#Preview {
+#Preview("RemindersScreen") {
     RemindersScreen(
         viewModel: RemindersViewModel(
             router: .empty

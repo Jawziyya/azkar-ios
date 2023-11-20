@@ -13,7 +13,7 @@ final class Deeplinker: ObservableObject {
 
     @Published var route: Route?
 
-    enum Route: Equatable, Hashable {
+    enum Route: Hashable {
         case settings(SettingsRoute)
         case azkar(ZikrCategory)
     }

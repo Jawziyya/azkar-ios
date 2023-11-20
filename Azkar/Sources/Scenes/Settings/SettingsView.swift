@@ -22,10 +22,9 @@ struct SettingsView: View {
                 .listRowBackground(Color.contentBackground)
         }
         .listStyle(.insetGrouped)
-        .accentColor(Color.accent)
-        .toggleStyle(SwitchToggleStyle(tint: Color.accent))
         .customScrollContentBackground()
         .background(Color.background, ignoresSafeAreaEdges: .all)
+        .navigationTitle(L10n.Settings.title)
     }
         
     var content: some View {

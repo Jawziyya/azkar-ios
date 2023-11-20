@@ -52,6 +52,7 @@ let packages: [Package] = [
     .remote(url: "https://github.com/demharusnam/SwiftUIDrag", requirement: .revision("0686318a")),
     .remote(url: "https://github.com/aheze/Popovers", requirement: .upToNextMajor(from: "1.3.2")),
     .remote(url: "https://github.com/SvenTiigi/WhatsNewKit", requirement: .upToNextMajor(from: "2.0.0")),
+    .remote(url: "https://github.com/rundfunk47/stinsen", requirement: .upToNextMajor(from: "2.0.0")),
 ]
 
 let baseSettingsDictionary = SettingsDictionary()
@@ -134,6 +135,7 @@ enum AzkarTarget: String, CaseIterable {
                     .package(product: "Popovers"),
                     .package(product: "WhatsNewKit"),
                     .package(product: "IGStoryKit"),
+                    .package(product: "Stinsen"),
                 ],
                 settings: Settings.settings(
                     base: baseSettingsDictionary

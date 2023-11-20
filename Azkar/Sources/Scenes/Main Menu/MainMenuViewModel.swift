@@ -14,8 +14,17 @@ import Entities
 final class MainMenuViewModel: ObservableObject {
 
     @Published var title = ""
+    @Published var searchQuery = ""
+    
+    private let searchQueryPublisher = PassthroughSubject<String, Never>()
 
     let router: UnownedRouteTrigger<RootSection>
+    let databaseService: DatabaseService
+    
+    private(set) lazy var searchViewModel = SearchResultsViewModel(
+        databaseService: databaseService,
+        searchQuery: searchQueryPublisher.removeDuplicates().eraseToAnyPublisher()
+    )
 
     let currentYear: String
 
@@ -69,10 +78,11 @@ final class MainMenuViewModel: ObservableObject {
         preferences: Preferences,
         player: Player
     ) {
+        self.databaseService = databaseService
         self.router = router
         self.preferences = preferences
         self.player = player
-
+        
         fastingDua = try? databaseService.getZikr(51)
         
         otherAzkarModels = [
@@ -150,6 +160,11 @@ final class MainMenuViewModel: ObservableObject {
                 try? databaseService.getRandomFadl(language: language)
             }
             .assign(to: &$fadl)
+        
+        $searchQuery
+            .subscribe(on: DispatchQueue.global(qos: .userInteractive))
+            .sink(receiveValue: searchQueryPublisher.send(_:))
+            .store(in: &cancellables)
     }
 
     private func hideIconPacksMessage() {
@@ -157,6 +172,15 @@ final class MainMenuViewModel: ObservableObject {
             if let index = self.additionalMenuItems.firstIndex(where: { $0 == self.iconsPackMessage }) {
                 self.additionalMenuItems.remove(at: index)
             }
+        }
+    }
+    
+    func naviateToSearchResult(_ searchResult: SearchResult) {
+        switch searchResult.resultType {
+        case .category(let zikrCategory):
+            router.trigger(.category(zikrCategory))            
+        case .zikr(let zikr):
+            router.trigger(.zikr(zikr, index: nil))
         }
     }
 

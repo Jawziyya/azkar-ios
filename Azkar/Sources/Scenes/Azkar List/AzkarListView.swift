@@ -21,6 +21,7 @@ struct AzkarListView: View {
         ScrollView(.vertical, showsIndicators: true) {
             list
         }
+        .navigationTitle(viewModel.title)
         .background(Color.background.edgesIgnoringSafeArea(.all))
         .onReceive(viewModel.selectedPage) { page in
             self.page = page

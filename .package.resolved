@@ -110,6 +110,15 @@
         }
       },
       {
+        "package": "Stinsen",
+        "repositoryURL": "https://github.com/rundfunk47/stinsen",
+        "state": {
+          "branch": null,
+          "revision": "91ddedb7d86c7d3aa2d0dd281f1113ebae256324",
+          "version": "2.0.13"
+        }
+      },
+      {
         "package": "Introspect",
         "repositoryURL": "https://github.com/siteline/SwiftUI-Introspect",
         "state": {
