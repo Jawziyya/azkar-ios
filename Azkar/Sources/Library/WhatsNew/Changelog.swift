@@ -3,16 +3,18 @@
 
 import UIKit
 import WhatsNewKit
+import SwiftUI
 
-func getWhatsNewViewController() -> UIViewController? {
-    let whatsNewVersionStore: WhatsNewVersionStore = {
-        if CommandLine.arguments.contains("ALWAYS_SHOW_CHANGELOG") {
-            InMemoryWhatsNewVersionStore()
-        } else {
-            UserDefaultsWhatsNewVersionStore()
-        }
-    }()
-    
+func getVersionStore() -> WhatsNewVersionStore {
+    if CommandLine.arguments.contains("ALWAYS_SHOW_CHANGELOG") {
+        InMemoryWhatsNewVersionStore()
+    } else {
+        UserDefaultsWhatsNewVersionStore()
+    }
+}
+
+func getWhatsNew() -> WhatsNew? {
+    let versionStore = getVersionStore()
     let currentAppVersion = WhatsNew.Version.current()
     let changelogs: [Changelog]
     
@@ -30,20 +32,32 @@ func getWhatsNewViewController() -> UIViewController? {
     // Comparing current app version against version in Changelog.json file
     // If the major and minor versions do not match, we'll not display changelog to the user.
     guard let changelog = changelogs.first(where: { changelog in
-        changelog.versionInfo.major == currentAppVersion.major && changelog.versionInfo.minor == currentAppVersion.minor
+        changelog.versionInfo.major == currentAppVersion.major && 
+        changelog.versionInfo.minor == currentAppVersion.minor
     }) else {
         return nil
     }
     
-    guard let viewController = WhatsNewViewController(
-        whatsNew: changelog.whatsNew,
-        versionStore: whatsNewVersionStore
-    ) else {
+    guard versionStore.hasPresented(currentAppVersion) == false else {
         return nil
     }
     
-    if let sheetController = viewController.presentationController as? UISheetPresentationController {
-        sheetController.detents = changelog.items.count > 1 ? [.large()] : [.medium()]
+    return changelog.whatsNew
+}
+
+func getWhatsNewView(_ whatsNew: WhatsNew) -> WhatsNewView {
+    WhatsNewView(
+        whatsNew: whatsNew,
+        versionStore: getVersionStore()
+    )
+}
+
+func getWhatsNewViewController(_ whatsNew: WhatsNew) -> UIViewController? {
+    guard let viewController = WhatsNewViewController(
+        whatsNew: whatsNew,
+        versionStore: getVersionStore()
+    ) else {
+        return nil
     }
     return viewController
 }
@@ -130,6 +144,7 @@ struct Changelog: Decodable {
     
     var whatsNew: WhatsNew {
         WhatsNew(
+            version: versionInfo,
             title: .init(stringLiteral: title ?? L10n.Updates.title),
             features: items.map(\.whatsNewItem),
             primaryAction: WhatsNew.PrimaryAction(

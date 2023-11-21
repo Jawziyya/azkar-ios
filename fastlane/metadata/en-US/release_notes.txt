@@ -1,2 +1,2 @@
-- English localization both app and content
-- Different color themes
+- Search functionality
+- Bugfixes for Virtues of Dhikr widget

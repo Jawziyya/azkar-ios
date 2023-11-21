@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - 'release/**'
+      - 'main'
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -11,11 +12,28 @@ jobs:
   deploy:
     name: Deploying to Testflight
     runs-on: macos-13
+
+    env:
+      APPLE_ID: '${{ secrets.APPLE_ID }}'
+      APP_ID: '${{ secrets.APP_ID }}'
+      WIDGETS_ID: '${{ secrets.WIDGETS_ID }}'
+      APP_APPLE_ID: '${{ secrets.APP_APPLE_ID }}'
+      AUTH_KEY_CONTENT: '${{ secrets.AUTH_KEY_CONTENT }}'
+      AUTH_KEY_ID: '${{ secrets.AUTH_KEY_ID }}'
+      AUTH_KEY_ISSUER_ID: '${{ secrets.AUTH_KEY_ISSUER_ID }}'
+      MATCH_GIT_AUTH: '${{ secrets.MATCH_GIT_AUTH }}'
+      MATCH_GIT_URL: '${{ secrets.MATCH_GIT_URL }}'
+      ITC_TEAM_ID: '${{ secrets.ITC_TEAM_ID }}'
+      TEAM_ID: '${{ secrets.TEAM_ID }}'
+      TEMP_KEYCHAIN_USER: '${{ secrets.TEMP_KEYCHAIN_USER }}'
+      TEMP_KEYCHAIN_PASSWORD: '${{ secrets.TEMP_KEYCHAIN_PASSWORD }}'          
+      MATCH_PASSWORD: '${{ secrets.MATCH_PASSWORD }}'
+      PROVISIONING_PROFILE_SPECIFIER: '${{ secrets.PROVISIONING_PROFILE_SPECIFIER }}'
     
     steps:
       - uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: 15.0.0
+          xcode-version: 15.0.1
 
       - name: Checkout repository
         uses: actions/checkout@v1
@@ -26,23 +44,14 @@ jobs:
           command: 'generate'
           arguments: ''
 
-      - name: Deploy iOS Beta to TestFlight
+      - name: Deploy iOS Beta to TestFlight (main branch)
+        if: github.ref == 'refs/heads/main'
+        uses: maierj/fastlane-action@v2.1.0
+        with:
+          lane: release
+
+      - name: Deploy iOS Beta to TestFlight (release branches)
+        if: github.ref != 'refs/heads/main'
         uses: maierj/fastlane-action@v2.1.0
         with:
           lane: closed_beta
-        env:
-          APPLE_ID: '${{ secrets.APPLE_ID }}'
-          APP_ID: '${{ secrets.APP_ID }}'
-          WIDGETS_ID: '${{ secrets.WIDGETS_ID }}'
-          APP_APPLE_ID: '${{ secrets.APP_APPLE_ID }}'
-          AUTH_KEY_CONTENT: '${{ secrets.AUTH_KEY_CONTENT }}'
-          AUTH_KEY_ID: '${{ secrets.AUTH_KEY_ID }}'
-          AUTH_KEY_ISSUER_ID: '${{ secrets.AUTH_KEY_ISSUER_ID }}'
-          MATCH_GIT_AUTH: '${{ secrets.MATCH_GIT_AUTH }}'
-          MATCH_GIT_URL: '${{ secrets.MATCH_GIT_URL }}'
-          ITC_TEAM_ID: '${{ secrets.ITC_TEAM_ID }}'
-          TEAM_ID: '${{ secrets.TEAM_ID }}'
-          TEMP_KEYCHAIN_USER: '${{ secrets.TEMP_KEYCHAIN_USER }}'
-          TEMP_KEYCHAIN_PASSWORD: '${{ secrets.TEMP_KEYCHAIN_PASSWORD }}'          
-          MATCH_PASSWORD: '${{ secrets.MATCH_PASSWORD }}'
-          PROVISIONING_PROFILE_SPECIFIER: '${{ secrets.PROVISIONING_PROFILE_SPECIFIER }}'

@@ -3,86 +3,143 @@
 
 import UIKit
 import SwiftUI
-import Coordinator
+import Stinsen
 
-enum SettingsRoute: Equatable, Route {
-    case root, subscribe, notificationsList
-    case appearance, text, counter, reminders
+enum SettingsRoute: Hashable, RouteKind {
+    case subscribe, notificationsList
+    case appearance, text, counter
+    case reminders, adhkarReminders, jumuaReminders, soundPicker(ReminderSound)
 }
 
-final class SettingsCoordinator: NavigationCoordinator, RouteTrigger {
+final class SettingsCoordinator: RouteTrigger, Identifiable, NavigationCoordinatable {
+    var stack = Stinsen.NavigationStack<SettingsCoordinator>(initial: \.root)
     
+    @Root var root = makeRootView
+    @Route(.push) var appearance = makeAppearanceView
+    @Route(.push) var notificationsList = makeNotificationsListView
+    @Route(.push) var text = makeTextView
+    @Route(.push) var counter = makeCounterView
+    @Route(.push) var reminders = makeRemindersView
+    @Route(.push) var adhkarReminders = makeAdhkarRemindersView
+    @Route(.push) var jumuaReminders = makeJumuaRemindersView
+    @Route(.push) var soundPicker = makeSoundPickerView
+    @Route(.modal) var subscribe = makeSubscribeView
+        
+    private let databaseService: DatabaseService
+    private let preferences: Preferences
     private let initialRoute: SettingsRoute?
     
-    init(rootViewController: UINavigationController?, initialRoute: SettingsRoute?) {
+    init(
+        databaseService: DatabaseService,
+        preferences: Preferences = Preferences.shared,
+        initialRoute: SettingsRoute?
+    ) {
+        self.databaseService = databaseService
+        self.preferences = preferences
         self.initialRoute = initialRoute
-        super.init(rootViewController: rootViewController)
-    }
-    
-    override func start(with completion: @escaping () -> Void) {
-        super.start(with: completion)
         if let initialRoute {
             trigger(initialRoute)
-        } else {
-            trigger(.root)
         }
+    }
+    
+    private func createRouter() -> UnownedRouteTrigger<SettingsRoute> {
+        UnownedRouteTrigger(router: self)
     }
     
     func trigger(_ route: SettingsRoute) {
         switch route {
-
-        case .root:
-            let viewModel = SettingsViewModel(
-                databaseService: DatabaseService.init(language: .getSystemLanguage()),
-                preferences: Preferences.shared,
-                router: UnownedRouteTrigger(router: self)
-            )
-            let view = SettingsView(viewModel: viewModel)
-            let viewController = UIHostingController(rootView: view)
-            viewController.title = L10n.Settings.title
-            show(viewController)
             
         case .notificationsList:
-            let viewModel = NotificationsListViewModel(notifications: UNUserNotificationCenter.current().pendingNotificationRequests)
-            let view = NotificationsListView(viewModel: viewModel)
-            let viewController = UIHostingController(rootView: view)
-            show(viewController)
+            self.route(to: \.notificationsList)
             
         case .subscribe:
-            let viewController = createSubscribeViewController { [unowned self] in
-                self.dismissModal()
-            }
-            (rootViewController.presentedViewController ?? rootViewController).present(viewController, animated: true)
+            self.route(to: \.subscribe)
             
         case .appearance:
-            let viewModel = AppearanceViewModel(router: UnownedRouteTrigger(router: self))
-            let view = AppearanceScreen(viewModel: viewModel)
-            showView(view, title: L10n.Settings.Theme.title)
+            self.route(to: \.appearance)
             
         case .text:
-            let viewModel = TextSettingsViewModel(router: UnownedRouteTrigger(router: self))
-            let view = TextSettingsScreen(viewModel: viewModel)
-            showView(view, title: L10n.Settings.Text.title)
+            self.route(to: \.text)
             
         case .counter:
-            let viewModel = CounterViewModel(router: UnownedRouteTrigger(router: self))
-            let view = CounterView(viewModel: viewModel)
-            showView(view, title: L10n.Settings.Counter.title)
+            self.route(to: \.counter)
 
         case .reminders:
-            let viewModel = RemindersViewModel(router: UnownedRouteTrigger(router: self))
-            let view = RemindersScreen(viewModel: viewModel)
-            showView(view, title: L10n.Settings.Reminders.title)
+            self.route(to: \.reminders)
+            
+        case .adhkarReminders:
+            self.route(to: \.adhkarReminders)
+            
+        case .jumuaReminders:
+            self.route(to: \.jumuaReminders)
+            
+        case .soundPicker(let currentSound):
+            self.route(to: \.soundPicker, currentSound)
 
         }
     }
     
-    private func showView(_ view: some View, title: String) {
-        let viewController = UIHostingController(
-            rootView: view.tint(Color.accent)
+}
+
+extension SettingsCoordinator {
+    
+    func makeRootView() -> some View {
+        let viewModel = SettingsViewModel(
+            databaseService: databaseService,
+            preferences: preferences,
+            router: createRouter()
         )
-        viewController.title = title
-        show(viewController)
+        return SettingsView(viewModel: viewModel)
+    }
+    
+    func makeAppearanceView() -> some View {
+        AppearanceScreen(viewModel: AppearanceViewModel(
+            router: createRouter()
+        ))
+    }
+    
+    func makeNotificationsListView() -> some View {
+        let viewModel = NotificationsListViewModel(notifications: UNUserNotificationCenter.current().pendingNotificationRequests)
+        return NotificationsListView(viewModel: viewModel)
+    }
+    
+    func makeTextView() -> some View {
+        let viewModel = TextSettingsViewModel(router: createRouter())
+        return TextSettingsScreen(viewModel: viewModel)
+    }
+    
+    func makeCounterView() -> some View {
+        let viewModel = RemindersViewModel(router: createRouter())
+        return RemindersScreen(viewModel: viewModel)
+    }
+    
+    func makeRemindersView() -> some View {
+        RemindersScreen(viewModel: RemindersViewModel(router: createRouter()))
+    }
+    
+    func makeAdhkarRemindersView() -> some View {
+        AdhkarRemindersView(viewModel: AdhkarRemindersViewModel(
+            router: self.createRouter()
+        ))
+    }
+    
+    func makeJumuaRemindersView() -> some View {
+        JumuaRemindersView(viewModel: JumuaRemindersViewModel(
+            router: self.createRouter()
+        ))
+    }
+    
+    func makeSoundPickerView(_ sound: ReminderSound) -> some View {
+        ReminderSoundPickerView(viewModel: ReminderSoundPickerViewModel(
+            preferredSound: sound,
+            subscribeScreenTrigger: {
+                self.route(to: \.subscribe)
+            }
+        ))
+    }
+
+    func makeSubscribeView() -> some View {
+        SubscribeView(viewModel: SubscribeViewModel())
     }
     
 }
