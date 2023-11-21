@@ -1,2 +1,1 @@
-- English localization both app and content
-- Different color themes
+This version adds search functionality to the app.
