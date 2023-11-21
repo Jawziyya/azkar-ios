@@ -1,1 +1,2 @@
-This version adds search functionality to the app.
+- Search functionality
+- Bugfixes for Virtues of Dhikr widget
