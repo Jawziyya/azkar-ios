@@ -14,6 +14,7 @@ func getVersionStore() -> WhatsNewVersionStore {
 }
 
 func getWhatsNew() -> WhatsNew? {
+    let versionStore = getVersionStore()
     let currentAppVersion = WhatsNew.Version.current()
     let changelogs: [Changelog]
     
@@ -31,8 +32,13 @@ func getWhatsNew() -> WhatsNew? {
     // Comparing current app version against version in Changelog.json file
     // If the major and minor versions do not match, we'll not display changelog to the user.
     guard let changelog = changelogs.first(where: { changelog in
-        changelog.versionInfo.major == currentAppVersion.major && changelog.versionInfo.minor == currentAppVersion.minor
+        changelog.versionInfo.major == currentAppVersion.major && 
+        changelog.versionInfo.minor == currentAppVersion.minor
     }) else {
+        return nil
+    }
+    
+    guard versionStore.hasPresented(currentAppVersion) == false else {
         return nil
     }
     
@@ -138,6 +144,7 @@ struct Changelog: Decodable {
     
     var whatsNew: WhatsNew {
         WhatsNew(
+            version: versionInfo,
             title: .init(stringLiteral: title ?? L10n.Updates.title),
             features: items.map(\.whatsNewItem),
             primaryAction: WhatsNew.PrimaryAction(

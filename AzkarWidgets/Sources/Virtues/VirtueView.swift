@@ -16,6 +16,12 @@ struct VirtueView: View {
                 .containerBackground(for: .widget) {
                     Color("WidgetBackground")
                 }
+        } else if #available(iOS 16, *) {
+            content
+                .background(
+                    Color("WidgetBackground"),
+                    ignoresSafeAreaEdges: .all
+                )
         } else {
             content
                 .shadow(
