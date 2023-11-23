@@ -72,7 +72,14 @@ platform :ios do
     build_for_app_store
     upload_to_app_store(
       api_key: get_api_key,
-      force: true
+      force: true,
+      submit_for_review: true,
+      skip_screenshots: true,
+      run_precheck_before_submit: false,
+      submission_information: {
+        add_id_info_uses_idfa: false,
+        export_compliance_uses_encryption: false
+      }
     )
   end
 
