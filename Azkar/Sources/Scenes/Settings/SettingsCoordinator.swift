@@ -109,8 +109,8 @@ extension SettingsCoordinator {
     }
     
     func makeCounterView() -> some View {
-        let viewModel = RemindersViewModel(router: createRouter())
-        return RemindersScreen(viewModel: viewModel)
+        let viewModel = CounterViewModel(router: createRouter())
+        return CounterView(viewModel: viewModel)
     }
     
     func makeRemindersView() -> some View {
