@@ -30,9 +30,9 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string/>
+	<string></string>
 	<key>REVENUCE_CAT_API_KEY</key>
-	<string>gpAMTUYnTxQzRSbPszKrFTOekbEVzsXk</string>
+	<string>appl_jDuKSWeoFUChrvgZQdfjLFvFaYK</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>AdobeArabic-Regular.otf</string>
