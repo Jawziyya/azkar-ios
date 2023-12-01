@@ -41,6 +41,7 @@ func getWhatsNew() -> WhatsNew? {
     guard versionStore.hasPresented(currentAppVersion) == false else {
         return nil
     }
+    versionStore.save(presentedVersion: currentAppVersion)
     
     return changelog.whatsNew
 }
