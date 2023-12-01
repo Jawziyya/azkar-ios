@@ -1,2 +1,3 @@
+- Improvements in "Virtues of dhikr" widget and fix background color
+- Fix What's new window appearance
 - Search
-- Improvements in "Virtues of dhikr" widget
