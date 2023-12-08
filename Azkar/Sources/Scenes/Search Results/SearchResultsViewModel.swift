@@ -3,106 +3,162 @@ import Combine
 import Library
 import Entities
 
-struct SearchResult: Identifiable {
+struct SearchResultZikr: Identifiable, Hashable {
     let id = UUID()
-    let title: String?
-    let text: String
-    let resultType: ResultType
+    var title: String?
+    var text: String?
+    var translation: String?
+    var caption: String?
+    var caption2: String?
+    var footnote: String?
+    let highlightText: String
+    let zikr: Zikr
+}
+
+extension SearchResultZikr {
     
-    enum ResultType {
-        case category(ZikrCategory), zikr(Zikr)
+    private static func extractContextFrom(
+        _ string: String?,
+        query: String
+    ) -> String? {
+        guard let string else { return nil }
+        return string
+            .extractContext(query).reduce("", { $0 + "\n\n" + $1.context })
+            .textOrNil
+    }
+    
+    init(zikr: Zikr, query: String) {
+        let titleMatches = SearchResultZikr.extractContextFrom(zikr.title, query: query)
+        let textMatches = SearchResultZikr.extractContextFrom(zikr.text.trimmingArabicVowels, query: query.trimmingArabicVowels)
+        let translationMatches = SearchResultZikr.extractContextFrom(zikr.translation, query: query)
+        let sourceMatches = SearchResultZikr.extractContextFrom(zikr.source, query: query)
+        let benefitsMatches = SearchResultZikr.extractContextFrom(zikr.benefits, query: query)
+        let notesMatches = SearchResultZikr.extractContextFrom(zikr.notes, query: query)
+        
+        self.init(
+            title: titleMatches,
+            text: textMatches,
+            translation: translationMatches,
+            caption: sourceMatches,
+            caption2: benefitsMatches,
+            footnote: notesMatches,
+            highlightText: query,
+            zikr: zikr
+        )
     }
 }
 
 struct SearchResultsSection: Identifiable {
     let id = UUID()
-    let title: String
-    let results: [SearchResult]
+    let title: String?
+    let results: [SearchResultZikr]
 }
 
 final class SearchResultsViewModel: ObservableObject {
     
-    @Published var sections: [SearchResultsSection] = []
+    @Published var searchResults: [SearchResultsSection] = []
+    @Published var selectedTokens: [SearchToken] = []
     @Published var isPerformingSearch = false
     
-    private let categoriesSection = PassthroughSubject<[SearchResultsSection], Never>()
-    private let azkarSection = PassthroughSubject<[SearchResultsSection], Never>()
+    private var morningAdhkar: [Zikr] = []
+    private var eveningAdhkar: [Zikr] = []
+    private var nightAdhkar: [Zikr] = []
+    private var afterSalahAdhkar: [Zikr] = []
+    private var otherAdhkar: [Zikr] = []
+    
+    private func getAdhkar(for token: SearchToken) -> [Zikr] {
+        switch token {
+        case .morning: return morningAdhkar
+        case .evening: return eveningAdhkar
+        case .night: return nightAdhkar
+        case .afterSalah: return afterSalahAdhkar
+        case .other: return otherAdhkar
+        }
+    }
     
     var haveSearchResults: Bool {
-        return sections.contains { !$0.results.isEmpty }
+        searchResults.isEmpty == false
     }
     
     private let databaseService: DatabaseService
     
     init(
         databaseService: DatabaseService,
+        searchTokens: AnyPublisher<[SearchToken], Never>,
         searchQuery: AnyPublisher<String, Never>
     ) {
         self.databaseService = databaseService
-        searchQuery.map { _ in [] }.assign(to: &$sections)
-        configureSearch(query: searchQuery, databaseService: databaseService)
+        searchTokens.assign(to: &$selectedTokens)
+        searchQuery.map { _ in [] }.assign(to: &$searchResults)
+        configureSearch(
+            query: searchQuery,
+            tokens: searchTokens,
+            databaseService: databaseService
+        )
+        
+        do {
+            morningAdhkar = try databaseService.getAdhkar(.morning)
+            eveningAdhkar = try databaseService.getAdhkar(.evening)
+            nightAdhkar = try databaseService.getAdhkar(.night)
+            afterSalahAdhkar = try databaseService.getAdhkar(.afterSalah)
+            otherAdhkar = try databaseService.getAdhkar(.other)
+        } catch {
+            print(error.localizedDescription)
+        }
     }
     
     private func configureSearch(
         query: AnyPublisher<String, Never>,
+        tokens: AnyPublisher<[SearchToken], Never>,
         databaseService: DatabaseService
     ) {
-        let categoriesSection = query
-            .map { query -> [ZikrCategory] in
-                return [ZikrCategory.morning, .evening, .night, .afterSalah, .other]
-                    .filter { $0.title.contains(query) || $0.title.contains(query.lowercased()) }
-            }
-            .map { categories in
-                SearchResultsSection(title: "Categories", results: categories.map { category in
-                    SearchResult(
-                        title: nil,
-                        text: category.title,
-                        resultType: .category(category)
-                    )
-                })
-            }
-        
-        let azkarSection = query
-            .throttle(
+        let searchResults = query.combineLatest(tokens)
+            .debounce(
                 for: .seconds(1),
-                scheduler: DispatchQueue.main,
-                latest: true
+                scheduler: DispatchQueue.main
             )
-            .receive(on: DispatchQueue.global(qos: .userInteractive))
-            .flatMap { query -> AnyPublisher<[SearchResult], Never> in
-                do {
-                    let azkar = try databaseService.searchAdhkar(query)
-                    let results = azkar.map { zikr in
-                        let title = zikr.title ?? ""
-                        let text = (zikr.translation ?? "")
-                        let context = text.extractContext(query)
-                            .first ?? ""
-                        return SearchResult(
-                            title: context.isEmpty ? nil : title.textOrNil,
-                            text: context.isEmpty ? title : context,
-                            resultType: .zikr(zikr)
-                        )
-                    }
-                    return Just(results).eraseToAnyPublisher()
-                } catch {
+            .receive(on: DispatchQueue.global(qos: .userInitiated))
+            .flatMap(maxPublishers: .max(1)) { [unowned self] query, tokens -> AnyPublisher<[SearchResultsSection], Never> in
+                guard let query = query.textOrNil else {
                     return Just([]).eraseToAnyPublisher()
                 }
-            }
-            .map { results in
-                return SearchResultsSection(title: "Azkar", results: results)
+                
+                let searchTokens = tokens.isEmpty ? SearchToken.allCases : tokens
+                let sections = searchTokens.compactMap { token -> SearchResultsSection? in
+                    let azkar = getAdhkar(for: token)
+                    let searchResults = peformSearchIn(azkar, query: query)
+                    guard searchResults.isEmpty == false else {
+                        return nil
+                    }
+                    return SearchResultsSection(title: token.title, results: searchResults)
+                }
+                return Just(sections).eraseToAnyPublisher()
             }
             .receive(on: DispatchQueue.main)
         
-        Publishers
-            .CombineLatest(categoriesSection.prepend([]), azkarSection.prepend([]))
-            .map { [$0, $1] }
-            .assign(to: &$sections)
+        searchResults.assign(to: &$searchResults)
         
         Publishers.Merge(
             query.map { _ in true },
-            azkarSection.map { _ in false }
+            searchResults.map { _ in false }
         )
         .assign(to: &$isPerformingSearch)
+    }
+    
+    private func peformSearchIn(_ azkar: [Zikr], query: String) -> [SearchResultZikr] {
+        let normalizedQuery = query.lowercased()
+        return azkar.compactMap { zikr -> SearchResultZikr? in
+            let titleMatches = zikr.title?.lowercased().contains(normalizedQuery) == true
+            let textMatches = zikr.text.trimmingArabicVowels.contains(query) == true
+            let translationMatches = zikr.translation?.lowercased().contains(normalizedQuery) == true
+            let sourceMatches = zikr.source.lowercased().contains(normalizedQuery)
+            let benefitMatches = zikr.benefits?.lowercased().contains(normalizedQuery) == true
+            let notesMatches = zikr.notes?.lowercased().contains(normalizedQuery) == true
+            guard titleMatches || textMatches || translationMatches || sourceMatches || benefitMatches || notesMatches else {
+                return nil
+            }
+            return SearchResultZikr(zikr: zikr, query: query)
+        }
     }
     
 }
@@ -111,18 +167,15 @@ extension SearchResultsViewModel {
     static var placeholder: SearchResultsViewModel {
         let vm = SearchResultsViewModel(
             databaseService: .init(language: Language.english),
+            searchTokens: Empty().eraseToAnyPublisher(),
             searchQuery: Empty().eraseToAnyPublisher()
         )
-        vm.sections = [
-            .init(title: "Categories", results: [
-                SearchResult(title: nil, text: "Morning", resultType: .category(.morning)),
-                SearchResult(title: nil, text: "Evening", resultType: .category(.evening)),
-            ]),
-            .init(title: "Azkar", results: [
-                SearchResult(title: "Zikr title 1", text: "Zikr text 1", resultType: .zikr(.placeholder)),
-                SearchResult(title: "Zikr title 2", text: "Zikr text 2", resultType: .zikr(.placeholder)),
-                SearchResult(title: "Zikr title 3", text: "Zikr text 3", resultType: .zikr(.placeholder)),
-            ]),
+        vm.searchResults = [
+            .init(title: "Placeholder", results: [
+                SearchResultZikr(zikr: .placeholder(id: 1), query: "title"),
+                SearchResultZikr(zikr: .placeholder(id: 2), query: "translation"),
+                SearchResultZikr(zikr: .placeholder(id: 3), query: "notes"),
+            ])
         ]
         return vm
     }

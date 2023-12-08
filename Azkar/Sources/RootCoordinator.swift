@@ -18,6 +18,7 @@ import IGStoryKit
 enum RootSection: Equatable, RouteKind {
     case category(ZikrCategory)
     case zikr(_ zikr: Zikr, index: Int? = nil)
+    case searchResult(result: SearchResultZikr, searchQuery: String)
     case zikrPages(_ vm: ZikrPagesViewModel)
     case goToPage(Int)
     case settings(_ intitialRoute: SettingsRoute? = nil, presentModally: Bool = false)
@@ -111,6 +112,7 @@ final class RootCoordinator: NSObject, RouteTrigger, NavigationCoordinatable {
             let viewModels = try adhkar.enumerated().map { idx, zikr in
                 try ZikrViewModel(
                     zikr: zikr,
+                    isNested: true,
                     row: idx + 1,
                     hadith: zikr.hadith.flatMap { id in
                         try databaseService.getHadith(id)
@@ -144,7 +146,7 @@ private extension RootCoordinator {
         switch section {
         case .aboutApp, .category, .settings:
             selectedZikrPageIndex.send(0)
-        case .zikr, .zikrPages, .goToPage, .whatsNew, .shareOptions:
+        case .zikr, .zikrPages, .goToPage, .whatsNew, .shareOptions, .searchResult:
             break
         }
         
@@ -159,6 +161,21 @@ private extension RootCoordinator {
 
         case .zikrPages(let vm):
             route(to: \.zikrPages, vm)
+            
+        case .searchResult(let searchResult, let query):
+            let zikr = searchResult.zikr
+            let hadith = try? zikr.hadith.flatMap { id in
+                try databaseService.getHadith(id)
+            }
+            let viewModel = ZikrViewModel(
+                zikr: zikr,
+                isNested: false,
+                highlightPattern: query,
+                hadith: hadith,
+                preferences: preferences,
+                player: player
+            )
+            route(to: \.zikr, viewModel)
 
         case .zikr(let zikr, let index):
             assert(Thread.isMainThread)
@@ -172,6 +189,7 @@ private extension RootCoordinator {
             }
             let viewModel = ZikrViewModel(
                 zikr: zikr,
+                isNested: true,
                 hadith: hadith,
                 preferences: preferences,
                 player: player
@@ -296,7 +314,7 @@ extension RootCoordinator: MFMailComposeViewControllerDelegate {
         options: ZikrShareOptionsView.ShareOptions,
         from viewController: UIViewController
     ) {
-        let currentViewModel = ZikrViewModel(zikr: zikr, hadith: nil, preferences: preferences, player: player)
+        let currentViewModel = ZikrViewModel(zikr: zikr, isNested: true, hadith: nil, preferences: preferences, player: player)
         let activityItems: [Any]
 
         switch options.shareType {

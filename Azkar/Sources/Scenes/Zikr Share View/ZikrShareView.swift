@@ -111,7 +111,8 @@ struct ZikrShareView_Previews: PreviewProvider {
     static var previews: some View {
         ZikrShareView(
             viewModel: ZikrViewModel(
-                zikr: Zikr.placeholder,
+                zikr: Zikr.placeholder(),
+                isNested: true,
                 hadith: Hadith.placeholder,
                 preferences: Preferences.shared,
                 player: Player.test

@@ -1,8 +1,9 @@
 import SwiftUI
 
 struct SearchResultsView: View {
+    
     @ObservedObject var viewModel: SearchResultsViewModel
-    var onSelect: (SearchResult) -> Void
+    var onSelect: (SearchResultZikr) -> Void
 
     var body: some View {
         content
@@ -29,9 +30,13 @@ struct SearchResultsView: View {
     
     var searchResultsList: some View {
         List {
-            ForEach(viewModel.sections) { section in
-                if !section.results.isEmpty {
-                    Section(header: section.title) {
+            ForEach(viewModel.searchResults) { section in
+                if let title = section.title {
+                    Section(header: title) {
+                        ForEach(section.results, content: searchResultView)
+                    }
+                } else {
+                    Section {
                         ForEach(section.results, content: searchResultView)
                     }
                 }
@@ -39,21 +44,16 @@ struct SearchResultsView: View {
         }
     }
     
-    func searchResultView(for result: SearchResult) -> some View {
+    func searchResultView(for result: SearchResultZikr) -> some View {
         Button {
             onSelect(result)
         } label: {
-            VStack(alignment: .leading, spacing: 10) {
-                if let title = result.title {
-                    Text(title)
-                        .font(Font.headline)
-                }
-                Text(result.text)
-            }
-            .padding(.vertical, 6)
-            .foregroundStyle(Color.text)
+            SearchResultsItemView(result: result)
+                .padding(.vertical, 6)
+                .foregroundStyle(Color.text)
         }
     }
+    
 }
 
 #Preview("Search Results") {
