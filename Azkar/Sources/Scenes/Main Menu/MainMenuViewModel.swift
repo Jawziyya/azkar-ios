@@ -10,11 +10,16 @@ import SwiftUI
 import AudioPlayer
 import Combine
 import Entities
+import Fakery
+
+typealias SearchToken = ZikrCategory
 
 final class MainMenuViewModel: ObservableObject {
 
     @Published var title = ""
     @Published var searchQuery = ""
+    @Published var searchTokens: [SearchToken] = []
+    @Published var availableSearchTokens: [SearchToken] = SearchToken.allCases
     
     private let searchQueryPublisher = PassthroughSubject<String, Never>()
 
@@ -23,6 +28,7 @@ final class MainMenuViewModel: ObservableObject {
     
     private(set) lazy var searchViewModel = SearchResultsViewModel(
         databaseService: databaseService,
+        searchTokens: $searchTokens.eraseToAnyPublisher(),
         searchQuery: searchQueryPublisher.removeDuplicates().eraseToAnyPublisher()
     )
 
@@ -175,13 +181,8 @@ final class MainMenuViewModel: ObservableObject {
         }
     }
     
-    func naviateToSearchResult(_ searchResult: SearchResult) {
-        switch searchResult.resultType {
-        case .category(let zikrCategory):
-            router.trigger(.category(zikrCategory))            
-        case .zikr(let zikr):
-            router.trigger(.zikr(zikr, index: nil))
-        }
+    func naviateToSearchResult(_ searchResult: SearchResultZikr) {
+        router.trigger(.searchResult(result: searchResult, searchQuery: searchQuery))
     }
 
     func navigateToZikr(_ zikr: Zikr) {
@@ -213,6 +214,18 @@ final class MainMenuViewModel: ObservableObject {
         default:
             break
         }
+    }
+    
+    let faker = Faker()
+    
+    func getSearchSuggestions() -> [String] {
+        return [
+            faker.lorem.word(),
+            faker.lorem.word(),
+            faker.lorem.word(),
+            faker.lorem.word(),
+            faker.lorem.word(),
+        ]
     }
 
 }

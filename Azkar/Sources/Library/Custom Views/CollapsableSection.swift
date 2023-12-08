@@ -17,6 +17,7 @@ struct CollapsableSection: View, Equatable {
     
     var title: String?
     let text: String
+    let highlightPattern: String?
     let isArabicText: Bool
     @Binding var isExpanded: Bool
     let font: AppFont
@@ -45,6 +46,7 @@ struct CollapsableSection: View, Equatable {
                     ReadingTextView(
                         action: nil,
                         text: text,
+                        highlightPattern: highlightPattern,
                         isArabicText: isArabicText,
                         font: font,
                         lineSpacing: lineSpacing,
@@ -63,11 +65,12 @@ struct CollapsableSection: View, Equatable {
 
 struct CollapsableSection_Previews: PreviewProvider {
     static var previews: some View {
-        let zikr = Zikr.placeholder
+        let zikr = Zikr.placeholder()
         Stateful(initialState: false) { isExpanded in
             CollapsableSection(
                 title: zikr.title ?? "Zikr",
                 text: zikr.translation ?? "",
+                highlightPattern: "Zikr",
                 isArabicText: false,
                 isExpanded: isExpanded,
                 font: TranslationFont.iowanOldStyle,

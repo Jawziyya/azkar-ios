@@ -23,12 +23,12 @@ struct MainMenuView: View {
     private var itemsBackgroundColor: SwiftUI.Color {
         Color.contentBackground
     }
-
+    
     var body: some View {
-        displayContent
+        searchableContent
+            .textInputAutocapitalization(.never)
             .navigationBarTitle(viewModel.title)
             .saturation(viewModel.preferences.colorTheme == .ink ? 0 : 1)
-            .searchable(text: $viewModel.searchQuery, placement: .navigationBarDrawer(displayMode: .always))
             .attachEnvironmentOverrides(viewModel: EnvironmentOverridesViewModel(preferences: viewModel.preferences))
             .background(
                 GeometryReader { proxy in
@@ -38,6 +38,32 @@ struct MainMenuView: View {
                         }
                 }
             )
+    }
+    
+    @ViewBuilder
+    var searchableContent: some View {
+        if #available(iOS 16, *) {
+            displayContent
+                .searchable(
+                    text: $viewModel.searchQuery,
+                    tokens: $viewModel.searchTokens,
+                    suggestedTokens: $viewModel.availableSearchTokens,
+                    token: { token in
+                        Label(
+                            title: { Text(token.title) },
+                            icon: { Image(systemName: token.systemImageName) }
+                        )
+                        .foregroundStyle(Color.primary)
+                        .padding(.vertical, 4)
+                    }
+                )
+        } else {
+            displayContent
+                .searchable(
+                    text: $viewModel.searchQuery,
+                    placement: .navigationBarDrawer(displayMode: .always)
+                )
+        }
     }
     
     @ViewBuilder

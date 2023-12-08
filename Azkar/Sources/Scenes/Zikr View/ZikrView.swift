@@ -57,8 +57,18 @@ struct ZikrView: View {
             Haptic.toggleFeedback()
         }
     }
-
+    
     var body: some View {
+        if viewModel.isNested {
+            scrollView
+        } else {
+            scrollView
+                .navigationTitle(viewModel.title)
+                .navigationBarTitleDisplayMode(.inline)
+        }
+    }
+
+    var scrollView: some View {
         ScrollView {
             getContent()
                 .largeScreenPadding()
@@ -98,7 +108,6 @@ struct ZikrView: View {
             counterButton,
             alignment: viewModel.preferences.alignCounterButtonByLeadingSide ? .bottomLeading : .bottomTrailing
         )
-        .navigationBarTitleDisplayMode(.inline)
     }
 
     private var counterButton: some View {
@@ -127,7 +136,12 @@ struct ZikrView: View {
 
     private func getContent() -> some View {
         VStack(alignment: .leading, spacing: 0) {
-            titleView(viewModel.title)
+            if viewModel.isNested {
+                titleView(viewModel.title)
+            } else {
+                Color.clear.frame(height: 10)
+            }
+            
             textView
             
             if !viewModel.translation.isEmpty {
@@ -235,6 +249,7 @@ struct ZikrView: View {
                         viewModel.playAudio(at: idx)
                     },
                     text: line,
+                    highlightPattern: viewModel.highlightPattern,
                     isArabicText: isArabicText,
                     font: isArabicText ? prefs.preferredArabicFont : prefs.preferredTranslationFont,
                     lineSpacing: prefs.enableLineBreaks ? spacing : 0
@@ -404,7 +419,8 @@ struct ZikrView_Previews: PreviewProvider {
         prefs.colorTheme = .sea
         return ZikrView(
             viewModel: ZikrViewModel(
-                zikr: Zikr.placeholder,
+                zikr: Zikr.placeholder(),
+                isNested: false,
                 hadith: Hadith.placeholder,
                 preferences: prefs,
                 player: .test

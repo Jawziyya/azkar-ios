@@ -46,9 +46,11 @@ public struct Zikr: Identifiable, Hashable {
     public let audio: Audio?
     public let audioTimings: [AudioTiming]
     
-    public static var placeholder: Zikr {
+    public static func placeholder(
+        id: Int = 1
+    ) -> Zikr {
         Zikr(
-            id: 1,
+            id: id,
             hadith: 1,
             text: "Text",
             category: ZikrCategory.other,

@@ -196,6 +196,6 @@ struct ZikrShareOptionsView: View {
 }
 
 #Preview("Share Options") {
-    ZikrShareOptionsView(zikr: .placeholder, callback: { _ in })
+    ZikrShareOptionsView(zikr: .placeholder(), callback: { _ in })
         .tint(Color.accentColor)
 }
