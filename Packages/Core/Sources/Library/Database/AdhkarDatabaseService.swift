@@ -113,6 +113,11 @@ public extension AdhkarDatabaseService {
             )
         }
     }
+    
+    func getZikrBeforeBreakingFast() -> Zikr? {
+        let fastBreakingZikrId = 48
+        return try? getZikr(fastBreakingZikrId)
+    }
 
     func getAllAdhkar() throws -> [Zikr] {
         return try getDatabaseQueue().read { db in

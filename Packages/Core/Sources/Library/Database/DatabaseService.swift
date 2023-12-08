@@ -60,27 +60,30 @@ public protocol DatabaseService {
     /// - Returns: An array of `Fadl` objects.
     func getFadail(language: Language?) throws -> [Fadl]
     
-    /// Retrieves a specific Zikr (remembrance) by its identifier.
+    /// Retrieves a specific Zikr by its identifier.
     ///
     /// - Parameter id: The identifier of the Zikr.
     /// - Throws: An error if the retrieval fails.
     /// - Returns: An optional `Zikr` object. Nil if not found.
     func getZikr(_ id: Int) throws -> Zikr?
     
-    /// Retrieves all Adhkar (remembrances) from the database.
+    /// Retrieves a Zikr that is recited before breaking a fast.
+    func getZikrBeforeBreakingFast() -> Zikr?
+    
+    /// Retrieves all Adhkar from the database.
     ///
     /// - Throws: An error if the retrieval fails.
     /// - Returns: An array of `Zikr` objects.
     func getAllAdhkar() throws -> [Zikr]
     
-    /// Retrieves Adhkar (remembrances) belonging to a specific category.
+    /// Retrieves Adhkar belonging to a specific category.
     ///
     /// - Parameter category: The category of Zikr to retrieve.
     /// - Throws: An error if the retrieval fails.
     /// - Returns: An array of `Zikr` objects within the given category.
     func getAdhkar(_ category: ZikrCategory) throws -> [Zikr]
     
-    /// Searches for Adhkar (remembrances) matching a given query.
+    /// Searches for Adhkar matching a given query.
     ///
     /// This method performs a search based on a textual query and returns a list of Zikr objects that match the search criteria.
     ///
@@ -89,7 +92,7 @@ public protocol DatabaseService {
     /// - Returns: An array of `Zikr` objects that match the query.
     func searchAdhkar(_ query: String) throws -> [Zikr]
     
-    /// Retrieves the count of Adhkar (remembrances) within a specific category.
+    /// Retrieves the count of Adhkar within a specific category.
     ///
     /// - Parameter category: The category of Zikr for which to retrieve the count.
     /// - Throws: An error if the count cannot be retrieved.

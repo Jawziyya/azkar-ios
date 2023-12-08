@@ -89,7 +89,7 @@ final class MainMenuViewModel: ObservableObject {
         self.preferences = preferences
         self.player = player
         
-        fastingDua = try? databaseService.getZikr(51)
+        fastingDua = databaseService.getZikrBeforeBreakingFast()
         
         otherAzkarModels = [
             AzkarMenuItem(
