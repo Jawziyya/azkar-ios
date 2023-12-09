@@ -29,8 +29,9 @@ enum RootSection: Equatable, RouteKind {
 
 final class RootCoordinator: NSObject, RouteTrigger, NavigationCoordinatable {
     
-    var stack: Stinsen.NavigationStack<RootCoordinator> = .init(initial: \.menu)
+    var stack: Stinsen.NavigationStack<RootCoordinator> = .init(initial: \.root)
     
+    @Root var root = makeRootView
     @Root var menu = makeMainView
     @Route(.push) var zikrCategory = makeCategoryView
     @Route(.push) var zikrPages = makeZikrPagesView
@@ -224,6 +225,20 @@ private extension RootCoordinator {
 }
 
 extension RootCoordinator {
+    
+    func makeRootView() -> some View {
+        RootView(
+            viewModel: RootViewModel(
+                mainMenuViewModel: MainMenuViewModel(
+                    databaseService: databaseService,
+                    preferencesDatabase: preferencesDatabase,
+                    router: UnownedRouteTrigger(router: self),
+                    preferences: preferences,
+                    player: player
+                )
+            )
+        )
+    }
     
     func makeMainView() -> some View {
         MainMenuView(viewModel: MainMenuViewModel(

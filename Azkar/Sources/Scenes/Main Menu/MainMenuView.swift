@@ -23,8 +23,6 @@ struct MainMenuView: View {
     var body: some View {
         searchableContent
             .textInputAutocapitalization(.never)
-            .navigationBarTitle(viewModel.title)
-            .navigationTitleMode(.large)
             .saturation(viewModel.preferences.colorTheme == .ink ? 0 : 1)
             .attachEnvironmentOverrides(viewModel: EnvironmentOverridesViewModel(preferences: viewModel.preferences))
             .background(
@@ -244,9 +242,7 @@ struct MainMenuView: View {
 }
 
 #Preview("Menu") {
-    NavigationView {
-        MainMenuView(
-            viewModel: MainMenuViewModel.placeholder
-        )
-    }
+    MainMenuView(
+        viewModel: MainMenuViewModel.placeholder
+    )
 }

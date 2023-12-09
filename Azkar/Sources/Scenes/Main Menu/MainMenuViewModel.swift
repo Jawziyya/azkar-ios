@@ -16,7 +16,6 @@ typealias SearchToken = ZikrCategory
 
 final class MainMenuViewModel: ObservableObject {
 
-    @Published var title = ""
     @Published var searchQuery = ""
     @Published var searchTokens: [SearchToken] = []
     @Published var availableSearchTokens: [SearchToken] = SearchToken.allCases
@@ -27,7 +26,7 @@ final class MainMenuViewModel: ObservableObject {
     let azkarDatabase: AzkarDatabase
     
     private(set) lazy var searchViewModel = SearchResultsViewModel(
-        databaseService: azkarDatabase,
+        azkarDatabase: azkarDatabase,
         searchTokens: $searchTokens.eraseToAnyPublisher(),
         searchQuery: searchQueryPublisher.removeDuplicates().eraseToAnyPublisher()
     )
@@ -60,10 +59,6 @@ final class MainMenuViewModel: ObservableObject {
 
     private var isIpad: Bool {
         UIDevice.current.isIpad
-    }
-
-    private func getRandomEmoji() -> String {
-        ["🌙", "🌸", "☘️", "🌳", "🌴", "🌱", "🌼", "💫", "🌎", "🌍", "🌏", "🪐", "✨", "❄️"].randomElement()!
     }
 
     private lazy var iconsPackMessage: AzkarMenuOtherItem = {
@@ -136,19 +131,6 @@ final class MainMenuViewModel: ObservableObject {
         if !didDisplayIconPacksMessage && !UIDevice.current.isMac {
             additionalMenuItems.append(iconsPackMessage)
         }
-
-        let appName = L10n.appName
-        let title = "\(appName)"
-        preferences.$enableFunFeatures
-            .map { [unowned self] flag in
-                if flag {
-                    return title + " \(self.getRandomEmoji())"
-                } else {
-                    return title
-                }
-            }
-            .assign(to: \.title, on: self)
-            .store(in: &cancellables)
 
         preferences.$enableFunFeatures
             .map { flag in flag && Date().isRamadanEidDays }
