@@ -31,16 +31,15 @@ final class MainMenuViewModel: ObservableObject {
         searchTokens: $searchTokens.eraseToAnyPublisher(),
         searchQuery: searchQueryPublisher.removeDuplicates().eraseToAnyPublisher()
     )
+    
+    private(set) lazy var searchSuggestionsViewModel = SearchSuggestionsViewModel(
+        searchQuery: $searchQuery.removeDuplicates().eraseToAnyPublisher(),
+        databaseService: databaseService,
+        router: router
+    )
 
     let currentYear: String
-
-    func getDayNightSectionModels(isDarkModeEnabled: Bool) -> [MainMenuLargeGroupViewModel] {
-        [
-            MainMenuLargeGroupViewModel(category: .morning, title: L10n.Category.morning, animationName: "sun", animationSpeed: 0.3),
-            MainMenuLargeGroupViewModel(category: .evening, title: L10n.Category.evening, animationName: isDarkModeEnabled ? "moon" : "moon2", animationSpeed: 0.2),
-        ]
-    }
-
+    
     let otherAzkarModels: [AzkarMenuItem]
     let infoModels: [AzkarMenuOtherItem]
     
@@ -50,7 +49,7 @@ final class MainMenuViewModel: ObservableObject {
     @Published var enableEidBackground = false
 
     @Preference("kDidDisplayIconPacksMessage", defaultValue: false)
-    var kDidDisplayIconPacksMessage
+    var didDisplayIconPacksMessage
 
     let player: Player
     let fastingDua: Zikr?
@@ -71,7 +70,7 @@ final class MainMenuViewModel: ObservableObject {
         let title = L10n.Alerts.checkoutIconPacks
         var item = AzkarMenuOtherItem(imageName: AppIconPack.maccinz.icons.randomElement()!.imageName, title: title, color: Color.red, iconType: .bundled, imageCornerRadius: 4)
         item.action = { [unowned self] in
-            self.kDidDisplayIconPacksMessage = true
+            self.didDisplayIconPacksMessage = true
             self.hideIconPacksMessage()
             self.navigateToIconPacksList()
         }
@@ -89,7 +88,11 @@ final class MainMenuViewModel: ObservableObject {
         self.preferences = preferences
         self.player = player
         
-        fastingDua = databaseService.getZikrBeforeBreakingFast()
+        if Date().isRamadan {
+            fastingDua = databaseService.getZikrBeforeBreakingFast()
+        } else {
+            fastingDua = nil
+        }
         
         otherAzkarModels = [
             AzkarMenuItem(
@@ -130,7 +133,7 @@ final class MainMenuViewModel: ObservableObject {
         }
         currentYear = year
 
-        if !kDidDisplayIconPacksMessage && !UIDevice.current.isMac {
+        if !didDisplayIconPacksMessage && !UIDevice.current.isMac {
             additionalMenuItems.append(iconsPackMessage)
         }
 

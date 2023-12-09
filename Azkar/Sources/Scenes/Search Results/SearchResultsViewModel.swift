@@ -119,7 +119,7 @@ final class SearchResultsViewModel: ObservableObject {
             )
             .receive(on: DispatchQueue.global(qos: .userInitiated))
             .flatMap(maxPublishers: .max(1)) { [unowned self] query, tokens -> AnyPublisher<[SearchResultsSection], Never> in
-                guard let query = query.textOrNil else {
+                guard let query = query.textOrNil, query.count >= 3 else {
                     return Just([]).eraseToAnyPublisher()
                 }
                 
