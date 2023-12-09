@@ -24,17 +24,17 @@ final class MainMenuViewModel: ObservableObject {
     private let searchQueryPublisher = PassthroughSubject<String, Never>()
 
     let router: UnownedRouteTrigger<RootSection>
-    let databaseService: DatabaseService
+    let azkarDatabase: AzkarDatabase
     
     private(set) lazy var searchViewModel = SearchResultsViewModel(
-        databaseService: databaseService,
+        databaseService: azkarDatabase,
         searchTokens: $searchTokens.eraseToAnyPublisher(),
         searchQuery: searchQueryPublisher.removeDuplicates().eraseToAnyPublisher()
     )
     
     private(set) lazy var searchSuggestionsViewModel = SearchSuggestionsViewModel(
         searchQuery: $searchQuery.removeDuplicates().eraseToAnyPublisher(),
-        databaseService: databaseService,
+        azkarDatabase: azkarDatabase,
         router: router
     )
 
@@ -78,12 +78,12 @@ final class MainMenuViewModel: ObservableObject {
     }()
 
     init(
-        databaseService: DatabaseService,
+        databaseService: AzkarDatabase,
         router: UnownedRouteTrigger<RootSection>,
         preferences: Preferences,
         player: Player
     ) {
-        self.databaseService = databaseService
+        self.azkarDatabase = databaseService
         self.router = router
         self.preferences = preferences
         self.player = player
@@ -237,7 +237,7 @@ extension MainMenuViewModel {
     
     static var placeholder: MainMenuViewModel {
         MainMenuViewModel(
-            databaseService: DatabaseService(language: Language.getSystemLanguage()),
+            databaseService: AzkarDatabase(language: Language.getSystemLanguage()),
             router: .empty,
             preferences: Preferences.shared,
             player: .test

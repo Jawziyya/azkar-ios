@@ -80,28 +80,28 @@ final class SearchResultsViewModel: ObservableObject {
         searchResults.isEmpty == false
     }
     
-    private let databaseService: DatabaseService
+    private let azkarDatabase: AzkarDatabase
     
     init(
-        databaseService: DatabaseService,
+        azkarDatabase: AzkarDatabase,
         searchTokens: AnyPublisher<[SearchToken], Never>,
         searchQuery: AnyPublisher<String, Never>
     ) {
-        self.databaseService = databaseService
+        self.azkarDatabase = azkarDatabase
         searchTokens.assign(to: &$selectedTokens)
         searchQuery.map { _ in [] }.assign(to: &$searchResults)
         configureSearch(
             query: searchQuery,
             tokens: searchTokens,
-            databaseService: databaseService
+            azkarDatabase: azkarDatabase,
         )
         
         do {
-            morningAdhkar = try databaseService.getAdhkar(.morning)
-            eveningAdhkar = try databaseService.getAdhkar(.evening)
-            nightAdhkar = try databaseService.getAdhkar(.night)
-            afterSalahAdhkar = try databaseService.getAdhkar(.afterSalah)
-            otherAdhkar = try databaseService.getAdhkar(.other)
+            morningAdhkar = try azkarDatabase.getAdhkar(.morning)
+            eveningAdhkar = try azkarDatabase.getAdhkar(.evening)
+            nightAdhkar = try azkarDatabase.getAdhkar(.night)
+            afterSalahAdhkar = try azkarDatabase.getAdhkar(.afterSalah)
+            otherAdhkar = try azkarDatabase.getAdhkar(.other)
         } catch {
             print(error.localizedDescription)
         }
@@ -110,7 +110,7 @@ final class SearchResultsViewModel: ObservableObject {
     private func configureSearch(
         query: AnyPublisher<String, Never>,
         tokens: AnyPublisher<[SearchToken], Never>,
-        databaseService: DatabaseService
+        azkarDatabase: AzkarDatabase,
     ) {
         let searchResults = query.combineLatest(tokens)
             .debounce(
@@ -166,7 +166,7 @@ final class SearchResultsViewModel: ObservableObject {
 extension SearchResultsViewModel {
     static var placeholder: SearchResultsViewModel {
         let vm = SearchResultsViewModel(
-            databaseService: .init(language: Language.english),
+            azkarDatabase: .init(language: Language.english),
             searchTokens: Empty().eraseToAnyPublisher(),
             searchQuery: Empty().eraseToAnyPublisher()
         )

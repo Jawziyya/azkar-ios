@@ -43,8 +43,8 @@ final class RootCoordinator: NSObject, RouteTrigger, NavigationCoordinatable {
     @Route(.modal) var shareOptions = makeShareOptionsView
     
     let preferences: Preferences
-    var databaseService: DatabaseService {
-        DatabaseService(language: preferences.contentLanguage)
+    var databaseService: AzkarDatabase {
+        AzkarDatabase(language: preferences.contentLanguage)
     }
     let deeplinker: Deeplinker
     let player: Player

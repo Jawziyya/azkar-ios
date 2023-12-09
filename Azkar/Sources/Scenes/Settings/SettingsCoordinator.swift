@@ -25,12 +25,12 @@ final class SettingsCoordinator: RouteTrigger, Identifiable, NavigationCoordinat
     @Route(.push) var soundPicker = makeSoundPickerView
     @Route(.modal) var subscribe = makeSubscribeView
         
-    private let databaseService: DatabaseService
+    private let databaseService: AzkarDatabase
     private let preferences: Preferences
     private let initialRoute: SettingsRoute?
     
     init(
-        databaseService: DatabaseService,
+        databaseService: AzkarDatabase,
         preferences: Preferences = Preferences.shared,
         initialRoute: SettingsRoute?
     ) {
