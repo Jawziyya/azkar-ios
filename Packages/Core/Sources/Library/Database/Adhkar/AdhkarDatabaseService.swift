@@ -65,7 +65,7 @@ public protocol AdhkarDatabaseService {
     /// - Parameter id: The identifier of the Zikr.
     /// - Throws: An error if the retrieval fails.
     /// - Returns: An optional `Zikr` object. Nil if not found.
-    func getZikr(_ id: Int) throws -> Zikr?
+    func getZikr(_ id: Int, language: Language?) throws -> Zikr?
     
     /// Retrieves a Zikr that is recited before breaking a fast.
     func getZikrBeforeBreakingFast() -> Zikr?

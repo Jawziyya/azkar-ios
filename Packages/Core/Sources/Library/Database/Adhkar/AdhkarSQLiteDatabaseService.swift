@@ -92,12 +92,13 @@ public final class AdhkarSQLiteDatabaseService: AdhkarDatabaseService {
 // MARK: - Adhkar
 public extension AdhkarSQLiteDatabaseService {
 
-    func getZikr(_ id: Int) throws -> Zikr? {
+    public func getZikr(_ id: Int, language: Language?) throws -> Zikr? {
+        let lang = language ?? self.language
         return try getDatabaseQueue().read { db in
             let record = try ZikrOrigin.fetchOne(db, id: id)
             let translation = try ZikrTranslation.fetchOne(
                 db,
-                sql: "SELECT * FROM azkar_\(language.id) WHERE id = ?",
+                sql: "SELECT * FROM azkar_\(lang.id) WHERE id = ?",
                 arguments: [id]
             )
             guard let record, let translation else {
@@ -106,6 +107,7 @@ public extension AdhkarSQLiteDatabaseService {
             
             return Zikr(
                 origin: record,
+                language: lang,
                 category: nil,
                 translation: translation,
                 audio: nil,
@@ -116,7 +118,7 @@ public extension AdhkarSQLiteDatabaseService {
     
     func getZikrBeforeBreakingFast() -> Zikr? {
         let fastBreakingZikrId = 48
-        return try? getZikr(fastBreakingZikrId)
+        return try? getZikr(fastBreakingZikrId, language: language)
     }
 
     func getAllAdhkar() throws -> [Zikr] {
@@ -129,6 +131,7 @@ public extension AdhkarSQLiteDatabaseService {
             return zip(records, translations).map { zikr, translation in
                 Zikr(
                     origin: zikr,
+                    language: language,
                     category: nil,
                     translation: translation,
                     audio: nil,
@@ -172,6 +175,7 @@ public extension AdhkarSQLiteDatabaseService {
                 
                 return Zikr(
                     origin: zikr,
+                    language: language,
                     category: category,
                     translation: translation,
                     audio: audio,
@@ -233,6 +237,7 @@ public extension AdhkarSQLiteDatabaseService {
                 )
                 azkar.append(Zikr(
                     origin: origin,
+                    language: .arabic,
                     category: nil,
                     translation: translation,
                     audio: audio,
