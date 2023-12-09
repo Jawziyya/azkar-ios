@@ -4,7 +4,7 @@ import Foundation
 import Entities
 import GRDB
 
-public final class AdhkarDatabaseService: DatabaseService {
+public final class AdhkarSQLiteDatabaseService: AdhkarDatabaseService {
     
     public let language: Language
 
@@ -90,7 +90,7 @@ public final class AdhkarDatabaseService: DatabaseService {
 }
 
 // MARK: - Adhkar
-public extension AdhkarDatabaseService {
+public extension AdhkarSQLiteDatabaseService {
 
     func getZikr(_ id: Int) throws -> Zikr? {
         return try getDatabaseQueue().read { db in

@@ -2,12 +2,12 @@ import Foundation
 import Entities
 import Combine
 
-/// `DatabaseService` Protocol
+/// `AdhkarDatabaseService` Protocol
 ///
 /// A protocol that defines methods for accessing and retrieving data from a database.
 /// It supports operations for various types hadith, fadl and zikr.
 /// It is designed to handle multi-language content and provide translations where available.
-public protocol DatabaseService {
+public protocol AdhkarDatabaseService {
     
     /// The language in which the service provides the data.
     var language: Language { get }
