@@ -49,6 +49,7 @@ struct RootView: View {
             text: $viewModel.mainMenuViewModel.searchQuery,
             placement: .navigationBarDrawer(displayMode: .always)
         )
+        .autocorrectionDisabled(true)
     }
 }
 
