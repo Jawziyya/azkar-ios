@@ -12,4 +12,5 @@ typealias Fadl = Entities.Fadl
 typealias AudioTiming = Entities.AudioTiming
 
 typealias AzkarDatabase = Library.AdhkarSQLiteDatabaseService
+typealias PreferencesDatabase = Library.PreferencesDatabaseService
 typealias Preference = Library.Preference

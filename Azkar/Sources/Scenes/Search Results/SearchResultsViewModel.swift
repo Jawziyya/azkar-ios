@@ -81,9 +81,11 @@ final class SearchResultsViewModel: ObservableObject {
     }
     
     private let azkarDatabase: AzkarDatabase
+    private var cancellables = Set<AnyCancellable>()
     
     init(
         azkarDatabase: AzkarDatabase,
+        preferencesDatabase: PreferencesDatabase,
         searchTokens: AnyPublisher<[SearchToken], Never>,
         searchQuery: AnyPublisher<String, Never>
     ) {
@@ -94,6 +96,7 @@ final class SearchResultsViewModel: ObservableObject {
             query: searchQuery,
             tokens: searchTokens,
             azkarDatabase: azkarDatabase,
+            preferencesDatabase: preferencesDatabase
         )
         
         do {
@@ -111,6 +114,7 @@ final class SearchResultsViewModel: ObservableObject {
         query: AnyPublisher<String, Never>,
         tokens: AnyPublisher<[SearchToken], Never>,
         azkarDatabase: AzkarDatabase,
+        preferencesDatabase: PreferencesDatabase
     ) {
         let searchResults = query.combineLatest(tokens)
             .debounce(
@@ -135,6 +139,16 @@ final class SearchResultsViewModel: ObservableObject {
                 return Just(sections).eraseToAnyPublisher()
             }
             .receive(on: DispatchQueue.main)
+        
+        searchResults.combineLatest(query)
+            .sink(receiveValue: { results, query in
+                if results.isEmpty == false, query.count >= 3 {
+                    Task {
+                        await preferencesDatabase.storeSearchQuery(query)
+                    }
+                }
+            })
+            .store(in: &cancellables)
         
         searchResults.assign(to: &$searchResults)
         
@@ -167,6 +181,7 @@ extension SearchResultsViewModel {
     static var placeholder: SearchResultsViewModel {
         let vm = SearchResultsViewModel(
             azkarDatabase: .init(language: Language.english),
+            preferencesDatabase: MockPreferencesDatabase(),
             searchTokens: Empty().eraseToAnyPublisher(),
             searchQuery: Empty().eraseToAnyPublisher()
         )

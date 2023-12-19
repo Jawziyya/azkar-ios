@@ -24,9 +24,11 @@ final class MainMenuViewModel: ObservableObject {
 
     let router: UnownedRouteTrigger<RootSection>
     let azkarDatabase: AzkarDatabase
+    let preferencesDatabase: PreferencesDatabase
     
     private(set) lazy var searchViewModel = SearchResultsViewModel(
         azkarDatabase: azkarDatabase,
+        preferencesDatabase: preferencesDatabase,
         searchTokens: $searchTokens.eraseToAnyPublisher(),
         searchQuery: searchQueryPublisher.removeDuplicates().eraseToAnyPublisher()
     )
@@ -34,6 +36,7 @@ final class MainMenuViewModel: ObservableObject {
     private(set) lazy var searchSuggestionsViewModel = SearchSuggestionsViewModel(
         searchQuery: $searchQuery.removeDuplicates().eraseToAnyPublisher(),
         azkarDatabase: azkarDatabase,
+        preferencesDatabase: preferencesDatabase,
         router: router
     )
 
@@ -74,11 +77,13 @@ final class MainMenuViewModel: ObservableObject {
 
     init(
         databaseService: AzkarDatabase,
+        preferencesDatabase: PreferencesDatabase,
         router: UnownedRouteTrigger<RootSection>,
         preferences: Preferences,
         player: Player
     ) {
         self.azkarDatabase = databaseService
+        self.preferencesDatabase = preferencesDatabase
         self.router = router
         self.preferences = preferences
         self.player = player
@@ -220,6 +225,7 @@ extension MainMenuViewModel {
     static var placeholder: MainMenuViewModel {
         MainMenuViewModel(
             databaseService: AzkarDatabase(language: Language.getSystemLanguage()),
+            preferencesDatabase: MockPreferencesDatabase(),
             router: .empty,
             preferences: Preferences.shared,
             player: .test

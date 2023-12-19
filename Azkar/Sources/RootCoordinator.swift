@@ -14,6 +14,7 @@ import Stinsen
 import WhatsNewKit
 import MessageUI
 import IGStoryKit
+import Library
 
 enum RootSection: Equatable, RouteKind {
     case category(ZikrCategory)
@@ -47,6 +48,7 @@ final class RootCoordinator: NSObject, RouteTrigger, NavigationCoordinatable {
     var databaseService: AzkarDatabase {
         AzkarDatabase(language: preferences.contentLanguage)
     }
+    let preferencesDatabase: PreferencesDatabase
     let deeplinker: Deeplinker
     let player: Player
 
@@ -73,6 +75,13 @@ final class RootCoordinator: NSObject, RouteTrigger, NavigationCoordinatable {
         self.preferences = preferences
         self.deeplinker = deeplinker
         self.player = player
+        
+        let preferencesDatabasePath = FileManager.default
+            .appGroupContainerURL
+            .appendingPathComponent("preferences.db")
+            .absoluteString
+        preferencesDatabase = PreferencesSQLiteDatabaseService(databasePath: preferencesDatabasePath)
+        
         super.init()
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
@@ -165,6 +174,11 @@ private extension RootCoordinator {
             
         case .searchResult(let searchResult, let query):
             let zikr = searchResult.zikr
+            
+            Task {
+                await preferencesDatabase.storeOpenedZikr(zikr.id, language: zikr.language)
+            }
+            
             let hadith = try? zikr.hadith.flatMap { id in
                 try databaseService.getHadith(id)
             }
@@ -183,6 +197,10 @@ private extension RootCoordinator {
             if let index = index, rootViewController.isPadInterface {
                 self.selectedZikrPageIndex.send(index)
                 return
+            }
+            
+            Task {
+                await preferencesDatabase.storeOpenedZikr(zikr.id, language: zikr.language)
             }
 
             let hadith = try? zikr.hadith.flatMap { id in
@@ -243,6 +261,7 @@ extension RootCoordinator {
     func makeMainView() -> some View {
         MainMenuView(viewModel: MainMenuViewModel(
             databaseService: databaseService,
+            preferencesDatabase: preferencesDatabase,
             router: UnownedRouteTrigger(router: self),
             preferences: preferences,
             player: player
