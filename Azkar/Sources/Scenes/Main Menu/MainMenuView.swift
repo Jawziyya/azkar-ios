@@ -15,13 +15,15 @@ struct MainMenuView: View {
 
     @ObservedObject var viewModel: MainMenuViewModel
     @Environment(\.colorScheme) var colorScheme
+    @Environment(\.isSearching) var isSearching
+    @Environment(\.dismissSearch) var dismissSearch
 
     private var itemsBackgroundColor: SwiftUI.Color {
         Color.contentBackground
     }
     
     var body: some View {
-        searchableContent
+        displayContent
             .textInputAutocapitalization(.never)
             .saturation(viewModel.preferences.colorTheme == .ink ? 0 : 1)
             .attachEnvironmentOverrides(viewModel: EnvironmentOverridesViewModel(preferences: viewModel.preferences))
@@ -35,28 +37,19 @@ struct MainMenuView: View {
             )
     }
     
-    var searchableContent: some View {
-        displayContent
-            .searchable(
-                text: $viewModel.searchQuery,
-                placement: .navigationBarDrawer(displayMode: .always),
-                suggestions: {
-                    if viewModel.searchQuery.textOrNil == nil {
-                        SearchSuggestionsView(
-                            viewModel: viewModel.searchSuggestionsViewModel
-                        )
-                    }
-                }
-            )
-    }
-    
     @ViewBuilder
     var displayContent: some View {
-        if viewModel.searchQuery.isEmpty == false {
-            SearchResultsView(
-                viewModel: viewModel.searchViewModel,
-                onSelect: viewModel.naviateToSearchResult(_:)
-            )
+        if isSearching {
+            if viewModel.searchQuery.isEmpty == false {
+                SearchResultsView(
+                    viewModel: viewModel.searchViewModel,
+                    onSelect: viewModel.naviateToSearchResult(_:)
+                )
+            } else {
+                SearchSuggestionsView(
+                    viewModel: viewModel.searchSuggestionsViewModel
+                )
+            }
         } else {
             content
         }
@@ -67,6 +60,7 @@ struct MainMenuView: View {
             menuContent
                 .listRowSeparator(.hidden)
         }
+        .customListSectionSpacing(.compact)
         .listStyle(.insetGrouped)
         .customScrollContentBackground()
         .background(
