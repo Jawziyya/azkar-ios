@@ -45,6 +45,7 @@ public struct Zikr: Identifiable, Hashable {
     public let benefits: String?
     public let audio: Audio?
     public let audioTimings: [AudioTiming]
+    public let language: Language
     
     public static func placeholder(
         id: Int = 1
@@ -62,7 +63,8 @@ public struct Zikr: Identifiable, Hashable {
             notes: "Notes",
             benefits: "Benefit",
             audio: Audio(id: 1, link: ""),
-            audioTimings: []
+            audioTimings: [],
+            language: .arabic
         )
     }
     
@@ -71,12 +73,14 @@ public struct Zikr: Identifiable, Hashable {
 extension Zikr {
     public init(
         origin: ZikrOrigin,
+        language: Language,
         category: ZikrCategory? = nil,
         translation: ZikrTranslation? = nil,
         audio: Audio? = nil,
         audioTimings: [AudioTiming]
     ) {
         id = origin.id
+        self.language = language
         hadith = origin.hadith
         text = origin.text
         self.category = category

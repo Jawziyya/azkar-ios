@@ -9,31 +9,33 @@ struct MainMenuSmallGroup: View {
 
 	var body: some View {
 		HStack {
-
-            switch item.iconType {
-            case .system, .bundled:
-                item.image.flatMap { image in
-                    image
-                        .resizable()
-                        .scaledToFit()
-                        .cornerRadius(item.imageCornerRadius)
-                        .padding(8)
-                        .frame(width: 40, height: 40)
-                        .foregroundColor(item.color)
-                }
-            case .emoji:
-                Text(item.imageName)
-                    .minimumScaleFactor(0.1)
-                    .font(Font.largeTitle)
-                    .padding(4)
-                    .frame(width: 40, height: 40)
-            }
-
+            image
             title
-
         }
         .environment(\.layoutDirection, flip ? .rightToLeft : .leftToRight)
 	}
+    
+    @ViewBuilder
+    var image: some View {
+        switch item.iconType {
+        case .system, .bundled:
+            item.image.flatMap { image in
+                image
+                    .resizable()
+                    .scaledToFit()
+                    .cornerRadius(item.imageCornerRadius)
+                    .padding(.vertical, 8)
+                    .frame(width: 40, height: 40)
+                    .foregroundColor(item.color)
+            }
+        case .emoji:
+            Text(item.imageName)
+                .minimumScaleFactor(0.1)
+                .font(Font.largeTitle)
+                .padding(.vertical, 4)
+                .frame(width: 40, height: 40)
+        }
+    }
 
     var title: some View {
         Text(item.title)

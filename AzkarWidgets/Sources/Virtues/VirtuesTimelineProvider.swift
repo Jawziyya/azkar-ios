@@ -15,7 +15,7 @@ struct VirtuesProvider: TimelineProvider {
     init(
         databaseService: AdhkarDatabaseService
     ) {
-        fadail = (try? databaseService.getFadail()) ?? []
+        fadail = (try? databaseService.getFadail(language: nil)) ?? []
         if fadail.isEmpty {
             fadail = (try? databaseService.getFadail(language: databaseService.language.fallbackLanguage)) ?? []
         }

@@ -7,8 +7,8 @@ import Library
 
 final class TextSettingsViewModel: SettingsSectionViewModel {
     
-    var databaseService: DatabaseService {
-        DatabaseService(language: preferences.contentLanguage)
+    var databaseService: AzkarDatabase {
+        AzkarDatabase(language: preferences.contentLanguage)
     }
     
     var canChangeLanguage: Bool {

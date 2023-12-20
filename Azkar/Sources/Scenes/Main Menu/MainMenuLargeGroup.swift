@@ -33,7 +33,6 @@ struct MainMenuLargeGroup: View {
                 .padding(8)
                 .layoutPriority(1)
 		}
-		.padding()
 	}
 }
 

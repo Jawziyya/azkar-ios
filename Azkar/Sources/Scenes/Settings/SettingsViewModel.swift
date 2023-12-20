@@ -28,7 +28,7 @@ final class SettingsViewModel: ObservableObject {
     private let formatter: DateFormatter
 
     var preferences: Preferences
-    private let databaseService: DatabaseService
+    private let databaseService: AzkarDatabase
     
     var themeTitle: String {
         "\(preferences.theme.title), \(preferences.colorTheme.title)"
@@ -40,7 +40,7 @@ final class SettingsViewModel: ObservableObject {
 
     init(
         mode: SettingsMode = .standart,
-        databaseService: DatabaseService,
+        databaseService: AzkarDatabase,
         preferences: Preferences,
         notificationsHandler: NotificationsHandler = .shared,
         router: UnownedRouteTrigger<SettingsRoute>

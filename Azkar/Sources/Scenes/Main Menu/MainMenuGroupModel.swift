@@ -34,7 +34,7 @@ struct AzkarMenuItem: Identifiable, AzkarMenuType, Hashable {
     let imageName: String
     let title: String
     let color: Color
-    let count: Int?
+    var count: Int?
     var iconType: IconType = .system
 
     var image: Image? {
