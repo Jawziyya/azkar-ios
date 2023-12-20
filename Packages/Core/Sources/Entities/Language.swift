@@ -4,7 +4,7 @@ import Foundation
 
 /// Represents content language
 /// .rawValue is ISO 639-1 identifier.
-public enum Language: String, Codable, CaseIterable, Identifiable {
+public enum Language: String, Codable, CaseIterable, Identifiable, Hashable {
     case arabic = "ar"
     case turkish = "tr"
     case english = "en"
