@@ -20,7 +20,7 @@ final class MainMenuViewModel: ObservableObject {
     @Published var searchTokens: [SearchToken] = []
     @Published var availableSearchTokens: [SearchToken] = SearchToken.allCases
     
-    private let searchQueryPublisher = PassthroughSubject<String, Never>()
+    private let searchQueryPublisher = CurrentValueSubject<String, Never>("")
 
     let router: UnownedRouteTrigger<RootSection>
     let azkarDatabase: AzkarDatabase
@@ -158,8 +158,9 @@ final class MainMenuViewModel: ObservableObject {
             .assign(to: &$fadl)
         
         $searchQuery
+            .removeDuplicates()
             .subscribe(on: DispatchQueue.global(qos: .userInteractive))
-            .sink(receiveValue: searchQueryPublisher.send(_:))
+            .subscribe(searchQueryPublisher)
             .store(in: &cancellables)
     }
 

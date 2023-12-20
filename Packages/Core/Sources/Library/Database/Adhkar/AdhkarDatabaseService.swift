@@ -81,7 +81,7 @@ public protocol AdhkarDatabaseService {
     /// - Parameter category: The category of Zikr to retrieve.
     /// - Throws: An error if the retrieval fails.
     /// - Returns: An array of `Zikr` objects within the given category.
-    func getAdhkar(_ category: ZikrCategory) throws -> [Zikr]
+    func getAdhkar(_ category: ZikrCategory, language: Language?) throws -> [Zikr]
     
     /// Searches for Adhkar matching a given query.
     ///
@@ -90,7 +90,7 @@ public protocol AdhkarDatabaseService {
     /// - Parameter query: The text string to search for within the Adhkar.
     /// - Throws: An error if the search or retrieval fails.
     /// - Returns: An array of `Zikr` objects that match the query.
-    func searchAdhkar(_ query: String) throws -> [Zikr]
+    func searchAdhkar(_ query: String, category: ZikrCategory, languages: [Language]) async throws -> [Zikr]
     
     /// Retrieves the count of Adhkar within a specific category.
     ///
@@ -106,4 +106,18 @@ public protocol AdhkarDatabaseService {
     /// - Returns: An array of `AudioTiming` objects.
     func getAudioTimings(audioId: Int) throws -> [AudioTiming]
     
+}
+
+public extension AdhkarDatabaseService {
+    func getZikr(_ id: Int, language: Language? = nil) throws -> Zikr? {
+        try getZikr(id, language: language)
+    }
+    
+    func getAdhkar(_ category: ZikrCategory, language: Language? = nil) throws -> [Zikr] {
+        try getAdhkar(category, language: language)
+    }
+    
+    func getFadail(language: Language? = nil) throws -> [Fadl] {
+        try getFadail(language: language)
+    }
 }

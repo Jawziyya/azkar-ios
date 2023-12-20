@@ -28,6 +28,10 @@ final class SearchSuggestionsViewModel: ObservableObject {
         }
     }
     
+    func getAvailableLanguages() -> [Language] {
+        Language.allCases.filter(azkarDatabase.translationExists(for:))
+    }
+    
     static var placeholder: SearchSuggestionsViewModel {
         SearchSuggestionsViewModel(
             searchQuery: Empty().eraseToAnyPublisher(),
@@ -38,9 +42,9 @@ final class SearchSuggestionsViewModel: ObservableObject {
     }
     
     @MainActor func loadSuggestions() async {
-        suggestedQueries = await preferencesDatabase.getRecentSearchQueries(limit: 10)
+        suggestedQueries = await preferencesDatabase.getRecentSearchQueries(limit: 5)
         do {
-            suggestedAzkar = try await preferencesDatabase.getRecentAzkar(limit: 10)
+            suggestedAzkar = try await preferencesDatabase.getRecentAzkar(limit: 5)
                 .compactMap { record -> Zikr? in
                     try azkarDatabase.getZikr(record.zikrId, language: record.language)
                 }

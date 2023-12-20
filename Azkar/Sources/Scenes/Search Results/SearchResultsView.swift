@@ -15,6 +15,7 @@ struct SearchResultsView: View {
     var content: some View {
         if viewModel.isPerformingSearch {
             ProgressView()
+                .scaleEffect(x: 1.5, y: 1.5, anchor: .center)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
         } else if viewModel.haveSearchResults == false {
             Text(L10n.Common.noSearchResults)
@@ -31,13 +32,16 @@ struct SearchResultsView: View {
     var searchResultsList: some View {
         List {
             ForEach(viewModel.searchResults) { section in
-                if let title = section.title {
-                    Section(header: title) {
-                        ForEach(section.results, content: searchResultView)
-                    }
-                } else {
-                    Section {
-                        ForEach(section.results, content: searchResultView)
+                Section {
+                    ForEach(section.results, content: searchResultView)
+                } header: {
+                    HStack {
+                        if let image = section.image {
+                            Image(systemName: image)
+                        }
+                        if let title = section.title {
+                            Text(title)
+                        }
                     }
                 }
             }

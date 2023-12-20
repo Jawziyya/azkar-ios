@@ -1,10 +1,11 @@
 import SwiftUI
 import SwiftUIX
+import Entities
 
 struct SearchSuggestionsView: View {
     
     @ObservedObject var viewModel: SearchSuggestionsViewModel
-    
+        
     var body: some View {
         List {
             content

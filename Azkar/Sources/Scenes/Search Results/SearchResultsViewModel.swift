@@ -51,6 +51,7 @@ extension SearchResultZikr {
 struct SearchResultsSection: Identifiable {
     let id = UUID()
     let title: String?
+    let image: String?
     let results: [SearchResultZikr]
 }
 
@@ -59,22 +60,6 @@ final class SearchResultsViewModel: ObservableObject {
     @Published var searchResults: [SearchResultsSection] = []
     @Published var selectedTokens: [SearchToken] = []
     @Published var isPerformingSearch = false
-    
-    private var morningAdhkar: [Zikr] = []
-    private var eveningAdhkar: [Zikr] = []
-    private var nightAdhkar: [Zikr] = []
-    private var afterSalahAdhkar: [Zikr] = []
-    private var otherAdhkar: [Zikr] = []
-    
-    private func getAdhkar(for token: SearchToken) -> [Zikr] {
-        switch token {
-        case .morning: return morningAdhkar
-        case .evening: return eveningAdhkar
-        case .night: return nightAdhkar
-        case .afterSalah: return afterSalahAdhkar
-        case .other: return otherAdhkar
-        }
-    }
     
     var haveSearchResults: Bool {
         searchResults.isEmpty == false
@@ -93,21 +78,11 @@ final class SearchResultsViewModel: ObservableObject {
         searchTokens.assign(to: &$selectedTokens)
         searchQuery.map { _ in [] }.assign(to: &$searchResults)
         configureSearch(
-            query: searchQuery,
+            query: searchQuery.eraseToAnyPublisher(),
             tokens: searchTokens,
             azkarDatabase: azkarDatabase,
             preferencesDatabase: preferencesDatabase
         )
-        
-        do {
-            morningAdhkar = try azkarDatabase.getAdhkar(.morning)
-            eveningAdhkar = try azkarDatabase.getAdhkar(.evening)
-            nightAdhkar = try azkarDatabase.getAdhkar(.night)
-            afterSalahAdhkar = try azkarDatabase.getAdhkar(.afterSalah)
-            otherAdhkar = try azkarDatabase.getAdhkar(.other)
-        } catch {
-            print(error.localizedDescription)
-        }
     }
     
     private func configureSearch(
@@ -116,29 +91,40 @@ final class SearchResultsViewModel: ObservableObject {
         azkarDatabase: AzkarDatabase,
         preferencesDatabase: PreferencesDatabase
     ) {
-        let searchResults = query.combineLatest(tokens)
+        let searchManagers = ZikrCategory.allCases.map { category in
+            return SearchManager(
+                category: category,
+                languages: Language.allCases.filter(azkarDatabase.translationExists(for:)),
+                azkarDatabase: azkarDatabase
+            )
+        }
+        
+        let searchResults = query
+            .combineLatest(tokens)
             .debounce(
                 for: .seconds(1),
                 scheduler: DispatchQueue.main
             )
             .receive(on: DispatchQueue.global(qos: .userInitiated))
-            .flatMap(maxPublishers: .max(1)) { [unowned self] query, tokens -> AnyPublisher<[SearchResultsSection], Never> in
+            .flatMap(maxPublishers: .max(1)) { query, tokens -> AnyPublisher<[SearchResultsSection], Never> in
                 guard let query = query.textOrNil, query.count >= 3 else {
                     return Just([]).eraseToAnyPublisher()
                 }
                 
                 let searchTokens = tokens.isEmpty ? SearchToken.allCases : tokens
-                let sections = searchTokens.compactMap { token -> SearchResultsSection? in
-                    let azkar = getAdhkar(for: token)
-                    let searchResults = peformSearchIn(azkar, query: query)
-                    guard searchResults.isEmpty == false else {
-                        return nil
+                searchManagers.forEach { manager in
+                    if searchTokens.contains(where: { $0 == manager.category }) {
+                        manager.performSearch(query: query)
                     }
-                    return SearchResultsSection(title: token.title, results: searchResults)
                 }
-                return Just(sections).eraseToAnyPublisher()
+                return Publishers.ZipMany(searchManagers.map(\.searchResultSections))
+                    .eraseToAnyPublisher()
+            }
+            .map { sections in
+                sections.filter { $0.results.isEmpty == false }
             }
             .receive(on: DispatchQueue.main)
+            .share()
         
         searchResults.combineLatest(query)
             .sink(receiveValue: { results, query in
@@ -159,22 +145,6 @@ final class SearchResultsViewModel: ObservableObject {
         .assign(to: &$isPerformingSearch)
     }
     
-    private func peformSearchIn(_ azkar: [Zikr], query: String) -> [SearchResultZikr] {
-        let normalizedQuery = query.lowercased()
-        return azkar.compactMap { zikr -> SearchResultZikr? in
-            let titleMatches = zikr.title?.lowercased().contains(normalizedQuery) == true
-            let textMatches = zikr.text.trimmingArabicVowels.contains(query) == true
-            let translationMatches = zikr.translation?.lowercased().contains(normalizedQuery) == true
-            let sourceMatches = zikr.source.lowercased().contains(normalizedQuery)
-            let benefitMatches = zikr.benefits?.lowercased().contains(normalizedQuery) == true
-            let notesMatches = zikr.notes?.lowercased().contains(normalizedQuery) == true
-            guard titleMatches || textMatches || translationMatches || sourceMatches || benefitMatches || notesMatches else {
-                return nil
-            }
-            return SearchResultZikr(zikr: zikr, query: query)
-        }
-    }
-    
 }
 
 extension SearchResultsViewModel {
@@ -186,7 +156,7 @@ extension SearchResultsViewModel {
             searchQuery: Empty().eraseToAnyPublisher()
         )
         vm.searchResults = [
-            .init(title: "Placeholder", results: [
+            .init(title: "Placeholder", image: "book", results: [
                 SearchResultZikr(zikr: .placeholder(id: 1), query: "title"),
                 SearchResultZikr(zikr: .placeholder(id: 2), query: "translation"),
                 SearchResultZikr(zikr: .placeholder(id: 3), query: "notes"),
