@@ -140,7 +140,7 @@ public extension AdhkarSQLiteDatabaseService {
                 origin: record,
                 language: lang,
                 category: nil,
-                translation: translation,
+                translation: lang == .arabic ? nil : translation,
                 audio: audio,
                 audioTimings: audioTimings ?? []
             )
@@ -164,7 +164,7 @@ public extension AdhkarSQLiteDatabaseService {
                     origin: zikr,
                     language: language,
                     category: nil,
-                    translation: translation,
+                    translation: language == .arabic ? nil : translation,
                     audio: nil,
                     audioTimings: []
                 )
@@ -209,7 +209,7 @@ public extension AdhkarSQLiteDatabaseService {
                     origin: zikr,
                     language: lang,
                     category: category,
-                    translation: translation,
+                    translation: lang == .arabic ? nil : translation,
                     audio: audio,
                     audioTimings: audioTimings.filter { $0.audioId == audio?.id }
                 )
@@ -219,12 +219,14 @@ public extension AdhkarSQLiteDatabaseService {
     
     func searchAdhkar(
         _ query: String,
+        resultsLimit: UInt8,
         category: ZikrCategory,
         languages: [Language]
     ) async throws -> [Zikr] {
         return try await getDatabaseQueue().read { db in
             try self.getSearchResults(
                 for: query,
+                resultsLimit: resultsLimit,
                 category: category,
                 languages: languages,
                 from: db
@@ -234,12 +236,15 @@ public extension AdhkarSQLiteDatabaseService {
     
     private func normalizeSearchQuery(_ query: String) -> String {
         query
+            .trimmingArabicVowels
             .replacingOccurrences(of: "Ё|ё|Е|е", with: "*", options: .regularExpression)
+            .trimmingCharacters(in: .whitespacesAndNewlines)
         + "*"
     }
 
     private func getSearchResults(
         for query: String,
+        resultsLimit: UInt8,
         category: ZikrCategory,
         languages: [Language],
         from db: Database
@@ -258,11 +263,13 @@ public extension AdhkarSQLiteDatabaseService {
                 JOIN "azkar+azkar_group" ON \(tableName).id = "azkar+azkar_group"."azkar_id"
                 WHERE "azkar+azkar_group"."group" = ?
                 AND \(tableName).id IN (
-                    SELECT rowid FROM azkar_search WHERE text_\(language.id) MATCH ?
+                    SELECT rowid FROM azkar_search
+                    WHERE text_\(language.id) MATCH ?
+                    ORDER BY rank
+                    LIMIT ?
                 )
-                ORDER BY "azkar+azkar_group"."order"
                 """,
-                arguments: [category.rawValue, normalizedQuery]
+                arguments: [category.rawValue, normalizedQuery, resultsLimit]
             )
             
             for translation in translations {
@@ -285,7 +292,7 @@ public extension AdhkarSQLiteDatabaseService {
                     origin: origin,
                     language: language,
                     category: category,
-                    translation: translation,
+                    translation: language == .arabic ? nil : translation,
                     audio: audio,
                     audioTimings: audioTimings ?? []
                 )
