@@ -99,12 +99,15 @@ public protocol AdhkarDatabaseService {
     /// - Returns: The count of `Zikr` objects in the given category as an Int.
     func getAdhkarCount(_ category: ZikrCategory) throws -> Int
     
+    /// Retrieves audio record with a given id.
+    func getAudio(audioId: Int) async throws -> Audio?
+    
     /// Retrieves audio timing data for a specific audioId.
     ///
     /// - Parameter audioId: The identifier of the audio for which timings are requested.
     /// - Throws: An error if the retrieval fails.
     /// - Returns: An array of `AudioTiming` objects.
-    func getAudioTimings(audioId: Int) throws -> [AudioTiming]
+    func getAudioTimings(audioId: Int) async throws -> [AudioTiming]
     
 }
 

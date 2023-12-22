@@ -175,7 +175,7 @@ struct ZikrView: View {
                             .font(Font.largeTitle)
                             .frame(maxWidth: 20, maxHeight: 15)
                             .foregroundColor(Color.accent)
-                        Text(text)
+                        Text(getAttributedString(text))
                             .font(.customFont(viewModel.preferences.preferredTranslationFont, style: .footnote))
                     }
                     .padding()
@@ -369,7 +369,7 @@ struct ZikrView: View {
     private func getInfoStack(label: String, text: String, underline: Bool = false) -> some View {
         VStack(alignment: .leading, spacing: 0) {
             self.getCaption(label)
-            Text(text)
+            Text(getAttributedString(text))
                 .if(underline, transform: { text in
                     text.underline()
                 })
@@ -383,7 +383,7 @@ struct ZikrView: View {
     }
 
     private func getCaption(_ text: String) -> some View {
-        Text(text)
+        Text(getAttributedString(text))
             .font(Font.system(.caption2, design: .rounded).smallCaps())
             .foregroundColor(Color.tertiaryText)
     }
@@ -395,10 +395,14 @@ struct ZikrView: View {
                 .scaledToFit()
                 .frame(width: 15, height: 15)
                 .foregroundColor(Color.accent)
-            Text(text)
+            Text(getAttributedString(text))
                 .font(Font.customFont(viewModel.preferences.preferredTranslationFont, style: .footnote))
         }
         .padding()
+    }
+    
+    private func getAttributedString(_ text: String) -> AttributedString {
+        attributedString(text, highlighting: viewModel.highlightPattern)
     }
 
     private func playerView(viewModel: PlayerViewModel) -> some View {

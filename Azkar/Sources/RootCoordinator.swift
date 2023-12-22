@@ -173,7 +173,9 @@ private extension RootCoordinator {
             route(to: \.zikrPages, vm)
             
         case .searchResult(let searchResult, let query):
-            let zikr = searchResult.zikr
+            guard let zikr = try? databaseService.getZikr(searchResult.zikrId, language: searchResult.language) else {
+                return
+            }
             
             Task {
                 await preferencesDatabase.storeOpenedZikr(zikr.id, language: zikr.language)
