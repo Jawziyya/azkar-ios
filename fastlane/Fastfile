@@ -40,8 +40,6 @@ private_lane :match_configuration do |options|
     app_identifier: options[:bundle_id],
     git_basic_authorization: Base64.strict_encode64(MATCH_GIT_AUTH),
     readonly: options[:force] == false,
-    keychain_name: options[:keychain_user],
-    keychain_password: options[:keychain_password],
     api_key: get_api_key,
     force_for_new_devices: options[:force_for_new_devices] == true
   )
