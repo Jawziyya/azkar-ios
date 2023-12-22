@@ -1,4 +1,5 @@
 import SwiftUI
+import Extensions
 
 struct SearchResultsView: View {
     
@@ -46,6 +47,7 @@ struct SearchResultsView: View {
                 }
             }
         }
+        .automaticKeyboardDismissing()
     }
     
     func searchResultView(for result: SearchResultZikr) -> some View {

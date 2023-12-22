@@ -12,15 +12,18 @@ final class SearchSuggestionsViewModel: ObservableObject {
     private let router: UnownedRouteTrigger<RootSection>
     private let azkarDatabase: AzkarDatabase
     private let preferencesDatabase: PreferencesDatabase
+    private let preferences: Preferences
     
     init(
         searchQuery: AnyPublisher<String, Never>,
         azkarDatabase: AzkarDatabase,
         preferencesDatabase: PreferencesDatabase,
+        preferences: Preferences = .shared,
         router: UnownedRouteTrigger<RootSection>
     ) {
         self.azkarDatabase = azkarDatabase
         self.preferencesDatabase = preferencesDatabase
+        self.preferences = preferences
         self.router = router
         
         Task {
@@ -30,6 +33,14 @@ final class SearchSuggestionsViewModel: ObservableObject {
     
     func getAvailableLanguages() -> [Language] {
         Language.allCases.filter(azkarDatabase.translationExists(for:))
+    }
+    
+    private func getPredefinedSuggestedQuries() -> [String] {
+        switch preferences.contentLanguage {
+        case .russian: return ["поклонение", "благополучие"]
+        case .english: return ["worship"]
+        default: return []
+        }
     }
     
     static var placeholder: SearchSuggestionsViewModel {
@@ -43,6 +54,9 @@ final class SearchSuggestionsViewModel: ObservableObject {
     
     @MainActor func loadSuggestions() async {
         suggestedQueries = await preferencesDatabase.getRecentSearchQueries(limit: 5)
+        if suggestedQueries.count < 5 {
+            suggestedQueries += getPredefinedSuggestedQuries()
+        }
         do {
             suggestedAzkar = try await preferencesDatabase.getRecentAzkar(limit: 5)
                 .compactMap { record -> Zikr? in

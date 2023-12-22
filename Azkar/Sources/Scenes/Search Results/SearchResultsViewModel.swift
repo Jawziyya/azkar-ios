@@ -12,7 +12,8 @@ struct SearchResultZikr: Identifiable, Hashable {
     var caption2: String?
     var footnote: String?
     let highlightText: String
-    let zikr: Zikr
+    let zikrId: Zikr.ID
+    let language: Language
 }
 
 extension SearchResultZikr {
@@ -28,6 +29,7 @@ extension SearchResultZikr {
     }
     
     init(zikr: Zikr, query: String) {
+        var title: String?
         let titleMatches = SearchResultZikr.extractContextFrom(zikr.title, query: query)
         let textMatches = SearchResultZikr.extractContextFrom(zikr.text.trimmingArabicVowels, query: query.trimmingArabicVowels)
         let translationMatches = SearchResultZikr.extractContextFrom(zikr.translation, query: query)
@@ -35,15 +37,26 @@ extension SearchResultZikr {
         let benefitsMatches = SearchResultZikr.extractContextFrom(zikr.benefits, query: query)
         let notesMatches = SearchResultZikr.extractContextFrom(zikr.notes, query: query)
         
+        if titleMatches == nil, textMatches == nil, translationMatches == nil, sourceMatches == nil, benefitsMatches == nil, notesMatches == nil {
+            if let zikrTitle = zikr.title {
+                title = zikrTitle
+            } else if let translation = zikr.translation {
+                title = translation.prefix(50) + "..."
+            } else {
+                title = "\(L10n.Common.zikr) \(zikr.id)"
+            }
+        }
+        
         self.init(
-            title: titleMatches,
+            title: title ?? titleMatches,
             text: textMatches,
             translation: translationMatches,
             caption: sourceMatches,
             caption2: benefitsMatches,
             footnote: notesMatches,
             highlightText: query,
-            zikr: zikr
+            zikrId: zikr.id,
+            language: zikr.language
         )
     }
 }

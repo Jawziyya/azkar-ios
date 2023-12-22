@@ -94,6 +94,22 @@ public final class AdhkarSQLiteDatabaseService: AdhkarDatabaseService {
             }
         }
     }
+    
+    private func getAudio(_ audioId: Int, database: Database) throws -> Audio? {
+        try Audio.fetchOne(
+            database,
+            sql: "SELECT * FROM audios WHERE id = ?",
+            arguments: [audioId]
+        )
+    }
+    
+    private func getAudioTimings(_ audioId: Int, database: Database) throws -> [AudioTiming] {
+        try AudioTiming.fetchAll(
+            database,
+            sql: "SELECT * FROM audio_timings WHERE audio_id = ?",
+            arguments: [audioId]
+        )
+    }
 
 }
 
@@ -113,13 +129,20 @@ public extension AdhkarSQLiteDatabaseService {
                 return nil
             }
             
+            let audio = try record.audioId.flatMap { id in
+                try getAudio(id, database: db)
+            }
+            let audioTimings = try record.audioId.flatMap { id in
+                try getAudioTimings(id, database: db)
+            }
+            
             return Zikr(
                 origin: record,
                 language: lang,
                 category: nil,
                 translation: translation,
-                audio: nil,
-                audioTimings: []
+                audio: audio,
+                audioTimings: audioTimings ?? []
             )
         }
     }
@@ -208,6 +231,12 @@ public extension AdhkarSQLiteDatabaseService {
             )
         }
     }
+    
+    private func normalizeSearchQuery(_ query: String) -> String {
+        query
+            .replacingOccurrences(of: "Ё|ё|Е|е", with: "*", options: .regularExpression)
+        + "*"
+    }
 
     private func getSearchResults(
         for query: String,
@@ -215,9 +244,11 @@ public extension AdhkarSQLiteDatabaseService {
         languages: [Language],
         from db: Database
     ) throws -> [Zikr] {
+        let normalizedQuery = normalizeSearchQuery(query)
         var azkar: [Zikr] = []
                 
         for language in languages {
+            
             let tableName = language.databaseTableName
             let translations = try ZikrTranslation.fetchAll(
                 db,
@@ -226,21 +257,12 @@ public extension AdhkarSQLiteDatabaseService {
                 FROM \(tableName)
                 JOIN "azkar+azkar_group" ON \(tableName).id = "azkar+azkar_group"."azkar_id"
                 WHERE "azkar+azkar_group"."group" = ?
-                AND (
-                    \(tableName).text LIKE ?
-                    OR \(tableName).text LIKE ?
-                    OR \(tableName).title LIKE ?
-                    OR \(tableName).title LIKE ?
+                AND \(tableName).id IN (
+                    SELECT rowid FROM azkar_search WHERE text_\(language.id) MATCH ?
                 )
                 ORDER BY "azkar+azkar_group"."order"
                 """,
-                arguments: [
-                    category.rawValue,
-                    "%\(query)%",
-                    "%\(query.lowercased())%",
-                    "%\(query)%",
-                    "%\(query.lowercased())%"
-                ]
+                arguments: [category.rawValue, normalizedQuery]
             )
             
             for translation in translations {
@@ -252,23 +274,20 @@ public extension AdhkarSQLiteDatabaseService {
                 ) else {
                     continue
                 }
-                let audio = try Audio.fetchOne(
-                    db,
-                    sql: "SELECT * FROM audios WHERE id = ?",
-                    arguments: [origin.audioId]
-                )
-                let audioTimings = try AudioTiming.fetchAll(
-                    db,
-                    sql: "SELECT * FROM audio_timings WHERE audio_id = ?",
-                    arguments: [audio?.id]
-                )
+                
+                let audio = try origin.audioId.flatMap { id in
+                    try getAudio(id, database: db)
+                }
+                let audioTimings = try origin.audioId.flatMap { id in
+                    try getAudioTimings(id, database: db)
+                }
                 let zikr = Zikr(
                     origin: origin,
                     language: language,
-                    category: nil,
+                    category: category,
                     translation: translation,
                     audio: audio,
-                    audioTimings: audioTimings
+                    audioTimings: audioTimings ?? []
                 )
                 azkar.append(zikr)
             }
@@ -294,12 +313,16 @@ public extension AdhkarSQLiteDatabaseService {
             return row["count"]
         }
     }
+    
+    func getAudio(audioId: Int) async throws -> Audio? {
+        return try await getDatabaseQueue().read { db in
+            try self.getAudio(audioId, database: db)
+        }
+    }
 
-    func getAudioTimings(audioId: Int) throws -> [AudioTiming] {
-        return try getDatabaseQueue().read { db in
-            try AudioTiming
-                .filter(sql: "audio_id = ?", arguments: [audioId])
-                .fetchAll(db)
+    func getAudioTimings(audioId: Int) async throws -> [AudioTiming] {
+        return try await getDatabaseQueue().read { db in
+            try self.getAudioTimings(audioId, database: db)
         }
     }
 

@@ -4,6 +4,26 @@ import SwiftUI
 import Library
 import Fakery
 
+func attributedString(_ text: String, highlighting pattern: String? = nil) -> AttributedString {
+    var attributedString = AttributedString(text)
+    
+    if let pattern = pattern {
+        var currentSearchRange = attributedString.startIndex..<attributedString.endIndex
+        while let range = attributedString[currentSearchRange].range(of: pattern, options: [.caseInsensitive, .diacriticInsensitive]) {
+            let globalRange = range.lowerBound..<range.upperBound
+            attributedString[globalRange].backgroundColor = UIColor.systemBlue.withAlphaComponent(0.25)
+            
+            if globalRange.upperBound < attributedString.endIndex {
+                currentSearchRange = globalRange.upperBound..<attributedString.endIndex
+            } else {
+                break
+            }
+        }
+    }
+
+    return attributedString
+}
+
 struct ReadingTextView: View {
 
     let action: (() -> Void)?
@@ -19,11 +39,11 @@ struct ReadingTextView: View {
             action: { action?() },
             label: {
                 if isArabicText {
-                    Text(attributedString)
+                    Text(attributedString(text, highlighting: highlightPattern))
                         .font(Font.customFont(font, style: .title1, sizeCategory: sizeCategory))
                         .lineSpacing(lineSpacing)
                 } else {
-                    Text(attributedString)
+                    Text(attributedString(text, highlighting: highlightPattern))
                         .font(Font.customFont(font, style: .body).leading(.tight))
                         .lineSpacing(lineSpacing)
                 }
@@ -32,26 +52,6 @@ struct ReadingTextView: View {
         .allowsHitTesting(action != nil)
         .multilineTextAlignment(isArabicText ? .trailing : .leading)
         .buttonStyle(.plain)
-    }
-    
-    private var attributedString: AttributedString {
-        var attributedString = AttributedString(text)
-        
-        if let pattern = highlightPattern {
-            var currentSearchRange = attributedString.startIndex..<attributedString.endIndex
-            while let range = attributedString[currentSearchRange].range(of: pattern, options: [.caseInsensitive, .diacriticInsensitive]) {
-                let globalRange = range.lowerBound..<range.upperBound
-                attributedString[globalRange].backgroundColor = UIColor.systemBlue.withAlphaComponent(0.25)
-                
-                if globalRange.upperBound < attributedString.endIndex {
-                    currentSearchRange = globalRange.upperBound..<attributedString.endIndex
-                } else {
-                    break
-                }
-            }
-        }
-
-        return attributedString
     }
     
 }

@@ -1,11 +1,3 @@
-//
-//  SearchResultsItemView.swift
-//  Azkar
-//
-//  Created by avocoder on 03.12.2023.
-//  Copyright © 2023 Al Jawziyya. All rights reserved.
-//
-
 import SwiftUI
 
 struct SearchResultsItemView: View {
@@ -13,6 +5,21 @@ struct SearchResultsItemView: View {
     let result: SearchResultZikr
     
     var body: some View {
+        HStack(alignment: .top) {
+            content
+            Spacer()
+            Text(result.language.id)
+                .textCase(.uppercase)
+                .font(Font.system(size: 12, design: .monospaced))
+                .padding(.horizontal, 7)
+                .padding(.vertical, 3)
+                .background(Color.secondaryBackground)
+                .foregroundStyle(Color.secondary)
+                .cornerRadius(3)
+        }
+    }
+    
+    var content: some View {
         VStack(spacing: 10) {
             if let title = result.title {
                 Text(getText(title))
