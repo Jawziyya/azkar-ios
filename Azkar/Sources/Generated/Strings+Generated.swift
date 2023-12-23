@@ -226,6 +226,12 @@ internal enum L10n {
     /// Settings
     internal static let settings = L10n.tr("Localizable", "root.settings", fallback: "Settings")
   }
+  internal enum Search {
+    /// Adhkar
+    internal static let suggestedAdhkar = L10n.tr("Localizable", "search.suggested-adhkar", fallback: "Adhkar")
+    /// Search queries
+    internal static let suggestedQuries = L10n.tr("Localizable", "search.suggested-queries", fallback: "Search queries")
+  }
   internal enum Settings {
     /// Settings
     internal static let title = L10n.tr("Localizable", "settings.title", fallback: "Settings")

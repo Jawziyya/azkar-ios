@@ -138,10 +138,12 @@ final class SearchResultsViewModel: ObservableObject {
             }
             .receive(on: DispatchQueue.main)
             .share()
+            .eraseToAnyPublisher()
         
         searchResults.combineLatest(query)
+            .debounce(for: .seconds(1), scheduler: DispatchQueue.main)
             .sink(receiveValue: { results, query in
-                if results.isEmpty == false, query.count >= 3 {
+                if query.count >= 3, results.contains(where: { !$0.results.isEmpty }) {
                     Task {
                         await preferencesDatabase.storeSearchQuery(query)
                     }

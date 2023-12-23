@@ -100,8 +100,8 @@ struct MainMenuView: View {
         Section {
             HStack(spacing: 8) {
                 getMainMenuSectionView(MainMenuLargeGroupViewModel(
-                    category: .evening,
-                    title: L10n.Category.evening,
+                    category: .morning,
+                    title: L10n.Category.morning,
                     animationName: "sun",
                     animationSpeed: 0.5
                 ))
@@ -109,8 +109,8 @@ struct MainMenuView: View {
                 Spacer()
                 
                 getMainMenuSectionView(MainMenuLargeGroupViewModel(
-                    category: .morning,
-                    title: L10n.Category.morning,
+                    category: .evening,
+                    title: L10n.Category.evening,
                     animationName: colorScheme == .dark ? "moon" : "moon2",
                     animationSpeed: 0.5
                 ))

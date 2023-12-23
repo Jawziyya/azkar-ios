@@ -251,10 +251,16 @@ public extension AdhkarSQLiteDatabaseService {
     ) throws -> [Zikr] {
         let normalizedQuery = normalizeSearchQuery(query)
         var azkar: [Zikr] = []
+        
+        let currentLanguage = self.language
                 
         for language in languages {
             
-            let tableName = language.databaseTableName
+            var tableName = language.databaseTableName
+            if language == .arabic, currentLanguage != .arabic {
+                tableName = currentLanguage.databaseTableName
+            }
+            
             let translations = try ZikrTranslation.fetchAll(
                 db,
                 sql: """
@@ -292,7 +298,7 @@ public extension AdhkarSQLiteDatabaseService {
                     origin: origin,
                     language: language,
                     category: category,
-                    translation: language == .arabic ? nil : translation,
+                    translation: currentLanguage == .arabic ? nil : translation,
                     audio: audio,
                     audioTimings: audioTimings ?? []
                 )

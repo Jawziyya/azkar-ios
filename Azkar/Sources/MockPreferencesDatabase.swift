@@ -30,7 +30,7 @@ final class MockPreferencesDatabase: PreferencesDatabase {
         }
     }
     
-    func getRecentSearchQueries(limit: UInt16) async -> [String] {
+    func getRecentSearchQueries(limit: UInt8) async -> [String] {
         return Array(searchQueries.prefix(upTo: Int(limit)))
     }
     
@@ -46,7 +46,7 @@ final class MockPreferencesDatabase: PreferencesDatabase {
         }
     }
     
-    func getRecentAzkar(limit: UInt16) async -> [RecentZikr] {
+    func getRecentAzkar(limit: UInt8) async -> [RecentZikr] {
         return Array(openedZikr.prefix(upTo: Int(limit)))
     }
     
