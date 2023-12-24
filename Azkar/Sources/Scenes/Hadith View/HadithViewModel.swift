@@ -17,9 +17,11 @@ struct HadithViewModel {
     let text: String
     let translation: String?
     let source: String
+    let highlightPattern: String?
 
-    init(hadith: Hadith, preferences: Preferences) {
+    init(hadith: Hadith, highlightPattern: String?, preferences: Preferences) {
         self.preferences = preferences
+        self.highlightPattern = highlightPattern
         self.hadith = hadith
         text = (preferences.showTashkeel && preferences.preferredArabicFont.hasTashkeelSupport ? hadith.text : hadith.text.trimmingArabicVowels).trimmingCharacters(in: .whitespacesAndNewlines)
         translation = hadith.translation?.trimmingCharacters(in: .whitespacesAndNewlines)

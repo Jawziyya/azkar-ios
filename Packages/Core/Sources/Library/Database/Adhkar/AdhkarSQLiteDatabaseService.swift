@@ -4,7 +4,16 @@ import Foundation
 import Entities
 import GRDB
 
-public final class AdhkarDatabaseService: DatabaseService {
+extension Language {
+    var databaseTableName: String {
+        switch self {
+        case .arabic: return "azkar"
+        default: return "azkar_\(self.id)"
+        }
+    }
+}
+
+public final class AdhkarSQLiteDatabaseService: AdhkarDatabaseService {
     
     public let language: Language
 
@@ -29,8 +38,7 @@ public final class AdhkarDatabaseService: DatabaseService {
     
     public func translationExists(for language: Language) -> Bool {
         do {
-            let tableName = "azkar_\(language.id)"
-            return try DatabaseHelper.tableExists(tableName, databaseQueue: getDatabaseQueue())
+            return try DatabaseHelper.tableExists(language.databaseTableName, databaseQueue: getDatabaseQueue())
         } catch {
             return false
         }
@@ -86,32 +94,62 @@ public final class AdhkarDatabaseService: DatabaseService {
             }
         }
     }
+    
+    private func getAudio(_ audioId: Int, database: Database) throws -> Audio? {
+        try Audio.fetchOne(
+            database,
+            sql: "SELECT * FROM audios WHERE id = ?",
+            arguments: [audioId]
+        )
+    }
+    
+    private func getAudioTimings(_ audioId: Int, database: Database) throws -> [AudioTiming] {
+        try AudioTiming.fetchAll(
+            database,
+            sql: "SELECT * FROM audio_timings WHERE audio_id = ?",
+            arguments: [audioId]
+        )
+    }
 
 }
 
 // MARK: - Adhkar
-public extension AdhkarDatabaseService {
+public extension AdhkarSQLiteDatabaseService {
 
-    func getZikr(_ id: Int) throws -> Zikr? {
+    func getZikr(_ id: Int, language: Language?) throws -> Zikr? {
+        let lang = language ?? self.language
         return try getDatabaseQueue().read { db in
             let record = try ZikrOrigin.fetchOne(db, id: id)
             let translation = try ZikrTranslation.fetchOne(
                 db,
-                sql: "SELECT * FROM azkar_\(language.id) WHERE id = ?",
+                sql: "SELECT * FROM \(lang.databaseTableName) WHERE id = ?",
                 arguments: [id]
             )
             guard let record, let translation else {
                 return nil
             }
             
+            let audio = try record.audioId.flatMap { id in
+                try getAudio(id, database: db)
+            }
+            let audioTimings = try record.audioId.flatMap { id in
+                try getAudioTimings(id, database: db)
+            }
+            
             return Zikr(
                 origin: record,
+                language: lang,
                 category: nil,
-                translation: translation,
-                audio: nil,
-                audioTimings: []
+                translation: lang == .arabic ? nil : translation,
+                audio: audio,
+                audioTimings: audioTimings ?? []
             )
         }
+    }
+    
+    func getZikrBeforeBreakingFast() -> Zikr? {
+        let fastBreakingZikrId = 48
+        return try? getZikr(fastBreakingZikrId, language: language)
     }
 
     func getAllAdhkar() throws -> [Zikr] {
@@ -119,21 +157,23 @@ public extension AdhkarDatabaseService {
             let records = try ZikrOrigin.fetchAll(db, sql: "SELECT * FROM azkar")
             let translations = try ZikrTranslation.fetchAll(
                 db,
-                sql: "SELECT * FROM azkar_\(language.id)"
+                sql: "SELECT * FROM \(language.databaseTableName)"
             )
             return zip(records, translations).map { zikr, translation in
                 Zikr(
                     origin: zikr,
+                    language: language,
                     category: nil,
-                    translation: translation,
+                    translation: language == .arabic ? nil : translation,
                     audio: nil,
                     audioTimings: []
                 )
             }
         }
     }
-
-    func getAdhkar(_ category: ZikrCategory) throws -> [Zikr] {
+    
+    func getAdhkar(_ category: ZikrCategory, language: Language?) throws -> [Zikr] {
+        let lang = language ?? self.language
         return try getDatabaseQueue().read { db in
             let records = try ZikrOrigin.fetchAll(
                 db,
@@ -146,7 +186,7 @@ public extension AdhkarDatabaseService {
                 """,
                 arguments: [category.rawValue]
             )
-            let translationTableName = "azkar_\(language.id)"
+            let translationTableName = "azkar_\(lang.id)"
             let translations = try ZikrTranslation.fetchAll(
                 db,
                 sql: """
@@ -167,8 +207,9 @@ public extension AdhkarDatabaseService {
                 
                 return Zikr(
                     origin: zikr,
+                    language: lang,
                     category: category,
-                    translation: translation,
+                    translation: lang == .arabic ? nil : translation,
                     audio: audio,
                     audioTimings: audioTimings.filter { $0.audioId == audio?.id }
                 )
@@ -176,35 +217,65 @@ public extension AdhkarDatabaseService {
         }
     }
     
-    func searchAdhkar(_ query: String) throws -> [Zikr] {
-        return try getDatabaseQueue().read { db in
-            try self.getSearchResults(for: query, from: db)
+    func searchAdhkar(
+        _ query: String,
+        resultsLimit: UInt8,
+        category: ZikrCategory,
+        languages: [Language]
+    ) async throws -> [Zikr] {
+        return try await getDatabaseQueue().read { db in
+            try self.getSearchResults(
+                for: query,
+                resultsLimit: resultsLimit,
+                category: category,
+                languages: languages,
+                from: db
+            )
         }
     }
+    
+    private func normalizeSearchQuery(_ query: String) -> String {
+        query
+            .trimmingArabicVowels
+            .replacingOccurrences(of: "Ё|ё|Е|е", with: "*", options: .regularExpression)
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+        + "*"
+    }
 
-    private func getSearchResults(for query: String, from db: Database) throws -> [Zikr] {
-        let languageTableNames = [Language.russian, .english].map { lang in
-            return "azkar_\(lang.rawValue)"
-        }
-        var azkar = [Zikr]()
+    private func getSearchResults(
+        for query: String,
+        resultsLimit: UInt8,
+        category: ZikrCategory,
+        languages: [Language],
+        from db: Database
+    ) throws -> [Zikr] {
+        let normalizedQuery = normalizeSearchQuery(query)
+        var azkar: [Zikr] = []
         
-        for tableName in languageTableNames {
+        let currentLanguage = self.language
+                
+        for language in languages {
+            
+            var tableName = language.databaseTableName
+            if language == .arabic, currentLanguage != .arabic {
+                tableName = currentLanguage.databaseTableName
+            }
+            
             let translations = try ZikrTranslation.fetchAll(
                 db,
                 sql: """
                 SELECT \(tableName).*
                 FROM \(tableName)
-                WHERE \(tableName).text LIKE ?
-                OR \(tableName).text LIKE ?
-                OR \(tableName).title LIKE ?
-                OR \(tableName).title LIKE ?
+                JOIN "azkar+azkar_group" ON \(tableName).id = "azkar+azkar_group"."azkar_id"
+                WHERE "azkar+azkar_group"."group" = ?
+                AND \(tableName).id IN (
+                    SELECT rowid FROM azkar_search
+                    WHERE text_\(language.id) MATCH ?
+                    ORDER BY rank
+                    LIMIT ?
+                )
                 """,
-                arguments: [
-                    "%\(query)%",
-                    "%\(query.lowercased())%",
-                    "%\(query)%",
-                    "%\(query.lowercased())%"
-                ]
+                arguments: [category.rawValue, normalizedQuery, resultsLimit]
             )
             
             for translation in translations {
@@ -216,23 +287,22 @@ public extension AdhkarDatabaseService {
                 ) else {
                     continue
                 }
-                let audio = try Audio.fetchOne(
-                    db,
-                    sql: "SELECT * FROM audios WHERE id = ?",
-                    arguments: [origin.audioId]
-                )
-                let audioTimings = try AudioTiming.fetchAll(
-                    db,
-                    sql: "SELECT * FROM audio_timings WHERE audio_id = ?",
-                    arguments: [audio?.id]
-                )
-                azkar.append(Zikr(
+                
+                let audio = try origin.audioId.flatMap { id in
+                    try getAudio(id, database: db)
+                }
+                let audioTimings = try origin.audioId.flatMap { id in
+                    try getAudioTimings(id, database: db)
+                }
+                let zikr = Zikr(
                     origin: origin,
-                    category: nil,
-                    translation: translation,
+                    language: language,
+                    category: category,
+                    translation: currentLanguage == .arabic ? nil : translation,
                     audio: audio,
-                    audioTimings: audioTimings
-                ))
+                    audioTimings: audioTimings ?? []
+                )
+                azkar.append(zikr)
             }
         }
         
@@ -256,12 +326,16 @@ public extension AdhkarDatabaseService {
             return row["count"]
         }
     }
+    
+    func getAudio(audioId: Int) async throws -> Audio? {
+        return try await getDatabaseQueue().read { db in
+            try self.getAudio(audioId, database: db)
+        }
+    }
 
-    func getAudioTimings(audioId: Int) throws -> [AudioTiming] {
-        return try getDatabaseQueue().read { db in
-            try AudioTiming
-                .filter(sql: "audio_id = ?", arguments: [audioId])
-                .fetchAll(db)
+    func getAudioTimings(audioId: Int) async throws -> [AudioTiming] {
+        return try await getDatabaseQueue().read { db in
+            try self.getAudioTimings(audioId, database: db)
         }
     }
 

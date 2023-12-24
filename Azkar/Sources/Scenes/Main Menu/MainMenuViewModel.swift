@@ -10,31 +10,38 @@ import SwiftUI
 import AudioPlayer
 import Combine
 import Entities
+import Fakery
+
+typealias SearchToken = ZikrCategory
 
 final class MainMenuViewModel: ObservableObject {
 
-    @Published var title = ""
     @Published var searchQuery = ""
+    @Published var searchTokens: [SearchToken] = []
+    @Published var availableSearchTokens: [SearchToken] = SearchToken.allCases
     
-    private let searchQueryPublisher = PassthroughSubject<String, Never>()
+    private let searchQueryPublisher = CurrentValueSubject<String, Never>("")
 
     let router: UnownedRouteTrigger<RootSection>
-    let databaseService: DatabaseService
+    let azkarDatabase: AzkarDatabase
+    let preferencesDatabase: PreferencesDatabase
     
     private(set) lazy var searchViewModel = SearchResultsViewModel(
-        databaseService: databaseService,
+        azkarDatabase: azkarDatabase,
+        preferencesDatabase: preferencesDatabase,
+        searchTokens: $searchTokens.eraseToAnyPublisher(),
         searchQuery: searchQueryPublisher.removeDuplicates().eraseToAnyPublisher()
+    )
+    
+    private(set) lazy var searchSuggestionsViewModel = SearchSuggestionsViewModel(
+        searchQuery: $searchQuery.removeDuplicates().eraseToAnyPublisher(),
+        azkarDatabase: azkarDatabase,
+        preferencesDatabase: preferencesDatabase,
+        router: router
     )
 
     let currentYear: String
-
-    func getDayNightSectionModels(isDarkModeEnabled: Bool) -> [MainMenuLargeGroupViewModel] {
-        [
-            MainMenuLargeGroupViewModel(category: .morning, title: L10n.Category.morning, animationName: "sun", animationSpeed: 0.3),
-            MainMenuLargeGroupViewModel(category: .evening, title: L10n.Category.evening, animationName: isDarkModeEnabled ? "moon" : "moon2", animationSpeed: 0.2),
-        ]
-    }
-
+    
     let otherAzkarModels: [AzkarMenuItem]
     let infoModels: [AzkarMenuOtherItem]
     
@@ -44,7 +51,7 @@ final class MainMenuViewModel: ObservableObject {
     @Published var enableEidBackground = false
 
     @Preference("kDidDisplayIconPacksMessage", defaultValue: false)
-    var kDidDisplayIconPacksMessage
+    var didDisplayIconPacksMessage
 
     let player: Player
     let fastingDua: Zikr?
@@ -57,15 +64,11 @@ final class MainMenuViewModel: ObservableObject {
         UIDevice.current.isIpad
     }
 
-    private func getRandomEmoji() -> String {
-        ["🌙", "🌸", "☘️", "🌳", "🌴", "🌱", "🌼", "💫", "🌎", "🌍", "🌏", "🪐", "✨", "❄️"].randomElement()!
-    }
-
     private lazy var iconsPackMessage: AzkarMenuOtherItem = {
         let title = L10n.Alerts.checkoutIconPacks
         var item = AzkarMenuOtherItem(imageName: AppIconPack.maccinz.icons.randomElement()!.imageName, title: title, color: Color.red, iconType: .bundled, imageCornerRadius: 4)
         item.action = { [unowned self] in
-            self.kDidDisplayIconPacksMessage = true
+            self.didDisplayIconPacksMessage = true
             self.hideIconPacksMessage()
             self.navigateToIconPacksList()
         }
@@ -73,17 +76,23 @@ final class MainMenuViewModel: ObservableObject {
     }()
 
     init(
-        databaseService: DatabaseService,
+        databaseService: AzkarDatabase,
+        preferencesDatabase: PreferencesDatabase,
         router: UnownedRouteTrigger<RootSection>,
         preferences: Preferences,
         player: Player
     ) {
-        self.databaseService = databaseService
+        self.azkarDatabase = databaseService
+        self.preferencesDatabase = preferencesDatabase
         self.router = router
         self.preferences = preferences
         self.player = player
         
-        fastingDua = try? databaseService.getZikr(51)
+        if Date().isRamadan {
+            fastingDua = databaseService.getZikrBeforeBreakingFast()
+        } else {
+            fastingDua = nil
+        }
         
         otherAzkarModels = [
             AzkarMenuItem(
@@ -124,22 +133,9 @@ final class MainMenuViewModel: ObservableObject {
         }
         currentYear = year
 
-        if !kDidDisplayIconPacksMessage && !UIDevice.current.isMac {
+        if !didDisplayIconPacksMessage && !UIDevice.current.isMac {
             additionalMenuItems.append(iconsPackMessage)
         }
-
-        let appName = L10n.appName
-        let title = "\(appName)"
-        preferences.$enableFunFeatures
-            .map { [unowned self] flag in
-                if flag {
-                    return title + " \(self.getRandomEmoji())"
-                } else {
-                    return title
-                }
-            }
-            .assign(to: \.title, on: self)
-            .store(in: &cancellables)
 
         preferences.$enableFunFeatures
             .map { flag in flag && Date().isRamadanEidDays }
@@ -162,8 +158,9 @@ final class MainMenuViewModel: ObservableObject {
             .assign(to: &$fadl)
         
         $searchQuery
+            .removeDuplicates()
             .subscribe(on: DispatchQueue.global(qos: .userInteractive))
-            .sink(receiveValue: searchQueryPublisher.send(_:))
+            .subscribe(searchQueryPublisher)
             .store(in: &cancellables)
     }
 
@@ -175,13 +172,8 @@ final class MainMenuViewModel: ObservableObject {
         }
     }
     
-    func naviateToSearchResult(_ searchResult: SearchResult) {
-        switch searchResult.resultType {
-        case .category(let zikrCategory):
-            router.trigger(.category(zikrCategory))            
-        case .zikr(let zikr):
-            router.trigger(.zikr(zikr, index: nil))
-        }
+    func naviateToSearchResult(_ searchResult: SearchResultZikr) {
+        router.trigger(.searchResult(result: searchResult, searchQuery: searchQuery))
     }
 
     func navigateToZikr(_ zikr: Zikr) {
@@ -214,6 +206,18 @@ final class MainMenuViewModel: ObservableObject {
             break
         }
     }
+    
+    let faker = Faker()
+    
+    func getSearchSuggestions() -> [String] {
+        return [
+            faker.lorem.word(),
+            faker.lorem.word(),
+            faker.lorem.word(),
+            faker.lorem.word(),
+            faker.lorem.word(),
+        ]
+    }
 
 }
 
@@ -221,7 +225,8 @@ extension MainMenuViewModel {
     
     static var placeholder: MainMenuViewModel {
         MainMenuViewModel(
-            databaseService: DatabaseService(language: Language.getSystemLanguage()),
+            databaseService: AzkarDatabase(language: Language.getSystemLanguage()),
+            preferencesDatabase: MockPreferencesDatabase(),
             router: .empty,
             preferences: Preferences.shared,
             player: .test

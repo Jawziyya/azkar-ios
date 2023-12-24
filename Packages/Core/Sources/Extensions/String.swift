@@ -41,6 +41,7 @@ public extension String {
         .subtracting(CharacterSet(charactersIn: "ّ"))
       return components(separatedBy: arabicVowelsSet).joined()
     }
+    
 }
 
 public extension String {
@@ -59,12 +60,20 @@ public extension String {
 
 }
 
+public struct SearchContext {
+    /// Range of the query inside the string
+    public let resultRange: Range<String.Index>
+    /// The context which the result appears in.
+    public let context: String
+    public let contextRange: Range<String.Index>
+}
+
 public extension String {
-    func extractContext(_ query: String, contextWords: Int = 10) -> [String] {
-        // Define the regex pattern to find the query with one or two words before and after, case insensitive
+    
+    func extractContext(_ query: String, contextWords: Int = 10) -> [SearchContext] {
+        // Define the regex pattern to find the query with a specified number of words before and after, case insensitive
         let wordsPattern = "(?:\\S+\\s)?"
         let pattern = "\(String(repeating: wordsPattern, count: contextWords))\\S*\(NSRegularExpression.escapedPattern(for: query))\\S*(?:\\s\\S+)?\(String(repeating: wordsPattern, count: contextWords))"
-
 
         // Compile the regular expression
         guard let regex = try? NSRegularExpression(pattern: pattern, options: [.caseInsensitive]) else { return [] }
@@ -73,28 +82,23 @@ public extension String {
         let matches = regex.matches(in: self, options: [], range: NSRange(self.startIndex..., in: self))
         
         // Extract the matching strings and format them with ellipses
-        return matches.compactMap { match -> String? in
-            guard
-                let range = Range(match.range, in: self),
-                range.lowerBound >= self.startIndex,
-                range.upperBound <= self.endIndex
-            else {
-                return nil
+        return matches.compactMap { match -> SearchContext? in
+            guard let contextRange = Range(match.range, in: self) else { return nil }
+            var context = String(self[contextRange]).replacingOccurrences(of: "\n", with: " ")
+
+            // Add ellipses where appropriate
+            if contextRange.lowerBound != self.startIndex {
+                context = "... \(context)"
             }
-            
-            var matchText = String(self[range]).replacingOccurrences(of: "\n", with: " ")
-            // Check if the match is not at the start of the text and prepend ellipsis if needed
-            if range.lowerBound != self.startIndex {
-                matchText = "... \(matchText)"
+            if contextRange.upperBound != self.endIndex {
+                context = "\(context) ..."
             }
-            
-            // Check if the match is not at the end of the text and append ellipsis if needed
-            if range.upperBound != self.endIndex {
-                matchText = "\(matchText) ..."
-            }
-            
-            return matchText
+
+            // Find the range of the query in the context
+            guard let resultRange = self.range(of: query, options: [.caseInsensitive], range: contextRange) else { return nil }
+
+            return SearchContext(resultRange: resultRange, context: context, contextRange: contextRange)
         }
     }
-
+    
 }

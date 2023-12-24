@@ -30,7 +30,7 @@ struct VirtuesWidgets: Widget {
         StaticConfiguration(
             kind: kind,
             provider: VirtuesProvider(
-                databaseService: AdhkarDatabaseService(language: language)
+                databaseService: AdhkarSQLiteDatabaseService(language: language)
             )
         ) { entry in
             VirtueView(fadl: entry.fadl)
@@ -44,7 +44,7 @@ struct VirtuesWidgets: Widget {
 
 struct AzkarVirtuesWidgets_Previews: PreviewProvider {
     static var previews: some View {
-        let databaseService = AdhkarDatabaseService(language: Language.getSystemLanguage())
+        let databaseService = AdhkarSQLiteDatabaseService(language: Language.getSystemLanguage())
         let fadail = try! databaseService.getFadail()
         
         return VirtueView(

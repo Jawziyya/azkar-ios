@@ -57,8 +57,18 @@ struct ZikrView: View {
             Haptic.toggleFeedback()
         }
     }
-
+    
     var body: some View {
+        if viewModel.isNested {
+            scrollView
+        } else {
+            scrollView
+                .navigationTitle(viewModel.title)
+                .navigationBarTitleDisplayMode(.inline)
+        }
+    }
+
+    var scrollView: some View {
         ScrollView {
             getContent()
                 .largeScreenPadding()
@@ -68,6 +78,7 @@ struct ZikrView: View {
                 await viewModel.updateRemainingRepeats()
             }
         }
+        .onDisappear(perform: viewModel.pausePlayer)
         .saturation(viewModel.preferences.colorTheme == .ink ? 0 : 1)
         .background(Color.background.edgesIgnoringSafeArea(.all))
         .onKeyboardShortcut("+", modifiers: [.command], perform: viewModel.increaseFontSize)
@@ -98,7 +109,6 @@ struct ZikrView: View {
             counterButton,
             alignment: viewModel.preferences.alignCounterButtonByLeadingSide ? .bottomLeading : .bottomTrailing
         )
-        .navigationBarTitleDisplayMode(.inline)
     }
 
     private var counterButton: some View {
@@ -127,7 +137,12 @@ struct ZikrView: View {
 
     private func getContent() -> some View {
         VStack(alignment: .leading, spacing: 0) {
-            titleView(viewModel.title)
+            if viewModel.isNested {
+                titleView(viewModel.title)
+            } else {
+                Color.clear.frame(height: 10)
+            }
+            
             textView
             
             if !viewModel.translation.isEmpty {
@@ -161,7 +176,7 @@ struct ZikrView: View {
                             .font(Font.largeTitle)
                             .frame(maxWidth: 20, maxHeight: 15)
                             .foregroundColor(Color.accent)
-                        Text(text)
+                        Text(getAttributedString(text))
                             .font(.customFont(viewModel.preferences.preferredTranslationFont, style: .footnote))
                     }
                     .padding()
@@ -235,6 +250,7 @@ struct ZikrView: View {
                         viewModel.playAudio(at: idx)
                     },
                     text: line,
+                    highlightPattern: viewModel.highlightPattern,
                     isArabicText: isArabicText,
                     font: isArabicText ? prefs.preferredArabicFont : prefs.preferredTranslationFont,
                     lineSpacing: prefs.enableLineBreaks ? spacing : 0
@@ -354,7 +370,7 @@ struct ZikrView: View {
     private func getInfoStack(label: String, text: String, underline: Bool = false) -> some View {
         VStack(alignment: .leading, spacing: 0) {
             self.getCaption(label)
-            Text(text)
+            Text(getAttributedString(text))
                 .if(underline, transform: { text in
                     text.underline()
                 })
@@ -368,7 +384,7 @@ struct ZikrView: View {
     }
 
     private func getCaption(_ text: String) -> some View {
-        Text(text)
+        Text(getAttributedString(text))
             .font(Font.system(.caption2, design: .rounded).smallCaps())
             .foregroundColor(Color.tertiaryText)
     }
@@ -380,10 +396,14 @@ struct ZikrView: View {
                 .scaledToFit()
                 .frame(width: 15, height: 15)
                 .foregroundColor(Color.accent)
-            Text(text)
+            Text(getAttributedString(text))
                 .font(Font.customFont(viewModel.preferences.preferredTranslationFont, style: .footnote))
         }
         .padding()
+    }
+    
+    private func getAttributedString(_ text: String) -> AttributedString {
+        attributedString(text, highlighting: viewModel.highlightPattern)
     }
 
     private func playerView(viewModel: PlayerViewModel) -> some View {
@@ -404,7 +424,8 @@ struct ZikrView_Previews: PreviewProvider {
         prefs.colorTheme = .sea
         return ZikrView(
             viewModel: ZikrViewModel(
-                zikr: Zikr.placeholder,
+                zikr: Zikr.placeholder(),
+                isNested: false,
                 hadith: Hadith.placeholder,
                 preferences: prefs,
                 player: .test

@@ -14,10 +14,12 @@ import Stinsen
 import WhatsNewKit
 import MessageUI
 import IGStoryKit
+import Library
 
 enum RootSection: Equatable, RouteKind {
     case category(ZikrCategory)
     case zikr(_ zikr: Zikr, index: Int? = nil)
+    case searchResult(result: SearchResultZikr, searchQuery: String)
     case zikrPages(_ vm: ZikrPagesViewModel)
     case goToPage(Int)
     case settings(_ intitialRoute: SettingsRoute? = nil, presentModally: Bool = false)
@@ -28,8 +30,9 @@ enum RootSection: Equatable, RouteKind {
 
 final class RootCoordinator: NSObject, RouteTrigger, NavigationCoordinatable {
     
-    var stack: Stinsen.NavigationStack<RootCoordinator> = .init(initial: \.menu)
+    var stack: Stinsen.NavigationStack<RootCoordinator> = .init(initial: \.root)
     
+    @Root var root = makeRootView
     @Root var menu = makeMainView
     @Route(.push) var zikrCategory = makeCategoryView
     @Route(.push) var zikrPages = makeZikrPagesView
@@ -42,9 +45,10 @@ final class RootCoordinator: NSObject, RouteTrigger, NavigationCoordinatable {
     @Route(.modal) var shareOptions = makeShareOptionsView
     
     let preferences: Preferences
-    var databaseService: DatabaseService {
-        DatabaseService(language: preferences.contentLanguage)
+    var databaseService: AzkarDatabase {
+        AzkarDatabase(language: preferences.contentLanguage)
     }
+    let preferencesDatabase: PreferencesDatabase
     let deeplinker: Deeplinker
     let player: Player
 
@@ -71,6 +75,13 @@ final class RootCoordinator: NSObject, RouteTrigger, NavigationCoordinatable {
         self.preferences = preferences
         self.deeplinker = deeplinker
         self.player = player
+        
+        let preferencesDatabasePath = FileManager.default
+            .appGroupContainerURL
+            .appendingPathComponent("preferences.db")
+            .absoluteString
+        preferencesDatabase = PreferencesSQLiteDatabaseService(databasePath: preferencesDatabasePath)
+        
         super.init()
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
@@ -111,6 +122,7 @@ final class RootCoordinator: NSObject, RouteTrigger, NavigationCoordinatable {
             let viewModels = try adhkar.enumerated().map { idx, zikr in
                 try ZikrViewModel(
                     zikr: zikr,
+                    isNested: true,
                     row: idx + 1,
                     hadith: zikr.hadith.flatMap { id in
                         try databaseService.getHadith(id)
@@ -144,7 +156,7 @@ private extension RootCoordinator {
         switch section {
         case .aboutApp, .category, .settings:
             selectedZikrPageIndex.send(0)
-        case .zikr, .zikrPages, .goToPage, .whatsNew, .shareOptions:
+        case .zikr, .zikrPages, .goToPage, .whatsNew, .shareOptions, .searchResult:
             break
         }
         
@@ -159,6 +171,28 @@ private extension RootCoordinator {
 
         case .zikrPages(let vm):
             route(to: \.zikrPages, vm)
+            
+        case .searchResult(let searchResult, let query):
+            guard let zikr = try? databaseService.getZikr(searchResult.zikrId, language: searchResult.language) else {
+                return
+            }
+            
+            Task {
+                await preferencesDatabase.storeOpenedZikr(zikr.id, language: zikr.language)
+            }
+            
+            let hadith = try? zikr.hadith.flatMap { id in
+                try databaseService.getHadith(id)
+            }
+            let viewModel = ZikrViewModel(
+                zikr: zikr,
+                isNested: false,
+                highlightPattern: query,
+                hadith: hadith,
+                preferences: preferences,
+                player: player
+            )
+            route(to: \.zikr, viewModel)
 
         case .zikr(let zikr, let index):
             assert(Thread.isMainThread)
@@ -166,12 +200,17 @@ private extension RootCoordinator {
                 self.selectedZikrPageIndex.send(index)
                 return
             }
+            
+            Task {
+                await preferencesDatabase.storeOpenedZikr(zikr.id, language: zikr.language)
+            }
 
             let hadith = try? zikr.hadith.flatMap { id in
                 try databaseService.getHadith(id)
             }
             let viewModel = ZikrViewModel(
                 zikr: zikr,
+                isNested: true,
                 hadith: hadith,
                 preferences: preferences,
                 player: player
@@ -207,9 +246,24 @@ private extension RootCoordinator {
 
 extension RootCoordinator {
     
+    func makeRootView() -> some View {
+        RootView(
+            viewModel: RootViewModel(
+                mainMenuViewModel: MainMenuViewModel(
+                    databaseService: databaseService,
+                    preferencesDatabase: preferencesDatabase,
+                    router: UnownedRouteTrigger(router: self),
+                    preferences: preferences,
+                    player: player
+                )
+            )
+        )
+    }
+    
     func makeMainView() -> some View {
         MainMenuView(viewModel: MainMenuViewModel(
             databaseService: databaseService,
+            preferencesDatabase: preferencesDatabase,
             router: UnownedRouteTrigger(router: self),
             preferences: preferences,
             player: player
@@ -296,7 +350,7 @@ extension RootCoordinator: MFMailComposeViewControllerDelegate {
         options: ZikrShareOptionsView.ShareOptions,
         from viewController: UIViewController
     ) {
-        let currentViewModel = ZikrViewModel(zikr: zikr, hadith: nil, preferences: preferences, player: player)
+        let currentViewModel = ZikrViewModel(zikr: zikr, isNested: true, hadith: nil, preferences: preferences, player: player)
         let activityItems: [Any]
 
         switch options.shareType {

@@ -11,5 +11,6 @@ typealias ZikrCategory = Entities.ZikrCategory
 typealias Fadl = Entities.Fadl
 typealias AudioTiming = Entities.AudioTiming
 
-typealias DatabaseService = Library.AdhkarDatabaseService
+typealias AzkarDatabase = Library.AdhkarSQLiteDatabaseService
+typealias PreferencesDatabase = Library.PreferencesDatabaseService
 typealias Preference = Library.Preference

@@ -29,10 +29,13 @@ final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
 
     let zikr: Zikr
     let title: String
+    /// Is nested into a container like page view or other.
+    let isNested: Bool
 
     @Published private(set) var text: [String]
     @Published private(set) var translation: [String]
     @Published private(set) var transliteration: [String]
+    let highlightPattern: String?
 
     @Published private(set) var highlightCurrentIndex = true
     @Published private(set) var indexToHighlight: Int?
@@ -98,6 +101,8 @@ final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
 
     init(
         zikr: Zikr,
+        isNested: Bool,
+        highlightPattern: String? = nil,
         row: Int? = nil,
         hadith: Hadith?,
         preferences: Preferences,
@@ -105,7 +110,9 @@ final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
         counter: ZikrCounterType = ZikrCounter.shared,
         textProcessor: TextProcessor = TextProcessor(preferences: Preferences.shared)
     ) {
+        self.highlightPattern = highlightPattern
         self.counter = counter
+        self.isNested = isNested
         self.zikr = zikr
         self.preferences = preferences
         self.textProcessor = textProcessor
@@ -168,7 +175,11 @@ final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
         }
 
         if let hadith = hadith {
-            hadithViewModel = HadithViewModel(hadith: hadith, preferences: preferences)
+            hadithViewModel = HadithViewModel(
+                hadith: hadith,
+                highlightPattern: highlightPattern,
+                preferences: preferences
+            )
         }
         
         cancellables.insert(
@@ -276,6 +287,10 @@ final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
     
     func playAudio(at index: Int) {
         playerViewModel?.goToTiming(at: index)
+    }
+    
+    func pausePlayer() {
+        player.pause()
     }
 
 }

@@ -141,7 +141,7 @@ struct SettingsView_Previews: PreviewProvider {
         NavigationView {
             SettingsView(
                 viewModel: SettingsViewModel(
-                    databaseService: DatabaseService(language: .english),
+                    databaseService: AzkarDatabase(language: .english),
                     preferences: Preferences.shared,
                     router: .empty
                 )
