@@ -2,12 +2,15 @@ import Foundation
 import Combine
 import Entities
 
+private let SEARCH_RESULTS_LIMIT: UInt8 = 5
+
 final class SearchManager {
     
     var searchResultSections: AnyPublisher<SearchResultsSection, Never> {
         searchResultSectionsPublisher.eraseToAnyPublisher()
     }
     let category: ZikrCategory
+    
     
     private var searchTask: Task<Void, Never>?
     private let searchResultSectionsPublisher = PassthroughSubject<SearchResultsSection, Never>()
@@ -49,7 +52,12 @@ final class SearchManager {
         query: String
     ) async -> [Zikr] {
         do {
-            return try await azkarDatabase.searchAdhkar(query, category: category, languages: languages)
+            return try await azkarDatabase.searchAdhkar(
+                query,
+                resultsLimit: SEARCH_RESULTS_LIMIT,
+                category: category,
+                languages: languages
+            )
         } catch {
             print(error.localizedDescription)
             return []

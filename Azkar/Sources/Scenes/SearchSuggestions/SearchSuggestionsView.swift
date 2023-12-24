@@ -28,7 +28,7 @@ struct SearchSuggestionsView: View {
     }
     
     var suggestedSearchQueriesSection: some View {
-        Section("Recent Search") {
+        Section("search.suggested-queries") {
             ForEach(viewModel.suggestedQueries) { query in
                 HStack {
                     Image(systemName: .magnifyingglass)
@@ -47,7 +47,7 @@ struct SearchSuggestionsView: View {
     }
     
     var suggestedAzkarSection: some View {
-        Section("Recent Azkar") {
+        Section("search.suggested-adhkar") {
             ForEach(viewModel.suggestedAzkar) { zikr in
                 Button(action: {
                     viewModel.navigateToZikr(zikr)

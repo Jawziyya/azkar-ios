@@ -95,12 +95,12 @@ public final class PreferencesSQLiteDatabaseService: PreferencesDatabaseService 
         }
     }
     
-    public func getRecentSearchQueries(limit: UInt16) async -> [String] {
+    public func getRecentSearchQueries(limit: UInt8) async -> [String] {
         do {
             return try await database.read { db in
                 return try SearchQuery
-                    .limit(Int(limit))
                     .order(sql: "date DESC")
+                    .limit(Int(limit))
                     .fetchAll(db)
                     .map(\.text)
             }
@@ -143,12 +143,12 @@ public final class PreferencesSQLiteDatabaseService: PreferencesDatabaseService 
         }
     }
     
-    public func getRecentAzkar(limit: UInt16) async -> [RecentZikr] {
+    public func getRecentAzkar(limit: UInt8) async -> [RecentZikr] {
         do {
             return try await database.read { db in
                 try RecentZikr
-                    .limit(Int(limit))
                     .order(sql: "date DESC")
+                    .limit(Int(limit))
                     .fetchAll(db)
             }
         } catch {

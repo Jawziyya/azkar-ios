@@ -13,13 +13,13 @@ public protocol PreferencesDatabaseService {
     func clearSearchQueries() async
     
     /// Get list of recently performed searches.
-    func getRecentSearchQueries(limit: UInt16) async -> [String]
+    func getRecentSearchQueries(limit: UInt8) async -> [String]
         
     /// Save metadata of opened zikr along with its language.
     func storeOpenedZikr(_ id: Zikr.ID, language: Language) async
     
     /// Retrieve list of recently opened azkar.
-    func getRecentAzkar(limit: UInt16) async -> [RecentZikr]
+    func getRecentAzkar(limit: UInt8) async -> [RecentZikr]
     
     /// Remove zikr from recent azkar list.
     func deleteRecentZikr(_ id: Zikr.ID, language: Language) async

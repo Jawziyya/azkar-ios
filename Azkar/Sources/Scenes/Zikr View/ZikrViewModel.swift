@@ -288,5 +288,9 @@ final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
     func playAudio(at index: Int) {
         playerViewModel?.goToTiming(at: index)
     }
+    
+    func pausePlayer() {
+        player.pause()
+    }
 
 }

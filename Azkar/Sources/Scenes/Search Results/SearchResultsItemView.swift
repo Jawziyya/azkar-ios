@@ -23,18 +23,15 @@ struct SearchResultsItemView: View {
         VStack(spacing: 10) {
             if let title = result.title {
                 Text(getText(title))
-                    .font(.headline)
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
             if let text = result.text {
                 Text(getText(text))
-                    .font(.body)
                     .multilineTextAlignment(.trailing)
                     .frame(maxWidth: .infinity, alignment: .trailing)
             }
             if let translation = result.translation {
                 Text(getText(translation))
-                    .font(.body)
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
             if let caption = result.caption {

@@ -90,7 +90,7 @@ public protocol AdhkarDatabaseService {
     /// - Parameter query: The text string to search for within the Adhkar.
     /// - Throws: An error if the search or retrieval fails.
     /// - Returns: An array of `Zikr` objects that match the query.
-    func searchAdhkar(_ query: String, category: ZikrCategory, languages: [Language]) async throws -> [Zikr]
+    func searchAdhkar(_ query: String, resultsLimit: UInt8, category: ZikrCategory, languages: [Language]) async throws -> [Zikr]
     
     /// Retrieves the count of Adhkar within a specific category.
     ///
