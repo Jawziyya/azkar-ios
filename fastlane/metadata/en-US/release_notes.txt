@@ -1,3 +1,1 @@
-- Improvements in "Virtues of dhikr" widget and fix background color
-- Fix What's new window appearance
-- Search
+- Added Ayat-al-Kursi back to morning & evening categories
