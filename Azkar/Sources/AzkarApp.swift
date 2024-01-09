@@ -11,6 +11,7 @@ import Stinsen
 struct AzkarApp: App {
     
     @UIApplicationDelegateAdaptor var delegate: AppDelegate
+    @StateObject var preferences = Preferences.shared
     
     var body: some Scene {
         WindowGroup {
@@ -24,6 +25,11 @@ struct AzkarApp: App {
             .view()
             .tint(Color.accent)
             .toggleStyle(SwitchToggleStyle(tint: Color.accent))
+            .onReceive(preferences.$theme) { theme in
+                let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene
+                let window = scene?.keyWindow
+                window?.overrideUserInterfaceStyle = theme.userInterfaceStyle
+            }
         }
     }
     
