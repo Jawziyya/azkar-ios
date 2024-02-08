@@ -2,7 +2,7 @@
 
 import UIKit
 import SwiftUI
-import Introspect
+import SwiftUIIntrospect
 import SwiftUIX
 import ActivityView
 

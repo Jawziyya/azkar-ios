@@ -1,15 +1,8 @@
-//
-//  MainMenuView.swift
-//  Azkar
-//
-//  Created by Abdurahim Jauzee on 12.04.2020.
-//  Copyright © 2020 Al Jawziyya. All rights reserved.
-//
-
 import SwiftUI
 import AudioPlayer
 import UserNotifications
 import Entities
+import ArticleReader
 
 struct MainMenuView: View {
 
@@ -90,6 +83,20 @@ struct MainMenuView: View {
 
         additionalItems
 
+        if let article = viewModel.article {
+            Button(action: {
+                viewModel.navigateToArticle(article)
+            }, label: {
+                articleCell(article)
+            })
+            .listRowInsets(.zero)
+            .buttonStyle(.plain)
+            .overlay(
+                RoundedRectangle(cornerRadius: 10)
+                    .stroke(Color.accentColor.opacity(0.5), lineWidth: 3)
+            )
+        }
+        
         if let fadl = viewModel.fadl {
             fadlSection(fadl)
         }
@@ -207,6 +214,11 @@ struct MainMenuView: View {
             .listRowBackground(Color.clear)
             .frame(maxWidth: .infinity)
         }
+    }
+    
+    private func articleCell(_ article: Article) -> some View {
+        ArticleCellView(article: article)
+            .frame(height: 200)
     }
     
     private func getMenuItem(

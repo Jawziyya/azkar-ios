@@ -1,4 +1,5 @@
 import ProjectDescription
+import Foundation
 
 // MARK: - Constants
 let kDebugSigningIdentity = "iPhone Developer"
@@ -30,6 +31,7 @@ let packages: [Package] = [
     // MARK: Internal depedencies.
     .local(path: AzkarPackage.audioPlayer.path),
     .local(path: AzkarPackage.core.path),
+    .local(path: AzkarPackage.features.path),
 
     // MARK: Services.
     .remote(url: "https://github.com/RevenueCat/purchases-ios.git", requirement: .upToNextMajor(from: "4.19.0")),
@@ -45,14 +47,13 @@ let packages: [Package] = [
     // MARK: UI.
     .remote(url: "https://github.com/radianttap/Coordinator", requirement: .upToNextMajor(from: "6.4.2")),
     .remote(url: "https://github.com/airbnb/lottie-ios", requirement: .upToNextMajor(from: "3.0.0")),
-    .remote(url: "https://github.com/kean/NukeUI", requirement: .upToNextMajor(from: "0.7.0")),
     .remote(url: "https://github.com/SwiftUIX/SwiftUIX", requirement: .upToNextMajor(from: "0.1.3")),
-    .remote(url: "https://github.com/siteline/SwiftUI-Introspect", requirement: .upToNextMajor(from: "0.1.3")),
     .remote(url: "https://github.com/SwiftUI-Plus/ActivityView", requirement: .upToNextMajor(from: "1.0.0")),
     .remote(url: "https://github.com/demharusnam/SwiftUIDrag", requirement: .revision("0686318a")),
     .remote(url: "https://github.com/aheze/Popovers", requirement: .upToNextMajor(from: "1.3.2")),
     .remote(url: "https://github.com/SvenTiigi/WhatsNewKit", requirement: .upToNextMajor(from: "2.0.0")),
     .remote(url: "https://github.com/rundfunk47/stinsen", requirement: .upToNextMajor(from: "2.0.0")),
+    .remote(url: "https://github.com/supabase-community/supabase-swift", requirement: .upToNextMajor(from: "2.0.0")),
 ]
 
 let baseSettingsDictionary = SettingsDictionary()
@@ -120,11 +121,11 @@ enum AzkarTarget: String, CaseIterable {
                     .package(product: "Entities"),
                     .package(product: "Extensions"),
                     .package(product: "Library"),
+                    .package(product: "ArticleReader"),
                     .package(product: "AudioPlayer"),
                     .package(product: "SwiftyStoreKit"),
                     .package(product: "Coordinator"),
                     .package(product: "Lottie"),
-                    .package(product: "Introspect"),
                     .package(product: "Alamofire"),
                     .package(product: "ZIPFoundation"),
                     .package(product: "NukeUI"),
@@ -136,6 +137,7 @@ enum AzkarTarget: String, CaseIterable {
                     .package(product: "WhatsNewKit"),
                     .package(product: "IGStoryKit"),
                     .package(product: "Stinsen"),
+                    .package(product: "Supabase"),
                 ],
                 settings: Settings.settings(
                     base: baseSettingsDictionary
@@ -262,6 +264,7 @@ enum AzkarTarget: String, CaseIterable {
 enum AzkarPackage: String {
     case core = "Core"
     case audioPlayer = "AudioPlayer"
+    case features = "Features"
 
     var name: String { rawValue }
 
@@ -285,7 +288,15 @@ let project = Project(
             name: AzkarTarget.azkarApp.rawValue,
             shared: true,
             buildAction: BuildAction(targets: ["Azkar"]),
-            runAction: RunAction.runAction(executable: "Azkar")
+            runAction: RunAction.runAction(
+                executable: "Azkar",
+                arguments: Arguments(
+                    environment: [
+                        "SUPABASE_API_URL": ProcessInfo.processInfo.environment["SUPABASE_API_URL"]!,
+                        "SUPABASE_API_KEY": ProcessInfo.processInfo.environment["SUPABASE_API_KEY"]!,
+                    ]
+                )
+            )
         ),
         Scheme(
             name: AzkarTarget.azkarAppUITests.rawValue,
