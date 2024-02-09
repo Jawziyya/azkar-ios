@@ -43,10 +43,13 @@ extension Article {
         
         if let coverImageFormat = article.coverImageFormat {
             let imageType: ImageType
-            if let link = article.imageLink {
-                imageType = .link(link)
+            if let link = article.imageLink, let url = URL(string: link) {
+                imageType = .link(url)
+            } else if let resourceName = article.imageResourceName {
+                imageType = .resource(resourceName)
             } else {
-                imageType = .resource(article.imageResourceName ?? "")
+                coverImage = nil
+                return
             }
             
             coverImage = .init(imageType: imageType, imageFormat: coverImageFormat)
