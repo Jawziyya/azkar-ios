@@ -154,6 +154,9 @@ final class MainMenuViewModel: ObservableObject {
         
         preferences
             .$contentLanguage
+            .handleEvents(receiveOutput: { language in
+                ArticleCategory.language = language
+            })
             .map { language in
                 try? databaseService.getRandomFadl(language: language)
             }
