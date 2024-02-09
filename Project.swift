@@ -13,6 +13,32 @@ let teamId = "486STKKP6Y"
 let projectName = "Azkar"
 let baseDomain = "io.jawziyya"
 
+var env: [String: String] {
+    let filePath = "./.env"
+    var dict = [String: String]()
+
+    // Ensure the file exists
+    guard let contents = try? String(contentsOfFile: filePath) else {
+        print("File at \(filePath) not found")
+        return dict
+    }
+
+    // Split the file contents into lines
+    let lines = contents.split(separator: "\n")
+    for line in lines {
+        // Split each line into key and value
+        let parts = line.split(separator: "=", maxSplits: 1, omittingEmptySubsequences: true)
+        if parts.count == 2 {
+            let key = String(parts[0]).trimmingCharacters(in: .whitespacesAndNewlines)
+            let value = String(parts[1]).trimmingCharacters(in: .whitespacesAndNewlines)
+            dict[key] = value
+        }
+    }
+
+    return dict
+}
+
+
 private func getDefaultSettings(
     bundleId: String,
     isDistribution: Bool
@@ -288,7 +314,15 @@ let project = Project(
             name: AzkarTarget.azkarApp.rawValue,
             shared: true,
             buildAction: BuildAction(targets: ["Azkar"]),
-            runAction: RunAction.runAction(executable: "Azkar")
+            runAction: RunAction.runAction(
+                executable: "Azkar",
+                arguments: Arguments(
+                    environment: [
+                        "SUPABASE_API_URL": env["SUPABASE_API_URL"] ?? "",
+                        "SUPABASE_API_KEY": env["SUPABASE_API_KEY"] ?? "",
+                    ]
+                )
+            )
         ),
         Scheme(
             name: AzkarTarget.azkarAppUITests.rawValue,

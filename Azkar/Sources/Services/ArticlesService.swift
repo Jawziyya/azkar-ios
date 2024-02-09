@@ -8,9 +8,17 @@ private let supabaseClient: SupabaseClient = {
     decoder.keyDecodingStrategy = .convertFromSnakeCase
     let encoder = JSONEncoder()
     encoder.keyEncodingStrategy = .convertToSnakeCase
+    
+    let kURL = "SUPABASE_API_URL"
+    let kApiKey = "SUPABASE_API_KEY"
+    let processEnv = ProcessInfo.processInfo.environment
+    let infoPlist = Bundle.main.infoDictionary ?? [:]
+    let url = (infoPlist[kURL] as? String) ?? processEnv[kURL]
+    let key = (infoPlist[kApiKey] as? String) ?? processEnv[kApiKey]
+    
     let client = SupabaseClient(
-        supabaseURL: URL(string: Bundle.main.infoDictionary!["SUPABASE_API_URL"] as! String)!,
-        supabaseKey: Bundle.main.infoDictionary!["SUPABASE_API_KEY"] as! String,
+        supabaseURL: URL(string: url!)!,
+        supabaseKey: key!,
         options: SupabaseClientOptions(
             db: .init(
                 encoder: encoder,
