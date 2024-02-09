@@ -288,15 +288,7 @@ let project = Project(
             name: AzkarTarget.azkarApp.rawValue,
             shared: true,
             buildAction: BuildAction(targets: ["Azkar"]),
-            runAction: RunAction.runAction(
-                executable: "Azkar",
-                arguments: Arguments(
-                    environment: [
-                        "SUPABASE_API_URL": ProcessInfo.processInfo.environment["SUPABASE_API_URL"]!,
-                        "SUPABASE_API_KEY": ProcessInfo.processInfo.environment["SUPABASE_API_KEY"]!,
-                    ]
-                )
-            )
+            runAction: RunAction.runAction(executable: "Azkar")
         ),
         Scheme(
             name: AzkarTarget.azkarAppUITests.rawValue,

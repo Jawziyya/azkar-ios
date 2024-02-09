@@ -37,15 +37,24 @@ jobs:
 
       - name: Checkout repository
         uses: actions/checkout@v1
+
+      - name: Set Info.plist Values
+        run: |
+          # Set SUPABASE_API_URL value in Info.plist
+          /usr/libexec/PlistBuddy -c "Set :SUPABASE_API_URL $SUPABASE_API_URL" ./Azkar/Info.plist
+          
+          # Set SUPABASE_API_KEY value in Info.plist
+          /usr/libexec/PlistBuddy -c "Set :SUPABASE_API_KEY $SUPABASE_API_KEY" ./Azkar/Info.plist
+        env:
+          SUPABASE_API_URL: ${{ secrets.SUPABASE_API_URL }}
+          SUPABASE_API_KEY: ${{ secrets.SUPABASE_API_KEY }}
+        working-directory: ${{ github.workspace }}
   
       - name: Generate Xcode project
         uses: tuist/tuist-action@0.13.0
         with:
           command: 'generate'
           arguments: ''
-        env:
-          SUPABASE_API_URL: '${{ secrets.SUPABASE_API_URL }}'
-          SUPABASE_API_KEY: '${{ secrets.SUPABASE_API_KEY }}'
 
       - name: Deploy iOS build to App Store
         if: github.ref == 'refs/heads/main'
