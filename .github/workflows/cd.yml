@@ -29,6 +29,9 @@ jobs:
       TEMP_KEYCHAIN_PASSWORD: '${{ secrets.TEMP_KEYCHAIN_PASSWORD }}'          
       MATCH_PASSWORD: '${{ secrets.MATCH_PASSWORD }}'
       PROVISIONING_PROFILE_SPECIFIER: '${{ secrets.PROVISIONING_PROFILE_SPECIFIER }}'
+      SUPABASE_API_URL: '${{ secrets.SUPABASE_API_URL }}'
+      SUPABASE_API_KEY: '${{ secrets.SUPABASE_API_KEY }}'
+
     
     steps:
       - uses: maxim-lobanov/setup-xcode@v1
