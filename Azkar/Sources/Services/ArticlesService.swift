@@ -55,6 +55,7 @@ final class ArticlesService {
             .from("articles")
             .select()
             .eq("language", value: language.id)
+            .eq("is_published", value: true)
             .in("id", value: spotlightArticles.map(\.article))
             .execute()
             .value
