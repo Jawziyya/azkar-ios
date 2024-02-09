@@ -4,6 +4,27 @@ import NukeUI
 import Fakery
 import RoughSwift
 
+struct PatternView: View {
+    var body: some View {
+        RoughView()
+            .fill([
+                .systemGreen,
+                .systemMint,
+                .systemBlue,
+                .systemCyan,
+            ].randomElement()!)
+            .fillStyle([
+                .crossHatch,
+                .dots,
+                .dashed,
+                .zigzagLine,
+            ].randomElement()!)
+            .rectangle()
+            .opacity(0.25)
+            .scaleEffect(x: 2, y: 2)
+    }
+}
+
 public struct ArticleCellView: View {
     
     let title: String
@@ -84,22 +105,7 @@ public struct ArticleCellView: View {
                 .accentColor(Color.primary)
             
         default:
-            RoughView()
-                .fill([
-                    .systemGreen,
-                    .systemMint,
-                    .systemBlue,
-                    .systemCyan,
-                ].randomElement()!)
-                .fillStyle([
-                    .crossHatch,
-                    .dots,
-                    .dashed,
-                    .zigzagLine,
-                ].randomElement()!)
-                .rectangle()
-                .opacity(0.25)
-                .scaleEffect(x: 2, y: 2)
+            PatternView()
             
         }
     }

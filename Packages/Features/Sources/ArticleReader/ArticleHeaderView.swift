@@ -82,7 +82,7 @@ struct ArticleHeaderView: View {
                         .aspectRatio(contentMode: .fill)
                         .accentColor(Color.primary)
                 } else {
-                    Color.black
+                    PatternView()
                 }
             }
             .frame(height: imageMaxHeight)
