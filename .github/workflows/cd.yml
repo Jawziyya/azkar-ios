@@ -55,9 +55,9 @@ jobs:
         working-directory: ${{ github.workspace }}
   
       - name: Generate Xcode project
-        uses: tuist/tuist-action@0.13.0
+        uses: jdx/mise-action@v2
         with:
-          command: 'generate'
+          command: 'mise x tuist generate'
           arguments: ''
 
       - name: Deploy iOS build to App Store
