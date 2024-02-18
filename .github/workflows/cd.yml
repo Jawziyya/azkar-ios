@@ -13,6 +13,7 @@ jobs:
     name: Deploying to Testflight
     runs-on: macos-13
 
+
     env:
       APPLE_ID: '${{ secrets.APPLE_ID }}'
       APP_ID: '${{ secrets.APP_ID }}'
@@ -39,7 +40,7 @@ jobs:
           xcode-version: 15.0.1
 
       - name: Checkout repository
-        uses: actions/checkout@v1
+        uses: actions/checkout@v3
 
       - name: Set Info.plist Values
         run: |
