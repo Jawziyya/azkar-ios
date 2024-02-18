@@ -37,12 +37,12 @@
       }
     },
     {
-      "identity" : "scalingheaderscrollview",
+      "identity" : "roughswift",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/exyte/ScalingHeaderScrollView",
+      "location" : "https://github.com/onmyway133/RoughSwift",
       "state" : {
-        "branch" : "master",
-        "revision" : "7e3395141e7bbc36714437060dd169e7be342e12"
+        "revision" : "9969243bffbefcfa8cfb7c32ba47b5f624746a13",
+        "version" : "2.0.0"
       }
     },
     {
@@ -70,15 +70,6 @@
       "state" : {
         "revision" : "64889f0c732f210a935a0ad7cda38f77f876262d",
         "version" : "509.1.1"
-      }
-    },
-    {
-      "identity" : "swiftui-introspect",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/siteline/swiftui-introspect",
-      "state" : {
-        "revision" : "18e965f867e37a558ad13c12d330dbe047099180",
-        "version" : "1.1.2"
       }
     },
     {
