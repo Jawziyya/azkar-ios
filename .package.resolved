@@ -173,6 +173,15 @@
         }
       },
       {
+        "package": "swiftui-introspect",
+        "repositoryURL": "https://github.com/siteline/swiftui-introspect",
+        "state": {
+          "branch": null,
+          "revision": "18e965f867e37a558ad13c12d330dbe047099180",
+          "version": "1.1.2"
+        }
+      },
+      {
         "package": "SwiftUIDrag",
         "repositoryURL": "https://github.com/demharusnam/SwiftUIDrag",
         "state": {

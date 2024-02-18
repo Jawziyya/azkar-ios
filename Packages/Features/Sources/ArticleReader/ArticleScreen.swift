@@ -1,5 +1,4 @@
 import SwiftUI
-import ScalingHeaderScrollView
 import NukeUI
 import Entities
 

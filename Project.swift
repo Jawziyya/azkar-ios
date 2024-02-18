@@ -80,6 +80,7 @@ let packages: [Package] = [
     .remote(url: "https://github.com/SvenTiigi/WhatsNewKit", requirement: .upToNextMajor(from: "2.0.0")),
     .remote(url: "https://github.com/rundfunk47/stinsen", requirement: .upToNextMajor(from: "2.0.0")),
     .remote(url: "https://github.com/supabase-community/supabase-swift", requirement: .upToNextMajor(from: "2.0.0")),
+    .remote(url: "https://github.com/siteline/swiftui-introspect", requirement: .upToNextMajor(from: "1.0.0")),
 ]
 
 let baseSettingsDictionary = SettingsDictionary()
@@ -163,6 +164,7 @@ enum AzkarTarget: String, CaseIterable {
                     .package(product: "IGStoryKit"),
                     .package(product: "Stinsen"),
                     .package(product: "Supabase"),
+                    .package(product: "SwiftUIIntrospect"),
                 ],
                 settings: Settings.settings(
                     base: baseSettingsDictionary
