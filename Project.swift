@@ -94,8 +94,7 @@ let settings = Settings.settings(
     base: baseSettingsDictionary
 )
 
-let deploymentTarget = DeploymentTarget.iOS(targetVersion: "15.0", devices: [.iphone, .ipad, .mac])
-let testsDeploymentTarget = DeploymentTarget.iOS(targetVersion: "15.0", devices: [.iphone, .ipad, .mac])
+let deploymentTarget = DeploymentTargets.iOS("15.0")
 
 // MARK: - Extensions
 extension SettingsDictionary {
@@ -129,12 +128,12 @@ enum AzkarTarget: String, CaseIterable {
         switch self {
 
         case .azkarApp:
-            return Target(
+            return Target.target(
                 name: rawValue,
-                platform: .iOS,
+                destinations: .iOS,
                 product: .app,
                 bundleId: bundleId,
-                deploymentTarget: deploymentTarget,
+                deploymentTargets: deploymentTarget,
                 infoPlist: .file(path: "\(rawValue)/Info.plist"),
                 sources: "Azkar/Sources/**",
                 resources: "Azkar/Resources/**",
@@ -191,12 +190,12 @@ enum AzkarTarget: String, CaseIterable {
             )
             
         case .azkarWidgets:
-            return Target(
+            return Target.target(
                 name: "AzkarWidgets",
-                platform: .iOS,
+                destinations: .iOS,
                 product: .appExtension,
                 bundleId: bundleId,
-                deploymentTarget: deploymentTarget,
+                deploymentTargets: deploymentTarget,
                 infoPlist: .file(path: "AzkarWidgets/Info.plist"),
                 sources: [
                     "AzkarWidgets/Sources/**",
@@ -240,13 +239,13 @@ enum AzkarTarget: String, CaseIterable {
             )
 
         case .azkarAppTests:
-            return Target(
+            return Target.target(
                 name: rawValue,
-                platform: Platform.iOS,
+                destinations: .iOS,
                 product: Product.unitTests,
                 productName: rawValue,
                 bundleId: bundleId,
-                deploymentTarget: deploymentTarget,
+                deploymentTargets: deploymentTarget,
                 infoPlist: "AzkarTests/Info.plist",
                 sources: [
                     "AzkarTests/Sources/**"
@@ -262,13 +261,13 @@ enum AzkarTarget: String, CaseIterable {
                 launchArguments: []
             )
         case .azkarAppUITests:
-            return Target(
+            return Target.target(
                 name: rawValue,
-                platform: Platform.iOS,
+                destinations: .iOS,
                 product: Product.uiTests,
                 productName: rawValue,
                 bundleId: bundleId,
-                deploymentTarget: deploymentTarget,
+                deploymentTargets: deploymentTarget,
                 infoPlist: "AzkarUITests/Info.plist",
                 sources: "AzkarUITests/Sources/**",
                 resources: [
@@ -310,24 +309,24 @@ let project = Project(
     settings: settings,
     targets: AzkarTarget.allCases.map(\.target),
     schemes: [
-        Scheme(
+        Scheme.scheme(
             name: AzkarTarget.azkarApp.rawValue,
             shared: true,
-            buildAction: BuildAction(targets: ["Azkar"]),
+            buildAction: .buildAction(targets: ["Azkar"]),
             runAction: RunAction.runAction(
                 executable: "Azkar",
-                arguments: Arguments(
-                    environment: [
-                        "SUPABASE_API_URL": env["SUPABASE_API_URL"] ?? "",
-                        "SUPABASE_API_KEY": env["SUPABASE_API_KEY"] ?? "",
+                arguments: Arguments.arguments(
+                    environmentVariables: [
+                        "SUPABASE_API_URL": .init(stringLiteral: env["SUPABASE_API_URL"] ?? ""),
+                        "SUPABASE_API_KEY": .init(stringLiteral: env["SUPABASE_API_KEY"] ?? ""),
                     ]
                 )
             )
         ),
-        Scheme(
+        Scheme.scheme(
             name: AzkarTarget.azkarAppUITests.rawValue,
             shared: true,
-            buildAction: BuildAction(targets: ["AzkarUITests"]),
+            buildAction: .buildAction(targets: ["AzkarUITests"]),
             testAction: TestAction.targets(["AzkarUITests"]),
             runAction: RunAction.runAction(executable: "Azkar")
         )
