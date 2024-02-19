@@ -79,10 +79,6 @@ final class RootCoordinator: NSObject, RouteTrigger, NavigationCoordinatable {
         
         super.init()
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-            self.trigger(.whatsNew)
-        }
-        
         preferences.$colorTheme
             .receive(on: RunLoop.main)
             .prepend(preferences.colorTheme)
