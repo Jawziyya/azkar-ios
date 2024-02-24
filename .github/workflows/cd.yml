@@ -13,7 +13,6 @@ jobs:
     name: Deploying to Testflight
     runs-on: macos-14
 
-
     env:
       APPLE_ID: '${{ secrets.APPLE_ID }}'
       APP_ID: '${{ secrets.APP_ID }}'
@@ -33,7 +32,6 @@ jobs:
       SUPABASE_API_URL: '${{ secrets.SUPABASE_API_URL }}'
       SUPABASE_API_KEY: '${{ secrets.SUPABASE_API_KEY }}'
 
-    
     steps:
       - uses: jdx/mise-action@v2
       - uses: maxim-lobanov/setup-xcode@v1
@@ -42,6 +40,10 @@ jobs:
 
       - name: Checkout repository
         uses: actions/checkout@v3
+
+      - name: Set Xcode IDE Preferences
+        run: |
+          sudo defaults write /Library/Preferences/com.apple.dt.Xcode IDESkipMacroFingerprintValidation -bool YES
 
       - name: Set Info.plist Values
         run: |
