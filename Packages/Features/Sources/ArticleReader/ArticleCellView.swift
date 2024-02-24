@@ -49,7 +49,7 @@ public struct ArticleCellView: View {
     
     public var body: some View {
         image
-            .frame(maxHeight: 200)
+            .frame(minWidth: 0, maxHeight: 200)
             .overlay(alignment: .leading) {
                 VStack(alignment: .leading) {
                     Text(category)

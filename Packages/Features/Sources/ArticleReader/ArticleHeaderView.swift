@@ -10,9 +10,7 @@ struct ArticleHeaderView: View {
     @State var scrollProgress: CGFloat
     
     var body: some View {
-        VStack(spacing: 0) {
-            imageAndTitle
-        }
+        imageAndTitle
     }
     
     @MainActor @ViewBuilder
@@ -86,6 +84,7 @@ struct ArticleHeaderView: View {
                 }
             }
             .frame(height: imageMaxHeight)
+            .frame(minWidth: 0)
             
         case .resource(let name):
             Image(name)
@@ -93,6 +92,7 @@ struct ArticleHeaderView: View {
                 .aspectRatio(contentMode: .fill)
                 .accentColor(Color.primary)
                 .frame(height: imageMaxHeight)
+                .frame(minWidth: 0)
             
         default:
             EmptyView()

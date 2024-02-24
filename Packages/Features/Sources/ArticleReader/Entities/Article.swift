@@ -16,6 +16,11 @@ public struct Article: Identifiable, Hashable {
     public struct CoverImage: Hashable {
         let imageType: ImageType
         let imageFormat: ArticleDTO.CoverImageFormat
+        
+        public init(imageType: ImageType, imageFormat: ArticleDTO.CoverImageFormat) {
+            self.imageType = imageType
+            self.imageFormat = imageFormat
+        }
     }
     
     public enum ImageType: Hashable {
