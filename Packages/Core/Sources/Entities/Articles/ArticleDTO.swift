@@ -19,6 +19,7 @@ public struct ArticleDTO: Identifiable, Decodable, Hashable {
     public let text: String
     public let textFormat: TextFormat
     public let coverImageFormat: CoverImageFormat?
+    public let coverImageAltText: String?
     public let imageLink: String?
     public let imageResourceName: String?
     public let views: Int?

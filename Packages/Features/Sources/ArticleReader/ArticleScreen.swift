@@ -39,6 +39,7 @@ public struct ArticleScreen: View {
             title: viewModel.title,
             tags: viewModel.tags ?? [],
             cover: viewModel.coverImage,
+            coverAltText: viewModel.coverImageAltText,
             imageMaxHeight: maxHeight,
             scrollProgress: 0
         )

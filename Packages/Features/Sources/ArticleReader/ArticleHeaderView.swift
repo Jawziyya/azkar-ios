@@ -1,13 +1,17 @@
 import SwiftUI
 import NukeUI
+import Popovers
+import Extensions
 
 struct ArticleHeaderView: View {
         
     let title: String
-    let tags: [String]?
-    let cover: Article.CoverImage?
+    var tags: [String]?
+    var cover: Article.CoverImage?
+    var coverAltText: String?
     let imageMaxHeight: CGFloat
     @State var scrollProgress: CGFloat
+    @State var showAltText = false
     
     var body: some View {
         imageAndTitle
@@ -65,6 +69,10 @@ struct ArticleHeaderView: View {
         image
             .clipped()
             .clipShape(RoundedRectangle(cornerRadius: 15))
+            .overlay(alignment: .topTrailing) {
+                altTextView
+            }
+            .applyAccessibilityLabel(coverAltText)
             .padding()
     }
     
@@ -121,6 +129,10 @@ struct ArticleHeaderView: View {
                     )
                 )
             }
+            .overlay(alignment: .topTrailing) {
+                altTextView
+            }
+            .applyAccessibilityLabel(coverAltText)
             .clipped()
     }
     
@@ -139,9 +151,47 @@ struct ArticleHeaderView: View {
         }
     }
     
+    @ViewBuilder
+    var altTextView: some View {
+        if let coverAltText {
+            Templates.Menu(
+                configuration: { config in
+                    config.popoverAnchor = .topRight
+                }
+            ) {
+                Text(coverAltText)
+                    .font(Font.caption)
+                    .padding()
+                    .cornerRadius(10)
+            } label: { das in
+                Text("ALT")
+                    .padding(6)
+                    .foregroundStyle(Color.white)
+                    .background(Color.black)
+                    .font(Font.caption.weight(.bold))
+                    .cornerRadius(6)
+                    .padding(8)
+            }
+        }
+    }
+    
 }
 
-#Preview("Article Header") {   
+#Preview("Background") {
+    ArticleHeaderView(
+        title: "Test",
+        tags: ["#benefit", "#general", "#info"],
+        cover: .init(
+            imageType: .link(demoImageURL),
+            imageFormat: .titleBackground
+        ),
+        coverAltText: "MidJourney Image",
+        imageMaxHeight: 300,
+        scrollProgress: 1
+    )
+}
+
+#Preview("Standalone Top") {
     ArticleHeaderView(
         title: "Test",
         tags: ["#benefit", "#general", "#info"],
@@ -149,6 +199,21 @@ struct ArticleHeaderView: View {
             imageType: .link(demoImageURL),
             imageFormat: .standaloneTop
         ),
+        coverAltText: "MidJourney Image",
+        imageMaxHeight: 300,
+        scrollProgress: 1
+    )
+}
+
+#Preview("Standalone Under title") {
+    ArticleHeaderView(
+        title: "Test",
+        tags: ["#benefit", "#general", "#info"],
+        cover: .init(
+            imageType: .link(demoImageURL),
+            imageFormat: .standaloneUnderTitle
+        ),
+        coverAltText: "man in black wear standing in the middle of an ice cold lake, in the style of stephan martinière, marina abramović, pictorial space, 32k uhd, alan bean, depictions of inclement weather, humanity's struggle",
         imageMaxHeight: 300,
         scrollProgress: 1
     )

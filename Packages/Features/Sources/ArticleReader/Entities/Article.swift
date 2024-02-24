@@ -11,6 +11,7 @@ public struct Article: Identifiable, Hashable {
     public let text: String
     public let textFormat: ArticleDTO.TextFormat
     public let coverImage: CoverImage?
+    public let coverImageAltText: String?
     public let views: Int
     
     public struct CoverImage: Hashable {
@@ -45,6 +46,7 @@ extension Article {
         textFormat = article.textFormat
         self.views = viewsCount ?? 0
         self.category = category
+        coverImageAltText = article.coverImageAltText
         
         if let coverImageFormat = article.coverImageFormat {
             let imageType: ImageType
@@ -75,7 +77,8 @@ extension Article {
         category: ArticleCategory = .placeholder(),
         text: String? = nil,
         textFormat: ArticleDTO.TextFormat = .plain,
-        coverImage: CoverImage? = nil
+        coverImage: CoverImage? = nil,
+        coverImageAltText: String? = nil
     ) -> Article {
         let faker = Faker()
         return Article(
@@ -91,6 +94,7 @@ extension Article {
                 .joined(separator: "\n\n"),
             textFormat: textFormat,
             coverImage: coverImage,
+            coverImageAltText: coverImageAltText ?? faker.lorem.paragraphs(),
             views: Int.random(in: 0...1000)
         )
     }
