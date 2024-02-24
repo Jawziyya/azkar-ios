@@ -58,7 +58,7 @@ jobs:
       - name: Generate Xcode project
         run: |
           mise install tuist
-          mise x -- tuist generate
+          mise x -- tuist generate -n
 
       - name: Deploy iOS build to App Store
         if: github.ref == 'refs/heads/main'
