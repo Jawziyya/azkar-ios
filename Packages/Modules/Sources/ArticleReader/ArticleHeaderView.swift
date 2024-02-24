@@ -9,6 +9,7 @@ struct ArticleHeaderView: View {
     var tags: [String]?
     var cover: Article.CoverImage?
     var coverAltText: String?
+    var views: String?
     let imageMaxHeight: CGFloat
     @State var scrollProgress: CGFloat
     @State var showAltText = false
@@ -49,7 +50,7 @@ struct ArticleHeaderView: View {
         lineLimit: Int = 3,
         tagsForegroundColor: Color = Color.secondary
     ) -> some View {
-        VStack(spacing: 6) {
+        VStack(alignment: .leading, spacing: 6) {
             Text(title)
                 .font(Font.system(size: fontSize, weight: .black, design: .serif))
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -58,8 +59,15 @@ struct ArticleHeaderView: View {
                 .lineLimit(lineLimit)
                 .minimumScaleFactor(0.25)
             
-            tagsView
+            ScrollView(.horizontal) {
+                HStack {
+                    viewsView
+                    Divider()
+                        .frame(height: 10)
+                    tagsView
+                }
                 .foregroundStyle(tagsForegroundColor)
+            }
         }
         .padding()
     }
@@ -139,15 +147,28 @@ struct ArticleHeaderView: View {
     @ViewBuilder
     var tagsView: some View {
         if let tags = tags {
-            ScrollView(.horizontal) {
-                HStack {
-                    ForEach(tags, id: \.self) { tag in
-                        Text(tag)
-                            .font(Font.callout)
-                            .clipShape(RoundedRectangle(cornerRadius: 10))
-                    }
+            HStack {
+                ForEach(tags, id: \.self) { tag in
+                    Text(tag)
+                        .font(Font.callout)
+                        .clipShape(RoundedRectangle(cornerRadius: 10))
                 }
             }
+        }
+    }
+    
+    @ViewBuilder
+    var viewsView: some View {
+        if let views {
+            Label(
+                title: { Text(views) },
+                icon: { 
+                    Image(systemName: "eye")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 15, height: 15)
+                }
+            )
         }
     }
     
@@ -179,13 +200,14 @@ struct ArticleHeaderView: View {
 
 #Preview("Background") {
     ArticleHeaderView(
-        title: "Test",
+        title: "Test title",
         tags: ["#benefit", "#general", "#info"],
         cover: .init(
             imageType: .link(demoImageURL),
             imageFormat: .titleBackground
         ),
         coverAltText: "MidJourney Image",
+        views: "1231",
         imageMaxHeight: 300,
         scrollProgress: 1
     )
@@ -200,6 +222,7 @@ struct ArticleHeaderView: View {
             imageFormat: .standaloneTop
         ),
         coverAltText: "MidJourney Image",
+        views: "1231",
         imageMaxHeight: 300,
         scrollProgress: 1
     )
@@ -214,6 +237,7 @@ struct ArticleHeaderView: View {
             imageFormat: .standaloneUnderTitle
         ),
         coverAltText: "man in black wear standing in the middle of an ice cold lake, in the style of stephan martinière, marina abramović, pictorial space, 32k uhd, alan bean, depictions of inclement weather, humanity's struggle",
+        views: "1231",
         imageMaxHeight: 300,
         scrollProgress: 1
     )

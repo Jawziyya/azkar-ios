@@ -55,28 +55,7 @@ private func getDefaultSettings(
 
 let packages: [Package] = [
     // MARK: Internal depedencies.
-    .local(path: AzkarPackage.audioPlayer.path),
-    .local(path: AzkarPackage.core.path),
-    .local(path: AzkarPackage.features.path),
-
-    // MARK: Services.
-    .remote(url: "https://github.com/RevenueCat/purchases-ios.git", requirement: .upToNextMajor(from: "4.19.0")),
-
-    // MARK: Network.
-    .remote(url: "https://github.com/Alamofire/Alamofire", requirement: .upToNextMajor(from: "5.0.0")),
-
-    // MARK: Utilities.
-    .remote(url: "https://github.com/weichsel/ZIPFoundation", requirement: .upToNextMajor(from: "0.9.0")),
-    .remote(url: "https://github.com/bizz84/SwiftyStoreKit", requirement: .upToNextMajor(from: "0.16.3")),
-    .remote(url: "https://github.com/SwapnanilDhol/IGStoryKit", requirement: .upToNextMajor(from: "1.1.1")),
-
-    // MARK: UI.
-    .remote(url: "https://github.com/radianttap/Coordinator", requirement: .upToNextMajor(from: "6.4.2")),
-    .remote(url: "https://github.com/airbnb/lottie-ios", requirement: .upToNextMajor(from: "3.0.0")),
-    .remote(url: "https://github.com/SwiftUIX/SwiftUIX", requirement: .upToNextMajor(from: "0.1.3")),
-    .remote(url: "https://github.com/SwiftUI-Plus/ActivityView", requirement: .upToNextMajor(from: "1.0.0")),
-    .remote(url: "https://github.com/demharusnam/SwiftUIDrag", requirement: .revision("0686318a")),
-    .remote(url: "https://github.com/SvenTiigi/WhatsNewKit", requirement: .upToNextMajor(from: "2.0.0")),
+    .local(path: "Packages/Modules"),
 ]
 
 let baseSettingsDictionary = SettingsDictionary()
@@ -281,18 +260,6 @@ enum AzkarTarget: String, CaseIterable {
                 launchArguments: []
             )
         }
-    }
-}
-
-enum AzkarPackage: String {
-    case core = "Core"
-    case audioPlayer = "AudioPlayer"
-    case features = "Features"
-
-    var name: String { rawValue }
-
-    var path: Path {
-        return "Packages/\(name)"
     }
 }
 

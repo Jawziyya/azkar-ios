@@ -13,8 +13,8 @@ private let supabaseClient: SupabaseClient = {
     let kApiKey = "SUPABASE_API_KEY"
     let processEnv = ProcessInfo.processInfo.environment
     let infoPlist = Bundle.main.infoDictionary ?? [:]
-    let url = (infoPlist[kURL] as? String) ?? processEnv[kURL]
-    let key = (infoPlist[kApiKey] as? String) ?? processEnv[kApiKey]
+    let url = (infoPlist[kURL] as? String)?.textOrNil ?? processEnv[kURL]
+    let key = (infoPlist[kApiKey] as? String)?.textOrNil ?? processEnv[kApiKey]
     
     let client = SupabaseClient(
         supabaseURL: URL(string: url!)!,
@@ -50,6 +50,15 @@ final class ArticlesService {
             let article: Article.ID
         }
         
+        let analytics: [AnalyticsRecord] = try await supabaseClient
+            .database
+            .from("analytics")
+            .select()
+            .eq("action_type", value: AnalyticsRecord.ActionType.view.rawValue)
+            .execute()
+            .value
+        let analyticsDict = Dictionary(grouping: analytics, by: \.objectId)
+        
         let spotlightArticles: [SpotlightArticle] = try await supabaseClient
             .database
             .from("articles_spotlight")
@@ -83,7 +92,7 @@ final class ArticlesService {
             return Article(
                 article,
                 category: category,
-                viewsCount: nil
+                viewsCount: analyticsDict[article.id]?.count
             )
         }
     }
