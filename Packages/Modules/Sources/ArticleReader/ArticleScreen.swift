@@ -5,9 +5,25 @@ import Entities
 public struct ArticleScreen: View {
     
     let viewModel: ArticleViewModel
+    var shareOptions: ShareOptions?
+    let onShareButtonTap: () -> Void
     
-    public init(viewModel: ArticleViewModel) {
+    public struct ShareOptions {
+        let maxWidth: CGFloat
+        
+        public init(maxWidth: CGFloat) {
+            self.maxWidth = maxWidth
+        }
+    }
+    
+    public init(
+        viewModel: ArticleViewModel,
+        shareOptions: ShareOptions? = nil,
+        onShareButtonTap: @escaping () -> Void = {}
+    ) {
         self.viewModel = viewModel
+        self.shareOptions = shareOptions
+        self.onShareButtonTap = onShareButtonTap
     }
     
     private let minHeight = 175.0
@@ -20,18 +36,64 @@ public struct ArticleScreen: View {
     }
     
     public var body: some View {
-        content
-            .navigationBarTitleDisplayMode(.inline)
+        if let shareOptions {
+            VStack(spacing: 20) {
+                content
+                sharedWithAzkarView
+            }
+            .frame(width: shareOptions.maxWidth)
+            .frame(maxHeight: .infinity)
+        } else {
+            content
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem {
+                        shareButton
+                    }
+                }
+        }
     }
     
     @MainActor @ViewBuilder
     public var content: some View {
         ScrollView {
             VStack(spacing: 16) {
-                headerView
-                scrollableContent
+                if shareOptions == nil {
+                    headerView
+                    scrollableContent
+                } else {
+                    Text(viewModel.title)
+                        .font(Font.system(size: 30, weight: .black, design: .serif))
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .multilineTextAlignment(.leading)
+                        .dynamicTypeSize(.accessibility5)
+                        .padding(.horizontal)
+                    
+                    scrollableContent
+                }
             }
         }
+    }
+    
+    var sharedWithAzkarView: some View {
+        VStack {
+            Image(uiImage: UIImage(named: "ink")!)
+                .resizable()
+                .frame(width: 30, height: 30)
+                .cornerRadius(6)
+            Text("share.shared-with-azkar")
+                .foregroundColor(Color.secondary)
+                .font(Font.system(size: 12, weight: .regular, design: .rounded).smallCaps())
+        }
+        .frame(maxWidth: .infinity, alignment: .center)
+        .frame(height: 45)
+        .opacity(0.5)
+    }
+    
+    var shareButton: some View {
+        Button(action: onShareButtonTap, label: {
+            Image(systemName: "square.and.arrow.up")
+        })
     }
     
     var headerView: some View {

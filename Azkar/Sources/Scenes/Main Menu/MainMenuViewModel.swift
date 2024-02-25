@@ -168,17 +168,19 @@ final class MainMenuViewModel: ObservableObject {
             .subscribe(searchQueryPublisher)
             .store(in: &cancellables)
         
-        loadArticles()
+        loadArticles(language: preferences.contentLanguage.fallbackLanguage)
     }
     
-    private func loadArticles() {
-        Task { @MainActor in
+    private func loadArticles(language: Language) {
+        Task {
             do {
                 let articles = try await ArticlesService.shared.getArticles(
-                    language: preferences.contentLanguage.fallbackLanguage,
+                    language: language,
                     limit: 1
                 )
-                self.article = articles.first
+                await MainActor.run {                
+                    self.article = articles.first
+                }
             } catch {
                 print(error.localizedDescription)
             }

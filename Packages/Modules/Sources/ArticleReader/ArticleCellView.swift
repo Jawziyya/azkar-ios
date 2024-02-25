@@ -84,29 +84,10 @@ public struct ArticleCellView: View {
     
     @MainActor @ViewBuilder
     var image: some View {
-        switch imageType {
-            
-        case .link(let link):
-            LazyImage(url: link) { state in
-                if let image = state.image {
-                    image
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .accentColor(Color.primary)
-                } else {
-                    Color.black
-                }
-            }
-            
-        case .resource(let name):
-            Image(name)
-                .resizable()
-                .aspectRatio(contentMode: .fill)
-                .accentColor(Color.primary)
-            
-        default:
+        if let imageType {
+            imageType.getImageView()
+        } else {
             PatternView()
-            
         }
     }
     

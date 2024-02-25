@@ -3,6 +3,35 @@ import NukeUI
 import Popovers
 import Extensions
 
+extension Article.ImageType {
+    @ViewBuilder @MainActor
+    func getImageView(_ maxHeight: CGFloat = .infinity) -> some View {
+        switch self {
+            
+        case .link(let link):
+            LazyImage(url: link) { state in
+                if let image = state.image {
+                    image
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .accentColor(Color.primary)
+                } else {
+                    PatternView()
+                }
+            }
+            .frame(minWidth: 0, maxHeight: maxHeight)
+            
+        case .resource(let name):
+            Image(name)
+                .resizable()
+                .aspectRatio(contentMode: .fill)
+                .accentColor(Color.primary)
+                .frame(minWidth: 0, maxHeight: maxHeight)
+            
+        }
+    }
+}
+
 struct ArticleHeaderView: View {
         
     let title: String
@@ -86,34 +115,7 @@ struct ArticleHeaderView: View {
     
     @MainActor @ViewBuilder
     var image: some View {
-        switch cover?.imageType {
-            
-        case .link(let link):
-            LazyImage(url: link) { state in
-                if let image = state.image {
-                    image
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .accentColor(Color.primary)
-                } else {
-                    PatternView()
-                }
-            }
-            .frame(height: imageMaxHeight)
-            .frame(minWidth: 0)
-            
-        case .resource(let name):
-            Image(name)
-                .resizable()
-                .aspectRatio(contentMode: .fill)
-                .accentColor(Color.primary)
-                .frame(height: imageMaxHeight)
-                .frame(minWidth: 0)
-            
-        default:
-            EmptyView()
-            
-        }
+        cover?.imageType.getImageView(imageMaxHeight)
     }
     
     @MainActor

@@ -9,6 +9,7 @@ import IGStoryKit
 import Library
 import ArticleReader
 import Entities
+import PDFKit
 
 enum RootSection: Equatable, RouteKind {
     case category(ZikrCategory)
@@ -258,7 +259,69 @@ extension RootCoordinator {
     }
     
     func makeArticleView(_ article: Article) -> some View {
-        ArticleScreen(viewModel: ArticleViewModel(article: article))
+        ArticleScreen(
+            viewModel: ArticleViewModel(article: article),
+            onShareButtonTap: {
+                assert(Thread.isMainThread)
+                guard
+                    let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                    let window = scene.windows.first,
+                    let rootViewController = window.rootViewController?.topmostPresentedViewController
+                else {
+                    return
+                }
+                
+                let view = ArticleScreen(
+                    viewModel: ArticleViewModel(article: article),
+                    shareOptions: .init(maxWidth: UIScreen.main.bounds.width)
+                )
+                .padding(30)
+                .frame(width: UIScreen.main.bounds.width)
+                .frame(maxHeight: .infinity)
+                
+                let viewController = UIHostingController(rootView: view)
+                
+                let image = viewController.snapshot()
+                
+                let pdfDocument = PDFDocument()
+                guard let pdfPage = PDFPage(image: image) else {
+                    return
+                }
+                pdfDocument.insert(pdfPage, at: 0)
+                guard let data = pdfDocument.dataRepresentation() else {
+                    return
+                }
+                
+                let fileName = "\(article.title).pdf"
+                let tempFilePath = FileManager.default.temporaryDirectory.appendingPathComponent(fileName)
+                
+                do {
+                    try? FileManager.default.removeItem(at: tempFilePath)
+                    try data.write(to: tempFilePath)
+                } catch {
+                    return
+                }
+                
+                let activityController = UIActivityViewController(
+                    activityItems: [tempFilePath],
+                    applicationActivities: [ZikrFeedbackActivity(prepareAction: { [unowned self] in
+                        self.presentMailComposer(from: viewController)
+                    })]
+                )
+                activityController.excludedActivityTypes = [
+                    .init(rawValue: "com.apple.reminders.sharingextension")
+                ]
+                activityController.completionWithItemsHandler = { (activityType, completed, arguments, error) in
+                    viewController.dismiss()
+                    if completed {
+                        Task {
+                            await ArticlesService.shared.sendAnalyticsEvent(.share, articleId: article.id)
+                        }
+                    }
+                }
+                rootViewController.present(activityController, animated: true)
+            }
+        )
     }
     
     func makeZikrPagesViewModel(_ category: ZikrCategory) -> ZikrPagesViewModel {
