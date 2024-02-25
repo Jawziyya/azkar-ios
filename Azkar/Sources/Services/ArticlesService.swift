@@ -50,15 +50,6 @@ final class ArticlesService {
             let article: Article.ID
         }
         
-        let analytics: [AnalyticsRecord] = try await supabaseClient
-            .database
-            .from("analytics")
-            .select()
-            .eq("action_type", value: AnalyticsRecord.ActionType.view.rawValue)
-            .execute()
-            .value
-        let analyticsDict = Dictionary(grouping: analytics, by: \.objectId)
-        
         let spotlightArticles: [SpotlightArticle] = try await supabaseClient
             .database
             .from("articles_spotlight")
@@ -67,7 +58,7 @@ final class ArticlesService {
             .execute()
             .value
         
-        let articles: [ArticleDTO] = try await supabaseClient
+        let articleObjects: [ArticleDTO] = try await supabaseClient
             .database
             .from("articles")
             .select()
@@ -84,17 +75,30 @@ final class ArticlesService {
             .execute()
             .value
         
-        return articles.compactMap { article -> Article? in
-            guard let category = categories.first(where: { $0.id == article.category }) else {
-                return nil
+        var articles: [Article] = []
+        for articleObject in articleObjects {
+            guard let category = categories.first(where: { $0.id == articleObject.category }) else {
+                continue
             }
+            try await Task.sleep(nanoseconds: 1_000_000_000)
             
-            return Article(
-                article,
+            let views = try await supabaseClient
+                .database
+                .from("analytics")
+                .select("*", head: true, count: .estimated)
+                .eq("action_type", value: AnalyticsRecord.ActionType.view.rawValue)
+                .eq("object_id", value: articleObject.id)
+                .execute()
+                .count
+            
+            let article = Article(
+                articleObject,
                 category: category,
-                viewsCount: analyticsDict[article.id]?.count
+                viewsCount: views
             )
+            articles.append(article)
         }
+        return articles
     }
     
     func sendAnalyticsEvent(_ type: AnalyticsActionType, articleId: Article.ID) async {
