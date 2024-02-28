@@ -85,7 +85,7 @@ final class ArticlesService {
             let views = try await supabaseClient
                 .database
                 .from("analytics")
-                .select("*", head: true, count: .estimated)
+                .select("*", head: true, count: .exact)
                 .eq("action_type", value: AnalyticsRecord.ActionType.view.rawValue)
                 .eq("object_id", value: articleObject.id)
                 .execute()
