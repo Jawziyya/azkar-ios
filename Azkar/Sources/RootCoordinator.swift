@@ -278,6 +278,8 @@ extension RootCoordinator {
                 .padding(30)
                 .frame(width: UIScreen.main.bounds.width)
                 .frame(maxHeight: .infinity)
+                .environment(\.colorScheme, .light)
+                .background(Color.white)
                 
                 let viewController = UIHostingController(rootView: view)
                 
