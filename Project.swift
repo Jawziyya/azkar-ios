@@ -1,4 +1,5 @@
 import ProjectDescription
+import Foundation
 
 // MARK: - Constants
 let kDebugSigningIdentity = "iPhone Developer"
@@ -11,6 +12,32 @@ let companyName = "Al Jawziyya"
 let teamId = "486STKKP6Y"
 let projectName = "Azkar"
 let baseDomain = "io.jawziyya"
+
+var env: [String: String] {
+    let filePath = "./.env"
+    var dict = [String: String]()
+
+    // Ensure the file exists
+    guard let contents = try? String(contentsOfFile: filePath) else {
+        print("File at \(filePath) not found")
+        return dict
+    }
+
+    // Split the file contents into lines
+    let lines = contents.split(separator: "\n")
+    for line in lines {
+        // Split each line into key and value
+        let parts = line.split(separator: "=", maxSplits: 1, omittingEmptySubsequences: true)
+        if parts.count == 2 {
+            let key = String(parts[0]).trimmingCharacters(in: .whitespacesAndNewlines)
+            let value = String(parts[1]).trimmingCharacters(in: .whitespacesAndNewlines)
+            dict[key] = value
+        }
+    }
+
+    return dict
+}
+
 
 private func getDefaultSettings(
     bundleId: String,
@@ -28,31 +55,7 @@ private func getDefaultSettings(
 
 let packages: [Package] = [
     // MARK: Internal depedencies.
-    .local(path: AzkarPackage.audioPlayer.path),
-    .local(path: AzkarPackage.core.path),
-
-    // MARK: Services.
-    .remote(url: "https://github.com/RevenueCat/purchases-ios.git", requirement: .upToNextMajor(from: "4.19.0")),
-
-    // MARK: Network.
-    .remote(url: "https://github.com/Alamofire/Alamofire", requirement: .upToNextMajor(from: "5.0.0")),
-
-    // MARK: Utilities.
-    .remote(url: "https://github.com/weichsel/ZIPFoundation", requirement: .upToNextMajor(from: "0.9.0")),
-    .remote(url: "https://github.com/bizz84/SwiftyStoreKit", requirement: .upToNextMajor(from: "0.16.3")),
-    .remote(url: "https://github.com/SwapnanilDhol/IGStoryKit", requirement: .upToNextMajor(from: "1.1.1")),
-
-    // MARK: UI.
-    .remote(url: "https://github.com/radianttap/Coordinator", requirement: .upToNextMajor(from: "6.4.2")),
-    .remote(url: "https://github.com/airbnb/lottie-ios", requirement: .upToNextMajor(from: "3.0.0")),
-    .remote(url: "https://github.com/kean/NukeUI", requirement: .upToNextMajor(from: "0.7.0")),
-    .remote(url: "https://github.com/SwiftUIX/SwiftUIX", requirement: .upToNextMajor(from: "0.1.3")),
-    .remote(url: "https://github.com/siteline/SwiftUI-Introspect", requirement: .upToNextMajor(from: "0.1.3")),
-    .remote(url: "https://github.com/SwiftUI-Plus/ActivityView", requirement: .upToNextMajor(from: "1.0.0")),
-    .remote(url: "https://github.com/demharusnam/SwiftUIDrag", requirement: .revision("0686318a")),
-    .remote(url: "https://github.com/aheze/Popovers", requirement: .upToNextMajor(from: "1.3.2")),
-    .remote(url: "https://github.com/SvenTiigi/WhatsNewKit", requirement: .upToNextMajor(from: "2.0.0")),
-    .remote(url: "https://github.com/rundfunk47/stinsen", requirement: .upToNextMajor(from: "2.0.0")),
+    .local(path: "Packages/Modules"),
 ]
 
 let baseSettingsDictionary = SettingsDictionary()
@@ -67,8 +70,7 @@ let settings = Settings.settings(
     base: baseSettingsDictionary
 )
 
-let deploymentTarget = DeploymentTarget.iOS(targetVersion: "15.0", devices: [.iphone, .ipad, .mac])
-let testsDeploymentTarget = DeploymentTarget.iOS(targetVersion: "15.0", devices: [.iphone, .ipad, .mac])
+let deploymentTarget = DeploymentTargets.iOS("15.0")
 
 // MARK: - Extensions
 extension SettingsDictionary {
@@ -102,12 +104,12 @@ enum AzkarTarget: String, CaseIterable {
         switch self {
 
         case .azkarApp:
-            return Target(
+            return Target.target(
                 name: rawValue,
-                platform: .iOS,
+                destinations: .iOS,
                 product: .app,
                 bundleId: bundleId,
-                deploymentTarget: deploymentTarget,
+                deploymentTargets: deploymentTarget,
                 infoPlist: .file(path: "\(rawValue)/Info.plist"),
                 sources: "Azkar/Sources/**",
                 resources: "Azkar/Resources/**",
@@ -120,11 +122,11 @@ enum AzkarTarget: String, CaseIterable {
                     .package(product: "Entities"),
                     .package(product: "Extensions"),
                     .package(product: "Library"),
+                    .package(product: "ArticleReader"),
                     .package(product: "AudioPlayer"),
                     .package(product: "SwiftyStoreKit"),
                     .package(product: "Coordinator"),
                     .package(product: "Lottie"),
-                    .package(product: "Introspect"),
                     .package(product: "Alamofire"),
                     .package(product: "ZIPFoundation"),
                     .package(product: "NukeUI"),
@@ -136,6 +138,8 @@ enum AzkarTarget: String, CaseIterable {
                     .package(product: "WhatsNewKit"),
                     .package(product: "IGStoryKit"),
                     .package(product: "Stinsen"),
+                    .package(product: "Supabase"),
+                    .package(product: "SwiftUIIntrospect"),
                 ],
                 settings: Settings.settings(
                     base: baseSettingsDictionary
@@ -163,12 +167,12 @@ enum AzkarTarget: String, CaseIterable {
             )
             
         case .azkarWidgets:
-            return Target(
+            return Target.target(
                 name: "AzkarWidgets",
-                platform: .iOS,
+                destinations: .iOS,
                 product: .appExtension,
                 bundleId: bundleId,
-                deploymentTarget: deploymentTarget,
+                deploymentTargets: deploymentTarget,
                 infoPlist: .file(path: "AzkarWidgets/Info.plist"),
                 sources: [
                     "AzkarWidgets/Sources/**",
@@ -212,13 +216,13 @@ enum AzkarTarget: String, CaseIterable {
             )
 
         case .azkarAppTests:
-            return Target(
+            return Target.target(
                 name: rawValue,
-                platform: Platform.iOS,
+                destinations: .iOS,
                 product: Product.unitTests,
                 productName: rawValue,
                 bundleId: bundleId,
-                deploymentTarget: deploymentTarget,
+                deploymentTargets: deploymentTarget,
                 infoPlist: "AzkarTests/Info.plist",
                 sources: [
                     "AzkarTests/Sources/**"
@@ -234,13 +238,13 @@ enum AzkarTarget: String, CaseIterable {
                 launchArguments: []
             )
         case .azkarAppUITests:
-            return Target(
+            return Target.target(
                 name: rawValue,
-                platform: Platform.iOS,
+                destinations: .iOS,
                 product: Product.uiTests,
                 productName: rawValue,
                 bundleId: bundleId,
-                deploymentTarget: deploymentTarget,
+                deploymentTargets: deploymentTarget,
                 infoPlist: "AzkarUITests/Info.plist",
                 sources: "AzkarUITests/Sources/**",
                 resources: [
@@ -259,17 +263,6 @@ enum AzkarTarget: String, CaseIterable {
     }
 }
 
-enum AzkarPackage: String {
-    case core = "Core"
-    case audioPlayer = "AudioPlayer"
-
-    var name: String { rawValue }
-
-    var path: Path {
-        return "Packages/\(name)"
-    }
-}
-
 let project = Project(
     name: projectName,
     organizationName: companyName,
@@ -281,16 +274,24 @@ let project = Project(
     settings: settings,
     targets: AzkarTarget.allCases.map(\.target),
     schemes: [
-        Scheme(
+        Scheme.scheme(
             name: AzkarTarget.azkarApp.rawValue,
             shared: true,
-            buildAction: BuildAction(targets: ["Azkar"]),
-            runAction: RunAction.runAction(executable: "Azkar")
+            buildAction: .buildAction(targets: ["Azkar"]),
+            runAction: RunAction.runAction(
+                executable: "Azkar",
+                arguments: Arguments.arguments(
+                    environmentVariables: [
+                        "SUPABASE_API_URL": .init(stringLiteral: env["SUPABASE_API_URL"] ?? ""),
+                        "SUPABASE_API_KEY": .init(stringLiteral: env["SUPABASE_API_KEY"] ?? ""),
+                    ]
+                )
+            )
         ),
-        Scheme(
+        Scheme.scheme(
             name: AzkarTarget.azkarAppUITests.rawValue,
             shared: true,
-            buildAction: BuildAction(targets: ["AzkarUITests"]),
+            buildAction: .buildAction(targets: ["AzkarUITests"]),
             testAction: TestAction.targets(["AzkarUITests"]),
             runAction: RunAction.runAction(executable: "Azkar")
         )

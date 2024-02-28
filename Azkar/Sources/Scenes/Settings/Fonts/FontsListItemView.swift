@@ -48,11 +48,13 @@ struct FontsListItemView: View {
         .frame(minHeight: 44)
     }
     
+    @MainActor
     static func fontImageView(_ url: URL?, isRedacted: Bool) -> some View {
-        LazyImage(source: url) { state in
+        LazyImage(url: url) { state in
             if let image = state.image {
                 image
-                    .resizingMode(.aspectFit)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
                     .accentColor(Color.text)
             } else if state.error != nil {
                 Color.clear

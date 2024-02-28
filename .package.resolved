@@ -38,15 +38,6 @@
         }
       },
       {
-        "package": "Gifu",
-        "repositoryURL": "https://github.com/kaishin/Gifu",
-        "state": {
-          "branch": null,
-          "revision": "51f2eab32903e336f590c013267cfa4d7f8b06c4",
-          "version": "3.3.1"
-        }
-      },
-      {
         "package": "GRDB",
         "repositoryURL": "https://github.com/groue/GRDB.swift",
         "state": {
@@ -65,6 +56,15 @@
         }
       },
       {
+        "package": "KeychainAccess",
+        "repositoryURL": "https://github.com/kishikawakatsumi/KeychainAccess",
+        "state": {
+          "branch": null,
+          "revision": "84e546727d66f1adc5439debad16270d0fdd04e7",
+          "version": "4.2.2"
+        }
+      },
+      {
         "package": "Lottie",
         "repositoryURL": "https://github.com/airbnb/lottie-ios",
         "state": {
@@ -78,17 +78,8 @@
         "repositoryURL": "https://github.com/kean/Nuke.git",
         "state": {
           "branch": null,
-          "revision": "6f7c6adb11a8d22587b2995b3f7d9554682ad122",
-          "version": "10.7.0"
-        }
-      },
-      {
-        "package": "NukeUI",
-        "repositoryURL": "https://github.com/kean/NukeUI",
-        "state": {
-          "branch": null,
-          "revision": "08e953d8d80b409bebcd95ba0635fdd748934ce0",
-          "version": "0.7.0"
+          "revision": "15fde63470d782c897816a74bdd516a907e33147",
+          "version": "12.3.0"
         }
       },
       {
@@ -110,6 +101,15 @@
         }
       },
       {
+        "package": "RoughSwift",
+        "repositoryURL": "https://github.com/onmyway133/RoughSwift",
+        "state": {
+          "branch": null,
+          "revision": "9969243bffbefcfa8cfb7c32ba47b5f624746a13",
+          "version": "2.0.0"
+        }
+      },
+      {
         "package": "Stinsen",
         "repositoryURL": "https://github.com/rundfunk47/stinsen",
         "state": {
@@ -119,12 +119,66 @@
         }
       },
       {
-        "package": "Introspect",
-        "repositoryURL": "https://github.com/siteline/SwiftUI-Introspect",
+        "package": "Supabase",
+        "repositoryURL": "https://github.com/supabase-community/supabase-swift",
         "state": {
           "branch": null,
-          "revision": "2e09be8af614401bc9f87d40093ec19ce56ccaf2",
-          "version": "0.1.3"
+          "revision": "fd4984cfd54eb148ff43586cc5a93cc8406e5aae",
+          "version": "2.3.1"
+        }
+      },
+      {
+        "package": "swift-collections",
+        "repositoryURL": "https://github.com/apple/swift-collections",
+        "state": {
+          "branch": null,
+          "revision": "94cf62b3ba8d4bed62680a282d4c25f9c63c2efb",
+          "version": "1.1.0"
+        }
+      },
+      {
+        "package": "swift-concurrency-extras",
+        "repositoryURL": "https://github.com/pointfreeco/swift-concurrency-extras",
+        "state": {
+          "branch": null,
+          "revision": "bb5059bde9022d69ac516803f4f227d8ac967f71",
+          "version": "1.1.0"
+        }
+      },
+      {
+        "package": "swift-crypto",
+        "repositoryURL": "https://github.com/apple/swift-crypto.git",
+        "state": {
+          "branch": null,
+          "revision": "60f13f60c4d093691934dc6cfdf5f508ada1f894",
+          "version": "2.6.0"
+        }
+      },
+      {
+        "package": "swift-perception",
+        "repositoryURL": "https://github.com/pointfreeco/swift-perception",
+        "state": {
+          "branch": null,
+          "revision": "42240120b2a8797595433288ab4118f8042214c3",
+          "version": "1.1.1"
+        }
+      },
+      {
+        "package": "swift-syntax",
+        "repositoryURL": "https://github.com/apple/swift-syntax",
+        "state": {
+          "branch": null,
+          "revision": "64889f0c732f210a935a0ad7cda38f77f876262d",
+          "version": "509.1.1"
+        }
+      },
+      {
+        "package": "swiftui-introspect",
+        "repositoryURL": "https://github.com/siteline/swiftui-introspect",
+        "state": {
+          "branch": null,
+          "revision": "18e965f867e37a558ad13c12d330dbe047099180",
+          "version": "1.1.2"
         }
       },
       {
@@ -161,6 +215,15 @@
           "branch": null,
           "revision": "238dadc14dd58885f51037e63d08baf4275c480e",
           "version": "2.1.0"
+        }
+      },
+      {
+        "package": "xctest-dynamic-overlay",
+        "repositoryURL": "https://github.com/pointfreeco/xctest-dynamic-overlay",
+        "state": {
+          "branch": null,
+          "revision": "b58e6627149808b40634c4552fcf2f44d0b3ca87",
+          "version": "1.1.0"
         }
       },
       {

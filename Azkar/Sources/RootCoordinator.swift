@@ -1,11 +1,3 @@
-//
-//
-//  Azkar
-//  
-//  Created on 15.08.2021
-//  Copyright © 2021 Al Jawziyya. All rights reserved.
-//  
-
 import UIKit
 import SwiftUI
 import Coordinator
@@ -15,6 +7,9 @@ import WhatsNewKit
 import MessageUI
 import IGStoryKit
 import Library
+import ArticleReader
+import Entities
+import PDFKit
 
 enum RootSection: Equatable, RouteKind {
     case category(ZikrCategory)
@@ -26,6 +21,7 @@ enum RootSection: Equatable, RouteKind {
     case aboutApp
     case whatsNew
     case shareOptions(Zikr)
+    case article(Article)
 }
 
 final class RootCoordinator: NSObject, RouteTrigger, NavigationCoordinatable {
@@ -33,7 +29,6 @@ final class RootCoordinator: NSObject, RouteTrigger, NavigationCoordinatable {
     var stack: Stinsen.NavigationStack<RootCoordinator> = .init(initial: \.root)
     
     @Root var root = makeRootView
-    @Root var menu = makeMainView
     @Route(.push) var zikrCategory = makeCategoryView
     @Route(.push) var zikrPages = makeZikrPagesView
     @Route(.push) var zikr = makeZikrView
@@ -43,6 +38,7 @@ final class RootCoordinator: NSObject, RouteTrigger, NavigationCoordinatable {
     @Route(.modal) var modalSettings = makeModalSettingsView
     @Route(.modal) var whatsNew = makeWhatsNewView
     @Route(.modal) var shareOptions = makeShareOptionsView
+    @Route(.push) var articleView = makeArticleView
     
     let preferences: Preferences
     var databaseService: AzkarDatabase {
@@ -83,10 +79,6 @@ final class RootCoordinator: NSObject, RouteTrigger, NavigationCoordinatable {
         preferencesDatabase = PreferencesSQLiteDatabaseService(databasePath: preferencesDatabasePath)
         
         super.init()
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-            self.trigger(.whatsNew)
-        }
         
         preferences.$colorTheme
             .receive(on: RunLoop.main)
@@ -156,7 +148,7 @@ private extension RootCoordinator {
         switch section {
         case .aboutApp, .category, .settings:
             selectedZikrPageIndex.send(0)
-        case .zikr, .zikrPages, .goToPage, .whatsNew, .shareOptions, .searchResult:
+        case .zikr, .zikrPages, .goToPage, .whatsNew, .shareOptions, .searchResult, .article:
             break
         }
         
@@ -167,6 +159,12 @@ private extension RootCoordinator {
                 route(to: \.azkarList, category)
             } else {
                 route(to: \.zikrCategory, category)
+            }
+            
+        case .article(let article):
+            route(to: \.articleView, article)
+            Task {
+                await ArticlesService.shared.sendAnalyticsEvent(.view, articleId: article.id)                
             }
 
         case .zikrPages(let vm):
@@ -260,14 +258,70 @@ extension RootCoordinator {
         )
     }
     
-    func makeMainView() -> some View {
-        MainMenuView(viewModel: MainMenuViewModel(
-            databaseService: databaseService,
-            preferencesDatabase: preferencesDatabase,
-            router: UnownedRouteTrigger(router: self),
-            preferences: preferences,
-            player: player
-        ))
+    func makeArticleView(_ article: Article) -> some View {
+        ArticleScreen(
+            viewModel: ArticleViewModel(article: article),
+            onShareButtonTap: {
+                assert(Thread.isMainThread)
+                guard
+                    let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                    let window = scene.windows.first,
+                    let rootViewController = window.rootViewController?.topmostPresentedViewController
+                else {
+                    return
+                }
+                
+                let view = ArticleScreen(
+                    viewModel: ArticleViewModel(article: article),
+                    shareOptions: .init(maxWidth: UIScreen.main.bounds.width)
+                )
+                .padding(30)
+                .frame(width: UIScreen.main.bounds.width)
+                .frame(maxHeight: .infinity)
+                
+                let viewController = UIHostingController(rootView: view)
+                
+                let image = viewController.snapshot()
+                
+                let pdfDocument = PDFDocument()
+                guard let pdfPage = PDFPage(image: image) else {
+                    return
+                }
+                pdfDocument.insert(pdfPage, at: 0)
+                guard let data = pdfDocument.dataRepresentation() else {
+                    return
+                }
+                
+                let fileName = "\(article.title).pdf"
+                let tempFilePath = FileManager.default.temporaryDirectory.appendingPathComponent(fileName)
+                
+                do {
+                    try? FileManager.default.removeItem(at: tempFilePath)
+                    try data.write(to: tempFilePath)
+                } catch {
+                    return
+                }
+                
+                let activityController = UIActivityViewController(
+                    activityItems: [tempFilePath],
+                    applicationActivities: [ZikrFeedbackActivity(prepareAction: { [unowned self] in
+                        self.presentMailComposer(from: viewController)
+                    })]
+                )
+                activityController.excludedActivityTypes = [
+                    .init(rawValue: "com.apple.reminders.sharingextension")
+                ]
+                activityController.completionWithItemsHandler = { (activityType, completed, arguments, error) in
+                    viewController.dismiss()
+                    if completed {
+                        Task {
+                            await ArticlesService.shared.sendAnalyticsEvent(.share, articleId: article.id)
+                        }
+                    }
+                }
+                rootViewController.present(activityController, animated: true)
+            }
+        )
     }
     
     func makeZikrPagesViewModel(_ category: ZikrCategory) -> ZikrPagesViewModel {

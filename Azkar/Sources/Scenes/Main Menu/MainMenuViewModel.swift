@@ -11,6 +11,7 @@ import AudioPlayer
 import Combine
 import Entities
 import Fakery
+import ArticleReader
 
 typealias SearchToken = ZikrCategory
 
@@ -49,6 +50,7 @@ final class MainMenuViewModel: ObservableObject {
 
     @Published var additionalMenuItems: [AzkarMenuOtherItem] = []
     @Published var enableEidBackground = false
+    @Published var article: Article?
 
     @Preference("kDidDisplayIconPacksMessage", defaultValue: false)
     var didDisplayIconPacksMessage
@@ -152,6 +154,9 @@ final class MainMenuViewModel: ObservableObject {
         
         preferences
             .$contentLanguage
+            .handleEvents(receiveOutput: { language in
+                ArticleCategory.language = language
+            })
             .map { language in
                 try? databaseService.getRandomFadl(language: language)
             }
@@ -162,6 +167,28 @@ final class MainMenuViewModel: ObservableObject {
             .subscribe(on: DispatchQueue.global(qos: .userInteractive))
             .subscribe(searchQueryPublisher)
             .store(in: &cancellables)
+        
+        loadArticles(language: preferences.contentLanguage.fallbackLanguage)
+    }
+    
+    private func loadArticles(language: Language) {
+        Task {
+            do {
+                let articles = try await ArticlesService.shared.getArticles(
+                    language: language,
+                    limit: 1
+                )
+                await MainActor.run {                
+                    self.article = articles.first
+                }
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
+    }
+    
+    func navigateToArticle(_ article: Article) {
+        router.trigger(.article(article))
     }
 
     private func hideIconPacksMessage() {
