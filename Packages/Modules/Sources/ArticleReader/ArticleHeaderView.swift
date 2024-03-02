@@ -2,6 +2,7 @@ import SwiftUI
 import NukeUI
 import Popovers
 import Extensions
+import Entities
 
 extension Article.ImageType {
     @ViewBuilder @MainActor
@@ -15,6 +16,11 @@ extension Article.ImageType {
                         .resizable()
                         .aspectRatio(contentMode: .fill)
                         .accentColor(Color.primary)
+                } else if state.isLoading {
+                    Color(.systemBackground)
+                        .overlay {
+                            ProgressView()
+                        }
                 } else {
                     PatternView()
                 }

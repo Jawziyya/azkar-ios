@@ -1,11 +1,11 @@
 import Foundation
 
 public struct AnalyticsRecord: Decodable {
-    public enum RecordType: String, Decodable {
+    public enum RecordType: String, Codable {
         case article
     }
     
-    public enum ActionType: String, Decodable {
+    public enum ActionType: String, Codable {
         case view, share
     }
     

@@ -1,5 +1,6 @@
 import Foundation
 import Perception
+import Entities
 
 @Perceptible @dynamicMemberLookup
 public final class ArticleViewModel {

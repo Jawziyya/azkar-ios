@@ -1,1 +1,1 @@
-- Added Ayat-al-Kursi back to morning & evening categories
+- Improved Articles functionality

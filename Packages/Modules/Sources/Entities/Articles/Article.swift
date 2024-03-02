@@ -1,8 +1,7 @@
 import Foundation
 import Fakery
-import Entities
 
-public struct Article: Identifiable, Hashable {
+public struct Article: Identifiable, Hashable, Codable {
     public let id: Int
     public let language: Language
     public let title: String
@@ -13,10 +12,11 @@ public struct Article: Identifiable, Hashable {
     public let coverImage: CoverImage?
     public let coverImageAltText: String?
     public let views: Int
+    public let createdAt: Date
     
-    public struct CoverImage: Hashable {
-        let imageType: ImageType
-        let imageFormat: ArticleDTO.CoverImageFormat
+    public struct CoverImage: Hashable, Codable {
+        public let imageType: ImageType
+        public let imageFormat: ArticleDTO.CoverImageFormat
         
         public init(imageType: ImageType, imageFormat: ArticleDTO.CoverImageFormat) {
             self.imageType = imageType
@@ -24,7 +24,7 @@ public struct Article: Identifiable, Hashable {
         }
     }
     
-    public enum ImageType: Hashable {
+    public enum ImageType: Hashable, Codable {
         case link(URL), resource(String)
     }
     
@@ -42,6 +42,7 @@ extension Article {
         tags = article.tags?.compactMap { tag in
             "#" + tag
         }
+        createdAt = article.createdAt
         text = article.text
         textFormat = article.textFormat
         self.views = viewsCount ?? 0
@@ -76,6 +77,7 @@ extension Article {
         tags: [String]? = nil,
         category: ArticleCategory = .placeholder(),
         text: String? = nil,
+        createdAt: Date = Date(),
         textFormat: ArticleDTO.TextFormat = .plain,
         coverImage: CoverImage? = nil,
         coverImageAltText: String? = nil
@@ -95,7 +97,8 @@ extension Article {
             textFormat: textFormat,
             coverImage: coverImage,
             coverImageAltText: coverImageAltText ?? faker.lorem.paragraphs(),
-            views: Int.random(in: 0...1000)
+            views: Int.random(in: 0...1000),
+            createdAt: createdAt
         )
     }
 }

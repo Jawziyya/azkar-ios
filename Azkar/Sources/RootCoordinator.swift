@@ -47,6 +47,7 @@ final class RootCoordinator: NSObject, RouteTrigger, NavigationCoordinatable {
     let preferencesDatabase: PreferencesDatabase
     let deeplinker: Deeplinker
     let player: Player
+    let articlesService: ArticlesServiceType
 
     private let selectedZikrPageIndex = CurrentValueSubject<Int, Never>(0)
 
@@ -72,8 +73,17 @@ final class RootCoordinator: NSObject, RouteTrigger, NavigationCoordinatable {
         self.deeplinker = deeplinker
         self.player = player
         
-        let preferencesDatabasePath = FileManager.default
+        let appGroupFolder = FileManager.default
             .appGroupContainerURL
+        
+        articlesService = ArticlesService(
+            databasePath: appGroupFolder
+                .appendingPathComponent("articles.db")
+                .absoluteString,
+            language: preferences.contentLanguage.fallbackLanguage
+        )
+        
+        let preferencesDatabasePath = appGroupFolder
             .appendingPathComponent("preferences.db")
             .absoluteString
         preferencesDatabase = PreferencesSQLiteDatabaseService(databasePath: preferencesDatabasePath)
@@ -164,7 +174,7 @@ private extension RootCoordinator {
         case .article(let article):
             route(to: \.articleView, article)
             Task {
-                await ArticlesService.shared.sendAnalyticsEvent(.view, articleId: article.id)                
+                await self.articlesService.sendAnalyticsEvent(.view, articleId: article.id)
             }
 
         case .zikrPages(let vm):
@@ -252,7 +262,8 @@ extension RootCoordinator {
                     preferencesDatabase: preferencesDatabase,
                     router: UnownedRouteTrigger(router: self),
                     preferences: preferences,
-                    player: player
+                    player: player,
+                    articlesService: articlesService
                 )
             )
         )
@@ -313,11 +324,11 @@ extension RootCoordinator {
                 activityController.excludedActivityTypes = [
                     .init(rawValue: "com.apple.reminders.sharingextension")
                 ]
-                activityController.completionWithItemsHandler = { (activityType, completed, arguments, error) in
+                activityController.completionWithItemsHandler = { [unowned self] (activityType, completed, arguments, error) in
                     viewController.dismiss()
                     if completed {
                         Task {
-                            await ArticlesService.shared.sendAnalyticsEvent(.share, articleId: article.id)
+                            await self.articlesService.sendAnalyticsEvent(.share, articleId: article.id)
                         }
                     }
                 }

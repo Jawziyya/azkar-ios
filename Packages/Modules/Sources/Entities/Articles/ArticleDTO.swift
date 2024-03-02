@@ -1,11 +1,11 @@
 import Foundation
 
-public struct ArticleDTO: Identifiable, Decodable, Hashable {
-    public enum TextFormat: String, Hashable, Decodable {
+public struct ArticleDTO: Identifiable, Codable, Hashable {
+    public enum TextFormat: String, Hashable, Codable {
         case plain, markdown
     }
     
-    public enum CoverImageFormat: String, Hashable, Decodable {
+    public enum CoverImageFormat: String, Hashable, Codable {
         case titleBackground = "title_background"
         case standaloneTop = "standalone_top"
         case standaloneUnderTitle = "standalone_under_title"
@@ -23,4 +23,5 @@ public struct ArticleDTO: Identifiable, Decodable, Hashable {
     public let imageLink: String?
     public let imageResourceName: String?
     public let views: Int?
+    public let createdAt: Date
 }

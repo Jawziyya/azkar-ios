@@ -68,6 +68,7 @@ let package = Package(
                 "Entities",
                 "Extensions",
                 .product(name: "GRDB", package: "GRDB.swift"),
+                .product(name: "Supabase", package: "supabase-swift"),
             ]
         ),
         .target(name: "ArticleReader", dependencies: [
