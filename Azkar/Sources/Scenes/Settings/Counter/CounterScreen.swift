@@ -27,6 +27,7 @@ struct CounterView: View {
                 Templates.Menu {
                     Text(L10n.Settings.Counter.counterTypeInfo)
                         .padding()
+                        .cornerRadius(10)
                 } label: { _ in
                     Image(systemName: "info.circle")
                         .foregroundColor(Color.accent.opacity(0.75))
@@ -75,6 +76,8 @@ struct CounterView: View {
 
                     Templates.Menu {
                         Text(L10n.Settings.Counter.goToNextDhikrTip)
+                            .padding()
+                            .cornerRadius(10)
                     } label: { _ in
                         Image(systemName: "info.circle")
                             .foregroundColor(Color.accent.opacity(0.75))

@@ -42,6 +42,8 @@ struct AppearanceScreen: View {
                     
                     Templates.Menu {
                         Text(L10n.Settings.useFunFeaturesTip)
+                            .padding()
+                            .cornerRadius(10)
                     } label: { _ in
                         Image(systemName: "info.circle")
                             .foregroundColor(Color.accent.opacity(0.75))

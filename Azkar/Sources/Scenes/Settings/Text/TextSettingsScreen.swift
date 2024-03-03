@@ -74,6 +74,7 @@ struct TextSettingsScreen: View {
                     Templates.Menu {
                         Text(L10n.Settings.Breaks.info)
                             .padding()
+                            .cornerRadius(10)
                     } label: { _ in
                         Image(systemName: "info.circle")
                             .foregroundColor(Color.accent.opacity(0.75))
@@ -90,6 +91,7 @@ struct TextSettingsScreen: View {
                     Templates.Menu {
                         Text(L10n.Settings.Text.useSystemFontSizeTip)
                             .padding()
+                            .cornerRadius(10)
                     } label: { _ in
                         Image(systemName: "info.circle")
                             .foregroundColor(Color.accent.opacity(0.75))
@@ -233,9 +235,11 @@ struct TextSettingsScreen: View {
 }
 
 #Preview {
-    TextSettingsScreen(
-        viewModel: TextSettingsViewModel(
-            router: .empty
+    NavigationView {
+        TextSettingsScreen(
+            viewModel: TextSettingsViewModel(
+                router: .empty
+            )
         )
-    )
+    }
 }
