@@ -53,7 +53,7 @@ public struct Zikr: Identifiable, Hashable {
         Zikr(
             id: id,
             hadith: 1,
-            text: "Text",
+            text: "اللعم اغفر لي",
             category: ZikrCategory.other,
             repeats: 1,
             title: "Title",
