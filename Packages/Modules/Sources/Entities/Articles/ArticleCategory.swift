@@ -1,7 +1,7 @@
 import Foundation
 import Fakery
 
-public struct ArticleCategory: Identifiable, Decodable, Hashable {
+public struct ArticleCategory: Identifiable, Codable, Hashable {
     public static var language = Language.getSystemLanguage()
     
     public let id: Int

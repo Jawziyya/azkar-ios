@@ -1,17 +1,10 @@
-//
-//  MainMenuViewModel.swift
-//  Azkar
-//
-//  Created by Abdurahim Jauzee on 01.05.2020.
-//  Copyright © 2020 Al Jawziyya. All rights reserved.
-//
-
 import SwiftUI
 import AudioPlayer
 import Combine
 import Entities
 import Fakery
 import ArticleReader
+import Library
 
 typealias SearchToken = ZikrCategory
 
@@ -50,7 +43,7 @@ final class MainMenuViewModel: ObservableObject {
 
     @Published var additionalMenuItems: [AzkarMenuOtherItem] = []
     @Published var enableEidBackground = false
-    @Published var article: Article?
+    @Published var articles: [Article] = []
 
     @Preference("kDidDisplayIconPacksMessage", defaultValue: false)
     var didDisplayIconPacksMessage
@@ -59,6 +52,7 @@ final class MainMenuViewModel: ObservableObject {
     let fastingDua: Zikr?
 
     let preferences: Preferences
+    private let articlesService: ArticlesServiceType
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -82,13 +76,15 @@ final class MainMenuViewModel: ObservableObject {
         preferencesDatabase: PreferencesDatabase,
         router: UnownedRouteTrigger<RootSection>,
         preferences: Preferences,
-        player: Player
+        player: Player,
+        articlesService: ArticlesServiceType
     ) {
         self.azkarDatabase = databaseService
         self.preferencesDatabase = preferencesDatabase
         self.router = router
         self.preferences = preferences
         self.player = player
+        self.articlesService = articlesService
         
         if Date().isRamadan {
             fastingDua = databaseService.getZikrBeforeBreakingFast()
@@ -168,22 +164,24 @@ final class MainMenuViewModel: ObservableObject {
             .subscribe(searchQueryPublisher)
             .store(in: &cancellables)
         
-        loadArticles(language: preferences.contentLanguage.fallbackLanguage)
+        Task {
+            await loadArticles()
+        }
     }
     
-    private func loadArticles(language: Language) {
-        Task {
-            do {
-                let articles = try await ArticlesService.shared.getArticles(
-                    language: language,
-                    limit: 1
-                )
-                await MainActor.run {                
-                    self.article = articles.first
+    private func loadArticles() async {
+        do {
+            for try await articles in articlesService.getArticles(
+                limit: 5
+            ) {
+                await MainActor.run {
+                    withAnimation {                    
+                        self.articles = articles
+                    }
                 }
-            } catch {
-                print(error.localizedDescription)
             }
+        } catch {
+            print(error.localizedDescription)
         }
     }
     
@@ -256,7 +254,8 @@ extension MainMenuViewModel {
             preferencesDatabase: MockPreferencesDatabase(),
             router: .empty,
             preferences: Preferences.shared,
-            player: .test
+            player: .test,
+            articlesService: DemoArticlesService()
         )
     }
     

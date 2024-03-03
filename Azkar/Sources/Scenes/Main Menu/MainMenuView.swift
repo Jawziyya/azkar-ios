@@ -10,6 +10,8 @@ struct MainMenuView: View {
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.isSearching) var isSearching
     @Environment(\.dismissSearch) var dismissSearch
+    
+    private let articleCellHeight: CGFloat = 230
 
     private var itemsBackgroundColor: SwiftUI.Color {
         Color.contentBackground
@@ -82,24 +84,38 @@ struct MainMenuView: View {
         appSections
 
         additionalItems
-
-        if let article = viewModel.article {
-            Button(action: {
-                viewModel.navigateToArticle(article)
-            }, label: {
-                articleCell(article)
-            })
-            .listRowInsets(.zero)
-            .buttonStyle(.plain)
-            .overlay(
-                RoundedRectangle(cornerRadius: 10)
-                    .stroke(Color.accentColor.opacity(0.5), lineWidth: 3)
-            )
+        
+        if viewModel.articles.isEmpty == false {
+            articlesView
+                .listRowInsets(.zero)
+                .frame(height: articleCellHeight)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 10)
+                        .stroke(Color.accentColor.opacity(0.5), lineWidth: 3)
+                )
         }
         
         if let fadl = viewModel.fadl {
             fadlSection(fadl)
         }
+    }
+    
+    private var articlesView: some View {
+        TabView {
+            ForEach(viewModel.articles) { article in
+                Button(action: {
+                    viewModel.navigateToArticle(article)
+                }, label: {
+                    ArticleCellView(
+                        article: article,
+                        imageMaxHeight: articleCellHeight
+                    )
+                })
+                .buttonStyle(.plain)
+            }
+        }
+        .pageIndicatorTintColor(Color.red)
+        .tabViewStyle(.page)
     }
     
     // MARK: - Day & Night Azkar
@@ -214,11 +230,6 @@ struct MainMenuView: View {
             .listRowBackground(Color.clear)
             .frame(maxWidth: .infinity)
         }
-    }
-    
-    private func articleCell(_ article: Article) -> some View {
-        ArticleCellView(article: article)
-            .frame(height: 200)
     }
     
     private func getMenuItem(
