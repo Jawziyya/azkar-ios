@@ -41,9 +41,11 @@ public final class ArticlesSQLiteDatabaseService: ArticlesRepository {
                 t.column("cover_image", .blob)
                 t.column("cover_image_alt_text", .text)
                 t.column("views", .integer)
+                t.column("shares", .integer)
                 t.column("tags", .blob)
             }
         }
+        migrator.eraseDatabaseOnSchemaChange = true
         
         do {
             try migrator.migrate(databasePool)

@@ -114,21 +114,22 @@ final class ArticlesSupabaseRepository: ArticlesRepository {
             guard let category = categories.first(where: { $0.id == articleObject.category }) else {
                 continue
             }
-            try await Task.sleep(nanoseconds: 1_000_000_000)
             
-            let views = try await supabaseClient
-                .database
-                .from("analytics")
-                .select("*", head: true, count: .exact)
-                .eq("action_type", value: AnalyticsRecord.ActionType.view.rawValue)
-                .eq("object_id", value: articleObject.id)
-                .execute()
-                .count
+            let views = await getArticleAnalyticsCount(
+                articleObject.id,
+                actionType: .view
+            )
+            
+            let shares = await getArticleAnalyticsCount(
+                articleObject.id,
+                actionType: .share
+            )
             
             let article = Article(
                 articleObject,
                 category: category,
-                viewsCount: views
+                viewsCount: views,
+                sharesCount: shares
             )
             articles.append(article)
         }
@@ -163,7 +164,7 @@ private extension ArticlesSupabaseRepository {
             .database
             .from("analytics")
             .select("*", head: true, count: .exact)
-            .eq("action_type", value: AnalyticsRecord.ActionType.view.rawValue)
+            .eq("action_type", value: actionType.rawValue)
             .eq("object_id", value: articleId)
             .execute()
             .count

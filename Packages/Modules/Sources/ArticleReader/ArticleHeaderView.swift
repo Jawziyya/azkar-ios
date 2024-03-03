@@ -45,6 +45,7 @@ struct ArticleHeaderView: View {
     var cover: Article.CoverImage?
     var coverAltText: String?
     var views: String?
+    var shares: String?
     let imageMaxHeight: CGFloat
     @State var scrollProgress: CGFloat
     @State var showAltText = false
@@ -96,7 +97,8 @@ struct ArticleHeaderView: View {
             
             ScrollView(.horizontal) {
                 HStack {
-                    viewsView
+                    countView(views, image: "eye")
+                    countView(shares, image: "square.and.arrow.up")
                     Divider()
                         .frame(height: 10)
                     tagsView
@@ -166,12 +168,12 @@ struct ArticleHeaderView: View {
     }
     
     @ViewBuilder
-    var viewsView: some View {
-        if let views {
+    private func countView(_ count: String?, image: String) -> some View {
+        if let count {
             Label(
-                title: { Text(views) },
-                icon: { 
-                    Image(systemName: "eye")
+                title: { Text(count) },
+                icon: {
+                    Image(systemName: image)
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(width: 15, height: 15)

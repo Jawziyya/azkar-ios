@@ -12,6 +12,7 @@ public struct Article: Identifiable, Hashable, Codable {
     public let coverImage: CoverImage?
     public let coverImageAltText: String?
     public let views: Int
+    public let shares: Int
     public let createdAt: Date
     
     public struct CoverImage: Hashable, Codable {
@@ -34,7 +35,8 @@ extension Article {
     public init(
         _ article: ArticleDTO,
         category: ArticleCategory,
-        viewsCount: Int?
+        viewsCount: Int?,
+        sharesCount: Int?
     ) {
         id = article.id
         language = article.language
@@ -46,6 +48,7 @@ extension Article {
         text = article.text
         textFormat = article.textFormat
         self.views = viewsCount ?? 0
+        self.shares = sharesCount ?? 0
         self.category = category
         coverImageAltText = article.coverImageAltText
         
@@ -98,6 +101,7 @@ extension Article {
             coverImage: coverImage,
             coverImageAltText: coverImageAltText ?? faker.lorem.paragraphs(),
             views: Int.random(in: 0...1000),
+            shares: Int.random(in: 0...1000),
             createdAt: createdAt
         )
     }
