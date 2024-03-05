@@ -130,7 +130,13 @@ final class PlayerViewModel: ObservableObject, Equatable {
             return
         }
         let timing = timings[index]
-        player.seek(timing.time)
+        if isPlaying {
+            player.seek(timing.time)
+        } else {
+            play()
+            player.seek(timing.time)
+            pause()
+        }
     }
 
 }
