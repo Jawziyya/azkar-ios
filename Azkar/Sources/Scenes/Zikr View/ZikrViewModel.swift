@@ -265,6 +265,9 @@ final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
     }
     
     func playAudio(at index: Int) {
+        if text.count > 1 {
+            indexToHighlight = index
+        }
         playerViewModel?.goToTiming(at: index)
     }
     
