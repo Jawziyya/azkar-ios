@@ -389,19 +389,6 @@ struct ZikrView: View {
             .foregroundColor(Color.tertiaryText)
     }
 
-    private func getNoteView(_ text: String) -> some View {
-        HStack(alignment: .top, spacing: 8) {
-            Image(systemName: "lightbulb")
-                .resizable()
-                .scaledToFit()
-                .frame(width: 15, height: 15)
-                .foregroundColor(Color.accent)
-            Text(getAttributedString(text))
-                .font(Font.customFont(viewModel.preferences.preferredTranslationFont, style: .footnote))
-        }
-        .padding()
-    }
-    
     private func getAttributedString(_ text: String) -> AttributedString {
         attributedString(text, highlighting: viewModel.highlightPattern)
     }
