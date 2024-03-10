@@ -24,6 +24,7 @@ enum Keys {
     static let preferredFont = "kPreferredFont"
     static let lineSpacing = "kLineSpacing"
     static let translationLineSpacing = "kTranslationLineSpacing"
+    static let zikrReadingMode = "kZikrReadingMode"
     
     static let enableProFeatures = "kIsProFeaturesEnabled"
     
