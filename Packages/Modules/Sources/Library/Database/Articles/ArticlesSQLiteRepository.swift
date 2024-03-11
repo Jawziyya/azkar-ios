@@ -63,6 +63,12 @@ public final class ArticlesSQLiteDatabaseService: ArticlesRepository {
         }
     }
     
+    func saveArticle(_ article: Article) async throws {
+        try await databasePool.write { db in
+            try article.save(db)
+        }
+    }
+    
     func getArticles(limit: Int, newerThan: Date?) async throws -> [Article] {
         let lang = language.rawValue
         return try await databasePool
