@@ -140,6 +140,10 @@ final class ArticlesSupabaseRepository: ArticlesRepository {
         // No effect in remote repository.
     }
     
+    func saveArticle(_ article: Article) async throws {
+        // No effect in remote repository.    
+    }
+    
     func getArticle(_ id: ArticleDTO.ID) async throws -> Article? {
         return nil
     }

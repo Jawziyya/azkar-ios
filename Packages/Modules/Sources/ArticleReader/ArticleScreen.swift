@@ -102,8 +102,8 @@ public struct ArticleScreen: View {
             tags: viewModel.tags ?? [],
             cover: viewModel.coverImage,
             coverAltText: viewModel.coverImageAltText,
-            views: viewModel.views.description.textOrNil,
-            shares: viewModel.shares.description.textOrNil,
+            views: viewModel.views,
+            shares: viewModel.shares,
             imageMaxHeight: maxHeight,
             scrollProgress: 0
         )

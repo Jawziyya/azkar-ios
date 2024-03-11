@@ -11,8 +11,8 @@ public struct Article: Identifiable, Hashable, Codable {
     public let textFormat: ArticleDTO.TextFormat
     public let coverImage: CoverImage?
     public let coverImageAltText: String?
-    public let views: Int
-    public let shares: Int
+    public var views: Int?
+    public var shares: Int?
     public let createdAt: Date
     
     public struct CoverImage: Hashable, Codable {
@@ -47,8 +47,8 @@ extension Article {
         createdAt = article.createdAt
         text = article.text
         textFormat = article.textFormat
-        self.views = viewsCount ?? 0
-        self.shares = sharesCount ?? 0
+        self.views = viewsCount
+        self.shares = sharesCount
         self.category = category
         coverImageAltText = article.coverImageAltText
         
