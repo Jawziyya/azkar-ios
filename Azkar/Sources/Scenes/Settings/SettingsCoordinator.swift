@@ -27,7 +27,6 @@ final class SettingsCoordinator: RouteTrigger, Identifiable, NavigationCoordinat
         
     private let databaseService: AzkarDatabase
     private let preferences: Preferences
-    private let initialRoute: SettingsRoute?
     
     init(
         databaseService: AzkarDatabase,
@@ -36,9 +35,10 @@ final class SettingsCoordinator: RouteTrigger, Identifiable, NavigationCoordinat
     ) {
         self.databaseService = databaseService
         self.preferences = preferences
-        self.initialRoute = initialRoute
         if let initialRoute {
-            trigger(initialRoute)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                self.trigger(initialRoute)
+            }
         }
     }
     
