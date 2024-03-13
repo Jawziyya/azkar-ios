@@ -81,10 +81,6 @@ struct MainMenuView: View {
 
         otherAzkar
 
-        appSections
-
-        additionalItems
-        
         if viewModel.articles.isEmpty == false {
             articlesView
                 .listRowInsets(.zero)
@@ -94,6 +90,10 @@ struct MainMenuView: View {
                         .stroke(Color.accentColor.opacity(0.5), lineWidth: 3)
                 )
         }
+        
+        appSections
+        
+        additionalItems
         
         if let fadl = viewModel.fadl {
             fadlSection(fadl)
@@ -114,7 +114,6 @@ struct MainMenuView: View {
                 .buttonStyle(.plain)
             }
         }
-        .pageIndicatorTintColor(Color.red)
         .tabViewStyle(.page)
     }
     

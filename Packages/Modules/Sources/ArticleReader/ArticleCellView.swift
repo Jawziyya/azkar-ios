@@ -74,7 +74,7 @@ public struct ArticleCellView: View {
                         .lineLimit(3)
                         .foregroundStyle(Color.white)
                         .padding(.horizontal, 16)
-                        .padding(.vertical)
+                        .padding(.vertical, 40)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .background(
                             LinearGradient(
