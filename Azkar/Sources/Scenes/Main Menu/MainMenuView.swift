@@ -54,6 +54,7 @@ struct MainMenuView: View {
         List {
             menuContent
                 .listRowSeparator(.hidden)
+                .listRowBackground(itemsBackgroundColor)
         }
         .customListSectionSpacing(.compact)
         .listStyle(.insetGrouped)
