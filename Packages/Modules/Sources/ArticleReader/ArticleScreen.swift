@@ -106,7 +106,9 @@ public struct ArticleScreen: View {
             cover: viewModel.coverImage,
             coverAltText: viewModel.coverImageAltText,
             views: viewModel.views,
+            viewsAbbreviated: viewModel.viewsAbbreviated,
             shares: viewModel.shares,
+            sharesAbbreviated: viewModel.sharesAbbreviated,
             imageMaxHeight: maxHeight,
             scrollProgress: 0
         )
