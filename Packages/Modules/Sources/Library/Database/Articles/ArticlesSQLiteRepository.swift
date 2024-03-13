@@ -57,6 +57,7 @@ public final class ArticlesSQLiteDatabaseService: ArticlesRepository {
     /// Cache articles.
     func saveArticles(_ articles: [Article]) async throws {
         try await databasePool.write { db in
+            try Article.deleteAll(db, ids: articles.map(\.id))
             for article in articles {
                 try article.save(db)
             }
@@ -65,6 +66,7 @@ public final class ArticlesSQLiteDatabaseService: ArticlesRepository {
     
     func saveArticle(_ article: Article) async throws {
         try await databasePool.write { db in
+            try Article.deleteOne(db, key: article.id)
             try article.save(db)
         }
     }
