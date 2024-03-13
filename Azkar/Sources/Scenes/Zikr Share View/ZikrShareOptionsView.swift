@@ -125,15 +125,18 @@ struct ZikrShareOptionsView: View {
 
     var content: some View {
         List {
-            shareAsSection
-            
-            shareOptions
-
-            if selectedShareType != .text {
-                Section {
-                    Toggle(L10n.Share.includeAzkarLogo, isOn: $includeLogo)
+            Group {
+                shareAsSection
+                
+                shareOptions
+                
+                if selectedShareType != .text {
+                    Section {
+                        Toggle(L10n.Share.includeAzkarLogo, isOn: $includeLogo)
+                    }
                 }
             }
+            .listRowBackground(Color.contentBackground)
         }
     }
     
