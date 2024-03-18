@@ -39,6 +39,7 @@ struct FontsView: View {
                         Text(L10n.Fonts.Arabic.info)
                             .foregroundColor(Color.primary)
                             .padding()
+                            .cornerRadius(10)
                     } label: { _ in
                         Image(systemName: "info")
                             .foregroundColor(Color.accent)

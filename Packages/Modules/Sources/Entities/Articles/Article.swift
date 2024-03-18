@@ -1,7 +1,7 @@
 import Foundation
 import Fakery
 
-public struct Article: Identifiable, Hashable, Codable {
+public struct Article: Identifiable, Hashable, Codable, Equatable {
     public let id: Int
     public let language: Language
     public let title: String

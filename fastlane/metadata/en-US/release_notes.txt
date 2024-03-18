@@ -1,1 +1,2 @@
 - Improved Articles functionality
+- Bug fixes

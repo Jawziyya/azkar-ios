@@ -364,7 +364,17 @@ extension RootCoordinator {
     }
     
     func makeZikrView(_ viewModel: ZikrViewModel) -> some View {
-        ZikrView(viewModel: viewModel, incrementAction: Empty().eraseToAnyPublisher())
+        ZikrPagesView(
+            viewModel: ZikrPagesViewModel(
+                router: UnownedRouteTrigger(router: self),
+                category: .other,
+                title: "",
+                azkar: [viewModel],
+                preferences: preferences,
+                selectedPagePublisher: Empty().eraseToAnyPublisher(),
+                initialPage: 0
+            )
+        )
     }
     
     func makeAppInfoView() -> some View {

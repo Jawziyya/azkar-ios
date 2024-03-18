@@ -54,6 +54,7 @@ struct MainMenuView: View {
         List {
             menuContent
                 .listRowSeparator(.hidden)
+                .listRowBackground(itemsBackgroundColor)
         }
         .customListSectionSpacing(.compact)
         .listStyle(.insetGrouped)
@@ -81,10 +82,6 @@ struct MainMenuView: View {
 
         otherAzkar
 
-        appSections
-
-        additionalItems
-        
         if viewModel.articles.isEmpty == false {
             articlesView
                 .listRowInsets(.zero)
@@ -94,6 +91,10 @@ struct MainMenuView: View {
                         .stroke(Color.accentColor.opacity(0.5), lineWidth: 3)
                 )
         }
+        
+        appSections
+        
+        additionalItems
         
         if let fadl = viewModel.fadl {
             fadlSection(fadl)
@@ -114,8 +115,7 @@ struct MainMenuView: View {
                 .buttonStyle(.plain)
             }
         }
-        .pageIndicatorTintColor(Color.red)
-        .tabViewStyle(.page)
+        .tabViewStyle(.page(indexDisplayMode: .automatic))
     }
     
     // MARK: - Day & Night Azkar
@@ -258,8 +258,37 @@ struct MainMenuView: View {
 
 }
 
-#Preview("Menu") {
-    MainMenuView(
+#Preview("Menu Default") {
+    Preferences.shared.colorTheme = .default
+    return MainMenuView(
+        viewModel: MainMenuViewModel.placeholder
+    )
+}
+
+#Preview("Menu Ink") {
+    Preferences.shared.colorTheme = .ink
+    return MainMenuView(
+        viewModel: MainMenuViewModel.placeholder
+    )
+}
+
+#Preview("Menu Sea") {
+    Preferences.shared.colorTheme = .sea
+    return MainMenuView(
+        viewModel: MainMenuViewModel.placeholder
+    )
+}
+
+#Preview("Menu Purple Rose") {
+    Preferences.shared.colorTheme = .purpleRose
+    return MainMenuView(
+        viewModel: MainMenuViewModel.placeholder
+    )
+}
+
+#Preview("Menu Rose Quartz") {
+    Preferences.shared.colorTheme = .roseQuartz
+    return MainMenuView(
         viewModel: MainMenuViewModel.placeholder
     )
 }

@@ -83,7 +83,8 @@ public final class ArticlesService: ArticlesServiceType {
                 do {
                     let articles = try await remoteRepository.getArticles(limit: limit, newerThan: newestArticleDate)
                     try await localRepository.saveArticles(articles)
-                    continuation.yield(articles + cachedArticles)
+                    let allArticles = articles + cachedArticles
+                    continuation.yield(allArticles.unique(by: \.id))
                     continuation.finish()
                 } catch {
                     continuation.finish(throwing: error)
