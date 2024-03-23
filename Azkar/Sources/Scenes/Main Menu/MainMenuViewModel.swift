@@ -49,7 +49,7 @@ final class MainMenuViewModel: ObservableObject {
     var didDisplayIconPacksMessage
 
     let player: Player
-    let fastingDua: Zikr?
+    private(set) var additionalAdhkar: [ZikrMenuItem]?
 
     let preferences: Preferences
     private let articlesService: ArticlesServiceType
@@ -87,9 +87,24 @@ final class MainMenuViewModel: ObservableObject {
         self.articlesService = articlesService
         
         if Date().isRamadan {
-            fastingDua = databaseService.getZikrBeforeBreakingFast()
-        } else {
-            fastingDua = nil
+            var adhkar: [ZikrMenuItem] = []
+            if let fastindDua = databaseService.getZikrBeforeBreakingFast() {
+                adhkar.append(ZikrMenuItem(
+                    color: Color.blue,
+                    iconType: IconType.emoji,
+                    imageName: "🥛",
+                    zikr: fastindDua
+                ))
+            }
+            if let laylatulQadrDua = databaseService.getLaylatulQadrDua() {
+                adhkar.append(ZikrMenuItem(
+                    color: Color.green,
+                    iconType: IconType.emoji,
+                    imageName: "🌕",
+                    zikr: laylatulQadrDua
+                ))
+            }
+            additionalAdhkar = adhkar
         }
         
         otherAzkarModels = [

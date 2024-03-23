@@ -152,6 +152,11 @@ public extension AdhkarSQLiteDatabaseService {
         return try? getZikr(fastBreakingZikrId, language: language)
     }
 
+    func getLaylatulQadrDua() -> Zikr? {
+        let id = 49
+        return try? getZikr(id, language: language)
+    }
+    
     func getAllAdhkar() throws -> [Zikr] {
         return try getDatabaseQueue().read { db in
             let records = try ZikrOrigin.fetchAll(db, sql: "SELECT * FROM azkar")
