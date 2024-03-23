@@ -136,6 +136,9 @@ final class Preferences: ObservableObject, TextProcessingPreferences {
 
     @Preference(Keys.translationLineSpacing, defaultValue: LineSpacing.s)
     var translationLineSpacing
+    
+    @Preference(Keys.zikrReadingMode, defaultValue: ZikrReadingMode.normal)
+    var zikrReadingMode: ZikrReadingMode
 
     @Preference(Keys.purchasedIconPacks, defaultValue: [AppIconPack.standard])
     var purchasedIconPacks

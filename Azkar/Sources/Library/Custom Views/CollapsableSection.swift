@@ -44,7 +44,6 @@ struct CollapsableSection: View, Equatable {
             ZStack {
                 if isExpanded {
                     ReadingTextView(
-                        action: nil,
                         text: text,
                         highlightPattern: highlightPattern,
                         isArabicText: isArabicText,

@@ -445,6 +445,8 @@ extension RootCoordinator: MFMailComposeViewControllerDelegate {
                 otherTextAlignment: options.textAlignment.isCentered ? .center : .leading,
                 useFullScreen: options.shareType == .image
             )
+            .environment(\.colorScheme, .light)
+            .preferredColorScheme(.light)
             .frame(width: UIScreen.main.bounds.width)
             .frame(maxHeight: .infinity)
             let image = view.snapshot()

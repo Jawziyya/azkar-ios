@@ -1,42 +1,50 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"> 
+<!--
+ Loco ios export: iOS plural rules
+ Project: Azkar
+ Release: Working copy
+ Locale: en, English
+ Exported by: Abdurahim Jauzee
+ Exported at: Sat, 23 Mar 2024 15:58:44 +0200 
+--> 
 <plist version="1.0">
-<dict>
-	<key>remaining-repeats</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@items@</string>
-		<key>items</key>
-		<dict>
-			<key>NSStringFormatSpecTypeKey</key>
-			<string>NSStringPluralRuleType</string>
-			<key>NSStringFormatValueTypeKey</key>
-			<string>d</string>
-			<key>one</key>
-			<string>once more</string>
-			<key>other</key>
-			<string>%d times more</string>
-			<key>zero</key>
-			<string>done</string>
-		</dict>
-	</dict>
-	<key>repeats</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@items@</string>
-		<key>items</key>
-		<dict>
-			<key>NSStringFormatSpecTypeKey</key>
-			<string>NSStringPluralRuleType</string>
-			<key>NSStringFormatValueTypeKey</key>
-			<string>d</string>
-			<key>one</key>
-			<string>once</string>
-			<key>other</key>
-			<string>%d times</string>
-			<key>zero</key>
-			<string>done</string>
-		</dict>
-	</dict>
-</dict>
+    <dict> 
+        <key>remaining-repeats</key>
+        <dict> 
+            <key>NSStringLocalizedFormatKey</key>
+            <string>%#@items@</string>
+            <key>items</key>
+            <dict>
+                <key>NSStringFormatSpecTypeKey</key>
+                <string>NSStringPluralRuleType</string>
+                <key>NSStringFormatValueTypeKey</key>
+                <string>d</string> 
+                <key>one</key>
+                <string>once more</string> 
+                <key>few</key>
+                <string>%d times more</string> 
+                <key>other</key>
+                <string>done</string> 
+            </dict>
+        </dict> 
+        <key>repeats_number</key>
+        <dict> 
+            <key>NSStringLocalizedFormatKey</key>
+            <string>%#@items@</string>
+            <key>items</key>
+            <dict>
+                <key>NSStringFormatSpecTypeKey</key>
+                <string>NSStringPluralRuleType</string>
+                <key>NSStringFormatValueTypeKey</key>
+                <string>d</string> 
+                <key>one</key>
+                <string>once</string> 
+                <key>few</key>
+                <string>%d times</string> 
+                <key>other</key>
+                <string>done</string> 
+            </dict>
+        </dict> 
+    </dict>
 </plist>

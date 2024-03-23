@@ -17,8 +17,8 @@ internal enum L10n {
     return L10n.tr("Localizable", "remaining-repeats", p1, fallback: "Plural format key: \"%#@items@\"")
   }
   /// Plural format key: "%#@items@"
-  internal static func repeats(_ p1: Int) -> String {
-    return L10n.tr("Localizable", "repeats", p1, fallback: "Plural format key: \"%#@items@\"")
+  internal static func repeatsNumber(_ p1: Int) -> String {
+    return L10n.tr("Localizable", "repeats_number", p1, fallback: "Plural format key: \"%#@items@\"")
   }
   internal enum About {
     /// About
@@ -218,6 +218,26 @@ internal enum L10n {
     /// translation
     internal static let translation = L10n.tr("Localizable", "read.translation", fallback: "translation")
   }
+  internal enum RemainingRepeats {
+    /// %d times more
+    internal static func few(_ p1: Int) -> String {
+      return L10n.tr("Localizable", "remaining-repeats.few", p1, fallback: "%d times more")
+    }
+    /// done
+    internal static let other = L10n.tr("Localizable", "remaining-repeats.other", fallback: "done")
+    /// 
+    internal static let zero = L10n.tr("Localizable", "remaining-repeats.zero", fallback: "")
+  }
+  internal enum RepeatsNumber {
+    /// %d times
+    internal static func few(_ p1: Int) -> String {
+      return L10n.tr("Localizable", "repeats_number.few", p1, fallback: "%d times")
+    }
+    /// done
+    internal static let other = L10n.tr("Localizable", "repeats_number.other", fallback: "done")
+    /// 
+    internal static let zero = L10n.tr("Localizable", "repeats_number.zero", fallback: "")
+  }
   internal enum Root {
     /// About
     internal static let about = L10n.tr("Localizable", "root.about", fallback: "About")
@@ -230,7 +250,7 @@ internal enum L10n {
     /// Adhkar
     internal static let suggestedAdhkar = L10n.tr("Localizable", "search.suggested-adhkar", fallback: "Adhkar")
     /// Search queries
-    internal static let suggestedQuries = L10n.tr("Localizable", "search.suggested-queries", fallback: "Search queries")
+    internal static let suggestedQueries = L10n.tr("Localizable", "search.suggested-queries", fallback: "Search queries")
   }
   internal enum Settings {
     /// Settings
@@ -395,6 +415,14 @@ internal enum L10n {
       /// If this option is turned on Azkar app will use text size from iOS Settings (Settings — Display & Brightness — Text Size).
       /// If it's turned off you can choose desired text size below.
       internal static let useSystemFontSizeTip = L10n.tr("Localizable", "settings.text.use_system_font_size_tip", fallback: "If this option is turned on Azkar app will use text size from iOS Settings (Settings — Display & Brightness — Text Size).\nIf it's turned off you can choose desired text size below.")
+      internal enum ReadingMode {
+        /// Line by line
+        internal static let lineByLine = L10n.tr("Localizable", "settings.text.reading_mode.line_by_line", fallback: "Line by line")
+        /// Normal
+        internal static let normal = L10n.tr("Localizable", "settings.text.reading_mode.normal", fallback: "Normal")
+        /// Reading mode
+        internal static let title = L10n.tr("Localizable", "settings.text.reading_mode.title", fallback: "Reading mode")
+      }
     }
     internal enum Theme {
       /// System
