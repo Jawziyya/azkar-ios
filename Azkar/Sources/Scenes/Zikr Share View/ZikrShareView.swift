@@ -38,6 +38,7 @@ struct ZikrShareView: View {
             VStack(spacing: 0) {
                 Text(.init(viewModel.text.joined(separator: "\n")))
                     .font(Font.customFont(viewModel.preferences.preferredArabicFont, style: .title1, sizeCategory: .large))
+                    .frame(maxWidth: .infinity, alignment: .trailing)
                     .multilineTextAlignment(arabicTextAlignment)
                     .padding()
 
@@ -48,6 +49,7 @@ struct ZikrShareView: View {
                         .font(Font.customFont(viewModel.preferences.preferredTranslationFont, style: .body, sizeCategory: .large))
                         .multilineTextAlignment(otherTextAlignment)
                         .padding()
+                        .frame(maxWidth: .infinity, alignment: .leading)
                 }
 
                 if includeTransliteration {
@@ -57,6 +59,7 @@ struct ZikrShareView: View {
                         .font(Font.customFont(viewModel.preferences.preferredTranslationFont, style: .body, sizeCategory: .large))
                         .multilineTextAlignment(.leading)
                         .padding()
+                        .frame(maxWidth: .infinity, alignment: .leading)
                 }
 
                 if includeBenefits, let text = viewModel.zikr.benefits {
@@ -72,6 +75,7 @@ struct ZikrShareView: View {
                             .font(.customFont(viewModel.preferences.preferredTranslationFont, style: .footnote))
                     }
                     .padding()
+                    .frame(maxWidth: .infinity, alignment: .leading)
                 }
 
                 if includeSource {

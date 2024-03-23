@@ -1,2 +1,2 @@
-- Bugfixes
+- New Reading Mode in Text Settings
 - Added Dua of The Night of Power
