@@ -90,16 +90,19 @@ final class ArticlesSupabaseRepository: ArticlesRepository {
             .from("articles")
             .select()
             .eq("language", value: language.id)
-            .eq("is_published", value: true)
         
-        if let newerThan {
-            let formatter = DateFormatter()
-            formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSSSSZ"
-            formatter.timeZone = TimeZone(secondsFromGMT: 0)
-            formatter.locale = Locale(identifier: "en_US_POSIX")
-            let date = formatter.string(from: newerThan.addingTimeInterval(1))
-            articlesQuery = articlesQuery
-                .greaterThan("created_at", value: date)
+        if CommandLine.arguments.contains("LOAD_ALL_ARTICLES") == false {
+            articlesQuery = articlesQuery.eq("is_published", value: true)
+        
+            if let newerThan {
+                let formatter = DateFormatter()
+                formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSSSSZ"
+                formatter.timeZone = TimeZone(secondsFromGMT: 0)
+                formatter.locale = Locale(identifier: "en_US_POSIX")
+                let date = formatter.string(from: newerThan.addingTimeInterval(1))
+                articlesQuery = articlesQuery
+                    .greaterThan("created_at", value: date)
+            }
         }
         
         let articleObjects: [ArticleDTO] = try await articlesQuery
@@ -110,7 +113,11 @@ final class ArticlesSupabaseRepository: ArticlesRepository {
         let categories = try await getCategories()
         
         var articles: [Article] = []
-        for articleObject in articleObjects {
+        
+        let sortedArticles = articleObjects
+            .sorted(by: { $0.createdAt > $1.createdAt })
+        
+        for articleObject in sortedArticles {
             guard let category = categories.first(where: { $0.id == articleObject.category }) else {
                 continue
             }
@@ -138,6 +145,10 @@ final class ArticlesSupabaseRepository: ArticlesRepository {
     
     func saveArticles(_ articles: [Article]) async throws {
         // No effect in remote repository.
+    }
+    
+    func saveArticle(_ article: Article) async throws {
+        // No effect in remote repository.    
     }
     
     func getArticle(_ id: ArticleDTO.ID) async throws -> Article? {

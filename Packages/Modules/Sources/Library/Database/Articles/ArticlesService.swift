@@ -18,6 +18,16 @@ public struct ArticlesAnalyticsEvent: Encodable {
     }
 }
 
+public struct AnalyticsNumbers {
+    public let views: Int
+    public let shares: Int
+    
+    public init(views: Int, shares: Int) {
+        self.views = views
+        self.shares = shares
+    }
+}
+
 public protocol ArticlesServiceType {
     func getArticles(limit: Int) -> AsyncThrowingStream<[Article], Error>
     func getArticle(_ id: Article.ID) async throws -> Article?
@@ -55,7 +65,13 @@ public final class ArticlesService: ArticlesServiceType {
             Task {
                 var cachedArticles: [Article] = []
                 do {
-                    cachedArticles = try await localRepository.getArticles(limit: limit, newerThan: nil)
+                    let articles = try await localRepository.getArticles(limit: limit, newerThan: nil)
+                    cachedArticles = articles
+                    Task.detached { [self, articles] in
+                        for article in articles {
+                            await updateAnalyticsNumbers(for: article.id)
+                        }
+                    }
                     if cachedArticles.isEmpty == false {
                         continuation.yield(cachedArticles)
                     }
@@ -67,12 +83,37 @@ public final class ArticlesService: ArticlesServiceType {
                 do {
                     let articles = try await remoteRepository.getArticles(limit: limit, newerThan: newestArticleDate)
                     try await localRepository.saveArticles(articles)
-                    continuation.yield(articles + cachedArticles)
+                    let allArticles = articles + cachedArticles
+                    continuation.yield(allArticles.unique(by: \.id))
                     continuation.finish()
                 } catch {
                     continuation.finish(throwing: error)
                 }
             }
+        }
+    }
+    
+    public func updateAnalyticsNumbers(for articleId: Article.ID) async {
+        func getArticleAnalyticsCount(
+            _ articleId: ArticleDTO.ID,
+            actionType: AnalyticsRecord.ActionType
+        ) async -> Int? {
+            try? await supabaseClient
+                .database
+                .from("analytics")
+                .select("*", head: true, count: .exact)
+                .eq("action_type", value: actionType.rawValue)
+                .eq("object_id", value: articleId)
+                .execute()
+                .count
+        }
+        
+        let views = await getArticleAnalyticsCount(articleId, actionType: .view)
+        let shares = await getArticleAnalyticsCount(articleId, actionType: .share)
+        if var article = try? await localRepository?.getArticle(articleId) {
+            article.views = views
+            article.shares = shares
+            try? await localRepository?.saveArticle(article)
         }
     }
     

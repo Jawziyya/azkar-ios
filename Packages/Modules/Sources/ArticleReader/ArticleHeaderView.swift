@@ -38,6 +38,42 @@ extension Article.ImageType {
     }
 }
 
+private struct StatsView: View {
+    
+    let abbreviatedNumber: String
+    let number: String
+    let imageName: String
+    @State var showNumber = false
+    
+    var body: some View {
+        HStack {
+            Image(systemName: imageName)
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 15, height: 15)
+            Text(abbreviatedNumber)
+        }
+        .onTapGesture {
+            guard number != abbreviatedNumber else { return }
+            withAnimation(.spring) {
+                showNumber.toggle()
+            }
+        }
+        .popover(
+            present: $showNumber,
+            view: {
+                Text(number)
+                    .frame(minWidth: 20)
+                    .padding(4)
+                    .foregroundStyle(Color.secondary)
+                    .background(Color(UIColor.secondarySystemBackground))
+                    .cornerRadius(10)
+                    .opacity(showNumber ? 1 : 0)
+            }
+        )
+    }
+}
+
 struct ArticleHeaderView: View {
         
     let title: String
@@ -45,7 +81,10 @@ struct ArticleHeaderView: View {
     var cover: Article.CoverImage?
     var coverAltText: String?
     var views: String?
+    var viewsAbbreviated: String?
     var shares: String?
+    var sharesAbbreviated: String?
+    
     let imageMaxHeight: CGFloat
     @State var scrollProgress: CGFloat
     @State var showAltText = false
@@ -95,18 +134,39 @@ struct ArticleHeaderView: View {
                 .lineLimit(lineLimit)
                 .minimumScaleFactor(0.25)
             
-            ScrollView(.horizontal) {
-                HStack {
-                    countView(views, image: "eye")
-                    countView(shares, image: "square.and.arrow.up")
-                    Divider()
-                        .frame(height: 10)
-                    tagsView
+            if #available(iOS 16, *) {
+                ScrollView(.horizontal) {
+                    horizontalScrollViewContent(foregroundColor: tagsForegroundColor)
                 }
-                .foregroundStyle(tagsForegroundColor)
+                .scrollIndicators(.never)
+            } else {
+                ScrollView(.horizontal, showsIndicators: false) {
+                    horizontalScrollViewContent(foregroundColor: tagsForegroundColor)
+                }
             }
         }
         .padding()
+    }
+    
+    func horizontalScrollViewContent(
+        foregroundColor: Color
+    ) -> some View {
+        HStack {
+            countView(
+                views,
+                abbreviatedNumber: viewsAbbreviated,
+                image: "eye"
+            )
+            countView(
+                shares,
+                abbreviatedNumber: sharesAbbreviated,
+                image: "square.and.arrow.up"
+            )
+            Divider()
+                .frame(height: 10)
+            tagsView
+        }
+        .foregroundStyle(foregroundColor)
     }
     
     @MainActor @ViewBuilder
@@ -114,6 +174,7 @@ struct ArticleHeaderView: View {
         image
             .clipped()
             .clipShape(RoundedRectangle(cornerRadius: 15))
+            .allowsHitTesting(false)
             .overlay(alignment: .topTrailing) {
                 altTextView
             }
@@ -168,20 +229,16 @@ struct ArticleHeaderView: View {
     }
     
     @ViewBuilder
-    private func countView(_ count: String?, image: String) -> some View {
-        if let count {
-            Label(
-                title: { Text(count) },
-                icon: {
-                    Image(systemName: image)
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 15, height: 15)
-                }
-            )
+    private func countView(
+        _ number: String?,
+        abbreviatedNumber: String?,
+        image: String
+    ) -> some View {
+        if let number, let abbreviatedNumber {
+            StatsView(abbreviatedNumber: abbreviatedNumber, number: number, imageName: image)
         }
     }
-    
+        
     @ViewBuilder
     var altTextView: some View {
         if let coverAltText {

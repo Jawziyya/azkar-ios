@@ -1,6 +1,7 @@
 import SwiftUI
 import NukeUI
 import Entities
+import Perception
 
 public struct ArticleScreen: View {
     
@@ -36,21 +37,23 @@ public struct ArticleScreen: View {
     }
     
     public var body: some View {
-        if let shareOptions {
-            VStack(spacing: 20) {
-                content
-                sharedWithAzkarView
-            }
-            .frame(width: shareOptions.maxWidth)
-            .frame(maxHeight: .infinity)
-        } else {
-            content
-                .navigationBarTitleDisplayMode(.inline)
-                .toolbar {
-                    ToolbarItem {
-                        shareButton
-                    }
+        WithPerceptionTracking {
+            if let shareOptions {
+                VStack(spacing: 20) {
+                    content
+                    sharedWithAzkarView
                 }
+                .frame(width: shareOptions.maxWidth)
+                .frame(maxHeight: .infinity)
+            } else {
+                content
+                    .navigationBarTitleDisplayMode(.inline)
+                    .toolbar {
+                        ToolbarItem {
+                            shareButton
+                        }
+                    }
+            }
         }
     }
     
@@ -102,8 +105,10 @@ public struct ArticleScreen: View {
             tags: viewModel.tags ?? [],
             cover: viewModel.coverImage,
             coverAltText: viewModel.coverImageAltText,
-            views: viewModel.views.description.textOrNil,
-            shares: viewModel.shares.description.textOrNil,
+            views: viewModel.views,
+            viewsAbbreviated: viewModel.viewsAbbreviated,
+            shares: viewModel.shares,
+            sharesAbbreviated: viewModel.sharesAbbreviated,
             imageMaxHeight: maxHeight,
             scrollProgress: 0
         )
