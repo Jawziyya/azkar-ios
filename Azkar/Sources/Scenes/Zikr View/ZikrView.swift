@@ -14,37 +14,28 @@ import Library
     - source
  */
 struct ZikrView: View {
-
+    
     @AppStorage("kDidDisplayCounterOnboardingTip", store: UserDefaults.standard)
     var didDisplayCounterOnboardingTip: Bool?
 
     @ObservedObject var viewModel: ZikrViewModel
+    @Environment(\.zikrReadingMode) var zikrReadingMode
 
     let incrementAction: AnyPublisher<Void, Never>
 
     var counterFinishedCallback: Action?
 
-    @State
-    private var isLongPressGestureActive = false
-
-    @State
-    private var isIncrementActionPerformed = false
-
-    @State
-    private var counterFeedbackCompleted = false
-
-    @Namespace
-    private var counterButtonAnimationNamespace
-
+    @State var isLongPressGestureActive = false
+    @State var isIncrementActionPerformed = false
+    @State var counterFeedbackCompleted = false
+    @Namespace var counterButtonAnimationNamespace
+    @State var animateCounterButton = false
     private let counterButtonAnimationId = "counter-button"
-
-    @State private var animateCounterButton = false
 
     var sizeCategory: ContentSizeCategory {
         viewModel.preferences.sizeCategory
     }
 
-    private let tintColor = Color.accent
     private let dividerColor = Color.accent.opacity(0.1)
     private let dividerHeight: CGFloat = 1
 
@@ -63,7 +54,6 @@ struct ZikrView: View {
             scrollView
         } else {
             scrollView
-                .navigationTitle(viewModel.title)
                 .navigationBarTitleDisplayMode(.inline)
         }
     }
@@ -73,6 +63,7 @@ struct ZikrView: View {
             getContent()
                 .largeScreenPadding()
         }
+        .environment(\.highlightPattern, viewModel.highlightPattern)
         .onAppear {
             Task {
                 await viewModel.updateRemainingRepeats()
@@ -143,19 +134,7 @@ struct ZikrView: View {
                 Color.clear.frame(height: 10)
             }
             
-            textView
-            
-            if !viewModel.translation.isEmpty {
-                getTranslationView(text: viewModel.translation)
-                
-                getDivider()
-            }
-            
-            if !viewModel.transliteration.isEmpty {
-                getTransliterationView(text: viewModel.transliteration)
-                
-                getDivider()
-            }
+            textContent
 
             infoView
             
@@ -166,7 +145,10 @@ struct ZikrView: View {
                 }
 
                 viewModel.zikr.notes.flatMap { notes in
-                    self.getNoteView(notes)
+                    ZikrNoteView(
+                        text: notes,
+                        font: viewModel.preferences.preferredTranslationFont
+                    )
                 }
 
                 viewModel.zikr.benefits.flatMap { text in
@@ -221,19 +203,94 @@ struct ZikrView: View {
             Spacer(minLength: 20)
         }
     }
+    
+    @ViewBuilder
+    private var textContent: some View {
+        switch zikrReadingMode {
+        case .normal:
+            textView
+            
+            if !viewModel.translation.isEmpty {
+                getTranslationView(text: viewModel.translation)
+                
+                getDivider()
+            }
+            
+            if !viewModel.transliteration.isEmpty {
+                getTransliterationView(text: viewModel.transliteration)
+                
+                getDivider()
+            }
+            
+        case .lineByLine:
+            VStack(spacing: 0) {
+                ForEach(Array(zip(viewModel.text, zip(viewModel.translation, viewModel.transliteration)).enumerated()), id: \.0) { idx, args in
+                    let (text, combined) = args
+                    let (translation, transliteration) = combined
+                    let prefs = viewModel.preferences
+                    
+                    Button {
+                        Haptic.tapFeedback()
+                        viewModel.playAudio(at: idx)
+                    } label: {
+                        VStack {
+                            getReadingTextLine(
+                                text,
+                                isArabicText: true,
+                                prefs: prefs,
+                                spacing: viewModel.preferences.arabicLineAdjustment,
+                                idx: idx,
+                                backgroundColor: Color.systemGreen.opacity(0.1)
+                            )
+                            
+                            if viewModel.expandTranslation {
+                                getReadingTextLine(
+                                    translation,
+                                    isArabicText: false,
+                                    prefs: prefs,
+                                    spacing: viewModel.preferences.translationLineAdjustment,
+                                    idx: idx,
+                                    backgroundColor: Color.systemBlue.opacity(0.1)
+                                )
+                            }
+                            
+                            if viewModel.expandTransliteration {
+                                getReadingTextLine(
+                                    transliteration,
+                                    isArabicText: false,
+                                    prefs: prefs,
+                                    spacing: viewModel.preferences.translationLineAdjustment,
+                                    idx: idx,
+                                    backgroundColor: Color.systemRed.opacity(0.1)
+                                )
+                            }
+                        }
+                        .contentShape(Rectangle())
+                    }
+                    .padding()
+                    .buttonStyle(.plain)
+                    
+                    Divider()
+                }
+                
+                viewModel.playerViewModel.flatMap { vm in
+                    self.playerView(viewModel: vm)
+                        .padding(.vertical)
+                }
+            }
+            
+        }
+    }
 
     // MARK: - Title
     private func titleView(_ title: String) -> some View {
-        HStack {
-            Spacer()
-            Text(title)
-                .equatable()
-                .font(Font.system(.headline, design: .rounded))
-                .foregroundColor(Color.secondaryText)
-                .multilineTextAlignment(.center)
-                .padding()
-            Spacer()
-        }
+        Text(title)
+            .equatable()
+            .font(Font.system(.headline, design: .rounded))
+            .foregroundColor(Color.secondaryText)
+            .multilineTextAlignment(.center)
+            .frame(maxWidth: .infinity, alignment: .center)
+            .padding()
     }
 
     @ViewBuilder
@@ -245,29 +302,54 @@ struct ZikrView: View {
         let spacing = isArabicText ? prefs.arabicLineAdjustment : prefs.translationLineAdjustment
         VStack(spacing: spacing) {
             ForEach(Array(zip(text.indices, text)), id: \.0) { idx, line in
-                ReadingTextView(
-                    action: !viewModel.preferences.enableLineBreaks ? nil : {
-                        viewModel.playAudio(at: idx)
-                    },
-                    text: line,
-                    highlightPattern: viewModel.highlightPattern,
+                let label = getReadingTextLine(
+                    line,
                     isArabicText: isArabicText,
-                    font: isArabicText ? prefs.preferredArabicFont : prefs.preferredTranslationFont,
-                    lineSpacing: prefs.enableLineBreaks ? spacing : 0
+                    prefs: prefs,
+                    spacing: spacing,
+                    idx: idx,
+                    backgroundColor: Color.accentColor.opacity(0.15)
                 )
-                .background(
-                    Group {
-                        if idx == viewModel.indexToHighlight, viewModel.highlightCurrentIndex {
-                            RoundedRectangle(cornerRadius: 6)
-                                .foregroundColor(Color.accent)
-                                .opacity(0.15)
-                                .padding(isArabicText ? -4 : 0)
-                        }
-                    }
-                )
-                .frame(maxWidth: .infinity, alignment: isArabicText ? .trailing : .leading)
+                if viewModel.preferences.enableLineBreaks {
+                    Button(action: {
+                        Haptic.tapFeedback()
+                        viewModel.playAudio(at: idx)
+                    }, label: {
+                        label
+                    })
+                    .buttonStyle(.plain)
+                } else {
+                    label
+                }
             }
         }
+    }
+    
+    private func getReadingTextLine(
+        _ line: String,
+        isArabicText: Bool,
+        prefs: Preferences,
+        spacing: CGFloat,
+        idx: Int,
+        backgroundColor: Color = Color.clear
+    ) -> some View {
+        ReadingTextView(
+            text: line,
+            highlightPattern: viewModel.highlightPattern,
+            isArabicText: isArabicText,
+            font: isArabicText ? prefs.preferredArabicFont : prefs.preferredTranslationFont,
+            lineSpacing: prefs.enableLineBreaks ? spacing : 0
+        )
+        .padding(5)
+        .background(
+            Group {
+                if idx == viewModel.indexToHighlight, viewModel.highlightCurrentIndex {
+                    backgroundColor
+                        .cornerRadius(6)
+                }
+            }
+        )
+        .frame(maxWidth: .infinity, alignment: isArabicText ? .trailing : .leading)
     }
 
     // MARK: - Text
@@ -396,7 +478,7 @@ struct ZikrView: View {
     private func playerView(viewModel: PlayerViewModel) -> some View {
         PlayerView(
             viewModel: viewModel,
-            tintColor: tintColor,
+            tintColor: Color.accent,
             progressBarColor: dividerColor,
             progressBarHeight: dividerHeight
         )
@@ -405,10 +487,12 @@ struct ZikrView: View {
 
 }
 
-struct ZikrView_Previews: PreviewProvider {
-    static var previews: some View {
+private struct ZikrViewPreview: View {
+    var theme: ColorTheme
+    
+    var body: some View {
         let prefs = Preferences.shared
-        prefs.colorTheme = .sea
+        prefs.colorTheme = theme
         return ZikrView(
             viewModel: ZikrViewModel(
                 zikr: Zikr.placeholder(),
@@ -419,6 +503,19 @@ struct ZikrView_Previews: PreviewProvider {
             ),
             incrementAction: Empty().eraseToAnyPublisher()
         )
-        .environment(\.colorScheme, .dark)
     }
+}
+
+#Preview("Default") {
+    ZikrViewPreview(theme: .default)
+}
+
+#Preview("Sea") {
+    ZikrViewPreview(theme: .sea)
+        .environment(\.zikrReadingMode, .lineByLine)
+}
+
+#Preview("Ink") {
+    ZikrViewPreview(theme: .ink)
+        .environment(\.zikrReadingMode, .lineByLine)
 }

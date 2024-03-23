@@ -67,7 +67,7 @@ final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
 
     func updateRemainingRepeatsText() {
         if !showRemainingCounter || remainingRepeatsNumber == zikr.repeats {
-            remainingRepeatsFormatted = L10n.repeats(zikr.repeats)
+            remainingRepeatsFormatted = L10n.repeatsNumber(zikr.repeats)
         } else {
             remainingRepeatsFormatted = L10n.remainingRepeats(remainingRepeatsNumber)
         }

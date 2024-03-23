@@ -36,7 +36,7 @@ final class SettingsCoordinator: RouteTrigger, Identifiable, NavigationCoordinat
         self.databaseService = databaseService
         self.preferences = preferences
         if let initialRoute {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
                 self.trigger(initialRoute)
             }
         }

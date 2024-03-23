@@ -5,7 +5,7 @@ import Library
 import Fakery
 
 func attributedString(_ text: String, highlighting pattern: String? = nil) -> AttributedString {
-    var attributedString = AttributedString(text)
+    var attributedString = (try? AttributedString(markdown: text)) ?? AttributedString(text)
     
     if let pattern = pattern {
         var currentSearchRange = attributedString.startIndex..<attributedString.endIndex
@@ -26,7 +26,6 @@ func attributedString(_ text: String, highlighting pattern: String? = nil) -> At
 
 struct ReadingTextView: View {
 
-    let action: (() -> Void)?
     let text: String
     let highlightPattern: String?
     let isArabicText: Bool
@@ -35,21 +34,17 @@ struct ReadingTextView: View {
     var sizeCategory: ContentSizeCategory? = Preferences.shared.sizeCategory
 
     var body: some View {
-        Button(
-            action: { action?() },
-            label: {
-                if isArabicText {
-                    Text(attributedString(text, highlighting: highlightPattern))
-                        .font(Font.customFont(font, style: .title1, sizeCategory: sizeCategory))
-                        .lineSpacing(lineSpacing)
-                } else {
-                    Text(attributedString(text, highlighting: highlightPattern))
-                        .font(Font.customFont(font, style: .body).leading(.tight))
-                        .lineSpacing(lineSpacing)
-                }
+        Group {
+            if isArabicText {
+                Text(attributedString(text, highlighting: highlightPattern))
+                    .font(Font.customFont(font, style: .title1, sizeCategory: sizeCategory))
+                    .lineSpacing(lineSpacing)
+            } else {
+                Text(attributedString(text, highlighting: highlightPattern))
+                    .font(Font.customFont(font, style: .body).leading(.tight))
+                    .lineSpacing(lineSpacing)
             }
-        )
-        .allowsHitTesting(action != nil)
+        }
         .multilineTextAlignment(isArabicText ? .trailing : .leading)
         .buttonStyle(.plain)
     }
@@ -61,7 +56,6 @@ struct ReadingTextView: View {
     let words = faker.lorem.paragraphs(amount: 3)
     
     return ReadingTextView(
-        action: {},
         text: words,
         highlightPattern: words.components(separatedBy: " ").randomElement(),
         isArabicText: false,

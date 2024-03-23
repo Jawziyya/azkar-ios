@@ -20,6 +20,7 @@ struct ZikrPagesView: View, Equatable {
     }
 
     @ObservedObject var viewModel: ZikrPagesViewModel
+    @State var readingMode: ZikrReadingMode?
 
     var body: some View {
         pagerView
@@ -104,6 +105,10 @@ struct ZikrPagesView: View, Equatable {
         .initialPageIndex(viewModel.initialPage)
         .currentPageIndex($viewModel.page)
         .edgesIgnoringSafeArea(.bottom)
+        .environment(\.zikrReadingMode, readingMode ?? viewModel.preferences.zikrReadingMode)
+        .onReceive(viewModel.preferences.$zikrReadingMode) { newMode in
+            readingMode = newMode
+        }
     }
 
 }

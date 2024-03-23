@@ -105,6 +105,8 @@ struct TextSettingsScreen: View {
             }
             
             lineSpacingView
+            
+            textDisplayModePicker
         }
     }
     
@@ -230,6 +232,20 @@ struct TextSettingsScreen: View {
             }
         }
         .pickerStyle(.segmented)
+    }
+    
+    var textDisplayModePicker: some View {
+        NavigationLink {
+            ZikrReadingModeSelectionScreen(
+                zikr: viewModel.readingModeSampleZikr ?? Zikr.placeholder(),
+                mode: $viewModel.preferences.zikrReadingMode,
+                player: .test
+            )
+            .navigationTitle(L10n.Settings.Text.ReadingMode.title)
+        } label: {
+            Text(L10n.Settings.Text.ReadingMode.title)
+                .padding(.vertical, 8)
+        }
     }
     
 }
