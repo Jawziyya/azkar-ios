@@ -70,6 +70,9 @@ public protocol AdhkarDatabaseService {
     /// Retrieves a Zikr that is recited before breaking a fast.
     func getZikrBeforeBreakingFast() -> Zikr?
     
+    /// Retrieves dua of Laylat-ul-Qadr.
+    func getLaylatulQadrDua() -> Zikr?
+    
     /// Retrieves all Adhkar from the database.
     ///
     /// - Throws: An error if the retrieval fails.
