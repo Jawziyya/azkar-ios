@@ -69,7 +69,7 @@ struct ZikrShareOptionsView: View {
         let includeTitle: Bool
         let includeBenefits: Bool
         let includeLogo: Bool
-        let textAlignment: ShareTextAlignment
+        var textAlignment: ShareTextAlignment = .start
         let shareType: ShareType
     }
 
@@ -91,7 +91,7 @@ struct ZikrShareOptionsView: View {
     private var selectedShareType = ShareType.image
 
     @AppStorage("kShareTextAlignment")
-    private var textAlignment = ShareTextAlignment.center
+    private var textAlignment = ShareTextAlignment.start
 
     private let alignments: [ShareTextAlignment] = [.center, .start]
     

@@ -82,6 +82,8 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
             Keys.sizeCategory: ContentSizeCategory.medium.floatValue,
             Keys.lineSpacing: LineSpacing.s.rawValue,
             Keys.translationLineSpacing: LineSpacing.s.rawValue,
+            
+            Keys.zikrReadingMode: ZikrReadingMode.normal.rawValue,
         ]
 
         UserDefaults.standard.register(defaults: defaults)

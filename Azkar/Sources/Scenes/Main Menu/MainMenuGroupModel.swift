@@ -96,3 +96,19 @@ struct AzkarMenuOtherItem: Identifiable, AzkarMenuType {
 	var id: String { title }
     
 }
+
+struct ZikrMenuItem: Identifiable, AzkarMenuType {    
+    var id: Int {
+        zikr.id
+    }
+    
+    var title: String {
+        zikr.title ?? ""
+    }
+    
+    var image: Image?
+    let color: Color
+    let iconType: IconType
+    var imageName: String
+    let zikr: Zikr
+}

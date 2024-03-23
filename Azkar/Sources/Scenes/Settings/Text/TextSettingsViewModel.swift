@@ -7,6 +7,10 @@ import Library
 
 final class TextSettingsViewModel: SettingsSectionViewModel {
     
+    var readingModeSampleZikr: Zikr? {
+        try? databaseService.getZikr(2, language: .russian)
+    }
+    
     var databaseService: AzkarDatabase {
         AzkarDatabase(language: preferences.contentLanguage)
     }

@@ -1,11 +1,3 @@
-//
-//  ZikrViewModel.swift
-//  Azkar
-//
-//  Created by Al Jawziyya on 07.04.2020.
-//  Copyright © 2020 Al Jawziyya. All rights reserved.
-//
-
 import UIKit
 import SwiftUI
 import Combine
@@ -75,7 +67,7 @@ final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
 
     func updateRemainingRepeatsText() {
         if !showRemainingCounter || remainingRepeatsNumber == zikr.repeats {
-            remainingRepeatsFormatted = L10n.repeats(zikr.repeats)
+            remainingRepeatsFormatted = L10n.repeatsNumber(zikr.repeats)
         } else {
             remainingRepeatsFormatted = L10n.remainingRepeats(remainingRepeatsNumber)
         }
@@ -215,29 +207,16 @@ final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
         includeTransliteration: Bool,
         includeBenefits: Bool
     ) -> String {
-        var text = ""
-        
-        if includeTitle, let title = zikr.title {
-            text += title
-        }
-        
-        text += "\n\n\(zikr.text)"
-        
-        if includeTranslation, !translation.isEmpty {
-            text += "\n\n\(translation.joined(separator: "\n"))"
-        }
-        
-        if includeTransliteration, !transliteration.isEmpty {
-            text += "\n\n\(transliteration.joined(separator: "\n"))"
-        }
-        
-        text += "\n\n\(zikr.source)"
-        
-        if includeBenefits, let benefit = zikr.benefits {
-            text += "\n\n[\(benefit)]"
-        }
-        
-        return text
+        ShareTextProvider(
+            zikr: zikr,
+            translation: translation,
+            transliteration: transliteration,
+            includeTitle: includeTitle,
+            includeTranslation: includeTranslation,
+            includeTransliteration: includeTransliteration,
+            includeBenefits: includeBenefits
+        )
+        .getShareText()
     }
     
     func increaseFontSize() {
@@ -286,6 +265,9 @@ final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
     }
     
     func playAudio(at index: Int) {
+        if text.count > 1 {
+            indexToHighlight = index
+        }
         playerViewModel?.goToTiming(at: index)
     }
     

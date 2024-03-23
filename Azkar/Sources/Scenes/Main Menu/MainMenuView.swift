@@ -160,19 +160,15 @@ struct MainMenuView: View {
     // MARK: - Other Azkar
     private var otherAzkar: some View {
         Section {
-            if let dua = viewModel.fastingDua {
-                getMenuItem(
-                    item: AzkarMenuItem(
-                        category: ZikrCategory.other,
-                        imageName: "🌕",
-                        title: dua.title ?? "",
-                        color: Color.blue,
-                        iconType: .emoji
-                    ),
-                    action: {
-                        viewModel.navigateToZikr(dua)
-                    }
-                )
+            if let dua = viewModel.additionalAdhkar {
+                ForEach(dua) { item in
+                    getMenuItem(
+                        item: item,
+                        action: {
+                            viewModel.navigateToZikr(item.zikr)
+                        }
+                    )
+                }
             }
 
             ForEach(viewModel.otherAzkarModels) { item in
