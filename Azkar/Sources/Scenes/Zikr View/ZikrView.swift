@@ -224,9 +224,9 @@ struct ZikrView: View {
             
         case .lineByLine:
             VStack(spacing: 0) {
-                ForEach(Array(zip(viewModel.text, zip(viewModel.translation, viewModel.transliteration)).enumerated()), id: \.0) { idx, args in
-                    let (text, combined) = args
-                    let (translation, transliteration) = combined
+                ForEach(Array(viewModel.text.enumerated()), id: \.0) { idx, text in
+                    let translation = viewModel.translation[safe: idx]
+                    let transliteration = viewModel.transliteration[safe: idx]
                     let prefs = viewModel.preferences
                     
                     Button {
@@ -243,7 +243,7 @@ struct ZikrView: View {
                                 backgroundColor: Color.systemGreen.opacity(0.1)
                             )
                             
-                            if viewModel.expandTranslation {
+                            if let translation, viewModel.expandTranslation {
                                 getReadingTextLine(
                                     translation,
                                     isArabicText: false,
@@ -254,7 +254,7 @@ struct ZikrView: View {
                                 )
                             }
                             
-                            if viewModel.expandTransliteration {
+                            if let transliteration, viewModel.expandTransliteration {
                                 getReadingTextLine(
                                     transliteration,
                                     isArabicText: false,

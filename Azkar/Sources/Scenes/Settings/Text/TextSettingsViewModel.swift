@@ -8,7 +8,7 @@ import Library
 final class TextSettingsViewModel: SettingsSectionViewModel {
     
     var readingModeSampleZikr: Zikr? {
-        try? databaseService.getZikr(2, language: .russian)
+        try? databaseService.getZikr(2, language: preferences.contentLanguage)
     }
     
     var databaseService: AzkarDatabase {
