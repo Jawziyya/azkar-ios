@@ -44,6 +44,7 @@ let package = Package(
         .package(url: "https://github.com/SwiftUI-Plus/ActivityView", from: "1.0.0"),
         .package(url: "https://github.com/demharusnam/SwiftUIDrag", revision: "0686318a"),
         .package(url: "https://github.com/SvenTiigi/WhatsNewKit", from: "2.0.0"),
+        .package(url: "https://github.com/bmoliveira/MarkdownKit", from: "1.7.1"),
     ],
     targets: [
         .target(
@@ -76,6 +77,7 @@ let package = Package(
             "Extensions",
             "RoughSwift",
             "Popovers",
+            "MarkdownKit",
             .product(name: "Perception", package: "swift-perception"),
             .product(name: "Fakery", package: "Fakery"),
             .product(name: "NukeUI", package: "Nuke"),

@@ -109,8 +109,7 @@ public struct ArticleScreen: View {
             viewsAbbreviated: viewModel.viewsAbbreviated,
             shares: viewModel.shares,
             sharesAbbreviated: viewModel.sharesAbbreviated,
-            imageMaxHeight: maxHeight,
-            scrollProgress: 0
+            imageMaxHeight: maxHeight
         )
     }
     
