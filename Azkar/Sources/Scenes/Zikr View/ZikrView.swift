@@ -72,13 +72,6 @@ struct ZikrView: View {
         .onDisappear(perform: viewModel.pausePlayer)
         .saturation(viewModel.preferences.colorTheme == .ink ? 0 : 1)
         .background(Color.background.edgesIgnoringSafeArea(.all))
-        .onKeyboardShortcut("+", modifiers: [.command], perform: viewModel.increaseFontSize)
-        .onKeyboardShortcut("-", modifiers: [.command], perform: viewModel.decreaseFontSize)
-        .onKeyboardShortcut(.return, modifiers: [.command], perform: {
-            Task {
-                await viewModel.incrementZikrCount()
-            }
-        })
         .onReceive(incrementAction, perform: incrementZikrCounter)
         .onTapGesture(count: 2, perform: {
             guard viewModel.preferences.counterType == .tap else {

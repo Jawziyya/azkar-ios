@@ -30,7 +30,7 @@ struct AppInfoView: View {
         .toolbar {
             ToolbarItem(placement: ToolbarItemPlacement.navigationBarTrailing) {
                 Button(action: {
-                    activityItem = ActivityItem(items: URL(string: "https://itunes.apple.com/app/id1511423586")!)
+                    activityItem = ActivityItem(items: URL(string: "https://apps.apple.com/app/id1511423586")!)
                 }, label: {
                     Image(systemName: "square.and.arrow.up")
                         .foregroundColor(Color.accent)

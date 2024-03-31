@@ -272,7 +272,7 @@ extension RootCoordinator {
     func makeArticleView(_ article: Article) -> some View {
         ArticleScreen(
             viewModel: ArticleViewModel(article: article),
-            onShareButtonTap: {
+            onShareButtonTap: { [unowned self] in
                 assert(Thread.isMainThread)
                 guard
                     let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
@@ -282,32 +282,52 @@ extension RootCoordinator {
                     return
                 }
                 
-                let view = ArticleScreen(
-                    viewModel: ArticleViewModel(article: article),
-                    shareOptions: .init(maxWidth: UIScreen.main.bounds.width)
+                let composer = ArticlePDFComposer(
+                    article: article,
+                    titleFont: UIFont(name: self.preferences.preferredTranslationFont.postscriptName, size: 30)!,
+                    textFont: UIFont(name: self.preferences.preferredTranslationFont.postscriptName, size: 18)!,
+                    pageMargins: UIEdgeInsets(horizontal: 50, vertical: 50),
+                    footer: ArticlePDFComposer.Footer(
+                        image: UIImage(named: "ink")!,
+                        text: L10n.Share.sharedWithAzkar.uppercased(),
+                        link: URL(string: "https://apps.apple.com/app/id1511423586")
+                    )
                 )
-                .padding(30)
-                .frame(width: UIScreen.main.bounds.width)
-                .frame(maxHeight: .infinity)
+                
+                let fileName = "\(article.title).pdf"
+                let tempFilePath = FileManager.default.temporaryDirectory.appendingPathComponent(fileName)
+                do {
+                    let data = try composer.renderPDF()
+                    try? FileManager.default.removeItem(at: tempFilePath)
+                    try data.write(to: tempFilePath)
+                } catch {
+                    return
+                }
+                
+                let view = ArticlePDFCoverView(
+                    article: article,
+                    maxHeight: 842,
+                    logoImage: UIImage(named: "ink")!,
+                    logoSubtitle: L10n.Share.sharedWithAzkar
+                )
+                .frame(width: 595, height: 842)
                 .environment(\.colorScheme, .light)
                 .background(Color.white)
                 
                 let viewController = UIHostingController(rootView: view)
-                
                 let image = viewController.snapshot()
                 
-                let pdfDocument = PDFDocument()
-                guard let pdfPage = PDFPage(image: image) else {
+                guard
+                    image.size != .zero,
+                    let pdfDocument = PDFDocument(url: tempFilePath),
+                    let pdfPage = PDFPage(image: image)
+                else {
                     return
                 }
                 pdfDocument.insert(pdfPage, at: 0)
                 guard let data = pdfDocument.dataRepresentation() else {
                     return
                 }
-                
-                let fileName = "\(article.title).pdf"
-                let tempFilePath = FileManager.default.temporaryDirectory.appendingPathComponent(fileName)
-                
                 do {
                     try? FileManager.default.removeItem(at: tempFilePath)
                     try data.write(to: tempFilePath)
@@ -318,7 +338,7 @@ extension RootCoordinator {
                 let activityController = UIActivityViewController(
                     activityItems: [tempFilePath],
                     applicationActivities: [ZikrFeedbackActivity(prepareAction: { [unowned self] in
-                        self.presentMailComposer(from: viewController)
+                        self.presentMailComposer(from: rootViewController)
                     })]
                 )
                 activityController.excludedActivityTypes = [
