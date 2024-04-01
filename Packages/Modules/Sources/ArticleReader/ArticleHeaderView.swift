@@ -6,7 +6,9 @@ import Entities
 
 extension Article.ImageType {
     @ViewBuilder @MainActor
-    func getImageView(_ maxHeight: CGFloat = .infinity) -> some View {
+    func getImageView(
+        _ maxHeight: CGFloat = .infinity
+    ) -> some View {
         switch self {
             
         case .link(let link):
@@ -86,7 +88,6 @@ struct ArticleHeaderView: View {
     var sharesAbbreviated: String?
     
     let imageMaxHeight: CGFloat
-    @State var scrollProgress: CGFloat
     @State var showAltText = false
     
     var body: some View {
@@ -198,7 +199,6 @@ struct ArticleHeaderView: View {
                     tagsForegroundColor: Color.white.opacity(0.55)
                 )
                 .foregroundStyle(Color.white)
-                .opacity(1 - scrollProgress)
                 .padding(.vertical)
                 .background(
                     LinearGradient(
@@ -275,8 +275,7 @@ struct ArticleHeaderView: View {
         ),
         coverAltText: "MidJourney Image",
         views: "1231",
-        imageMaxHeight: 300,
-        scrollProgress: 1
+        imageMaxHeight: 300
     )
 }
 
@@ -290,8 +289,7 @@ struct ArticleHeaderView: View {
         ),
         coverAltText: "MidJourney Image",
         views: "1231",
-        imageMaxHeight: 300,
-        scrollProgress: 1
+        imageMaxHeight: 300
     )
 }
 
@@ -305,7 +303,6 @@ struct ArticleHeaderView: View {
         ),
         coverAltText: "man in black wear standing in the middle of an ice cold lake, in the style of stephan martinière, marina abramović, pictorial space, 32k uhd, alan bean, depictions of inclement weather, humanity's struggle",
         views: "1231",
-        imageMaxHeight: 300,
-        scrollProgress: 1
+        imageMaxHeight: 300
     )
 }
