@@ -270,8 +270,13 @@ extension RootCoordinator {
     }
     
     func makeArticleView(_ article: Article) -> some View {
-        ArticleScreen(
-            viewModel: ArticleViewModel(article: article),
+        return ArticleScreen(
+            viewModel: ArticleViewModel(
+                article: article,
+                analyticsStream: {
+                    await self.articlesService.observeAnalyticsNumbers(articleId: article.id)
+                }
+            ),
             onShareButtonTap: { [unowned self] in
                 assert(Thread.isMainThread)
                 guard

@@ -102,7 +102,7 @@ public struct ArticleScreen: View {
     var headerView: some View {
         ArticleHeaderView(
             title: viewModel.title,
-            tags: viewModel.tags ?? [],
+            tags: viewModel.tags,
             cover: viewModel.coverImage,
             coverAltText: viewModel.coverImageAltText,
             views: viewModel.views,
@@ -140,12 +140,15 @@ private func getDemoVM(
     _ coverImageFormat: ArticleDTO.CoverImageFormat,
     _ imageLink: URL
 ) -> ArticleViewModel {
-    return ArticleViewModel(article: .placeholder(
-        coverImage: .init(
-            imageType: .link(imageLink),
-            imageFormat: coverImageFormat
-        )
-    ))
+    return ArticleViewModel(
+        article: .placeholder(
+            coverImage: .init(
+                imageType: .link(imageLink),
+                imageFormat: coverImageFormat
+            )
+        ),
+        analyticsStream: { AsyncStream { _ in } }
+    )
 }
 
 let demoImageURL = URL(string: "https://azkar.ams3.digitaloceanspaces.com/media/post-covers/2_zikru_llahi")!
@@ -172,5 +175,10 @@ private struct ArticleScreenPreview: View {
 }
 
 #Preview("No Image") {
-    ArticleScreenPreview(viewModel: .init(article: .placeholder()))
+    ArticleScreenPreview(
+        viewModel: .init(
+            article: .placeholder(),
+            analyticsStream: { AsyncStream { _ in } }
+        )
+    )
 }

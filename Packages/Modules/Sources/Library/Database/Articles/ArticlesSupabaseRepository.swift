@@ -63,9 +63,14 @@ let supabaseClient: SupabaseClient = {
 final class ArticlesSupabaseRepository: ArticlesRepository {
     
     private let language: Language
+    private let analyticsService: ArticlesAnalyticsService
     
-    init(language: Language) {
+    init(
+        language: Language,
+        analyticsService: ArticlesAnalyticsService
+    ) {
         self.language = language
+        self.analyticsService = analyticsService
     }
     
     func getArticles(limit: Int, newerThan: Date?) async throws -> [Article] {
@@ -122,21 +127,13 @@ final class ArticlesSupabaseRepository: ArticlesRepository {
                 continue
             }
             
-            let views = await getArticleAnalyticsCount(
-                articleObject.id,
-                actionType: .view
-            )
-            
-            let shares = await getArticleAnalyticsCount(
-                articleObject.id,
-                actionType: .share
-            )
+            let analytics = await analyticsService.getArticleAnalyticsCount(articleObject.id)
             
             let article = Article(
                 articleObject,
                 category: category,
-                viewsCount: views,
-                sharesCount: shares
+                viewsCount: analytics?.viewsCount,
+                sharesCount: analytics?.sharesCount
             )
             articles.append(article)
         }
@@ -165,19 +162,5 @@ private extension ArticlesSupabaseRepository {
             .select()
             .execute()
             .value
-    }
-    
-    func getArticleAnalyticsCount(
-        _ articleId: ArticleDTO.ID,
-        actionType: AnalyticsRecord.ActionType
-    ) async -> Int? {
-        try? await supabaseClient
-            .database
-            .from("analytics")
-            .select("*", head: true, count: .exact)
-            .eq("action_type", value: actionType.rawValue)
-            .eq("object_id", value: articleId)
-            .execute()
-            .count
     }
 }

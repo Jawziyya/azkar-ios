@@ -1,6 +1,7 @@
 import SwiftUI
 import Entities
 import Supabase
+import Combine
 
 public struct ArticlesAnalyticsEvent: Encodable {
     public let actionType: AnalyticsRecord.ActionType
@@ -18,26 +19,18 @@ public struct ArticlesAnalyticsEvent: Encodable {
     }
 }
 
-public struct AnalyticsNumbers {
-    public let views: Int
-    public let shares: Int
-    
-    public init(views: Int, shares: Int) {
-        self.views = views
-        self.shares = shares
-    }
-}
-
 public protocol ArticlesServiceType {
     func getArticles(limit: Int) -> AsyncThrowingStream<[Article], Error>
     func getArticle(_ id: Article.ID) async throws -> Article?
     func sendAnalyticsEvent(_ type: AnalyticsRecord.ActionType, articleId: Article.ID) async
+    func observeAnalyticsNumbers(articleId: Article.ID) async -> AsyncStream<ArticleAnalytics>
 }
 
 public final class ArticlesService: ArticlesServiceType {
     
     private var localRepository: ArticlesRepository?
     private let remoteRepository: ArticlesRepository
+    private let articlesAnalyticsService: ArticlesAnalyticsService
     
     public init(
         databasePath: String,
@@ -48,7 +41,11 @@ public final class ArticlesService: ArticlesServiceType {
         } catch {
             print(error.localizedDescription)
         }
-        remoteRepository = ArticlesSupabaseRepository(language: language)
+        articlesAnalyticsService = ArticlesAnalyticsService(supabaseClient: supabaseClient)
+        remoteRepository = ArticlesSupabaseRepository(
+            language: language,
+            analyticsService: articlesAnalyticsService
+        )
     }
     
     public func getArticles(
@@ -93,30 +90,6 @@ public final class ArticlesService: ArticlesServiceType {
         }
     }
     
-    public func updateAnalyticsNumbers(for articleId: Article.ID) async {
-        func getArticleAnalyticsCount(
-            _ articleId: ArticleDTO.ID,
-            actionType: AnalyticsRecord.ActionType
-        ) async -> Int? {
-            try? await supabaseClient
-                .database
-                .from("analytics")
-                .select("*", head: true, count: .exact)
-                .eq("action_type", value: actionType.rawValue)
-                .eq("object_id", value: articleId)
-                .execute()
-                .count
-        }
-        
-        let views = await getArticleAnalyticsCount(articleId, actionType: .view)
-        let shares = await getArticleAnalyticsCount(articleId, actionType: .share)
-        if var article = try? await localRepository?.getArticle(articleId) {
-            article.views = views
-            article.shares = shares
-            try? await localRepository?.saveArticle(article)
-        }
-    }
-    
     /// Get list of articles for a given language.
     public func fetchArticles(
         limit: Int
@@ -138,26 +111,28 @@ public final class ArticlesService: ArticlesServiceType {
             return article
         }
     }
+    
+    private func updateAnalyticsNumbers(for articleId: Article.ID) async {
+        let analytics = await articlesAnalyticsService.getArticleAnalyticsCount(articleId)
+        if var article = try? await localRepository?.getArticle(articleId) {
+            article.views = analytics?.viewsCount
+            article.shares = analytics?.sharesCount
+            try? await localRepository?.saveArticle(article)
+        }
+    }
 
     /// Report analytics event.
     public func sendAnalyticsEvent(
         _ type: AnalyticsRecord.ActionType,
         articleId: Article.ID
     ) async {
-        do {
-            try await supabaseClient
-                .database
-                .from("analytics")
-                .insert(ArticlesAnalyticsEvent(
-                    actionType: type,
-                    objectId: articleId,
-                    recordType: AnalyticsRecord.RecordType.article.rawValue
-                ))
-                .execute()
-                .value
-        } catch {
-            print(error.localizedDescription)
-        }
+        await articlesAnalyticsService.sendAnalyticsEvent(type, articleId: articleId)
+    }
+    
+    public func observeAnalyticsNumbers(
+        articleId: Article.ID
+    ) async -> AsyncStream<ArticleAnalytics> {
+        await articlesAnalyticsService.observeAnalyticsNumbers(articleId: articleId)
     }
     
 }
