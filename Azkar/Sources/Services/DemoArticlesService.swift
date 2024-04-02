@@ -9,4 +9,7 @@ final class DemoArticlesService: ArticlesServiceType {
         }
     }
     func sendAnalyticsEvent(_ type: AnalyticsRecord.ActionType, articleId: Article.ID) async {}
+    func observeAnalyticsNumbers(articleId: Article.ID) async -> AsyncStream<ArticleAnalytics> {
+        return AsyncStream { _ in }
+    }
 }

@@ -11,7 +11,7 @@ extension Int {
         let million = number / 1000000
         if million >= 1 {
             return "\(round(million * 10) / 10)M"
-        } else if thousand >= 1 {
+        } else if thousand >= 100 {
             return "\(round(thousand * 10) / 10)K"
         } else {
             return "\(self)"

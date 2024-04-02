@@ -40,51 +40,15 @@ extension Article.ImageType {
     }
 }
 
-private struct StatsView: View {
-    
-    let abbreviatedNumber: String
-    let number: String
-    let imageName: String
-    @State var showNumber = false
-    
-    var body: some View {
-        HStack {
-            Image(systemName: imageName)
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(width: 15, height: 15)
-            Text(abbreviatedNumber)
-        }
-        .onTapGesture {
-            guard number != abbreviatedNumber else { return }
-            withAnimation(.spring) {
-                showNumber.toggle()
-            }
-        }
-        .popover(
-            present: $showNumber,
-            view: {
-                Text(number)
-                    .frame(minWidth: 20)
-                    .padding(4)
-                    .foregroundStyle(Color.secondary)
-                    .background(Color(UIColor.secondarySystemBackground))
-                    .cornerRadius(10)
-                    .opacity(showNumber ? 1 : 0)
-            }
-        )
-    }
-}
-
 struct ArticleHeaderView: View {
         
     let title: String
     var tags: [String]?
     var cover: Article.CoverImage?
     var coverAltText: String?
-    var views: String?
+    var views: Int?
     var viewsAbbreviated: String?
-    var shares: String?
+    var shares: Int?
     var sharesAbbreviated: String?
     
     let imageMaxHeight: CGFloat
@@ -152,7 +116,7 @@ struct ArticleHeaderView: View {
     func horizontalScrollViewContent(
         foregroundColor: Color
     ) -> some View {
-        HStack {
+        HStack(spacing: 8) {
             countView(
                 views,
                 abbreviatedNumber: viewsAbbreviated,
@@ -163,9 +127,11 @@ struct ArticleHeaderView: View {
                 abbreviatedNumber: sharesAbbreviated,
                 image: "square.and.arrow.up"
             )
-            Divider()
-                .frame(height: 10)
-            tagsView
+            if tags != nil {
+                Divider()
+                    .frame(height: 10)
+                tagsView
+            }
         }
         .foregroundStyle(foregroundColor)
     }
@@ -230,12 +196,16 @@ struct ArticleHeaderView: View {
     
     @ViewBuilder
     private func countView(
-        _ number: String?,
+        _ number: Int?,
         abbreviatedNumber: String?,
         image: String
     ) -> some View {
         if let number, let abbreviatedNumber {
-            StatsView(abbreviatedNumber: abbreviatedNumber, number: number, imageName: image)
+            ArticleStatsView(
+                abbreviatedNumber: abbreviatedNumber,
+                number: number,
+                imageName: image
+            )
         }
     }
         
@@ -274,7 +244,7 @@ struct ArticleHeaderView: View {
             imageFormat: .titleBackground
         ),
         coverAltText: "MidJourney Image",
-        views: "1231",
+        views: 1231,
         imageMaxHeight: 300
     )
 }
@@ -288,7 +258,7 @@ struct ArticleHeaderView: View {
             imageFormat: .standaloneTop
         ),
         coverAltText: "MidJourney Image",
-        views: "1231",
+        views: 1231,
         imageMaxHeight: 300
     )
 }
@@ -302,7 +272,7 @@ struct ArticleHeaderView: View {
             imageFormat: .standaloneUnderTitle
         ),
         coverAltText: "man in black wear standing in the middle of an ice cold lake, in the style of stephan martinière, marina abramović, pictorial space, 32k uhd, alan bean, depictions of inclement weather, humanity's struggle",
-        views: "1231",
+        views: 1231,
         imageMaxHeight: 300
     )
 }
