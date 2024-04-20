@@ -76,11 +76,11 @@ public final class ArticlesService: ArticlesServiceType {
                     continuation.finish(throwing: error)
                 }
                 
-                let newestArticleDate = cachedArticles.first?.createdAt
+//                let newestArticleDate = cachedArticles.first?.createdAt
                 do {
-                    let articles = try await remoteRepository.getArticles(limit: limit, newerThan: newestArticleDate)
+                    let articles = try await remoteRepository.getArticles(limit: limit, newerThan: nil)
                     try await localRepository.saveArticles(articles)
-                    let allArticles = articles + cachedArticles
+                    let allArticles = articles // + cachedArticles
                     continuation.yield(allArticles.unique(by: \.id))
                     continuation.finish()
                 } catch {
