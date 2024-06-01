@@ -1,1 +1,1 @@
-- Minor fixes and improvements
+- Arabic text related bug fixes
