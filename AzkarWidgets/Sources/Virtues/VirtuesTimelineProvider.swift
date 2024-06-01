@@ -29,7 +29,10 @@ struct VirtuesProvider: TimelineProvider {
     }
     
     func getRandomVirtue() -> Fadl {
-        getVirtue(at: Int.random(in: 0..<fadail.count))
+        guard let random = fadail.randomElement() else {
+            return Fadl.placeholder
+        }
+        return random
     }
     
     func placeholder(in context: Context) -> VirtueEntry {
