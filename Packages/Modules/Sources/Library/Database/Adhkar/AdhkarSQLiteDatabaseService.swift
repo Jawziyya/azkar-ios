@@ -191,7 +191,7 @@ public extension AdhkarSQLiteDatabaseService {
                 """,
                 arguments: [category.rawValue]
             )
-            let translationTableName = "azkar_\(lang.id)"
+            let translationTableName = lang.databaseTableName
             let translations = try ZikrTranslation.fetchAll(
                 db,
                 sql: """

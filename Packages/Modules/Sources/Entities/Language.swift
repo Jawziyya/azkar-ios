@@ -20,7 +20,7 @@ public enum Language: String, Codable, CaseIterable, Identifiable, Hashable {
     public var fallbackLanguage: Language {
         switch self {
         case .chechen, .ingush, .kyrgyz, .kazakh: return .russian
-        case .georgian, .turkish: return .english
+        case .arabic, .georgian, .turkish: return .english
         case .uzbek: return .turkish
         default: return self
         }
