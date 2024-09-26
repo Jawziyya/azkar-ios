@@ -47,7 +47,7 @@ final class RootCoordinator: NSObject, RouteTrigger, NavigationCoordinatable {
     var preferencesDatabase: PreferencesDatabase?
     let deeplinker: Deeplinker
     let player: Player
-    let articlesService: ArticlesServiceType
+    var articlesService: ArticlesServiceType?
 
     private let selectedZikrPageIndex = CurrentValueSubject<Int, Never>(0)
 
@@ -76,14 +76,14 @@ final class RootCoordinator: NSObject, RouteTrigger, NavigationCoordinatable {
         let appGroupFolder = FileManager.default
             .appGroupContainerURL
         
-        articlesService = ArticlesService(
-            databasePath: appGroupFolder
-                .appendingPathComponent("articles.db")
-                .absoluteString,
-            language: preferences.contentLanguage.fallbackLanguage
-        )
-        
         do {
+            articlesService = try ArticlesService(
+                databasePath: appGroupFolder
+                    .appendingPathComponent("articles.db")
+                    .absoluteString,
+                language: preferences.contentLanguage.fallbackLanguage
+            )
+            
             let preferencesDatabasePath = appGroupFolder
                 .appendingPathComponent("preferences.db")
                 .absoluteString
@@ -178,7 +178,7 @@ private extension RootCoordinator {
         case .article(let article):
             route(to: \.articleView, article)
             Task {
-                await self.articlesService.sendAnalyticsEvent(.view, articleId: article.id)
+                await self.articlesService?.sendAnalyticsEvent(.view, articleId: article.id)
             }
 
         case .zikrPages(let vm):
@@ -259,7 +259,7 @@ private extension RootCoordinator {
 extension RootCoordinator {
     
     @ViewBuilder func makeRootView() -> some View {
-        if let preferencesDatabase {
+        if let preferencesDatabase, let articlesService {
             RootView(
                 viewModel: RootViewModel(
                     mainMenuViewModel: MainMenuViewModel(
@@ -281,8 +281,11 @@ extension RootCoordinator {
         return ArticleScreen(
             viewModel: ArticleViewModel(
                 article: article,
-                analyticsStream: {
-                    await self.articlesService.observeAnalyticsNumbers(articleId: article.id)
+                analyticsStream: { [unowned self] in
+                    guard let articlesService = self.articlesService else {
+                        return .never
+                    }
+                    return await articlesService.observeAnalyticsNumbers(articleId: article.id)
                 }
             ),
             onShareButtonTap: { [unowned self] in
@@ -301,7 +304,7 @@ extension RootCoordinator {
                     textFont: UIFont(name: self.preferences.preferredTranslationFont.postscriptName, size: 18)!,
                     pageMargins: UIEdgeInsets(horizontal: 50, vertical: 50),
                     footer: ArticlePDFComposer.Footer(
-                        image: UIImage(named: "ink")!,
+                        image: UIImage(named: "ink"),
                         text: L10n.Share.sharedWithAzkar.uppercased(),
                         link: URL(string: "https://apps.apple.com/app/id1511423586")
                     )
@@ -320,7 +323,7 @@ extension RootCoordinator {
                 let view = ArticlePDFCoverView(
                     article: article,
                     maxHeight: 842,
-                    logoImage: UIImage(named: "ink")!,
+                    logoImage: UIImage(named: "ink"),
                     logoSubtitle: L10n.Share.sharedWithAzkar
                 )
                 .frame(width: 595, height: 842)
@@ -361,7 +364,7 @@ extension RootCoordinator {
                     viewController.dismiss()
                     if completed {
                         Task {
-                            await self.articlesService.sendAnalyticsEvent(.share, articleId: article.id)
+                            await self.articlesService?.sendAnalyticsEvent(.share, articleId: article.id)
                         }
                     }
                 }

@@ -2,7 +2,11 @@ import Foundation
 import Entities
 import Supabase
 
-let supabaseClient: SupabaseClient = {
+enum SupabaseContructorError: Error {
+    case noAPIKeyProvided
+}
+
+func getSupabaseClient() throws -> SupabaseClient {
     let decoder = JSONDecoder()
     decoder.keyDecodingStrategy = .convertFromSnakeCase
     
@@ -44,7 +48,8 @@ let supabaseClient: SupabaseClient = {
         let url = URL(string: rawURL),
         let key = (infoPlist[kApiKey] as? String)?.textOrNil ?? processEnv[kApiKey]
     else {
-        fatalError("You must provide Supabase API key & url address.")
+        print("You must provide Supabase API key & url address.")
+        throw SupabaseContructorError.noAPIKeyProvided
     }
     
     let client = SupabaseClient(
@@ -58,17 +63,20 @@ let supabaseClient: SupabaseClient = {
         )
     )
     return client
-}()
+}
 
 final class ArticlesSupabaseRepository: ArticlesRepository {
     
+    private let supabaseClient: SupabaseClient
     private let language: Language
     private let analyticsService: ArticlesAnalyticsService
     
     init(
+        supabaseClient: SupabaseClient,
         language: Language,
         analyticsService: ArticlesAnalyticsService
     ) {
+        self.supabaseClient = supabaseClient
         self.language = language
         self.analyticsService = analyticsService
     }
