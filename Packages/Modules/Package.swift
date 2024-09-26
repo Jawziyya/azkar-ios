@@ -17,7 +17,7 @@ let package = Package(
     dependencies: [
         // MARK: Data
         .package(url: "https://github.com/weichsel/ZIPFoundation", from: "0.9.0"),
-        .package(url: "https://github.com/groue/GRDB.swift", from: "5.0.0"),
+        .package(url: "https://github.com/groue/GRDB.swift", from: "6.29.3"),
         
         // MARK: Services.
         .package(url: "https://github.com/supabase-community/supabase-swift", from: "2.0.0"),

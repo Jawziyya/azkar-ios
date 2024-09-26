@@ -44,7 +44,7 @@ final class RootCoordinator: NSObject, RouteTrigger, NavigationCoordinatable {
     var databaseService: AzkarDatabase {
         AzkarDatabase(language: preferences.contentLanguage)
     }
-    let preferencesDatabase: PreferencesDatabase
+    var preferencesDatabase: PreferencesDatabase?
     let deeplinker: Deeplinker
     let player: Player
     let articlesService: ArticlesServiceType
@@ -83,10 +83,14 @@ final class RootCoordinator: NSObject, RouteTrigger, NavigationCoordinatable {
             language: preferences.contentLanguage.fallbackLanguage
         )
         
-        let preferencesDatabasePath = appGroupFolder
-            .appendingPathComponent("preferences.db")
-            .absoluteString
-        preferencesDatabase = PreferencesSQLiteDatabaseService(databasePath: preferencesDatabasePath)
+        do {
+            let preferencesDatabasePath = appGroupFolder
+                .appendingPathComponent("preferences.db")
+                .absoluteString
+            preferencesDatabase = try PreferencesSQLiteDatabaseService(databasePath: preferencesDatabasePath)
+        } catch {
+            print(error.localizedDescription)
+        }
         
         super.init()
         
@@ -186,7 +190,7 @@ private extension RootCoordinator {
             }
             
             Task {
-                await preferencesDatabase.storeOpenedZikr(zikr.id, language: zikr.language)
+                await preferencesDatabase?.storeOpenedZikr(zikr.id, language: zikr.language)
             }
             
             let hadith = try? zikr.hadith.flatMap { id in
@@ -210,7 +214,7 @@ private extension RootCoordinator {
             }
             
             Task {
-                await preferencesDatabase.storeOpenedZikr(zikr.id, language: zikr.language)
+                await preferencesDatabase?.storeOpenedZikr(zikr.id, language: zikr.language)
             }
 
             let hadith = try? zikr.hadith.flatMap { id in
@@ -254,19 +258,23 @@ private extension RootCoordinator {
 
 extension RootCoordinator {
     
-    func makeRootView() -> some View {
-        RootView(
-            viewModel: RootViewModel(
-                mainMenuViewModel: MainMenuViewModel(
-                    databaseService: databaseService,
-                    preferencesDatabase: preferencesDatabase,
-                    router: UnownedRouteTrigger(router: self),
-                    preferences: preferences,
-                    player: player,
-                    articlesService: articlesService
+    @ViewBuilder func makeRootView() -> some View {
+        if let preferencesDatabase {
+            RootView(
+                viewModel: RootViewModel(
+                    mainMenuViewModel: MainMenuViewModel(
+                        databaseService: databaseService,
+                        preferencesDatabase: preferencesDatabase,
+                        router: UnownedRouteTrigger(router: self),
+                        preferences: preferences,
+                        player: player,
+                        articlesService: articlesService
+                    )
                 )
             )
-        )
+        } else {
+            EmptyView()
+        }
     }
     
     func makeArticleView(_ article: Article) -> some View {
