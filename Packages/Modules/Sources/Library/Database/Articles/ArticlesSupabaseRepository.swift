@@ -79,8 +79,7 @@ final class ArticlesSupabaseRepository: ArticlesRepository {
             let createdAt: Date
         }
         
-        let spotlightArticlesQuery = await supabaseClient
-            .database
+        let spotlightArticlesQuery = supabaseClient
             .from("articles_spotlight")
             .select()
         
@@ -90,8 +89,7 @@ final class ArticlesSupabaseRepository: ArticlesRepository {
             .execute()
             .value
         
-        var articlesQuery = await supabaseClient
-            .database
+        var articlesQuery = supabaseClient
             .from("articles")
             .select()
             .eq("language", value: language.id)
@@ -111,7 +109,7 @@ final class ArticlesSupabaseRepository: ArticlesRepository {
         }
         
         let articleObjects: [ArticleDTO] = try await articlesQuery
-            .in("id", value: spotlightArticles.map(\.article))
+            .in("id", values: spotlightArticles.map(\.article))
             .execute()
             .value
         
@@ -157,7 +155,6 @@ final class ArticlesSupabaseRepository: ArticlesRepository {
 private extension ArticlesSupabaseRepository {
     func getCategories() async throws -> [ArticleCategory] {
         try await supabaseClient
-            .database
             .from("articles_categories")
             .select()
             .execute()

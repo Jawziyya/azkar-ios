@@ -4,7 +4,7 @@ import SwiftUI
 import Popovers
 import Entities
 
-extension URL: Identifiable {
+extension URL: @retroactive Identifiable {
     public var id: String {
         absoluteString
     }
