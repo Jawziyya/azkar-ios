@@ -22,7 +22,7 @@ protocol BackgroundTaskCreator: AnyObject {
     /// - Returns: A unique identifier for the new background task. You must pass this value to the
     ///     `endBackgroundTask:` method to mark the end of this task. This method returns `UIBackgroundTaskInvalid`
     ///     if running in the background is not possible.
-    func beginBackgroundTask(expirationHandler handler: (() -> Void)?) -> UIBackgroundTaskIdentifier
+    func beginBackgroundTask(withName taskName: String?, expirationHandler handler: (@MainActor @Sendable () -> Void)?) -> UIBackgroundTaskIdentifier
     
     /// Marks the end of a specific long-running background task.
     ///
@@ -72,7 +72,7 @@ class BackgroundHandler: NSObject {
                 return false
             }
 
-            taskIdentifier = backgroundTaskCreator.beginBackgroundTask { [weak self] in
+            taskIdentifier = backgroundTaskCreator.beginBackgroundTask(withName: nil) { [weak self] in
                 if let taskIdentifier = self?.taskIdentifier {
                     self?.backgroundTaskCreator.endBackgroundTask(taskIdentifier)
                 }
