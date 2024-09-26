@@ -41,7 +41,7 @@ let package = Package(
         .package(url: "https://github.com/airbnb/lottie-ios", from: "3.0.0"),
         .package(url: "https://github.com/SwiftUIX/SwiftUIX", from: "0.2.2"),
         .package(url: "https://github.com/siteline/swiftui-introspect", from: "1.1.2"),
-        .package(url: "https://github.com/SwiftUI-Plus/ActivityView", from: "1.0.0"),
+        .package(url: "https://github.com/shaps80/SwiftUIBackports", from: "2.8.1"),
         .package(url: "https://github.com/demharusnam/SwiftUIDrag", revision: "0686318a"),
         .package(url: "https://github.com/SvenTiigi/WhatsNewKit", from: "2.0.0"),
         .package(url: "https://github.com/bmoliveira/MarkdownKit", from: "1.7.1"),
@@ -70,6 +70,7 @@ let package = Package(
                 "Extensions",
                 .product(name: "GRDB", package: "GRDB.swift"),
                 .product(name: "Supabase", package: "supabase-swift"),
+                "SwiftUIBackports",
             ]
         ),
         .target(name: "ArticleReader", dependencies: [

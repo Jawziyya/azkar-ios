@@ -4,7 +4,7 @@ import UIKit
 import SwiftUI
 import SwiftUIIntrospect
 import SwiftUIX
-import ActivityView
+import SwiftUIBackports
 
 struct AppInfoView: View {
 
@@ -12,8 +12,8 @@ struct AppInfoView: View {
 
     @ObservedObject var viewModel: AppInfoViewModel
 
-    @State private var url: URL?
-    @State private var activityItem: ActivityItem?
+
+    @State private var activityItem: URL?
 
     var body: some View {
         ScrollView {
@@ -29,20 +29,14 @@ struct AppInfoView: View {
         }
         .toolbar {
             ToolbarItem(placement: ToolbarItemPlacement.navigationBarTrailing) {
-                Button(action: {
-                    activityItem = ActivityItem(items: URL(string: "https://apps.apple.com/app/id1511423586")!)
-                }, label: {
+                Backport.ShareLink(item: URL(string: "https://apps.apple.com/app/id1511423586")!) {
                     Image(systemName: "square.and.arrow.up")
                         .foregroundColor(Color.accent)
-                })
+                }
             }
         }
         .navigationTitle(Text("about.title", comment: "About app screen title."))
         .supportedOrientations(.portrait)
-        .activitySheet($activityItem)
-        .sheet(item: $url) { url in
-            SafariView(url: url, entersReaderIfAvailable: false)
-        }
         .background(Color.background.edgesIgnoringSafeArea(.all))
     }
 
@@ -142,5 +136,7 @@ struct AppInfoView: View {
 }
 
 #Preview("App Info") {
-    AppInfoView(viewModel: AppInfoViewModel(preferences: Preferences.shared))
+    NavigationView {
+        AppInfoView(viewModel: AppInfoViewModel(preferences: Preferences.shared))
+    }
 }
