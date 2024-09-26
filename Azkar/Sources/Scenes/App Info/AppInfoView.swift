@@ -50,14 +50,16 @@ struct AppInfoView: View {
         VStack {
             HStack {
                 Spacer()
-                Image(uiImage: UIImage(named: viewModel.iconImageName)!)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 100, height: 100)
-                    .clipShape(RoundedRectangle(cornerRadius: 15))
-                    .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 1)
-                    .id(viewModel.iconImageName)
-                    .transition(.opacity)
+                if let image = UIImage(named: viewModel.iconImageName) {
+                    Image(uiImage: image)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 100, height: 100)
+                        .clipShape(RoundedRectangle(cornerRadius: 15))
+                        .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 1)
+                        .id(viewModel.iconImageName)
+                        .transition(.opacity)
+                }
                 Spacer()
             }
 

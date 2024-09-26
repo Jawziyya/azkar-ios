@@ -39,7 +39,7 @@ let package = Package(
         .package(url: "https://github.com/aheze/Popovers", from: "1.3.2"),
         .package(url: "https://github.com/radianttap/Coordinator", from: "6.4.2"),
         .package(url: "https://github.com/airbnb/lottie-ios", from: "3.0.0"),
-        .package(url: "https://github.com/SwiftUIX/SwiftUIX", from: "0.1.3"),
+        .package(url: "https://github.com/SwiftUIX/SwiftUIX", from: "0.2.2"),
         .package(url: "https://github.com/siteline/swiftui-introspect", from: "1.1.2"),
         .package(url: "https://github.com/SwiftUI-Plus/ActivityView", from: "1.0.0"),
         .package(url: "https://github.com/demharusnam/SwiftUIDrag", revision: "0686318a"),

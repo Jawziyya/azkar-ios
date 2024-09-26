@@ -164,12 +164,14 @@ struct AppIconPackListView: View {
     func content(for pack: AppIconPack) -> some View {
         ForEach(pack.icons) { icon in
             HStack(spacing: 16) {
-                Image(uiImage: UIImage(named: icon.imageName)!)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 45, height: 45)
-                    .clipShape(RoundedRectangle(cornerRadius: 10))
-                    .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 1)
+                if let image = UIImage(named: icon.imageName) {
+                    Image(uiImage: image)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 45, height: 45)
+                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                        .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 1)                    
+                }
 
                 Text(icon.title)
                     .font(Font.system(.body, design: .rounded))
