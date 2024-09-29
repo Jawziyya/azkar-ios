@@ -89,6 +89,8 @@ final class RootCoordinator: NSObject, RouteTrigger, NavigationCoordinatable {
                 .absoluteString
             preferencesDatabase = try PreferencesSQLiteDatabaseService(databasePath: preferencesDatabasePath)
         } catch {
+            articlesService = DemoArticlesService()
+            preferencesDatabase = MockPreferencesDatabase()
             print(error.localizedDescription)
         }
         
