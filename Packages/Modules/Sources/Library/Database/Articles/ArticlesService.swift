@@ -19,6 +19,12 @@ public struct ArticlesAnalyticsEvent: Encodable {
     }
 }
 
+enum ArticlesServiceError: Error {
+    case localRepositoryUnavailable
+    case failedToFetchArticles(Error)
+    case failedToSaveArticles(Error)
+}
+
 public protocol ArticlesServiceType {
     func getArticles(limit: Int) -> AsyncThrowingStream<[Article], Error>
     func getArticle(_ id: Article.ID) async throws -> Article?
@@ -28,7 +34,7 @@ public protocol ArticlesServiceType {
 
 public final class ArticlesService: ArticlesServiceType {
     
-    private var localRepository: ArticlesRepository?
+    private let localRepository: ArticlesRepository
     private let remoteRepository: ArticlesRepository
     private let articlesAnalyticsService: ArticlesAnalyticsService
     
@@ -50,11 +56,7 @@ public final class ArticlesService: ArticlesServiceType {
         limit: Int
     ) -> AsyncThrowingStream<[Article], Error> {
         let remoteRepository = self.remoteRepository
-        guard let localRepository else {
-            return AsyncThrowingStream {
-                return try await remoteRepository.getArticles(limit: limit, newerThan: nil)
-            }
-        }
+        let localRepository = self.localRepository
                 
         return AsyncThrowingStream { continuation in
             Task {
@@ -99,12 +101,12 @@ public final class ArticlesService: ArticlesServiceType {
     public func getArticle(
         _ id: Article.ID
     ) async throws -> Article? {
-        if let article = try await localRepository?.getArticle(id) {
+        if let article = try await localRepository.getArticle(id) {
             return article
         } else {
             let article = try await remoteRepository.getArticle(id)
             if let article {
-                try? await localRepository?.saveArticles([article])
+                try? await localRepository.saveArticles([article])
             }
             return article
         }
@@ -112,10 +114,10 @@ public final class ArticlesService: ArticlesServiceType {
     
     private func updateAnalyticsNumbers(for articleId: Article.ID) async {
         let analytics = await articlesAnalyticsService.getArticleAnalyticsCount(articleId)
-        if var article = try? await localRepository?.getArticle(articleId) {
+        if var article = try? await localRepository.getArticle(articleId) {
             article.views = analytics?.viewsCount
             article.shares = analytics?.sharesCount
-            try? await localRepository?.saveArticle(article)
+            try? await localRepository.saveArticle(article)
         }
     }
 
