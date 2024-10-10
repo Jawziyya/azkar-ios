@@ -132,7 +132,7 @@ enum AzkarTarget: String, CaseIterable {
                     .package(product: "NukeUI"),
                     .package(product: "RevenueCat"),
                     .package(product: "SwiftUIX"),
-                    .package(product: "ActivityView"),
+                    .package(product: "SwiftUIBackports"),
                     .package(product: "SwiftUIDrag"),
                     .package(product: "Popovers"),
                     .package(product: "WhatsNewKit"),
