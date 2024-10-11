@@ -3,21 +3,6 @@ import Entities
 import Supabase
 import Combine
 
-public struct ArticlesAnalyticsEvent: Encodable {
-    public let actionType: AnalyticsRecord.ActionType
-    public let objectId: Int
-    public let recordType: String
-    
-    public init(
-        actionType: AnalyticsRecord.ActionType,
-        objectId: Int,
-        recordType: String
-    ) {
-        self.actionType = actionType
-        self.objectId = objectId
-        self.recordType = recordType
-    }
-}
 public final class ArticlesService: ArticlesServiceType {
     
     private let localRepository: ArticlesRepository
@@ -50,11 +35,11 @@ public final class ArticlesService: ArticlesServiceType {
                 do {
                     let articles = try await localRepository.getArticles(limit: limit, newerThan: nil)
                     cachedArticles = articles
-                    Task.detached { [self, articles] in
-                        for article in articles {
-                            await updateAnalyticsNumbers(for: article.id)
-                        }
-                    }
+//                    Task.detached { [self, articles] in
+//                        for article in articles {
+//                            await updateAnalyticsNumbers(for: article.id)
+//                        }
+//                    }
                     if cachedArticles.isEmpty == false {
                         continuation.yield(cachedArticles)
                     }
@@ -62,9 +47,9 @@ public final class ArticlesService: ArticlesServiceType {
                     continuation.finish(throwing: error)
                 }
                 
-//                let newestArticleDate = cachedArticles.first?.createdAt
+                let newestArticleDate = cachedArticles.first?.createdAt
                 do {
-                    let articles = try await remoteRepository.getArticles(limit: limit, newerThan: nil)
+                    let articles = try await remoteRepository.getArticles(limit: limit, newerThan: newestArticleDate)
                     try await localRepository.saveArticles(articles)
                     let allArticles = articles // + cachedArticles
                     continuation.yield(allArticles.unique(by: \.id))
@@ -74,13 +59,6 @@ public final class ArticlesService: ArticlesServiceType {
                 }
             }
         }
-    }
-    
-    /// Get list of articles for a given language.
-    public func fetchArticles(
-        limit: Int
-    ) async throws -> [Article] {
-        return try await remoteRepository.getArticles(limit: limit, newerThan: nil)
     }
     
     /// Request an article using article.id
@@ -98,14 +76,14 @@ public final class ArticlesService: ArticlesServiceType {
         }
     }
     
-    private func updateAnalyticsNumbers(for articleId: Article.ID) async {
-        let analytics = await articlesAnalyticsService.getArticleAnalyticsCount(articleId)
-        if var article = try? await localRepository.getArticle(articleId) {
-            article.views = analytics?.viewsCount
-            article.shares = analytics?.sharesCount
-            try? await localRepository.saveArticle(article)
-        }
-    }
+//    private func updateAnalyticsNumbers(for articleId: Article.ID) async {
+//        let analytics = await articlesAnalyticsService.getArticleAnalyticsCount(articleId)
+//        if var article = try? await localRepository.getArticle(articleId) {
+//            article.views = analytics?.viewsCount
+//            article.shares = analytics?.sharesCount
+//            try? await localRepository.saveArticle(article)
+//        }
+//    }
 
     /// Report analytics event.
     public func sendAnalyticsEvent(
