@@ -37,7 +37,6 @@ final class MainMenuViewModel: ObservableObject {
     let currentYear: String
     
     let otherAzkarModels: [AzkarMenuItem]
-    let infoModels: [AzkarMenuOtherItem]
     
     @Published var fadl: Fadl?
 
@@ -65,7 +64,6 @@ final class MainMenuViewModel: ObservableObject {
         var item = AzkarMenuOtherItem(imageName: AppIconPack.maccinz.icons.randomElement()!.imageName, title: title, color: Color.red, iconType: .bundled, imageCornerRadius: 4)
         item.action = { [unowned self] in
             self.didDisplayIconPacksMessage = true
-            self.hideIconPacksMessage()
             self.navigateToIconPacksList()
         }
         return item
@@ -131,11 +129,6 @@ final class MainMenuViewModel: ObservableObject {
                 count: nil
             ),
         ]
-
-        infoModels = [
-            AzkarMenuOtherItem(groupType: .about, imageName: "info.circle", title: L10n.Root.about, color: Color.init(.systemGray)),
-            AzkarMenuOtherItem(groupType: .settings, imageName: "gear", title: L10n.Root.settings, color: Color.init(.systemGray)),
-        ]
         
         var year = "\(Date().hijriYear) г.х."
         switch Calendar.current.identifier {
@@ -145,10 +138,6 @@ final class MainMenuViewModel: ObservableObject {
             year += " (\(Date().year) г.)"
         }
         currentYear = year
-
-        if !didDisplayIconPacksMessage && !UIDevice.current.isMac {
-            additionalMenuItems.append(iconsPackMessage)
-        }
 
         preferences.$enableFunFeatures
             .map { flag in flag && Date().isRamadanEidDays }
@@ -202,14 +191,6 @@ final class MainMenuViewModel: ObservableObject {
     
     func navigateToArticle(_ article: Article) {
         router.trigger(.article(article))
-    }
-
-    private func hideIconPacksMessage() {
-        DispatchQueue.main.async {
-            if let index = self.additionalMenuItems.firstIndex(where: { $0 == self.iconsPackMessage }) {
-                self.additionalMenuItems.remove(at: index)
-            }
-        }
     }
     
     func naviateToSearchResult(_ searchResult: SearchResultZikr) {

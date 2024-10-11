@@ -70,6 +70,7 @@ let package = Package(
                 "Extensions",
                 .product(name: "GRDB", package: "GRDB.swift"),
                 .product(name: "Supabase", package: "supabase-swift"),
+                .product(name: "NukeUI", package: "Nuke"),
                 "SwiftUIBackports",
             ]
         ),

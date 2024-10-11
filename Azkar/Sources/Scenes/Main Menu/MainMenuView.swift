@@ -4,6 +4,12 @@ import UserNotifications
 import Entities
 import ArticleReader
 
+private extension View {
+    func applyMenuPadding() -> some View {
+        self.padding(.horizontal, 20)
+    }
+}
+
 struct MainMenuView: View {
 
     @ObservedObject var viewModel: MainMenuViewModel
@@ -35,30 +41,30 @@ struct MainMenuView: View {
     @ViewBuilder
     var displayContent: some View {
         if isSearching {
-            if viewModel.searchQuery.isEmpty == false {
-                SearchResultsView(
-                    viewModel: viewModel.searchViewModel,
-                    onSelect: viewModel.naviateToSearchResult(_:)
-                )
-            } else {
-                SearchSuggestionsView(
-                    viewModel: viewModel.searchSuggestionsViewModel
-                )
-            }
+            searchView
         } else {
             content
         }
     }
     
     var content: some View {
-        List {
-            menuContent
-                .listRowSeparator(.hidden)
-                .listRowBackground(itemsBackgroundColor)
+        ScrollView {
+            VStack(spacing: 20) {
+                menuContent
+            }
         }
-        .customListSectionSpacing(.compact)
-        .listStyle(.insetGrouped)
         .customScrollContentBackground()
+        .toolbar {
+            ToolbarItemGroup(placement: .topBarTrailing) {
+                Button(action: viewModel.navigateToAboutScreen) {
+                    Image(systemName: "info.circle")
+                }
+                
+                Button(action: viewModel.navigateToSettings) {
+                    Image(systemName: "gear")
+                }
+            }
+        }
         .background(
             Color.background
                 .edgesIgnoringSafeArea(.all)
@@ -75,6 +81,19 @@ struct MainMenuView: View {
                 )
         )
     }
+    
+    @ViewBuilder private var searchView: some View {
+        if viewModel.searchQuery.isEmpty {
+            SearchSuggestionsView(
+                viewModel: viewModel.searchSuggestionsViewModel
+            )
+        } else {
+            SearchResultsView(
+                viewModel: viewModel.searchViewModel,
+                onSelect: viewModel.naviateToSearchResult(_:)
+            )
+        }
+    }
 
     @ViewBuilder
     private var menuContent: some View {
@@ -84,20 +103,8 @@ struct MainMenuView: View {
 
         if viewModel.articles.isEmpty == false {
             articlesView
-                .listRowInsets(.zero)
-                .frame(height: articleCellHeight)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 10)
-                        .stroke(Color.accentColor.opacity(0.5), lineWidth: 3)
-                )
         }
         
-        appSections
-        
-        additionalItems
-        
-        if let fadl = viewModel.fadl {
-            fadlSection(fadl)
         }
     }
     
@@ -111,10 +118,17 @@ struct MainMenuView: View {
                         article: article,
                         imageMaxHeight: articleCellHeight
                     )
+                    .clipShape(RoundedRectangle(cornerRadius: Constants.cornerRadius))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: Constants.cornerRadius)
+                            .stroke(Color.accentColor.opacity(0.5), lineWidth: 3)
+                    )
+                    .padding(.horizontal, 20)
                 })
                 .buttonStyle(.plain)
             }
         }
+        .frame(height: articleCellHeight)
         .tabViewStyle(.page(indexDisplayMode: .automatic))
     }
     
@@ -138,10 +152,9 @@ struct MainMenuView: View {
                     animationSpeed: 0.5
                 ))
             }
-            .listRowBackground(Color.clear)
-            .listRowInsets(.zero)
         }
         .frame(maxWidth: .infinity)
+        .applyMenuPadding()
     }
     
     private func getMainMenuSectionView(_ item: MainMenuLargeGroupViewModel) -> some View {
@@ -159,7 +172,7 @@ struct MainMenuView: View {
     
     // MARK: - Other Azkar
     private var otherAzkar: some View {
-        Section {
+        VStack {
             if let dua = viewModel.additionalAdhkar {
                 ForEach(dua) { item in
                     getMenuItem(
@@ -180,52 +193,10 @@ struct MainMenuView: View {
                 )
             }
         }
-    }
-    
-    // MARK: - App Sections
-    private var appSections: some View {
-        Section {
-            ForEach(viewModel.infoModels) { item in
-                getMenuItem(
-                    item: item,
-                    action: {
-                        viewModel.navigateToMenuItem(item)
-                    }
-                )
-            }
-        }
-    }
-    
-    // MARK: - Additional Sections
-    private var additionalItems: some View {
-        Section {
-            ForEach(viewModel.additionalMenuItems) { item in
-                getMenuItem(
-                    item: item,
-                    action: {
-                        item.action?()
-                    }
-                )
-                .disabled(item.action == nil)
-            }
-        }
-    }
-    
-    private func fadlSection(_ fadl: Fadl) -> some View {
-        Section {
-            VStack(spacing: 8) {
-                Text(fadl.text)
-                    .font(Font.customFont(viewModel.preferences.preferredTranslationFont, style: .caption1))
-                    .tracking(1.2)
-                    .foregroundColor(Color.text.opacity(0.7))
-                
-                Text(fadl.source)
-                    .font(Font.customFont(viewModel.preferences.preferredTranslationFont, style: .caption2))
-                    .foregroundColor(Color.secondaryText.opacity(0.5))
-            }
-            .listRowBackground(Color.clear)
-            .frame(maxWidth: .infinity)
-        }
+        .padding()
+        .background(Color.contentBackground)
+        .clipShape(RoundedRectangle(cornerRadius: Constants.cornerRadius))
+        .applyMenuPadding()
     }
     
     private func getMenuItem(
