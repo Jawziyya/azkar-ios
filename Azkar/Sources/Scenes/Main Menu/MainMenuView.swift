@@ -105,7 +105,6 @@ struct MainMenuView: View {
             articlesView
         }
         
-        }
     }
     
     private var articlesView: some View {
