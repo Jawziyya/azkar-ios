@@ -11,7 +11,7 @@ on:
 jobs:
   deploy:
     name: Deploying to Testflight
-    runs-on: macos-14
+    runs-on: macos-15
 
     env:
       APPLE_ID: '${{ secrets.APPLE_ID }}'
@@ -36,7 +36,7 @@ jobs:
       - uses: jdx/mise-action@v2
       - uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: 15.2
+          xcode-version: 16.0
 
       - name: Checkout repository
         uses: actions/checkout@v3
