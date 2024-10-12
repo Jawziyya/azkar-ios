@@ -46,6 +46,7 @@ final class RootCoordinator: NSObject, RouteTrigger, NavigationCoordinatable {
     let deeplinker: Deeplinker
     let player: Player
     var articlesService: ArticlesServiceType?
+    var adsService: AdsServiceType?
 
     private let selectedZikrPageIndex = CurrentValueSubject<Int, Never>(0)
 
@@ -81,6 +82,7 @@ final class RootCoordinator: NSObject, RouteTrigger, NavigationCoordinatable {
                     .absoluteString,
                 language: preferences.contentLanguage.fallbackLanguage
             )
+            adsService = try AdsService()
             
             let preferencesDatabasePath = appGroupFolder
                 .appendingPathComponent("preferences.db")
@@ -254,7 +256,7 @@ private extension RootCoordinator {
 extension RootCoordinator {
     
     @ViewBuilder func makeRootView() -> some View {
-        if let preferencesDatabase, let articlesService {
+        if let preferencesDatabase, let articlesService, let adsService {
             RootView(
                 viewModel: RootViewModel(
                     mainMenuViewModel: MainMenuViewModel(
@@ -263,7 +265,8 @@ extension RootCoordinator {
                         router: UnownedRouteTrigger(router: self),
                         preferences: preferences,
                         player: player,
-                        articlesService: articlesService
+                        articlesService: articlesService,
+                        adsService: adsService
                     )
                 )
             )

@@ -8,10 +8,9 @@ final class DemoArticlesService: ArticlesServiceType {
             return [.placeholder()]
         }
     }
-    func sendAnalyticsEvent(_ type: AnalyticsRecord.ActionType, articleId: Article.ID) async {}
+    func sendAnalyticsEvent(_ type: AnalyticsRecord.ActionType, articleId: Article.ID) {}
+    func updateAnalyticsNumbers(for articleId: Article.ID, views: Int, shares: Int) {}
     func observeAnalyticsNumbers(articleId: Article.ID) async -> AsyncStream<ArticleAnalytics> {
         return AsyncStream { _ in }
-    }
-    func updateAnalyticsNumbers(for articleId: Article.ID, views: Int, shares: Int) async {
     }
 }

@@ -5,30 +5,26 @@ import Entities
 final class ArticlesAnalyticsService {
     
     private let supabaseClient: SupabaseClient
+    private let analyticsService: AnalyticsService
     private var observationChannels: [Article.ID: Supabase.RealtimeChannelV2] = [:]
     private var observationStreams: [Article.ID: AsyncStream<AnyAction>] = [:]
     
-    init(supabaseClient: SupabaseClient) {
+    init(
+        supabaseClient: SupabaseClient
+    ) {
         self.supabaseClient = supabaseClient
+        self.analyticsService = AnalyticsService(supabaseClient: supabaseClient)
     }
     
     func sendAnalyticsEvent(
         _ type: AnalyticsRecord.ActionType,
         articleId: Article.ID
-    ) async {
-        do {
-            try await supabaseClient
-                .from("analytics")
-                .insert(ArticlesAnalyticsEvent(
-                    actionType: type,
-                    objectId: articleId,
-                    recordType: AnalyticsRecord.RecordType.article.rawValue
-                ))
-                .execute()
-                .value
-        } catch {
-            print(error.localizedDescription)
-        }
+    ) {
+        analyticsService.sendAnalyticsEvent(
+            objectId: articleId,
+            recordType: .article,
+            actionType: type
+        )
     }
     
     func getArticleAnalyticsCount(_ articleId: ArticleDTO.ID) async -> ArticleAnalytics? {

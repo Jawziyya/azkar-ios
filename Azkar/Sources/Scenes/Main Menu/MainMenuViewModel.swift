@@ -43,6 +43,7 @@ final class MainMenuViewModel: ObservableObject {
     @Published var additionalMenuItems: [AzkarMenuOtherItem] = []
     @Published var enableEidBackground = false
     @Published var articles: [Article] = []
+    @Published var ad: Ad?
 
     @Preference("kDidDisplayIconPacksMessage", defaultValue: false)
     var didDisplayIconPacksMessage
@@ -52,6 +53,7 @@ final class MainMenuViewModel: ObservableObject {
 
     let preferences: Preferences
     private let articlesService: ArticlesServiceType
+    private let adsService: AdsServiceType
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -75,7 +77,8 @@ final class MainMenuViewModel: ObservableObject {
         router: UnownedRouteTrigger<RootSection>,
         preferences: Preferences,
         player: Player,
-        articlesService: ArticlesServiceType
+        articlesService: ArticlesServiceType,
+        adsService: AdsServiceType
     ) {
         self.azkarDatabase = databaseService
         self.preferencesDatabase = preferencesDatabase
@@ -83,6 +86,7 @@ final class MainMenuViewModel: ObservableObject {
         self.preferences = preferences
         self.player = player
         self.articlesService = articlesService
+        self.adsService = adsService
         
         if Date().isRamadan {
             var adhkar: [ZikrMenuItem] = []
@@ -171,6 +175,10 @@ final class MainMenuViewModel: ObservableObject {
         Task {
             await loadArticles()
         }
+        
+        Task {
+            await loadAds()
+        }
     }
     
     private func loadArticles() async {
@@ -184,6 +192,15 @@ final class MainMenuViewModel: ObservableObject {
                     }
                 }
             }
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
+    
+    @MainActor private func loadAds() async {
+        do {
+            let ads = try await adsService.fetchAds(newerThan: nil)
+            self.ad = ads.last
         } catch {
             print(error.localizedDescription)
         }
@@ -212,16 +229,18 @@ final class MainMenuViewModel: ObservableObject {
     func navigateToIconPacksList() {
         router.trigger(.settings(.appearance))
     }
-
-    func navigateToMenuItem(_ item: AzkarMenuOtherItem) {
-        switch item.groupType {
-        case .about:
-            navigateToAboutScreen()
-        case .settings:
-            navigateToSettings()
-        default:
-            break
-        }
+    
+    func hideAd(_ ad: Ad) {
+        self.ad = nil
+    }
+    
+    func handleAdSelection(_ ad: Ad) {
+        UIApplication.shared.open(ad.actionLink)
+        adsService.sendAnalytics(for: ad, action: .open)
+    }
+    
+    func sendAdImpressionEvent(_ ad: Ad) {
+        adsService.sendAnalytics(for: ad, action: .impression)
     }
     
     let faker = Faker()
@@ -247,7 +266,8 @@ extension MainMenuViewModel {
             router: .empty,
             preferences: Preferences.shared,
             player: .test,
-            articlesService: DemoArticlesService()
+            articlesService: DemoArticlesService(),
+            adsService: DemoAdsService()
         )
     }
     

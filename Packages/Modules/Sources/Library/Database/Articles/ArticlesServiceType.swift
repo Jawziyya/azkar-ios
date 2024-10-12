@@ -41,7 +41,7 @@ public protocol ArticlesServiceType {
     func sendAnalyticsEvent(
         _ type: AnalyticsRecord.ActionType,
         articleId: Article.ID
-    ) async
+    )
     
     /// Fetches and observes real-time analytics numbers for a specific article.
     ///
@@ -65,6 +65,6 @@ public protocol ArticlesServiceType {
         for articleId: Article.ID,
         views: Int,
         shares: Int
-    ) async
+    )
     
 }

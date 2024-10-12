@@ -46,8 +46,10 @@ public final class ArticlesService: ArticlesServiceType {
                 do {
                     let articles = try await remoteRepository.getArticles(limit: limit, newerThan: newestArticleDate)
                     try await localRepository.saveArticles(articles)
-                    let allArticles = articles + cachedArticles
-                    continuation.yield(allArticles.unique(by: \.id))
+                    let allArticles = (articles + cachedArticles).unique(by: \.id)
+                    if allArticles != cachedArticles {
+                        continuation.yield(allArticles)
+                    }
                     continuation.finish()
                 } catch {
                     continuation.finish(throwing: error)
@@ -75,11 +77,13 @@ public final class ArticlesService: ArticlesServiceType {
         for articleId: Article.ID,
         views: Int,
         shares: Int
-    ) async {
-        if var article = try? await localRepository.getArticle(articleId) {
-            article.views = views
-            article.shares = shares
-            try? await localRepository.saveArticle(article)
+    ) {
+        Task {
+            if var article = try? await localRepository.getArticle(articleId) {
+                article.views = views
+                article.shares = shares
+                try? await localRepository.saveArticle(article)
+            }
         }
     }
 
@@ -87,8 +91,8 @@ public final class ArticlesService: ArticlesServiceType {
     public func sendAnalyticsEvent(
         _ type: AnalyticsRecord.ActionType,
         articleId: Article.ID
-    ) async {
-        await articlesAnalyticsService.sendAnalyticsEvent(type, articleId: articleId)
+    ) {
+        articlesAnalyticsService.sendAnalyticsEvent(type, articleId: articleId)
     }
     
     public func observeAnalyticsNumbers(

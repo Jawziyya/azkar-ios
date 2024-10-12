@@ -17,6 +17,7 @@ struct MainMenuView: View {
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.isSearching) var isSearching
     @Environment(\.dismissSearch) var dismissSearch
+    @State private var showAd = true
     
     private let articleCellHeight: CGFloat = 230
 
@@ -27,7 +28,7 @@ struct MainMenuView: View {
     var body: some View {
         displayContent
             .textInputAutocapitalization(.never)
-            .saturation(viewModel.preferences.colorTheme == .ink ? 0 : 1)
+            .removeSaturationIfNeeded()
             .attachEnvironmentOverrides(viewModel: EnvironmentOverridesViewModel(preferences: viewModel.preferences))
             .background(
                 GeometryReader { proxy in
@@ -102,30 +103,9 @@ struct MainMenuView: View {
             articlesView
         }
         
-    }
-    
-    private var articlesView: some View {
-        TabView {
-            ForEach(viewModel.articles) { article in
-                Button(action: {
-                    viewModel.navigateToArticle(article)
-                }, label: {
-                    ArticleCellView(
-                        article: article,
-                        imageMaxHeight: articleCellHeight
-                    )
-                    .clipShape(RoundedRectangle(cornerRadius: Constants.cornerRadius))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: Constants.cornerRadius)
-                            .stroke(Color.accentColor.opacity(0.5), lineWidth: 3)
-                    )
-                    .padding(.horizontal, 20)
-                })
-                .buttonStyle(.plain)
-            }
+        if let ad = viewModel.ad {
+            adView(ad)
         }
-        .frame(height: articleCellHeight)
-        .tabViewStyle(.page(indexDisplayMode: .automatic))
     }
     
     // MARK: - Day & Night Azkar
@@ -219,6 +199,59 @@ struct MainMenuView: View {
         .buttonStyle(.plain)
     }
 
+    private var articlesView: some View {
+        TabView {
+            ForEach(viewModel.articles) { article in
+                Button(action: {
+                    viewModel.navigateToArticle(article)
+                }, label: {
+                    ArticleCellView(
+                        article: article,
+                        imageMaxHeight: articleCellHeight
+                    )
+                    .clipShape(RoundedRectangle(cornerRadius: Constants.cornerRadius))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: Constants.cornerRadius)
+                            .stroke(Color.accentColor.opacity(0.5), lineWidth: 3)
+                    )
+                    .padding(.horizontal, 20)
+                })
+                .buttonStyle(.plain)
+            }
+        }
+        .frame(height: articleCellHeight)
+        .tabViewStyle(.page(indexDisplayMode: .automatic))
+    }
+    
+    func adView(_ ad: Ad) -> some View {
+        AdButton(
+            item: AdButtonItem(ad: ad),
+            cornerRadius: Constants.cornerRadius,
+            onClose: {
+                withAnimation(.spring) {
+                    viewModel.hideAd(ad)
+                }
+            },
+            action: {
+                viewModel.handleAdSelection(ad)
+            }
+        )
+        .onAppear {
+            viewModel.sendAdImpressionEvent(ad)
+        }
+        .frame(maxWidth: .infinity)
+        .clipShape(RoundedRectangle(cornerRadius: Constants.cornerRadius))
+        .overlay(
+            RoundedRectangle(cornerRadius: Constants.cornerRadius)
+                .stroke(Color.accentColor.opacity(0.5), lineWidth: 3)
+        )
+        .applyMenuPadding()
+        .transition(.asymmetric(
+            insertion: .move(edge: .top).combined(with: .opacity),
+            removal: .move(edge: .bottom).combined(with: .opacity)
+        ))
+    }
+    
 }
 
 #Preview("Menu Default") {
