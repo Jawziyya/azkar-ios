@@ -122,6 +122,7 @@ enum AzkarTarget: String, CaseIterable {
                     .package(product: "Entities"),
                     .package(product: "Extensions"),
                     .package(product: "Library"),
+                    .package(product: "AboutApp"),
                     .package(product: "ArticleReader"),
                     .package(product: "AudioPlayer"),
                     .package(product: "SwiftyStoreKit"),

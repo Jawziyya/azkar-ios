@@ -18,26 +18,42 @@ struct SettingsView: View {
         
     var body: some View {
         List {
-            content
-                .listRowBackground(Color.contentBackground)
+            Section {
+                content
+            }
+            .listRowBackground(Color.contentBackground)
+            
+            Section {
+                additionalContent
+            }
+            .listRowBackground(Color.contentBackground)
+        }
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button(action: viewModel.navigateToAboutAppScreen) {
+                    Image(systemName: "info.circle")
+                }
+            }
         }
         .listStyle(.insetGrouped)
         .customScrollContentBackground()
         .background(Color.background, ignoresSafeAreaEdges: .all)
         .navigationTitle(L10n.Settings.title)
+        .removeSaturationIfNeeded()
     }
         
     var content: some View {
         Group {
-            switch viewModel.mode {
-            case .standart:
-                appearanceSection
-                counterSection
-                textSettingsSection
-                remindersSection
-            case .text:
-                textSettingsSection
-            }
+            appearanceSection
+            counterSection
+            textSettingsSection
+            remindersSection
+        }
+    }
+    
+    var additionalContent: some View {
+        Group {
+            creditsSection
         }
     }
     
@@ -131,6 +147,16 @@ struct SettingsView: View {
             image: "bell.fill",
             imageBackground: Color(.systemGreen),
             action: viewModel.navigateToRemindersSettings
+        )
+    }
+    
+    var creditsSection: some View {
+        getSectionButton(
+            L10n.Credits.title,
+            subtitle: L10n.Credits.subtitle,
+            image: "link",
+            imageBackground: Color(.systemCyan),
+            action: viewModel.navigateToCreditsScreen
         )
     }
         

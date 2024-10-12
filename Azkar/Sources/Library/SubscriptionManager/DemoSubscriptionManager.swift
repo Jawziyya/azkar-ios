@@ -5,11 +5,11 @@ import Combine
 
 final class DemoSubscriptionManager: SubscriptionManagerType {
 
-    init(isProUser: Bool = false) {
+    init(isProUser: Bool = true) {
         self._isProUser = isProUser
     }
 
-    private var _isProUser = false
+    private var _isProUser: Bool
     private var _isPurchaseSuccessful = true
     
     private let _products = CurrentValueSubject<[Product], Error>([

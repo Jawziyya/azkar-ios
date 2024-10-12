@@ -18,7 +18,6 @@ enum RootSection: Equatable, RouteKind {
     case zikrPages(_ vm: ZikrPagesViewModel)
     case goToPage(Int)
     case settings(_ intitialRoute: SettingsRoute? = nil, presentModally: Bool = false)
-    case aboutApp
     case whatsNew
     case shareOptions(Zikr)
     case article(Article)
@@ -33,7 +32,6 @@ final class RootCoordinator: NSObject, RouteTrigger, NavigationCoordinatable {
     @Route(.push) var zikrPages = makeZikrPagesView
     @Route(.push) var zikr = makeZikrView
     @Route(.push) var azkarList = makeAzkarListView
-    @Route(.push) var appInfo = makeAppInfoView
     @Route(.push) var settings = makeSettingsView
     @Route(.modal) var modalSettings = makeModalSettingsView
     @Route(.modal) var whatsNew = makeWhatsNewView
@@ -162,7 +160,7 @@ private extension RootCoordinator {
         let rootViewController = UINavigationController()
         
         switch section {
-        case .aboutApp, .category, .settings:
+        case .category, .settings:
             selectedZikrPageIndex.send(0)
         case .zikr, .zikrPages, .goToPage, .whatsNew, .shareOptions, .searchResult, .article:
             break
@@ -179,9 +177,7 @@ private extension RootCoordinator {
             
         case .article(let article):
             route(to: \.articleView, article)
-            Task {
-                await self.articlesService?.sendAnalyticsEvent(.view, articleId: article.id)
-            }
+            articlesService?.sendAnalyticsEvent(.view, articleId: article.id)
 
         case .zikrPages(let vm):
             route(to: \.zikrPages, vm)
@@ -240,9 +236,6 @@ private extension RootCoordinator {
             } else {
                 route(to: \.settings, initialRoute)
             }
-
-        case .aboutApp:
-            route(to: \.appInfo)
             
         case .whatsNew:
             guard let whatsNew = getWhatsNew() else {
@@ -290,7 +283,7 @@ extension RootCoordinator {
                     return await articlesService.observeAnalyticsNumbers(articleId: article.id)
                 },
                 updateAnalytics: { [unowned self] (numbers: ArticleAnalytics) in
-                    await self.articlesService?
+                    self.articlesService?
                         .updateAnalyticsNumbers(
                             for: article.id,
                             views: numbers.viewsCount,
@@ -373,9 +366,7 @@ extension RootCoordinator {
                 activityController.completionWithItemsHandler = { [unowned self] (activityType, completed, arguments, error) in
                     viewController.dismiss()
                     if completed {
-                        Task {
-                            await self.articlesService?.sendAnalyticsEvent(.share, articleId: article.id)
-                        }
+                        self.articlesService?.sendAnalyticsEvent(.share, articleId: article.id)
                     }
                 }
                 rootViewController.present(activityController, animated: true)
@@ -421,10 +412,6 @@ extension RootCoordinator {
                 initialPage: 0
             )
         )
-    }
-    
-    func makeAppInfoView() -> some View {
-        AppInfoView(viewModel: AppInfoViewModel(preferences: preferences))
     }
     
     func makeSettingsView(_ initialRoute: SettingsRoute?) -> SettingsCoordinator {

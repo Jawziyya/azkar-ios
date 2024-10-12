@@ -205,10 +205,6 @@ final class MainMenuViewModel: ObservableObject {
         router.trigger(.category(category))
     }
 
-    func navigateToAboutScreen() {
-        router.trigger(.aboutApp)
-    }
-
     func navigateToSettings() {
         router.trigger(.settings())
     }

@@ -3,6 +3,7 @@ import AudioPlayer
 import UserNotifications
 import Entities
 import ArticleReader
+import Library
 
 private extension View {
     func applyMenuPadding() -> some View {
@@ -55,11 +56,7 @@ struct MainMenuView: View {
         }
         .customScrollContentBackground()
         .toolbar {
-            ToolbarItemGroup(placement: .topBarTrailing) {
-                Button(action: viewModel.navigateToAboutScreen) {
-                    Image(systemName: "info.circle")
-                }
-                
+            ToolbarItem(placement: .topBarTrailing) {
                 Button(action: viewModel.navigateToSettings) {
                     Image(systemName: "gear")
                 }

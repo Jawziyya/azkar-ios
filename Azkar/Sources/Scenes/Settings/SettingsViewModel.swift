@@ -15,16 +15,8 @@ import Library
 
 final class SettingsViewModel: ObservableObject {
     
-    enum SettingsMode {
-        case standart, text
-    }
-    
     private let notificationsHandler: NotificationsHandler
     
-    var canChangeLanguage: Bool {
-        return mode == .standart
-    }
-   
     private let formatter: DateFormatter
 
     var preferences: Preferences
@@ -36,16 +28,13 @@ final class SettingsViewModel: ObservableObject {
 
     private var cancellables = Set<AnyCancellable>()
     private let router: UnownedRouteTrigger<SettingsRoute>
-    let mode: SettingsMode
 
     init(
-        mode: SettingsMode = .standart,
         databaseService: AzkarDatabase,
         preferences: Preferences,
         notificationsHandler: NotificationsHandler = .shared,
         router: UnownedRouteTrigger<SettingsRoute>
     ) {
-        self.mode = mode
         self.databaseService = databaseService
         self.preferences = preferences
         self.notificationsHandler = notificationsHandler
@@ -82,6 +71,14 @@ final class SettingsViewModel: ObservableObject {
     
     func navigateToRemindersSettings() {
         router.trigger(.reminders)
+    }
+    
+    func navigateToCreditsScreen() {
+        router.trigger(.credits)
+    }
+    
+    func navigateToAboutAppScreen() {
+        router.trigger(.aboutApp)
     }
 
     /// Observes some preferences to reschedule notifications if needed.

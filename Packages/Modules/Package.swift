@@ -11,6 +11,7 @@ let package = Package(
         .library(name: "Extensions", targets: ["Extensions"]),
         .library(name: "Entities", targets: ["Entities"]),
         .library(name: "Library", targets: ["Library"]),
+        .library(name: "AboutApp", targets: ["AboutApp"]),
         .library(name: "ArticleReader", targets: ["ArticleReader"]),
         .library(name: "AudioPlayer", targets: ["AudioPlayer"]),
     ],
@@ -83,6 +84,13 @@ let package = Package(
             .product(name: "Perception", package: "swift-perception"),
             .product(name: "Fakery", package: "Fakery"),
             .product(name: "NukeUI", package: "Nuke"),
+        ]),
+        .target(name: "AboutApp", dependencies: [
+            "Entities",
+            "Extensions",
+            "Library",
+            .product(name: "SwiftUIBackports", package: "SwiftUIBackports"),
+            .product(name: "SwiftUIIntrospect", package: "swiftui-introspect"),
         ]),
     ]
 )

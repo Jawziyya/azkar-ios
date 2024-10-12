@@ -85,6 +85,12 @@ final class Preferences: ObservableObject, TextProcessingPreferences {
             )
             .subscribe(textSettingsChangePublishSubject)
             .store(in: &cancellables)
+        
+        $colorTheme
+            .sink { theme in
+                ColorTheme.current = theme
+            }
+            .store(in: &cancellables)
     }
     
     static var shared = Preferences()

@@ -70,7 +70,7 @@ struct ZikrView: View {
             }
         }
         .onDisappear(perform: viewModel.pausePlayer)
-        .saturation(viewModel.preferences.colorTheme == .ink ? 0 : 1)
+        .removeSaturationIfNeeded()
         .background(Color.background.edgesIgnoringSafeArea(.all))
         .onReceive(incrementAction, perform: incrementZikrCounter)
         .onTapGesture(count: 2, perform: {

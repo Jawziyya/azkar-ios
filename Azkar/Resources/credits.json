@@ -1,172 +1,205 @@
-[
-    {
-        "title": "credits.materials",
-        "items": [
-            {
-                "title": "credits.azkar-ru",
-                "link": "https://azkar.ru"
-            },
-            {
-                "title": "credits.source-code",
-                "link": "https://github.com/Jawziyya/azkar-ios"
-            }
-        ]
-    },
-    {
-        "title": "credits.links",
-        "items": [
-            {
-                "title": "credits.studio.telegram-channel",
-                "link": "https://telegram.me/jawziyya"
-            },
-            {
-                "title": "credits.studio.instagram-page",
-                "link": "https://instagram.com/jawziyya.studio"
-            },
-            {
-                "title": "credits.studio.jawziyya-apps",
-                "link": "https://apps.apple.com/ru/developer/al-jawziyya/id1165327318"
-            }
-        ]
-    },
-    {
-        "title": "credits.fonts",
-        "items": [
-            {
-                "title": "Adobe Arabic",
-                "link": "https://fonts.adobe.com/fonts/adobe-arabic"
-            },
-            {
-                "title": "credits.quran-complex-font",
-                "link": "https://qurancomplex.gov.sa/en"
-            },
-            {
-                "title": "Google Noto Naskh",
-                "link": "https://www.google.com/get/noto/#naskh-arab"
-            },
-            {
-                "title": "Scheherazade",
-                "link": "https://software.sil.org/scheherazade"
-            },
-            {
-                "title": "(A) Arslan Wessam B (A) Arslan Wessam B",
-                "link": "http://www.dev-point.com/"
-            },
-            {
-                "title": "Sukar Font",
-                "link": "https://www.behance.net/gallery/35520505/Sukar-Typeface-Arabic-Overlock-Typeface-(free)"
-            },
-            {
-                "title": "El Messiri Font",
-                "link": "https://fonts.google.com/specimen/El+Messiri?subset=arabic"
-            },
-            {
-                "title": "Cairo Font",
-                "link": "https://fonts.google.com/specimen/Cairo?subset=arabic"
-            },
-            {
-                "title": "Readex Pro",
-                "link": "https://fonts.google.com/specimen/Readex+Pro?subset=arabic"
-            },
-            {
-                "title": "Changa",
-                "link": "https://fonts.google.com/specimen/Changa?subset=arabic"
-            },
-            {
-                "title": "Harmattan",
-                "link": "https://fonts.google.com/specimen/Harmattan?subset=arabic"
-            },
-        ]
-    },
-    {
-        "title": "credits.graphics",
-        "items": [
-            {
-                "title": "Moon",
-                "link": "https://flaticon.com/free-icon/moon_414942?term=moon&page=1&position=17"
-            },
-            {
-                "title": "Sunny",
-                "link": "https://lottiefiles.com/50649-sunny"
-            },
-            {
-                "title": "Moon & Stars",
-                "link": "https://lottiefiles.com/12572-moon-stars"
-            },
-            {
-                "title": "Weather Night",
-                "link": "https://lottiefiles.com/4799-weather-night"
-            },
-        ]
-    },
-    {
-        "title": "credits.libraries",
-        "items": [
-            {
-                "title": "ActivityView",
-                "link": ""
-            },
-            {
-                "title": "Alamofire",
-                "link": "https://github.com/Alamofire/Alamofire"
-            },
-            {
-                "title": "Coordinator",
-                "link": "https://github.com/radianttap/Coordinator"
-            },
-            {
-                "title": "Introspect",
-                "link": "https://github.com/siteline/SwiftUI-Introspect"
-            },
-            {
-                "title": "Lottie",
-                "link": "https://github.com/airbnb/lottie-ios"
-            },
-            {
-                "title": "SwiftGen",
-                "link": "https://github.com/SwiftGen/SwiftGen"
-            },
-            {
-                "title": "Nuke",
-                "link": "https://github.com/kean/NukeUI"
-            },
-            {
-                "title": "SwiftUIX",
-                "link": "https://github.com/SwiftUIX/SwiftUIX"
-            },
-            {
-                "title": "ZIPFoundation",
-                "link": "https://github.com/weichsel/ZIPFoundation"
-            }
-        ],
-    },
-    {
-        "title": "credits.sounds",
-        "items": [
-            {
-                "title": "Beyound Doubt",
-                "link": "https://notificationsounds.com/notification-sounds/beyond-doubt-580"
-            },
-            {
-                "title": "For Sure",
-                "link": "https://notificationsounds.com/notification-sounds/for-sure-576"
-            },
-            {
-                "title": "Pristine",
-                "link": "https://notificationsounds.com/message-tones/pristine-609"
-            },
-            {
-                "title": "Deduction",
-                "link": "https://notificationsounds.com/notification-sounds/deduction-588"
-            },
-            {
-                "title": "Time is Now",
-                "link": "https://notificationsounds.com/notification-sounds/time-is-now-585"
-            },
-            {
-                "title": "Quite Impressed",
-                "link": "https://notificationsounds.com/notification-sounds/quite-impressed-565"
-            }
-        ]
-    }
-]
+{
+    "sections": [
+        {
+            "title": "credits.materials",
+            "items": [
+                {
+                    "title": "credits.azkar-ru",
+                    "link": "https://azkar.ru"
+                },
+                {
+                    "title": "credits.source-code",
+                    "link": "https://github.com/Jawziyya/azkar-ios"
+                }
+            ]
+        },
+        {
+            "title": "credits.fonts",
+            "items": [
+                {
+                    "title": "Adobe Arabic",
+                    "link": "https://fonts.adobe.com/fonts/adobe-arabic"
+                },
+                {
+                    "title": "credits.quran-complex-font",
+                    "link": "https://qurancomplex.gov.sa/en"
+                },
+                {
+                    "title": "Google Noto Naskh",
+                    "link": "https://www.google.com/get/noto/#naskh-arab"
+                },
+                {
+                    "title": "Scheherazade",
+                    "link": "https://software.sil.org/scheherazade"
+                },
+                {
+                    "title": "(A) Arslan Wessam B (A) Arslan Wessam B",
+                    "link": "http://www.dev-point.com/"
+                },
+                {
+                    "title": "Sukar Font",
+                    "link": "https://www.behance.net/gallery/35520505/Sukar-Typeface-Arabic-Overlock-Typeface-(free)"
+                },
+                {
+                    "title": "El Messiri Font",
+                    "link": "https://fonts.google.com/specimen/El+Messiri?subset=arabic"
+                },
+                {
+                    "title": "Cairo Font",
+                    "link": "https://fonts.google.com/specimen/Cairo?subset=arabic"
+                },
+                {
+                    "title": "Readex Pro",
+                    "link": "https://fonts.google.com/specimen/Readex+Pro?subset=arabic"
+                },
+                {
+                    "title": "Changa",
+                    "link": "https://fonts.google.com/specimen/Changa?subset=arabic"
+                },
+                {
+                    "title": "Harmattan",
+                    "link": "https://fonts.google.com/specimen/Harmattan?subset=arabic"
+                },
+            ]
+        },
+        {
+            "title": "credits.graphics",
+            "items": [
+                {
+                    "title": "Moon",
+                    "link": "https://flaticon.com/free-icon/moon_414942?term=moon&page=1&position=17"
+                },
+                {
+                    "title": "Sunny",
+                    "link": "https://lottiefiles.com/50649-sunny"
+                },
+                {
+                    "title": "Moon & Stars",
+                    "link": "https://lottiefiles.com/12572-moon-stars"
+                },
+                {
+                    "title": "Weather Night",
+                    "link": "https://lottiefiles.com/4799-weather-night"
+                },
+            ]
+        },
+        {
+            "title": "credits.libraries",
+            "items": [
+                {
+                    "title": "Alamofire",
+                    "link": "https://github.com/Alamofire/Alamofire"
+                },
+                {
+                    "title": "Coordinator",
+                    "link": "https://github.com/radianttap/Coordinator"
+                },
+                {
+                    "title": "Fakery",
+                    "link": "https://github.com/vadymmarkov/Fakery"
+                },
+                {
+                    "title": "GRDB.swift",
+                    "link": "https://github.com/groue/GRDB.swift"
+                },
+                {
+                    "title": "IGStoryKit",
+                    "link": "https://github.com/SwapnanilDhol/IGStoryKit"
+                },
+                {
+                    "title": "Lottie",
+                    "link": "https://github.com/airbnb/lottie-ios"
+                },
+                {
+                    "title": "MarkdownKit",
+                    "link": "https://github.com/bmoliveira/MarkdownKit"
+                },
+                {
+                    "title": "Nuke",
+                    "link": "https://github.com/kean/Nuke"
+                },
+                {
+                    "title": "Popovers",
+                    "link": "https://github.com/aheze/Popovers"
+                },
+                {
+                    "title": "RevenueCat",
+                    "link": "https://github.com/RevenueCat/purchases-ios.git"
+                },
+                {
+                    "title": "RoughSwift",
+                    "link": "https://github.com/onmyway133/RoughSwift"
+                },
+                {
+                    "title": "Stinsen",
+                    "link": "https://github.com/rundfunk47/stinsen"
+                },
+                {
+                    "title": "Supabase Swift",
+                    "link": "https://github.com/supabase-community/supabase-swift"
+                },
+                {
+                    "title": "Swift Perception",
+                    "link": "https://github.com/pointfreeco/swift-perception"
+                },
+                {
+                    "title": "SwiftUI Backports",
+                    "link": "https://github.com/shaps80/SwiftUIBackports"
+                },
+                {
+                    "title": "SwiftUI Introspect",
+                    "link": "https://github.com/siteline/swiftui-introspect"
+                },
+                {
+                    "title": "SwiftUIX",
+                    "link": "https://github.com/SwiftUIX/SwiftUIX"
+                },
+                {
+                    "title": "SwiftUIDrag",
+                    "link": "https://github.com/demharusnam/SwiftUIDrag"
+                },
+                {
+                    "title": "SwiftyStoreKit",
+                    "link": "https://github.com/bizz84/SwiftyStoreKit"
+                },
+                {
+                    "title": "WhatsNewKit",
+                    "link": "https://github.com/SvenTiigi/WhatsNewKit"
+                },
+                {
+                    "title": "ZIPFoundation",
+                    "link": "https://github.com/weichsel/ZIPFoundation"
+                }
+            ]
+        },
+        {
+            "title": "credits.sounds",
+            "items": [
+                {
+                    "title": "Beyound Doubt",
+                    "link": "https://notificationsounds.com/notification-sounds/beyond-doubt-580"
+                },
+                {
+                    "title": "For Sure",
+                    "link": "https://notificationsounds.com/notification-sounds/for-sure-576"
+                },
+                {
+                    "title": "Pristine",
+                    "link": "https://notificationsounds.com/message-tones/pristine-609"
+                },
+                {
+                    "title": "Deduction",
+                    "link": "https://notificationsounds.com/notification-sounds/deduction-588"
+                },
+                {
+                    "title": "Time is Now",
+                    "link": "https://notificationsounds.com/notification-sounds/time-is-now-585"
+                },
+                {
+                    "title": "Quite Impressed",
+                    "link": "https://notificationsounds.com/notification-sounds/quite-impressed-565"
+                }
+            ]
+        }
+    ]
+}

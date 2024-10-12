@@ -3,19 +3,19 @@
 import UIKit
 import SwiftUI
 import SwiftUIIntrospect
-import SwiftUIX
 import SwiftUIBackports
+import Library
 
-struct AppInfoView: View {
-
-    typealias ItemSection = AppInfoViewModel.Section
+public struct AppInfoView: View {
 
     @ObservedObject var viewModel: AppInfoViewModel
-
-
     @State private var activityItem: URL?
+    
+    public init(viewModel: AppInfoViewModel) {
+        self.viewModel = viewModel
+    }
 
-    var body: some View {
+    public var body: some View {
         ScrollView {
             LazyVStack(alignment: .center, spacing: 0) {
                 self.iconAndVersion.background(
@@ -23,8 +23,26 @@ struct AppInfoView: View {
                 )
                 .padding()
                 
-                ForEach(viewModel.sections, content: sectionView)
-                    .saturation(viewModel.preferences.colorTheme == .ink ? 0 : 1)
+                outboundLink(
+                    "credits.studio.telegram-channel",
+                    url: URL(string: "https://jawziyya.t.me")!,
+                    image: "paperplane",
+                    color: Color.blue
+                )
+                
+                outboundLink(
+                    "credits.studio.instagram-page",
+                    url: URL(string: "https://instagram.com/jawziyya.studio")!,
+                    image: "photo.stack",
+                    color: Color.orange
+                )
+                
+                outboundLink(
+                    "credits.studio.jawziyya-apps",
+                    url: URL(string: "https://apps.apple.com/developer/al-jawziyya/id1165327318")!,
+                    image: "apps.iphone",
+                    color: Color.indigo
+                )
             }
         }
         .toolbar {
@@ -36,7 +54,7 @@ struct AppInfoView: View {
             }
         }
         .navigationTitle(Text("about.title", comment: "About app screen title."))
-        .supportedOrientations(.portrait)
+        .customScrollContentBackground()
         .background(Color.background.edgesIgnoringSafeArea(.all))
     }
 
@@ -59,13 +77,14 @@ struct AppInfoView: View {
 
             HStack {
                 Spacer()
+                
                 VStack(spacing: 0) {
                     HStack(spacing: 0) {
-                        Text("app-name", comment: "App name.")
+                        Text("app-name")
                             .font(Font.system(.title2, design: .rounded).smallCaps().weight(.heavy))
                             .frame(alignment: .center)
                             .foregroundColor(Color.accent)
-                        if !UIDevice.current.isMac, viewModel.subscriptionManager.isProUser() {
+                        if !UIDevice.current.isMac, viewModel.isProUser {
                             Text(" PRO")
                                 .font(Font.system(.title3, design: .rounded).smallCaps().weight(.heavy))
                                 .foregroundColor(Color.blue)
@@ -76,67 +95,51 @@ struct AppInfoView: View {
                         .font(.subheadline)
                         .foregroundColor(Color.secondary)
                 }
+                
                 Spacer()
             }
         }
     }
     
-    private func sectionView(_ section: ItemSection) -> some View {
-        NavigationLink {
-            sectionItemsView(section)
+    private func outboundLink(
+        _ title: LocalizedStringKey,
+        url: URL,
+        image: String,
+        color: Color
+    ) -> some View {
+        Button {
+            UIApplication.shared.open(url)
         } label: {
-            sectionHeader(section)
-        }
-    }
-    
-    private func sectionHeader(_ section: ItemSection) -> some View {
-        HStack {
-            Text(section.title)
-                .foregroundStyle(Color.text)
-            Spacer()
-            Image(systemName: "chevron.right")
-                .foregroundColor(Color.accent)
-        }
-        .padding(16)
-        .frame(maxWidth: .infinity, alignment: .leading)
-    }
-    
-    private func sectionItemsView(_ section: ItemSection) -> some View {
-        List(section.items) { item in
-            viewForItem(item)
-                .listRowBackground(Color.contentBackground)
-        }
-        .customScrollContentBackground()
-        .background(Color.background, ignoresSafeAreaEdges: .all)
-        .listStyle(.grouped)
-        .navigationBarTitle(section.title)
-    }
-
-    private func viewForItem(_ item: SourceInfo.Item) -> some View {
-        Button(action: {
-            if let url = URL(string: item.link) {
-                UIApplication.shared.open(url)
-            }
-        }, label: {
-            HStack {
-                Text(item.title)
-                    .foregroundColor(Color.text)
+            HStack(spacing: 15) {
+                Image(systemName: image)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 20, height: 20)
+                    .foregroundStyle(color)
+                
+                Text(title)
+                
                 Spacer()
-                Image(systemName: "chevron.right")
-                    .foregroundColor(Color.tertiaryText)
+                
+                Image(systemName: "arrow.up.forward")
+                    .foregroundStyle(color)
+                    .font(Font.caption2)
+                    .opacity(0.5)
             }
+            .padding()
             .background(Color.contentBackground)
-            .clipShape(Rectangle())
-        })
-        .buttonStyle(PlainButtonStyle())
-        .padding(.vertical, 8)
-        .padding(.horizontal, 12)
+        }
+        .buttonStyle(.plain)
+        .removeSaturationIfNeeded()
     }
-
+    
 }
 
 #Preview("App Info") {
     NavigationView {
-        AppInfoView(viewModel: AppInfoViewModel(preferences: Preferences.shared))
+        AppInfoView(viewModel: AppInfoViewModel(
+            appVersion: "1.2.3",
+            isProUser: true
+        ))
     }
 }
