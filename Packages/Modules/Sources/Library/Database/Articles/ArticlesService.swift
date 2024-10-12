@@ -35,11 +35,6 @@ public final class ArticlesService: ArticlesServiceType {
                 do {
                     let articles = try await localRepository.getArticles(limit: limit, newerThan: nil)
                     cachedArticles = articles
-//                    Task.detached { [self, articles] in
-//                        for article in articles {
-//                            await updateAnalyticsNumbers(for: article.id)
-//                        }
-//                    }
                     if cachedArticles.isEmpty == false {
                         continuation.yield(cachedArticles)
                     }
