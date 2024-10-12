@@ -70,7 +70,8 @@ final class ArticlesAnalyticsService {
     public func observeAnalyticsNumbers(
         articleId: Article.ID
     ) async -> AsyncStream<ArticleAnalytics> {
-        return await getAnalyticsStream(for: articleId)
+        let initialAnalytics = await getArticleAnalyticsCount(articleId)
+        let stream = await getAnalyticsStream(for: articleId)
             .compactMap { action -> ArticleAnalytics? in
                 let record: [String: AnyJSON]
                 switch action {
@@ -86,6 +87,17 @@ final class ArticlesAnalyticsService {
                 return ArticleAnalytics(views: viewsNumber, shares: sharesNumber)
             }
             .eraseToStream()
+        return AsyncStream { continuation in
+            if let initialAnalytics {
+                continuation.yield(initialAnalytics)
+            }
+            Task {
+                for await value in stream {
+                    continuation.yield(value)
+                }
+                continuation.finish()                
+            }
+        }
     }
     
 }

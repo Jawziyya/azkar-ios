@@ -12,6 +12,7 @@ public final class ArticleViewModel {
     var sharesAbbreviated: String?
     
     private let analyticsStream: () async -> AsyncStream<ArticleAnalytics>
+    private let updateAnalytics: (ArticleAnalytics) async -> Void
     
     subscript<T>(dynamicMember keyPath: KeyPath<Article, T>) -> T {
         article[keyPath: keyPath]
@@ -19,10 +20,12 @@ public final class ArticleViewModel {
     
     public init(
         article: Article,
-        analyticsStream: @escaping () async -> AsyncStream<ArticleAnalytics>
+        analyticsStream: @escaping () async -> AsyncStream<ArticleAnalytics>,
+        updateAnalytics: @escaping (ArticleAnalytics) async -> Void
     ) {
         self.article = article
         self.analyticsStream = analyticsStream
+        self.updateAnalytics = updateAnalytics
         if let views = article.views {
             setViews(views)
         }
@@ -40,6 +43,9 @@ public final class ArticleViewModel {
             withAnimation(.spring) {
                 setViews(numbers.viewsCount)
                 setShares(numbers.sharesCount)
+            }
+            Task.detached {
+                await self.updateAnalytics(numbers)
             }
         }
     }

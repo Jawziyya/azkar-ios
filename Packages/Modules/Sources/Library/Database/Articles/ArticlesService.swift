@@ -51,7 +51,7 @@ public final class ArticlesService: ArticlesServiceType {
                 do {
                     let articles = try await remoteRepository.getArticles(limit: limit, newerThan: newestArticleDate)
                     try await localRepository.saveArticles(articles)
-                    let allArticles = articles // + cachedArticles
+                    let allArticles = articles + cachedArticles
                     continuation.yield(allArticles.unique(by: \.id))
                     continuation.finish()
                 } catch {
@@ -75,15 +75,18 @@ public final class ArticlesService: ArticlesServiceType {
             return article
         }
     }
-    
-//    private func updateAnalyticsNumbers(for articleId: Article.ID) async {
-//        let analytics = await articlesAnalyticsService.getArticleAnalyticsCount(articleId)
-//        if var article = try? await localRepository.getArticle(articleId) {
-//            article.views = analytics?.viewsCount
-//            article.shares = analytics?.sharesCount
-//            try? await localRepository.saveArticle(article)
-//        }
-//    }
+        
+    public func updateAnalyticsNumbers(
+        for articleId: Article.ID,
+        views: Int,
+        shares: Int
+    ) async {
+        if var article = try? await localRepository.getArticle(articleId) {
+            article.views = views
+            article.shares = shares
+            try? await localRepository.saveArticle(article)
+        }
+    }
 
     /// Report analytics event.
     public func sendAnalyticsEvent(

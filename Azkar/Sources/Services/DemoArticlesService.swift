@@ -12,4 +12,6 @@ final class DemoArticlesService: ArticlesServiceType {
     func observeAnalyticsNumbers(articleId: Article.ID) async -> AsyncStream<ArticleAnalytics> {
         return AsyncStream { _ in }
     }
+    func updateAnalyticsNumbers(for articleId: Article.ID, views: Int, shares: Int) async {
+    }
 }

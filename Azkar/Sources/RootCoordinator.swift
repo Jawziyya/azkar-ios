@@ -288,6 +288,14 @@ extension RootCoordinator {
                         return .never
                     }
                     return await articlesService.observeAnalyticsNumbers(articleId: article.id)
+                },
+                updateAnalytics: { [unowned self] (numbers: ArticleAnalytics) in
+                    await self.articlesService?
+                        .updateAnalyticsNumbers(
+                            for: article.id,
+                            views: numbers.viewsCount,
+                            shares: numbers.sharesCount
+                        )
                 }
             ),
             onShareButtonTap: { [unowned self] in
