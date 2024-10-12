@@ -219,7 +219,7 @@ struct MainMenuView: View {
                 .buttonStyle(.plain)
             }
         }
-        .frame(height: articleCellHeight)
+        .frame(height: articleCellHeight + 3)
         .tabViewStyle(.page(indexDisplayMode: .automatic))
     }
     
