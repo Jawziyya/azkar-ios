@@ -4,6 +4,7 @@ import Library
 public struct CreditsScreen: View {
     
     let viewModel: CreditsViewModel
+    @Environment(\.safariPresenter) var safariPresenter
     
     public init(viewModel: CreditsViewModel) {
         self.viewModel = viewModel
@@ -15,6 +16,7 @@ public struct CreditsScreen: View {
                 Section {
                     ForEach(section.items) { item in
                         viewForItem(item)
+                            .listRowBackground(Color.contentBackground)
                     }
                 } header: {
                     sectionHeader(section)
@@ -36,15 +38,13 @@ public struct CreditsScreen: View {
     
     private func viewForItem(_ item: SourceInfo.Item) -> some View {
         Button(action: {
-            if let url = URL(string: item.link) {
-                UIApplication.shared.open(url)
-            }
+            safariPresenter.set(URL(string: item.link))
         }, label: {
             HStack {
                 Text(item.title)
                     .foregroundColor(Color.text)
                 Spacer()
-                Image(systemName: "chevron.right")
+                Image(systemName: "arrow.up.forward")
                     .foregroundColor(Color.tertiaryText)
             }
             .background(Color.contentBackground)

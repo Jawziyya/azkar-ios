@@ -9,41 +9,18 @@ import Library
 public struct AppInfoView: View {
 
     @ObservedObject var viewModel: AppInfoViewModel
-    @State private var activityItem: URL?
+    @Environment(\.safariPresenter) var safariPresenter
     
     public init(viewModel: AppInfoViewModel) {
         self.viewModel = viewModel
     }
 
     public var body: some View {
-        ScrollView {
-            LazyVStack(alignment: .center, spacing: 0) {
-                self.iconAndVersion.background(
-                    Color.background.padding(-20)
-                )
-                .padding()
-                
-                outboundLink(
-                    "credits.studio.telegram-channel",
-                    url: URL(string: "https://jawziyya.t.me")!,
-                    image: "paperplane",
-                    color: Color.blue
-                )
-                
-                outboundLink(
-                    "credits.studio.instagram-page",
-                    url: URL(string: "https://instagram.com/jawziyya.studio")!,
-                    image: "photo.stack",
-                    color: Color.orange
-                )
-                
-                outboundLink(
-                    "credits.studio.jawziyya-apps",
-                    url: URL(string: "https://apps.apple.com/developer/al-jawziyya/id1165327318")!,
-                    image: "apps.iphone",
-                    color: Color.indigo
-                )
-            }
+        ScrollView(showsIndicators: false) {
+            verticalStack
+        }
+        .overlay(alignment: .bottom) {
+            copyrightView
         }
         .toolbar {
             ToolbarItem(placement: ToolbarItemPlacement.navigationBarTrailing) {
@@ -56,6 +33,50 @@ public struct AppInfoView: View {
         .navigationTitle(Text("about.title", comment: "About app screen title."))
         .customScrollContentBackground()
         .background(Color.background.edgesIgnoringSafeArea(.all))
+    }
+    
+    private var verticalStack: some View {
+        LazyVStack(alignment: .center, spacing: 0) {
+            self.iconAndVersion.background(
+                Color.background.padding(-20)
+            )
+            .padding()
+            
+            outboundLinkButton(
+                "credits.studio.telegram-channel",
+                url: URL(string: "https://jawziyya.t.me")!,
+                image: "paperplane",
+                color: Color.blue
+            )
+            
+            outboundLinkButton(
+                "credits.studio.instagram-page",
+                url: URL(string: "https://instagram.com/jawziyya.studio")!,
+                image: "photo.stack",
+                color: Color.orange
+            )
+            
+            outboundLinkButton(
+                "credits.studio.jawziyya-apps",
+                url: URL(string: "https://apps.apple.com/developer/al-jawziyya/id1165327318")!,
+                image: "apps.iphone",
+                color: Color.indigo
+            )
+            
+            NavigationLink {
+                CreditsScreen(viewModel: CreditsViewModel())
+            } label: {
+                buttonLabel(
+                    "credits.title",
+                    image: "link",
+                    color: Color.green,
+                    navigationImage: "chevron.right"
+                )
+            }
+            .buttonStyle(.plain)
+            
+            copyrightView.opacity(0)
+        }
     }
 
     private var iconAndVersion: some View {
@@ -101,36 +122,60 @@ public struct AppInfoView: View {
         }
     }
     
-    private func outboundLink(
+    private func outboundLinkButton(
         _ title: LocalizedStringKey,
         url: URL,
         image: String,
         color: Color
     ) -> some View {
         Button {
-            UIApplication.shared.open(url)
+            safariPresenter.set(url)
         } label: {
-            HStack(spacing: 15) {
-                Image(systemName: image)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 20, height: 20)
-                    .foregroundStyle(color)
-                
-                Text(title)
-                
-                Spacer()
-                
-                Image(systemName: "arrow.up.forward")
-                    .foregroundStyle(color)
-                    .font(Font.caption2)
-                    .opacity(0.5)
-            }
-            .padding()
-            .background(Color.contentBackground)
+            buttonLabel(title, image: image, color: color)
         }
         .buttonStyle(.plain)
         .removeSaturationIfNeeded()
+    }
+    
+    private func buttonLabel(
+        _ title: LocalizedStringKey,
+        image: String,
+        color: Color,
+        navigationImage: String = "arrow.up.forward"
+    ) -> some View {
+        HStack(spacing: 15) {
+            Image(systemName: image)
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 20, height: 20)
+                .foregroundStyle(color)
+            
+            Text(title)
+            
+            Spacer()
+            
+            Image(systemName: navigationImage)
+                .foregroundStyle(color)
+                .font(Font.caption2)
+                .opacity(0.5)
+        }
+        .padding()
+        .background(Color.contentBackground)
+    }
+    
+    private var copyrightView: some View {
+        let currentYear: String = String(Date().year)
+        return VStack(spacing: 10) {
+            Text("Copyright © 2020-\(currentYear) Al Jawziyya.")
+                .font(.caption)
+            
+            HStack {
+                Text("🥜 Jawziyya")
+                    .font(Font.title3.weight(.bold).monospaced())
+            }
+        }
+        .padding(20)
+        .opacity(0.5)
     }
     
 }

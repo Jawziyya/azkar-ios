@@ -73,10 +73,6 @@ final class SettingsViewModel: ObservableObject {
         router.trigger(.reminders)
     }
     
-    func navigateToCreditsScreen() {
-        router.trigger(.credits)
-    }
-    
     func navigateToAboutAppScreen() {
         router.trigger(.aboutApp)
     }

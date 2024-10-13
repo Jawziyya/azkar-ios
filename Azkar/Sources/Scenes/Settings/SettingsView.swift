@@ -3,12 +3,7 @@
 import SwiftUI
 import Popovers
 import Entities
-
-extension URL: @retroactive Identifiable {
-    public var id: String {
-        absoluteString
-    }
-}
+import Library
 
 extension Language: PickableItem {}
 
@@ -20,11 +15,6 @@ struct SettingsView: View {
         List {
             Section {
                 content
-            }
-            .listRowBackground(Color.contentBackground)
-            
-            Section {
-                additionalContent
             }
             .listRowBackground(Color.contentBackground)
         }
@@ -48,12 +38,6 @@ struct SettingsView: View {
             counterSection
             textSettingsSection
             remindersSection
-        }
-    }
-    
-    var additionalContent: some View {
-        Group {
-            creditsSection
         }
     }
     
@@ -150,16 +134,6 @@ struct SettingsView: View {
         )
     }
     
-    var creditsSection: some View {
-        getSectionButton(
-            L10n.Credits.title,
-            subtitle: L10n.Credits.subtitle,
-            image: "link",
-            imageBackground: Color(.systemCyan),
-            action: viewModel.navigateToCreditsScreen
-        )
-    }
-        
 }
 
 struct SettingsView_Previews: PreviewProvider {

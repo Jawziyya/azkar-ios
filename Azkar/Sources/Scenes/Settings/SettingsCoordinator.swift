@@ -10,7 +10,7 @@ enum SettingsRoute: Hashable, RouteKind {
     case subscribe, notificationsList
     case appearance, text, counter
     case reminders, adhkarReminders, jumuaReminders, soundPicker(ReminderSound)
-    case aboutApp, credits
+    case aboutApp
 }
 
 final class SettingsCoordinator: RouteTrigger, Identifiable, NavigationCoordinatable {
@@ -27,7 +27,6 @@ final class SettingsCoordinator: RouteTrigger, Identifiable, NavigationCoordinat
     @Route(.push) var soundPicker = makeSoundPickerView
     @Route(.modal) var subscribe = makeSubscribeView
     @Route(.push) var aboutApp = makeAboutAppView
-    @Route(.push) var credits = makeCreditsView
         
     private let databaseService: AzkarDatabase
     private let preferences: Preferences
@@ -83,9 +82,6 @@ final class SettingsCoordinator: RouteTrigger, Identifiable, NavigationCoordinat
             
         case .aboutApp:
             self.route(to: \.aboutApp)
-            
-        case .credits:
-            self.route(to: \.credits)
 
         }
     }
@@ -162,10 +158,6 @@ extension SettingsCoordinator {
             }(),
             isProUser: subscriptionManager.isProUser()
         ))
-    }
-    
-    func makeCreditsView() -> some View {
-        CreditsScreen(viewModel: CreditsViewModel())
     }
     
 }
