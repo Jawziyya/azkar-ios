@@ -13,7 +13,7 @@ struct LottieView: UIViewRepresentable {
     
     typealias UIViewType = UIView
     
-    let animationView = AnimationView()
+    let animationView = LottieAnimationView()
     let name: String
     var loopMode: LottieLoopMode = .playOnce
     var contentMode: UIView.ContentMode = .scaleAspectFit
@@ -33,7 +33,7 @@ struct LottieView: UIViewRepresentable {
     func makeUIView(context: UIViewRepresentableContext<LottieView>) -> UIView {
         context.coordinator.colorScheme = context.environment.colorScheme
         context.coordinator.completionBlock = completionBlock
-        animationView.animation = Animation.named(name)
+        animationView.animation = LottieAnimation.named(name)
         animationView.contentMode = contentMode
         animationView.loopMode = loopMode
         animationView.backgroundBehavior = .pauseAndRestore
@@ -61,9 +61,9 @@ struct LottieView: UIViewRepresentable {
         }
         context.coordinator.colorScheme = context.environment.colorScheme
         DispatchQueue.main.async {
-            if let view = uiView.subviews.first(where: { $0 is AnimationView }) as? AnimationView {
+            if let view = uiView.subviews.first(where: { $0 is LottieAnimationView }) as? LottieAnimationView {
                 view.stop()
-                view.animation = Animation.named(name)
+                view.animation = LottieAnimation.named(name)
                 view.play()
             }
         }

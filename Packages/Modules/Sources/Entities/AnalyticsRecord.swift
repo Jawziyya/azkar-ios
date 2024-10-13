@@ -2,11 +2,11 @@ import Foundation
 
 public struct AnalyticsRecord: Decodable {
     public enum RecordType: String, Codable {
-        case article
+        case article, ad
     }
     
     public enum ActionType: String, Codable {
-        case view, share
+        case impression, view, share, open
     }
     
     public let id: Int

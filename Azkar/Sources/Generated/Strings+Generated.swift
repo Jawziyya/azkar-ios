@@ -12,13 +12,13 @@ import Foundation
 internal enum L10n {
   /// Azkar
   internal static let appName = L10n.tr("Localizable", "app-name", fallback: "Azkar")
-  /// Plural format key: "%#@items@"
+  /// Plural format key: "%#@value@"
   internal static func remainingRepeats(_ p1: Int) -> String {
-    return L10n.tr("Localizable", "remaining-repeats", p1, fallback: "Plural format key: \"%#@items@\"")
+    return L10n.tr("Localizable", "remaining-repeats", p1, fallback: "Plural format key: \"%#@value@\"")
   }
-  /// Plural format key: "%#@items@"
+  /// Plural format key: "%#@value@"
   internal static func repeatsNumber(_ p1: Int) -> String {
-    return L10n.tr("Localizable", "repeats_number", p1, fallback: "Plural format key: \"%#@items@\"")
+    return L10n.tr("Localizable", "repeats_number", p1, fallback: "Plural format key: \"%#@value@\"")
   }
   internal enum About {
     /// About
@@ -109,6 +109,10 @@ internal enum L10n {
     internal static let sounds = L10n.tr("Localizable", "credits.sounds", fallback: "🔊 Sounds")
     /// Source code of the app (github.com)
     internal static let sourceCode = L10n.tr("Localizable", "credits.source-code", fallback: "Source code of the app (github.com)")
+    /// Information on used text, graphic, and other media materials.
+    internal static let subtitle = L10n.tr("Localizable", "credits.subtitle", fallback: "Information on used text, graphic, and other media materials.")
+    /// Credits
+    internal static let title = L10n.tr("Localizable", "credits.title", fallback: "Credits")
     internal enum Studio {
       /// Instagram page
       internal static let instagramPage = L10n.tr("Localizable", "credits.studio.instagram-page", fallback: "Instagram page")

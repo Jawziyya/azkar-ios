@@ -3,6 +3,13 @@ import AudioPlayer
 import UserNotifications
 import Entities
 import ArticleReader
+import Library
+
+private extension View {
+    func applyMenuPadding() -> some View {
+        self.padding(.horizontal, 20)
+    }
+}
 
 struct MainMenuView: View {
 
@@ -10,6 +17,7 @@ struct MainMenuView: View {
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.isSearching) var isSearching
     @Environment(\.dismissSearch) var dismissSearch
+    @State private var showAd = true
     
     private let articleCellHeight: CGFloat = 230
 
@@ -20,7 +28,7 @@ struct MainMenuView: View {
     var body: some View {
         displayContent
             .textInputAutocapitalization(.never)
-            .saturation(viewModel.preferences.colorTheme == .ink ? 0 : 1)
+            .removeSaturationIfNeeded()
             .attachEnvironmentOverrides(viewModel: EnvironmentOverridesViewModel(preferences: viewModel.preferences))
             .background(
                 GeometryReader { proxy in
@@ -35,30 +43,26 @@ struct MainMenuView: View {
     @ViewBuilder
     var displayContent: some View {
         if isSearching {
-            if viewModel.searchQuery.isEmpty == false {
-                SearchResultsView(
-                    viewModel: viewModel.searchViewModel,
-                    onSelect: viewModel.naviateToSearchResult(_:)
-                )
-            } else {
-                SearchSuggestionsView(
-                    viewModel: viewModel.searchSuggestionsViewModel
-                )
-            }
+            searchView
         } else {
             content
         }
     }
     
     var content: some View {
-        List {
-            menuContent
-                .listRowSeparator(.hidden)
-                .listRowBackground(itemsBackgroundColor)
+        ScrollView {
+            VStack(spacing: 20) {
+                menuContent
+            }
         }
-        .customListSectionSpacing(.compact)
-        .listStyle(.insetGrouped)
         .customScrollContentBackground()
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button(action: viewModel.navigateToSettings) {
+                    Image(systemName: "gear")
+                }
+            }
+        }
         .background(
             Color.background
                 .edgesIgnoringSafeArea(.all)
@@ -75,6 +79,19 @@ struct MainMenuView: View {
                 )
         )
     }
+    
+    @ViewBuilder private var searchView: some View {
+        if viewModel.searchQuery.isEmpty {
+            SearchSuggestionsView(
+                viewModel: viewModel.searchSuggestionsViewModel
+            )
+        } else {
+            SearchResultsView(
+                viewModel: viewModel.searchViewModel,
+                onSelect: viewModel.naviateToSearchResult(_:)
+            )
+        }
+    }
 
     @ViewBuilder
     private var menuContent: some View {
@@ -84,38 +101,11 @@ struct MainMenuView: View {
 
         if viewModel.articles.isEmpty == false {
             articlesView
-                .listRowInsets(.zero)
-                .frame(height: articleCellHeight)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 10)
-                        .stroke(Color.accentColor.opacity(0.5), lineWidth: 3)
-                )
         }
         
-        appSections
-        
-        additionalItems
-        
-        if let fadl = viewModel.fadl {
-            fadlSection(fadl)
+        if let ad = viewModel.ad {
+            adView(ad)
         }
-    }
-    
-    private var articlesView: some View {
-        TabView {
-            ForEach(viewModel.articles) { article in
-                Button(action: {
-                    viewModel.navigateToArticle(article)
-                }, label: {
-                    ArticleCellView(
-                        article: article,
-                        imageMaxHeight: articleCellHeight
-                    )
-                })
-                .buttonStyle(.plain)
-            }
-        }
-        .tabViewStyle(.page(indexDisplayMode: .automatic))
     }
     
     // MARK: - Day & Night Azkar
@@ -138,10 +128,9 @@ struct MainMenuView: View {
                     animationSpeed: 0.5
                 ))
             }
-            .listRowBackground(Color.clear)
-            .listRowInsets(.zero)
         }
         .frame(maxWidth: .infinity)
+        .applyMenuPadding()
     }
     
     private func getMainMenuSectionView(_ item: MainMenuLargeGroupViewModel) -> some View {
@@ -159,7 +148,7 @@ struct MainMenuView: View {
     
     // MARK: - Other Azkar
     private var otherAzkar: some View {
-        Section {
+        VStack {
             if let dua = viewModel.additionalAdhkar {
                 ForEach(dua) { item in
                     getMenuItem(
@@ -180,52 +169,10 @@ struct MainMenuView: View {
                 )
             }
         }
-    }
-    
-    // MARK: - App Sections
-    private var appSections: some View {
-        Section {
-            ForEach(viewModel.infoModels) { item in
-                getMenuItem(
-                    item: item,
-                    action: {
-                        viewModel.navigateToMenuItem(item)
-                    }
-                )
-            }
-        }
-    }
-    
-    // MARK: - Additional Sections
-    private var additionalItems: some View {
-        Section {
-            ForEach(viewModel.additionalMenuItems) { item in
-                getMenuItem(
-                    item: item,
-                    action: {
-                        item.action?()
-                    }
-                )
-                .disabled(item.action == nil)
-            }
-        }
-    }
-    
-    private func fadlSection(_ fadl: Fadl) -> some View {
-        Section {
-            VStack(spacing: 8) {
-                Text(fadl.text)
-                    .font(Font.customFont(viewModel.preferences.preferredTranslationFont, style: .caption1))
-                    .tracking(1.2)
-                    .foregroundColor(Color.text.opacity(0.7))
-                
-                Text(fadl.source)
-                    .font(Font.customFont(viewModel.preferences.preferredTranslationFont, style: .caption2))
-                    .foregroundColor(Color.secondaryText.opacity(0.5))
-            }
-            .listRowBackground(Color.clear)
-            .frame(maxWidth: .infinity)
-        }
+        .padding()
+        .background(Color.contentBackground)
+        .clipShape(RoundedRectangle(cornerRadius: Constants.cornerRadius))
+        .applyMenuPadding()
     }
     
     private func getMenuItem(
@@ -252,6 +199,59 @@ struct MainMenuView: View {
         .buttonStyle(.plain)
     }
 
+    private var articlesView: some View {
+        TabView {
+            ForEach(viewModel.articles) { article in
+                Button(action: {
+                    viewModel.navigateToArticle(article)
+                }, label: {
+                    ArticleCellView(
+                        article: article,
+                        imageMaxHeight: articleCellHeight
+                    )
+                    .clipShape(RoundedRectangle(cornerRadius: Constants.cornerRadius))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: Constants.cornerRadius)
+                            .stroke(Color.accentColor.opacity(0.5), lineWidth: 3)
+                    )
+                    .padding(.horizontal, 20)
+                })
+                .buttonStyle(.plain)
+            }
+        }
+        .frame(height: articleCellHeight + 3)
+        .tabViewStyle(.page(indexDisplayMode: .automatic))
+    }
+    
+    func adView(_ ad: Ad) -> some View {
+        AdButton(
+            item: AdButtonItem(ad: ad),
+            cornerRadius: Constants.cornerRadius,
+            onClose: {
+                withAnimation(.spring) {
+                    viewModel.hideAd(ad)
+                }
+            },
+            action: {
+                viewModel.handleAdSelection(ad)
+            }
+        )
+        .onAppear {
+            viewModel.sendAdImpressionEvent(ad)
+        }
+        .frame(maxWidth: .infinity)
+        .clipShape(RoundedRectangle(cornerRadius: Constants.cornerRadius))
+        .overlay(
+            RoundedRectangle(cornerRadius: Constants.cornerRadius)
+                .stroke(Color.accentColor.opacity(0.5), lineWidth: 3)
+        )
+        .applyMenuPadding()
+        .transition(.asymmetric(
+            insertion: .move(edge: .top).combined(with: .opacity),
+            removal: .move(edge: .bottom).combined(with: .opacity)
+        ))
+    }
+    
 }
 
 #Preview("Menu Default") {

@@ -6,13 +6,13 @@ public struct ArticlePDFCoverView: View {
     
     let article: Article
     let maxHeight: CGFloat
-    let logoImage: UIImage
+    let logoImage: UIImage?
     let logoSubtitle: String
     
     public init(
         article: Article,
         maxHeight: CGFloat,
-        logoImage: UIImage,
+        logoImage: UIImage?,
         logoSubtitle: String
     ) {
         self.article = article
@@ -28,10 +28,12 @@ public struct ArticlePDFCoverView: View {
             Spacer()
             
             VStack {
-                Image(uiImage: logoImage)
-                    .resizable()
-                    .frame(width: 30, height: 30)
-                    .cornerRadius(6)
+                if let logoImage {                
+                    Image(uiImage: logoImage)
+                        .resizable()
+                        .frame(width: 30, height: 30)
+                        .cornerRadius(6)
+                }
                 Text(logoSubtitle)
                     .font(Font.system(size: 12, weight: .regular, design: .rounded).smallCaps())
             }

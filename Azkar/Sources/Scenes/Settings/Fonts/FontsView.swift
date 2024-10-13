@@ -11,6 +11,24 @@ struct FontsView: View {
     @Environment(\.colorScheme) var colorScheme
     @State private var previewFont: AppFontViewModel?
     
+    var sampleTextView: some View {
+        VStack {
+            Divider()
+            
+            Text(viewModel.sampleText)
+                .font(Font.custom(viewModel.preferredFont.postscriptName, size: UIFont.preferredFont(forTextStyle: .title1).pointSize))
+                .padding()
+                .frame(maxWidth: .infinity)
+                .background(
+                    RoundedRectangle(cornerRadius: 15)
+                        .fill(Color.contentBackground)
+                        .shadow(color: Color.accentColor.opacity(0.25), radius: 10, x: 0, y: 0)
+                )
+                .padding()
+        }
+        .background(Color.background)
+    }
+    
     var body: some View {
         List {
             ForEach(viewModel.fonts) { section in
@@ -18,7 +36,9 @@ struct FontsView: View {
                     ForEach(section.fonts) { font in
                         fontView(font)
                             .onTapGesture {
-                                viewModel.changeSelectedFont(font)
+                                Task {
+                                    await viewModel.changeSelectedFont(font)
+                                }
                                 UISelectionFeedbackGenerator().selectionChanged()
                             }
                     }
@@ -26,6 +46,13 @@ struct FontsView: View {
             }
             .redacted(reason: viewModel.didLoadData ? [] : .placeholder)
             .listRowBackground(Color.contentBackground)
+            
+            sampleTextView
+                .opacity(0)
+                .listRowBackground(Color.clear)
+        }
+        .overlay(alignment: .bottom) {
+            sampleTextView
         }
         .customScrollContentBackground()
         .listStyle(.insetGrouped)

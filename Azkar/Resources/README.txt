@@ -1,5 +1,4 @@
-Loco ios export: iOS plural rules
+Loco ios export: Xcode Stringsdict (legacy)
 Project: Azkar
-Release: Working copy
-Exported at: Sat, 23 Mar 2024 15:58:44 +0200
+Exported at: Sat, 12 Oct 2024 22:45:58 +0300
 Exported by: Abdurahim Jauzee

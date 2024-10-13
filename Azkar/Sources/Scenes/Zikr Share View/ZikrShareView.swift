@@ -93,10 +93,12 @@ struct ZikrShareView: View {
 
             if includeLogo {
                 VStack {
-                    Image(uiImage: UIImage(named: "ink")!)
-                        .resizable()
-                        .frame(width: 30, height: 30)
-                        .cornerRadius(6)
+                    if let image = UIImage(named: "ink") {
+                        Image(uiImage: image)
+                            .resizable()
+                            .frame(width: 30, height: 30)
+                            .cornerRadius(6)
+                    }
                     Text(L10n.Share.sharedWithAzkar)
                         .foregroundColor(Color.secondary)
                         .font(Font.system(size: 12, weight: .regular, design: .rounded).smallCaps())

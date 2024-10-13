@@ -11,6 +11,7 @@ import AudioPlayer
 import UserNotifications
 import SwiftUI
 import RevenueCat
+import Library
 
 final class AppDelegate: UIResponder, UIApplicationDelegate {
 

@@ -28,9 +28,25 @@ final class TextSettingsViewModel: SettingsSectionViewModel {
     }
     
     func getFontsViewModel(fontsType: FontsType) -> FontsViewModel {
-        FontsViewModel(fontsType: fontsType, service: FontsService(), subscribeScreenTrigger: { [unowned self] in
-            self.router.trigger(.subscribe)
-        })
+        let sampleText: String
+        let sampleZikr = try? databaseService.getZikr(29, language: preferences.contentLanguage)
+        switch fontsType {
+        case .arabic:
+            sampleText = (sampleZikr?.text ?? "بِسۡمِ ٱللَّهِ‎").trimmingArabicVowels
+            
+        case .translation:
+            sampleText = sampleZikr?.translation ?? "bismillah"
+            
+        }
+        
+        return FontsViewModel(
+            sampleText: sampleText,
+            fontsType: fontsType,
+            service: FontsService(),
+            subscribeScreenTrigger: { [unowned self] in
+                self.router.trigger(.subscribe)
+            }
+        )
     }
     
 }

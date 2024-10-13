@@ -2,73 +2,18 @@ import Foundation
 import Entities
 import Supabase
 
-let supabaseClient: SupabaseClient = {
-    let decoder = JSONDecoder()
-    decoder.keyDecodingStrategy = .convertFromSnakeCase
-    
-    // First formatter with fractional seconds
-    let formatterWithFractionalSeconds = DateFormatter()
-    formatterWithFractionalSeconds.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSSSSZ"
-    formatterWithFractionalSeconds.timeZone = TimeZone(secondsFromGMT: 0)
-    formatterWithFractionalSeconds.locale = Locale(identifier: "en_US_POSIX")
-
-    // Second formatter without fractional seconds
-    let formatterWithoutFractionalSeconds = DateFormatter()
-    formatterWithoutFractionalSeconds.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
-    formatterWithoutFractionalSeconds.timeZone = TimeZone(secondsFromGMT: 0)
-    formatterWithoutFractionalSeconds.locale = Locale(identifier: "en_US_POSIX")
-
-    // Custom date decoding strategy
-    decoder.dateDecodingStrategy = .custom { (decoder) -> Date in
-        let container = try decoder.singleValueContainer()
-        let dateString = try container.decode(String.self)
-        
-        if let date = formatterWithFractionalSeconds.date(from: dateString) {
-            return date
-        } else if let date = formatterWithoutFractionalSeconds.date(from: dateString) {
-            return date
-        } else {
-            throw DecodingError.dataCorruptedError(in: container, debugDescription: "Cannot decode date string: \(dateString)")
-        }
-    }
-    
-    let encoder = JSONEncoder()
-    encoder.keyEncodingStrategy = .convertToSnakeCase
-    
-    let kURL = "SUPABASE_API_URL"
-    let kApiKey = "SUPABASE_API_KEY"
-    let processEnv = ProcessInfo.processInfo.environment
-    let infoPlist = Bundle.main.infoDictionary ?? [:]
-    guard
-        let rawURL = (infoPlist[kURL] as? String)?.textOrNil ?? processEnv[kURL],
-        let url = URL(string: rawURL),
-        let key = (infoPlist[kApiKey] as? String)?.textOrNil ?? processEnv[kApiKey]
-    else {
-        fatalError("You must provide Supabase API key & url address.")
-    }
-    
-    let client = SupabaseClient(
-        supabaseURL: url,
-        supabaseKey: key,
-        options: SupabaseClientOptions(
-            db: .init(
-                encoder: encoder,
-                decoder: decoder
-            )
-        )
-    )
-    return client
-}()
-
 final class ArticlesSupabaseRepository: ArticlesRepository {
     
+    private let supabaseClient: SupabaseClient
     private let language: Language
     private let analyticsService: ArticlesAnalyticsService
     
     init(
+        supabaseClient: SupabaseClient,
         language: Language,
         analyticsService: ArticlesAnalyticsService
     ) {
+        self.supabaseClient = supabaseClient
         self.language = language
         self.analyticsService = analyticsService
     }
@@ -79,8 +24,7 @@ final class ArticlesSupabaseRepository: ArticlesRepository {
             let createdAt: Date
         }
         
-        let spotlightArticlesQuery = await supabaseClient
-            .database
+        let spotlightArticlesQuery = supabaseClient
             .from("articles_spotlight")
             .select()
         
@@ -90,8 +34,7 @@ final class ArticlesSupabaseRepository: ArticlesRepository {
             .execute()
             .value
         
-        var articlesQuery = await supabaseClient
-            .database
+        var articlesQuery = supabaseClient
             .from("articles")
             .select()
             .eq("language", value: language.id)
@@ -111,7 +54,7 @@ final class ArticlesSupabaseRepository: ArticlesRepository {
         }
         
         let articleObjects: [ArticleDTO] = try await articlesQuery
-            .in("id", value: spotlightArticles.map(\.article))
+            .in("id", values: spotlightArticles.map(\.article))
             .execute()
             .value
         
@@ -157,7 +100,6 @@ final class ArticlesSupabaseRepository: ArticlesRepository {
 private extension ArticlesSupabaseRepository {
     func getCategories() async throws -> [ArticleCategory] {
         try await supabaseClient
-            .database
             .from("articles_categories")
             .select()
             .execute()

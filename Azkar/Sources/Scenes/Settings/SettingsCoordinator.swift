@@ -4,11 +4,13 @@
 import UIKit
 import SwiftUI
 import Stinsen
+import AboutApp
 
 enum SettingsRoute: Hashable, RouteKind {
     case subscribe, notificationsList
     case appearance, text, counter
     case reminders, adhkarReminders, jumuaReminders, soundPicker(ReminderSound)
+    case aboutApp
 }
 
 final class SettingsCoordinator: RouteTrigger, Identifiable, NavigationCoordinatable {
@@ -24,9 +26,11 @@ final class SettingsCoordinator: RouteTrigger, Identifiable, NavigationCoordinat
     @Route(.push) var jumuaReminders = makeJumuaRemindersView
     @Route(.push) var soundPicker = makeSoundPickerView
     @Route(.modal) var subscribe = makeSubscribeView
+    @Route(.push) var aboutApp = makeAboutAppView
         
     private let databaseService: AzkarDatabase
     private let preferences: Preferences
+    private let subscriptionManager: SubscriptionManagerType = SubscriptionManagerFactory.create()
     
     init(
         databaseService: AzkarDatabase,
@@ -75,6 +79,9 @@ final class SettingsCoordinator: RouteTrigger, Identifiable, NavigationCoordinat
             
         case .soundPicker(let currentSound):
             self.route(to: \.soundPicker, currentSound)
+            
+        case .aboutApp:
+            self.route(to: \.aboutApp)
 
         }
     }
@@ -140,6 +147,17 @@ extension SettingsCoordinator {
 
     func makeSubscribeView() -> some View {
         SubscribeView(viewModel: SubscribeViewModel())
+    }
+    
+    func makeAboutAppView() -> some View {
+        AppInfoView(viewModel: AppInfoViewModel(
+            appVersion: {
+                let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString")!
+                let build = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion")!
+                return "\(L10n.Common.version) \(version) (\(build))"
+            }(),
+            isProUser: subscriptionManager.isProUser()
+        ))
     }
     
 }

@@ -18,7 +18,6 @@ enum RootSection: Equatable, RouteKind {
     case zikrPages(_ vm: ZikrPagesViewModel)
     case goToPage(Int)
     case settings(_ intitialRoute: SettingsRoute? = nil, presentModally: Bool = false)
-    case aboutApp
     case whatsNew
     case shareOptions(Zikr)
     case article(Article)
@@ -33,7 +32,6 @@ final class RootCoordinator: NSObject, RouteTrigger, NavigationCoordinatable {
     @Route(.push) var zikrPages = makeZikrPagesView
     @Route(.push) var zikr = makeZikrView
     @Route(.push) var azkarList = makeAzkarListView
-    @Route(.push) var appInfo = makeAppInfoView
     @Route(.push) var settings = makeSettingsView
     @Route(.modal) var modalSettings = makeModalSettingsView
     @Route(.modal) var whatsNew = makeWhatsNewView
@@ -44,10 +42,11 @@ final class RootCoordinator: NSObject, RouteTrigger, NavigationCoordinatable {
     var databaseService: AzkarDatabase {
         AzkarDatabase(language: preferences.contentLanguage)
     }
-    let preferencesDatabase: PreferencesDatabase
+    var preferencesDatabase: PreferencesDatabase?
     let deeplinker: Deeplinker
     let player: Player
-    let articlesService: ArticlesServiceType
+    var articlesService: ArticlesServiceType?
+    var adsService: AdsServiceType?
 
     private let selectedZikrPageIndex = CurrentValueSubject<Int, Never>(0)
 
@@ -76,17 +75,24 @@ final class RootCoordinator: NSObject, RouteTrigger, NavigationCoordinatable {
         let appGroupFolder = FileManager.default
             .appGroupContainerURL
         
-        articlesService = ArticlesService(
-            databasePath: appGroupFolder
-                .appendingPathComponent("articles.db")
-                .absoluteString,
-            language: preferences.contentLanguage.fallbackLanguage
-        )
-        
-        let preferencesDatabasePath = appGroupFolder
-            .appendingPathComponent("preferences.db")
-            .absoluteString
-        preferencesDatabase = PreferencesSQLiteDatabaseService(databasePath: preferencesDatabasePath)
+        do {
+            articlesService = try ArticlesService(
+                databasePath: appGroupFolder
+                    .appendingPathComponent("articles.db")
+                    .absoluteString,
+                language: preferences.contentLanguage.fallbackLanguage
+            )
+            adsService = try AdsService()
+            
+            let preferencesDatabasePath = appGroupFolder
+                .appendingPathComponent("preferences.db")
+                .absoluteString
+            preferencesDatabase = try PreferencesSQLiteDatabaseService(databasePath: preferencesDatabasePath)
+        } catch {
+            articlesService = DemoArticlesService()
+            preferencesDatabase = MockPreferencesDatabase()
+            print(error.localizedDescription)
+        }
         
         super.init()
         
@@ -156,7 +162,7 @@ private extension RootCoordinator {
         let rootViewController = UINavigationController()
         
         switch section {
-        case .aboutApp, .category, .settings:
+        case .category, .settings:
             selectedZikrPageIndex.send(0)
         case .zikr, .zikrPages, .goToPage, .whatsNew, .shareOptions, .searchResult, .article:
             break
@@ -173,9 +179,7 @@ private extension RootCoordinator {
             
         case .article(let article):
             route(to: \.articleView, article)
-            Task {
-                await self.articlesService.sendAnalyticsEvent(.view, articleId: article.id)
-            }
+            articlesService?.sendAnalyticsEvent(.view, articleId: article.id)
 
         case .zikrPages(let vm):
             route(to: \.zikrPages, vm)
@@ -186,7 +190,7 @@ private extension RootCoordinator {
             }
             
             Task {
-                await preferencesDatabase.storeOpenedZikr(zikr.id, language: zikr.language)
+                await preferencesDatabase?.storeOpenedZikr(zikr.id, language: zikr.language)
             }
             
             let hadith = try? zikr.hadith.flatMap { id in
@@ -210,7 +214,7 @@ private extension RootCoordinator {
             }
             
             Task {
-                await preferencesDatabase.storeOpenedZikr(zikr.id, language: zikr.language)
+                await preferencesDatabase?.storeOpenedZikr(zikr.id, language: zikr.language)
             }
 
             let hadith = try? zikr.hadith.flatMap { id in
@@ -234,9 +238,6 @@ private extension RootCoordinator {
             } else {
                 route(to: \.settings, initialRoute)
             }
-
-        case .aboutApp:
-            route(to: \.appInfo)
             
         case .whatsNew:
             guard let whatsNew = getWhatsNew() else {
@@ -254,27 +255,43 @@ private extension RootCoordinator {
 
 extension RootCoordinator {
     
-    func makeRootView() -> some View {
-        RootView(
-            viewModel: RootViewModel(
-                mainMenuViewModel: MainMenuViewModel(
-                    databaseService: databaseService,
-                    preferencesDatabase: preferencesDatabase,
-                    router: UnownedRouteTrigger(router: self),
-                    preferences: preferences,
-                    player: player,
-                    articlesService: articlesService
+    @ViewBuilder func makeRootView() -> some View {
+        if let preferencesDatabase, let articlesService, let adsService {
+            RootView(
+                viewModel: RootViewModel(
+                    mainMenuViewModel: MainMenuViewModel(
+                        databaseService: databaseService,
+                        preferencesDatabase: preferencesDatabase,
+                        router: UnownedRouteTrigger(router: self),
+                        preferences: preferences,
+                        player: player,
+                        articlesService: articlesService,
+                        adsService: adsService
+                    )
                 )
             )
-        )
+        } else {
+            EmptyView()
+        }
     }
     
     func makeArticleView(_ article: Article) -> some View {
         return ArticleScreen(
             viewModel: ArticleViewModel(
                 article: article,
-                analyticsStream: {
-                    await self.articlesService.observeAnalyticsNumbers(articleId: article.id)
+                analyticsStream: { [unowned self] in
+                    guard let articlesService = self.articlesService else {
+                        return .never
+                    }
+                    return await articlesService.observeAnalyticsNumbers(articleId: article.id)
+                },
+                updateAnalytics: { [unowned self] (numbers: ArticleAnalytics) in
+                    self.articlesService?
+                        .updateAnalyticsNumbers(
+                            for: article.id,
+                            views: numbers.viewsCount,
+                            shares: numbers.sharesCount
+                        )
                 }
             ),
             onShareButtonTap: { [unowned self] in
@@ -293,7 +310,7 @@ extension RootCoordinator {
                     textFont: UIFont(name: self.preferences.preferredTranslationFont.postscriptName, size: 18)!,
                     pageMargins: UIEdgeInsets(horizontal: 50, vertical: 50),
                     footer: ArticlePDFComposer.Footer(
-                        image: UIImage(named: "ink")!,
+                        image: UIImage(named: "ink"),
                         text: L10n.Share.sharedWithAzkar.uppercased(),
                         link: URL(string: "https://apps.apple.com/app/id1511423586")
                     )
@@ -312,7 +329,7 @@ extension RootCoordinator {
                 let view = ArticlePDFCoverView(
                     article: article,
                     maxHeight: 842,
-                    logoImage: UIImage(named: "ink")!,
+                    logoImage: UIImage(named: "ink"),
                     logoSubtitle: L10n.Share.sharedWithAzkar
                 )
                 .frame(width: 595, height: 842)
@@ -352,9 +369,7 @@ extension RootCoordinator {
                 activityController.completionWithItemsHandler = { [unowned self] (activityType, completed, arguments, error) in
                     viewController.dismiss()
                     if completed {
-                        Task {
-                            await self.articlesService.sendAnalyticsEvent(.share, articleId: article.id)
-                        }
+                        self.articlesService?.sendAnalyticsEvent(.share, articleId: article.id)
                     }
                 }
                 rootViewController.present(activityController, animated: true)
@@ -400,10 +415,6 @@ extension RootCoordinator {
                 initialPage: 0
             )
         )
-    }
-    
-    func makeAppInfoView() -> some View {
-        AppInfoView(viewModel: AppInfoViewModel(preferences: preferences))
     }
     
     func makeSettingsView(_ initialRoute: SettingsRoute?) -> SettingsCoordinator {
