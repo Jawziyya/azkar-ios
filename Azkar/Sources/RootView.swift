@@ -9,7 +9,7 @@ final class RootViewModel: ObservableObject {
     @Published var title = ""
     
     private func getRandomEmoji() -> String {
-        ["🌙", "🌸", "☘️", "🌳", "🌴", "🌱", "🌼", "💫", "🌎", "🌍", "🌏", "🪐", "✨", "❄️"].randomElement()!
+        ["🌙", "🌸", "☘️", "🌳", "🌴", "🌱", "🌼", "💫", "🌎", "🌍", "🌏", "🪐", "✨", "❄️", "🤍", "🌌"].randomElement()!
     }
     
     init(

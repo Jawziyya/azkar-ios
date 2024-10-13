@@ -145,34 +145,6 @@ struct AppIconPackInfoView: View {
     }
 
     var body: some View {
-        ZStack(alignment: .top) {
-            content
-            ZStack {
-                ForEach(Array(viewModel.iconsToDisplay.enumerated()), id: \.0) { index, item in
-                    getSampleIcon(with: item.imageName)
-                        .offset(x: rotate ? offsetForIndex(index + 1) : 0)
-                        .rotationEffect(rotate ? Angle(degrees: iconRotationAngle(index)) : .zero)
-                }
-                getSampleIcon(with: viewModel.icon.imageName)
-            }
-            .onAppear {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                    withAnimation(Animation.easeInOut.speed(0.5)) {
-                        self.rotate.toggle()
-                    }
-                }
-            }
-            .onDisappear {
-                self.rotate.toggle()
-            }
-            .shadow(color: Color.black.opacity(0.25), radius: 10, x: 0.0, y: 0.3)
-        }
-        .onAppear {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: viewModel.requestPrice)
-        }
-    }
-
-    var content: some View {
         ZStack(alignment: .topTrailing) {
             Button(action: {
                 self.viewModel.closeAction?()
