@@ -15,6 +15,7 @@ final class AppIconPackListViewModel: ObservableObject {
     var preferences: Preferences
 
     @Published var icon: AppIcon
+    
     let iconPacks: [AppIconPack] = AppIconPack.allCases
 
     private var cancellabels = Set<AnyCancellable>()
@@ -60,9 +61,8 @@ struct AppIconPackListView: View {
 
     @State private var selectedIconPack: AppIconPackInfoViewModel?
     @State private var modalOffset: CGFloat = 0
-    @State private var selectedURL: URL?
-    @State private var safariViewURL: URL?
     @State private var moveEdge = Edge.bottom
+    @Environment(\.safariPresenter) var safariPresenter
 
     private var animation = Animation.spring().speed(1.25)
 
@@ -104,19 +104,6 @@ struct AppIconPackListView: View {
                 )
             }
         }
-        .onChange(of: selectedURL) { url in
-            if let url = url {
-                UIApplication.shared.open(url, options: [.universalLinksOnly: true]) { flag in
-                    if !flag {
-                        self.safariViewURL = url
-                    }
-                }
-                self.selectedURL = nil
-            }
-        }
-        .sheet(item: $safariViewURL) { url in
-            SafariView(url: url, entersReaderIfAvailable: false)
-        }
     }
 
     private func closeIconPackInfoWithAnimation() {
@@ -149,7 +136,7 @@ struct AppIconPackListView: View {
 
                         iconPack.link.flatMap { link in
                             Button(action: {
-                                self.selectedURL = link
+                                safariPresenter.set(link)
                             }, label: {
                                 Image(systemName: "link")
                             })

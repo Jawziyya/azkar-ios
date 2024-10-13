@@ -2,7 +2,7 @@ import SwiftUI
 import SafariServices
 
 public final class SafariPresenterModel: ObservableObject {
-    static let shared = SafariPresenterModel()
+    public static let shared = SafariPresenterModel()
     
     @Published var urlToOpen: URL?
     

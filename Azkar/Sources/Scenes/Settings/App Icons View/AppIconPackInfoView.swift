@@ -156,6 +156,7 @@ struct AppIconPackInfoView: View {
             .frame(width: 30, height: 30)
             stack
         }
+        .onAppear { viewModel.requestPrice() }
         .padding()
         .background(Color.background)
         .clipShape(RoundedRectangle(cornerRadius: 20))
