@@ -14,7 +14,7 @@ public final class AdsService: AdsServiceType {
     }
     
     public func fetchAds(newerThan: Date?) async throws -> [Ad] {
-        var articlesQuery = supabaseClient
+        var adsQuery = supabaseClient
             .from("ads")
             .select()
         let formatter = DateFormatter()
@@ -23,14 +23,18 @@ public final class AdsService: AdsServiceType {
         formatter.locale = Locale(identifier: "en_US_POSIX")
         if let newerThan {
             let date = formatter.string(from: newerThan.addingTimeInterval(1))
-            articlesQuery = articlesQuery
+            adsQuery = adsQuery
                 .greaterThan("created_at", value: date)
         }
-        articlesQuery = articlesQuery.greaterThan(
+        adsQuery = adsQuery.greaterThan(
             "expire_date",
             value: formatter.string(from: Date())
         )
-        let ads: [Ad] = try await articlesQuery.execute().value
+        adsQuery = adsQuery.lowerThan(
+            "begin_date",
+            value: formatter.string(from: Date())
+        )
+        let ads: [Ad] = try await adsQuery.execute().value
         return ads
     }
     

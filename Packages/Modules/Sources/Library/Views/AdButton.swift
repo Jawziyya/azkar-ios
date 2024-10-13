@@ -130,6 +130,8 @@ public struct AdButton: View {
                     .resizable()
                     .aspectRatio(contentMode: .fill)
                     .overlay(Color.black.opacity(0.35))
+            } else if state.isLoading {
+                Color.black
             }
         }
     }
