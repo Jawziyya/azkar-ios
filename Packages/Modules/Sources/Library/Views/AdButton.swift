@@ -64,14 +64,7 @@ public struct AdButton: View {
                     Spacer()
                     
                     if item.actionTitle == nil {
-                        Image(systemName: "arrow.up.forward")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: size.scale * 10, height: size.scale * 10)
-                            .foregroundColor(item.foregroundColor.opacity(0.5))
-                            .padding(size.scale * 10)
-                            .clipShape(Circle())
-                            .contentShape(Rectangle())
+                        arrowImage
                     }
                 }
                 .padding([.trailing, .vertical], 20 * size.scale)
@@ -92,6 +85,15 @@ public struct AdButton: View {
             RoundedRectangle(cornerRadius: cornerRadius)
                 .stroke(accentColor, lineWidth: 2 * size.scale)
         )
+    }
+    
+    private var arrowImage: some View {
+        Image(systemName: "arrow.up.forward")
+            .resizable()
+            .aspectRatio(contentMode: .fit)
+            .frame(width: size.scale * 10, height: size.scale * 10)
+            .padding(size.scale * 10)
+            .foregroundStyle(effectiveForegroundColor.opacity(0.75))
     }
     
     private var closeButton: some View {
