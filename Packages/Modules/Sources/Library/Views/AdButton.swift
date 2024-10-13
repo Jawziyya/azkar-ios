@@ -12,7 +12,7 @@ public struct AdButton: View {
     
     public init(
         item: AdButtonItem,
-        cornerRadius: CGFloat = 30,
+        cornerRadius: CGFloat = 25,
         onClose: @escaping () -> Void,
         action: @escaping () -> Void
     ) {
@@ -33,7 +33,7 @@ public struct AdButton: View {
 
     public var body: some View {
         HStack(alignment: .bottom, spacing: size.scale * 10) {
-            VStack(alignment: .leading, spacing: size.scale * 20) {
+            VStack(alignment: .leading, spacing: size.scale * 8) {
                 if let title = item.title {
                     Text(title)
                         .foregroundColor(effectiveForegroundColor)
@@ -53,7 +53,7 @@ public struct AdButton: View {
                 actionButton(actionTitle)
             }
         }
-        .padding(.vertical, 25 * size.scale)
+        .padding(.vertical, 20 * size.scale)
         .padding(.horizontal, 25 * size.scale)
         .onTapGesture(perform: action)
         .overlay(alignment: .topTrailing) {
@@ -92,19 +92,17 @@ public struct AdButton: View {
             .resizable()
             .aspectRatio(contentMode: .fit)
             .frame(width: size.scale * 10, height: size.scale * 10)
-            .padding(size.scale * 10)
+            .padding(size.scale * 5)
             .foregroundStyle(effectiveForegroundColor.opacity(0.75))
     }
     
     private var closeButton: some View {
         Image(systemName: "xmark")
             .resizable()
-            .aspectRatio(contentMode: .fit)
+            .aspectRatio(contentMode: .fill)
             .frame(width: size.scale * 10, height: size.scale * 10)
-            .foregroundColor(Color.white)
-            .padding(size.scale * 10)
-            .background(item.accentColor.opacity(0.25))
-            .clipShape(Circle())
+            .foregroundStyle(effectiveForegroundColor)
+            .padding(size.scale * 5)
             .contentShape(Rectangle())
             .highPriorityGesture(
                 TapGesture()
