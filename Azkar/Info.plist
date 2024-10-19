@@ -39,10 +39,6 @@
 	<string></string>
 	<key>REVENUCE_CAT_API_KEY</key>
 	<string>appl_jDuKSWeoFUChrvgZQdfjLFvFaYK</string>
-	<key>SUPABASE_API_KEY</key>
-	<string></string>
-	<key>SUPABASE_API_URL</key>
-	<string></string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>AdobeArabic-Regular.otf</string>

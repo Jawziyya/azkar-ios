@@ -38,14 +38,15 @@ func getSupabaseClient() throws -> SupabaseClient {
     let encoder = JSONEncoder()
     encoder.keyEncodingStrategy = .convertToSnakeCase
     
-    let kURL = "SUPABASE_API_URL"
-    let kApiKey = "SUPABASE_API_KEY"
+    let kURL = "AZKAR_SUPABASE_API_URL"
+    let kApiKey = "AZKAR_SUPABASE_API_KEY"
     let processEnv = ProcessInfo.processInfo.environment
-    let infoPlist = Bundle.main.infoDictionary ?? [:]
     guard
-        let rawURL = (infoPlist[kURL] as? String)?.textOrNil ?? processEnv[kURL],
+        let path = Bundle.main.path(forResource: "Secrets", ofType: "plist"),
+        let dict = NSDictionary(contentsOfFile: path) as? [String: Any],
+        let rawURL = (dict[kURL] as? String)?.textOrNil ?? processEnv[kURL],
         let url = URL(string: rawURL),
-        let key = (infoPlist[kApiKey] as? String)?.textOrNil ?? processEnv[kApiKey]
+        let key = (dict[kApiKey] as? String)?.textOrNil ?? processEnv[kApiKey]
     else {
         print("You must provide Supabase API key & url address.")
         throw SupabaseContructorError.noAPIKeyProvided

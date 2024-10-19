@@ -286,13 +286,7 @@ let project = Project(
             shared: true,
             buildAction: .buildAction(targets: ["Azkar"]),
             runAction: RunAction.runAction(
-                executable: "Azkar",
-                arguments: Arguments.arguments(
-                    environmentVariables: [
-                        "SUPABASE_API_URL": .init(stringLiteral: env["SUPABASE_API_URL"] ?? ""),
-                        "SUPABASE_API_KEY": .init(stringLiteral: env["SUPABASE_API_KEY"] ?? ""),
-                    ]
-                )
+                executable: "Azkar"
             )
         ),
         Scheme.scheme(
