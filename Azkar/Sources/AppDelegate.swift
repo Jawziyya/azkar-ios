@@ -12,7 +12,10 @@ import UserNotifications
 import SwiftUI
 import RevenueCat
 import Library
+import FirebaseCore
+import FirebaseMessaging
 
+@MainActor
 final class AppDelegate: UIResponder, UIApplicationDelegate {
 
     let player = AudioPlayer()
@@ -23,8 +26,16 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil
     ) -> Bool {
         application.beginReceivingRemoteControlEvents()
+        application.registerForRemoteNotifications()
         initialize()
         return true
+    }
+    
+    func application(
+        _ application: UIApplication,
+        didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data
+    ) {
+        notificationsHandler.handlePushNotificationToken(deviceToken)
     }
 
     private func initialize() {
@@ -44,10 +55,8 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 
         InAppPurchaseService.shared.completeTransactions()
         registerUserDefaults()
-        
-        Purchases.logLevel = .debug
-        Purchases.configure(withAPIKey: Bundle.main.object(forInfoDictionaryKey: "REVENUCE_CAT_API_KEY") as! String)
-        SubscriptionManager.shared.loadProducts()
+        setupRevenueCat()
+        setupFirebase()
     }
         
     override func remoteControlReceived(with event: UIEvent?) {
@@ -89,5 +98,17 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 
         UserDefaults.standard.register(defaults: defaults)
     }
-
+    
+    private func setupRevenueCat() {
+        Purchases.logLevel = .debug
+        Purchases.configure(withAPIKey: Bundle.main.object(forInfoDictionaryKey: "REVENUCE_CAT_API_KEY") as! String)
+        SubscriptionManager.shared.loadProducts()
+    }
+    
+    private func setupFirebase() {
+        FirebaseApp.configure()
+        Messaging.messaging().delegate = notificationsHandler
+        AnalyticsReporter.addTarget(FirebaseAnalyticsTarget.shared)
+    }
+    
 }

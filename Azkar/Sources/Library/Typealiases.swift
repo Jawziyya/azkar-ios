@@ -1,5 +1,7 @@
 // Copyright © 2021 Al Jawziyya. All rights reserved. 
 
 import SwiftUI
+import Library
 
-public typealias Color = SwiftUI.Color
+typealias Color = SwiftUI.Color
+typealias AnalyticsReporter = Library.AnalyticsReporter

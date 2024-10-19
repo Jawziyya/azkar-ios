@@ -6,7 +6,7 @@ public struct AnalyticsRecord: Decodable {
     }
     
     public enum ActionType: String, Codable {
-        case impression, view, share, open
+        case impression, view, share, open, hide
     }
     
     public let id: Int

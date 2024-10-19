@@ -9,6 +9,8 @@
 import UIKit
 import SwiftUI
 import Combine
+import FirebaseMessaging
+import Entities
 
 private let notificationCenter = UNUserNotificationCenter.current()
 
@@ -167,7 +169,7 @@ final class NotificationsHandler: NSObject {
 }
 
 extension NotificationsHandler: UNUserNotificationCenterDelegate {
-
+    
     func userNotificationCenter(
         _ center: UNUserNotificationCenter,
         willPresent notification: UNNotification,
@@ -176,7 +178,7 @@ extension NotificationsHandler: UNUserNotificationCenterDelegate {
         // Just present the notification as it comes.
         completionHandler([.list, .sound, .banner])
     }
-
+    
     func userNotificationCenter(
         _ center: UNUserNotificationCenter,
         didReceive response: UNNotificationResponse,
@@ -194,4 +196,16 @@ extension NotificationsHandler: UNUserNotificationCenterDelegate {
         completionHandler()
     }
 
+}
+
+extension NotificationsHandler: MessagingDelegate {
+    
+    func handlePushNotificationToken(_ token: Data) {
+        Messaging.messaging().apnsToken = token
+    }
+    
+    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
+        print(#function, fcmToken as Any)
+    }
+        
 }

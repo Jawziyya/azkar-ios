@@ -141,10 +141,16 @@ enum AzkarTarget: String, CaseIterable {
                     .package(product: "Stinsen"),
                     .package(product: "Supabase"),
                     .package(product: "SwiftUIIntrospect"),
+                    
+                    // Firebase
+                    .package(product: "FirebaseCore"),
+                    .package(product: "FirebaseAnalyticsWithoutAdIdSupport"),
+                    .package(product: "FirebaseMessaging"),
                 ],
                 settings: Settings.settings(
                     base: baseSettingsDictionary
                         .merging(["DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER": "NO"])
+                        .addingObjcLinkerFlag
                     ,
                     configurations: [
                         .debug(

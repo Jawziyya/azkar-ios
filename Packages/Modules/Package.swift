@@ -21,6 +21,7 @@ let package = Package(
         .package(url: "https://github.com/groue/GRDB.swift", from: "6.29.3"),
         
         // MARK: Services.
+        .package(url: "https://github.com/firebase/firebase-ios-sdk", from: "11.3.0"),
         .package(url: "https://github.com/supabase-community/supabase-swift", from: "2.0.0"),
         .package(url: "https://github.com/RevenueCat/purchases-ios.git", from: "4.19.0"),
         
