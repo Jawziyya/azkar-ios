@@ -19,7 +19,7 @@ public final class PreferencesSQLiteDatabaseService: PreferencesDatabaseService 
     
     public init(
         databasePath: String
-    ) {
+    ) throws {
         var migrator = DatabaseMigrator()
         migrator.registerMigration("Create recent_azkar") { db in
             try db.create(table: RecentZikr.databaseTableName) { t in
@@ -38,13 +38,8 @@ public final class PreferencesSQLiteDatabaseService: PreferencesDatabaseService 
         }
         
         let config = GRDB.Configuration()
-        do {
-            database = try DatabasePool(path: databasePath, configuration: config)
-            try migrator.migrate(database)
-        } catch {
-            database = DatabaseQueue()
-            try? migrator.migrate(database)
-        }
+        database = try DatabasePool(path: databasePath, configuration: config)
+        try migrator.migrate(database)
     }
     
     public func storeSearchQuery(_ query: String) async {

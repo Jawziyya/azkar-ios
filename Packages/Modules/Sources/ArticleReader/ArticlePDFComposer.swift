@@ -9,11 +9,11 @@ import MarkdownKit
 public final class ArticlePDFComposer {
     
     public struct Footer {
-        let image: UIImage
+        let image: UIImage?
         let text: String
         let link: URL?
         
-        public init(image: UIImage, text: String, link: URL?) {
+        public init(image: UIImage?, text: String, link: URL?) {
             self.image = image
             self.text = text
             self.link = link
@@ -146,7 +146,7 @@ private final class PrintPageRenderer: UIPrintPageRenderer {
         )
         let textWidth = text.boundingRect(with: footerRect.size, context: nil).width
         text.draw(at: CGPoint(x: footerRect.midX - textWidth/2, y: imageRect.maxY + 5))
-        footer.image.draw(
+        footer.image?.draw(
             in: imageRect,
             blendMode: .clear,
             alpha: alpha

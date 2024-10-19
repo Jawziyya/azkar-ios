@@ -11,32 +11,32 @@ on:
 jobs:
   deploy:
     name: Deploying to Testflight
-    runs-on: macos-14
+    runs-on: macos-15
 
     env:
-      APPLE_ID: '${{ secrets.APPLE_ID }}'
-      APP_ID: '${{ secrets.APP_ID }}'
-      WIDGETS_ID: '${{ secrets.WIDGETS_ID }}'
-      APP_APPLE_ID: '${{ secrets.APP_APPLE_ID }}'
-      AUTH_KEY_CONTENT: '${{ secrets.AUTH_KEY_CONTENT }}'
-      AUTH_KEY_ID: '${{ secrets.AUTH_KEY_ID }}'
-      AUTH_KEY_ISSUER_ID: '${{ secrets.AUTH_KEY_ISSUER_ID }}'
-      MATCH_GIT_AUTH: '${{ secrets.MATCH_GIT_AUTH }}'
-      MATCH_GIT_URL: '${{ secrets.MATCH_GIT_URL }}'
-      ITC_TEAM_ID: '${{ secrets.ITC_TEAM_ID }}'
-      TEAM_ID: '${{ secrets.TEAM_ID }}'
-      TEMP_KEYCHAIN_USER: '${{ secrets.TEMP_KEYCHAIN_USER }}'
-      TEMP_KEYCHAIN_PASSWORD: '${{ secrets.TEMP_KEYCHAIN_PASSWORD }}'          
-      MATCH_PASSWORD: '${{ secrets.MATCH_PASSWORD }}'
-      PROVISIONING_PROFILE_SPECIFIER: '${{ secrets.PROVISIONING_PROFILE_SPECIFIER }}'
-      SUPABASE_API_URL: '${{ secrets.SUPABASE_API_URL }}'
-      SUPABASE_API_KEY: '${{ secrets.SUPABASE_API_KEY }}'
+      APPLE_ID: ${{ secrets.APPLE_ID }}
+      APP_ID: ${{ secrets.APP_ID }}
+      WIDGETS_ID: ${{ secrets.WIDGETS_ID }}
+      APP_APPLE_ID: ${{ secrets.APP_APPLE_ID }}
+      AUTH_KEY_CONTENT: ${{ secrets.AUTH_KEY_CONTENT }}
+      AUTH_KEY_ID: ${{ secrets.AUTH_KEY_ID }}
+      AUTH_KEY_ISSUER_ID: ${{ secrets.AUTH_KEY_ISSUER_ID }}
+      MATCH_GIT_AUTH: ${{ secrets.MATCH_GIT_AUTH }}
+      MATCH_GIT_URL: ${{ secrets.MATCH_GIT_URL }}
+      ITC_TEAM_ID: ${{ secrets.ITC_TEAM_ID }}
+      TEAM_ID: ${{ secrets.TEAM_ID }}
+      TEMP_KEYCHAIN_USER: ${{ secrets.TEMP_KEYCHAIN_USER }}
+      TEMP_KEYCHAIN_PASSWORD: ${{ secrets.TEMP_KEYCHAIN_PASSWORD }}          
+      MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+      PROVISIONING_PROFILE_SPECIFIER: ${{ secrets.PROVISIONING_PROFILE_SPECIFIER }}
+      AZKAR_SUPABASE_API_URL: ${{ secrets.AZKAR_SUPABASE_API_URL }}
+      AZKAR_SUPABASE_API_KEY: ${{ secrets.AZKAR_SUPABASE_API_KEY }}
 
     steps:
       - uses: jdx/mise-action@v2
       - uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: 15.2
+          xcode-version: 16.0
 
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -45,17 +45,12 @@ jobs:
         run: |
           sudo defaults write /Library/Preferences/com.apple.dt.Xcode IDESkipMacroFingerprintValidation -bool YES
 
-      - name: Set Info.plist Values
+      - name: Set Supabase Config
         run: |
-          # Set SUPABASE_API_URL value in Info.plist
-          /usr/libexec/PlistBuddy -c "Set :SUPABASE_API_URL $SUPABASE_API_URL" ./Azkar/Info.plist
-          
-          # Set SUPABASE_API_KEY value in Info.plist
-          /usr/libexec/PlistBuddy -c "Set :SUPABASE_API_KEY $SUPABASE_API_KEY" ./Azkar/Info.plist
+          ./scripts/set_supabase_config.sh
         env:
-          SUPABASE_API_URL: ${{ secrets.SUPABASE_API_URL }}
-          SUPABASE_API_KEY: ${{ secrets.SUPABASE_API_KEY }}
-        working-directory: ${{ github.workspace }}
+          AZKAR_SUPABASE_API_URL: ${{ secrets.AZKAR_SUPABASE_API_URL }}
+          AZKAR_SUPABASE_API_KEY: ${{ secrets.AZKAR_SUPABASE_API_KEY }}
   
       - name: Generate Xcode project
         run: |

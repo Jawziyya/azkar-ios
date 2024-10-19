@@ -8,12 +8,14 @@
 
 import SwiftUI
 import Combine
+import Library
 
 final class AppIconPackListViewModel: ObservableObject {
 
     var preferences: Preferences
 
     @Published var icon: AppIcon
+    
     let iconPacks: [AppIconPack] = AppIconPack.allCases
 
     private var cancellabels = Set<AnyCancellable>()
@@ -59,9 +61,8 @@ struct AppIconPackListView: View {
 
     @State private var selectedIconPack: AppIconPackInfoViewModel?
     @State private var modalOffset: CGFloat = 0
-    @State private var selectedURL: URL?
-    @State private var safariViewURL: URL?
     @State private var moveEdge = Edge.bottom
+    @Environment(\.safariPresenter) var safariPresenter
 
     private var animation = Animation.spring().speed(1.25)
 
@@ -103,19 +104,6 @@ struct AppIconPackListView: View {
                 )
             }
         }
-        .onChange(of: selectedURL) { url in
-            if let url = url {
-                UIApplication.shared.open(url, options: [.universalLinksOnly: true]) { flag in
-                    if !flag {
-                        self.safariViewURL = url
-                    }
-                }
-                self.selectedURL = nil
-            }
-        }
-        .sheet(item: $safariViewURL) { url in
-            SafariView(url: url, entersReaderIfAvailable: false)
-        }
     }
 
     private func closeIconPackInfoWithAnimation() {
@@ -148,7 +136,7 @@ struct AppIconPackListView: View {
 
                         iconPack.link.flatMap { link in
                             Button(action: {
-                                self.selectedURL = link
+                                safariPresenter.set(link)
                             }, label: {
                                 Image(systemName: "link")
                             })
@@ -164,12 +152,14 @@ struct AppIconPackListView: View {
     func content(for pack: AppIconPack) -> some View {
         ForEach(pack.icons) { icon in
             HStack(spacing: 16) {
-                Image(uiImage: UIImage(named: icon.imageName)!)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 45, height: 45)
-                    .clipShape(RoundedRectangle(cornerRadius: 10))
-                    .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 1)
+                if let image = UIImage(named: icon.imageName) {
+                    Image(uiImage: image)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 45, height: 45)
+                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                        .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 1)                    
+                }
 
                 Text(icon.title)
                     .font(Font.system(.body, design: .rounded))

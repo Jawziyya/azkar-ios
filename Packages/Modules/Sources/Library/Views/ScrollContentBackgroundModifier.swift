@@ -3,9 +3,11 @@
 
 import SwiftUI
 
-struct ScrollContentBackgroundModifier: ViewModifier {
+public struct ScrollContentBackgroundModifier: ViewModifier {
+    public init() {}
+    
     @ViewBuilder
-    func body(content: Content) -> some View {
+    public func body(content: Content) -> some View {
         if #available(iOS 16, *) {
             content.scrollContentBackground(.hidden)
         } else {
@@ -15,7 +17,7 @@ struct ScrollContentBackgroundModifier: ViewModifier {
 }
 
 extension View {
-    func customScrollContentBackground() -> some View {
+    public func customScrollContentBackground() -> some View {
         self.modifier(ScrollContentBackgroundModifier())
     }
 }

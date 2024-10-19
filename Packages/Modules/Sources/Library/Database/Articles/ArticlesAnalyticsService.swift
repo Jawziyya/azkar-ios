@@ -5,37 +5,31 @@ import Entities
 final class ArticlesAnalyticsService {
     
     private let supabaseClient: SupabaseClient
+    private let analyticsService: AnalyticsService
     private var observationChannels: [Article.ID: Supabase.RealtimeChannelV2] = [:]
     private var observationStreams: [Article.ID: AsyncStream<AnyAction>] = [:]
     
-    init(supabaseClient: SupabaseClient) {
+    init(
+        supabaseClient: SupabaseClient
+    ) {
         self.supabaseClient = supabaseClient
+        self.analyticsService = AnalyticsService(supabaseClient: supabaseClient)
     }
     
     func sendAnalyticsEvent(
         _ type: AnalyticsRecord.ActionType,
         articleId: Article.ID
-    ) async {
-        do {
-            try await supabaseClient
-                .database
-                .from("analytics")
-                .insert(ArticlesAnalyticsEvent(
-                    actionType: type,
-                    objectId: articleId,
-                    recordType: AnalyticsRecord.RecordType.article.rawValue
-                ))
-                .execute()
-                .value
-        } catch {
-            print(error.localizedDescription)
-        }
+    ) {
+        analyticsService.sendAnalyticsEvent(
+            objectId: articleId,
+            recordType: .article,
+            actionType: type
+        )
     }
     
     func getArticleAnalyticsCount(_ articleId: ArticleDTO.ID) async -> ArticleAnalytics? {
         do {
             return try await supabaseClient
-                .database
                 .from("article_analytics")
                 .select("*")
                 .eq("article_id", value: articleId)
@@ -54,10 +48,10 @@ final class ArticlesAnalyticsService {
         if let existingChannel = observationStreams[articleId] {
             return existingChannel
         } else {
-            channel = await supabaseClient.realtimeV2.channel("analytics-\(articleId)")
+            channel = supabaseClient.realtimeV2.channel("analytics-\(articleId)")
             observationChannels[articleId] = channel
         }
-        let anyChange = await channel.postgresChange(
+        let anyChange = channel.postgresChange(
             AnyAction.self,
             schema: "public",
             table: "article_analytics",
@@ -72,7 +66,8 @@ final class ArticlesAnalyticsService {
     public func observeAnalyticsNumbers(
         articleId: Article.ID
     ) async -> AsyncStream<ArticleAnalytics> {
-        return await getAnalyticsStream(for: articleId)
+        let initialAnalytics = await getArticleAnalyticsCount(articleId)
+        let stream = await getAnalyticsStream(for: articleId)
             .compactMap { action -> ArticleAnalytics? in
                 let record: [String: AnyJSON]
                 switch action {
@@ -88,6 +83,17 @@ final class ArticlesAnalyticsService {
                 return ArticleAnalytics(views: viewsNumber, shares: sharesNumber)
             }
             .eraseToStream()
+        return AsyncStream { continuation in
+            if let initialAnalytics {
+                continuation.yield(initialAnalytics)
+            }
+            Task {
+                for await value in stream {
+                    continuation.yield(value)
+                }
+                continuation.finish()                
+            }
+        }
     }
     
 }

@@ -6,6 +6,7 @@ import Library
 
 final class FontsViewModel: ObservableObject {
     
+    let sampleText: String
     @Published var didLoadData = false
     @Published var fonts: [FontsSection] = [
         FontsSection(
@@ -76,12 +77,14 @@ final class FontsViewModel: ObservableObject {
     let fontsType: FontsType
     
     init(
+        sampleText: String,
         fontsType: FontsType,
         service: FontsServiceType,
         preferences: Preferences = Preferences.shared,
         subscriptionManager: SubscriptionManagerType = SubscriptionManagerFactory.create(),
         subscribeScreenTrigger: @escaping () -> Void
     ) {
+        self.sampleText = sampleText
         self.fontsType = fontsType
         self.service = service
         self.preferences = preferences
@@ -94,7 +97,7 @@ final class FontsViewModel: ObservableObject {
         }
     }
     
-    func changeSelectedFont(_ font: AppFontViewModel) {
+    @MainActor func changeSelectedFont(_ font: AppFontViewModel) async {
         @Sendable func setFont() {
             preferredFont = font.font
             if fontsType == .arabic {
@@ -111,14 +114,16 @@ final class FontsViewModel: ObservableObject {
         
         if let url = font.zipFileURL, isFontInstalled(font) == false {
             loadingFonts.insert(font.id)
-            Task(priority: .userInitiated) { [unowned self] in
+            do {
                 let fileURLs = try await service.loadFont(url: url)
                 FontsHelper.registerFonts(fileURLs)
                 loadingFonts.remove(font.id)
-                DispatchQueue.main.async(execute: setFont)
+                setFont()
+            } catch {
+                loadingFonts.remove(font.id)
             }
         } else {
-            DispatchQueue.main.async(execute: setFont)
+            setFont()
         }
     }
     
@@ -184,7 +189,12 @@ final class FontsViewModel: ObservableObject {
     }
     
     static var placeholder: FontsViewModel {
-        FontsViewModel(fontsType: .translation, service: DemoFontsService(), subscribeScreenTrigger: {})
+        FontsViewModel(
+            sampleText: "С именем Аллаха",
+            fontsType: .translation,
+            service: DemoFontsService(),
+            subscribeScreenTrigger: {}
+        )
     }
     
 }

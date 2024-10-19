@@ -11,15 +11,17 @@ let package = Package(
         .library(name: "Extensions", targets: ["Extensions"]),
         .library(name: "Entities", targets: ["Entities"]),
         .library(name: "Library", targets: ["Library"]),
+        .library(name: "AboutApp", targets: ["AboutApp"]),
         .library(name: "ArticleReader", targets: ["ArticleReader"]),
         .library(name: "AudioPlayer", targets: ["AudioPlayer"]),
     ],
     dependencies: [
         // MARK: Data
         .package(url: "https://github.com/weichsel/ZIPFoundation", from: "0.9.0"),
-        .package(url: "https://github.com/groue/GRDB.swift", from: "5.0.0"),
+        .package(url: "https://github.com/groue/GRDB.swift", from: "6.29.3"),
         
         // MARK: Services.
+        .package(url: "https://github.com/firebase/firebase-ios-sdk", from: "11.3.0"),
         .package(url: "https://github.com/supabase-community/supabase-swift", from: "2.0.0"),
         .package(url: "https://github.com/RevenueCat/purchases-ios.git", from: "4.19.0"),
         
@@ -39,9 +41,9 @@ let package = Package(
         .package(url: "https://github.com/aheze/Popovers", from: "1.3.2"),
         .package(url: "https://github.com/radianttap/Coordinator", from: "6.4.2"),
         .package(url: "https://github.com/airbnb/lottie-ios", from: "3.0.0"),
-        .package(url: "https://github.com/SwiftUIX/SwiftUIX", from: "0.1.3"),
+        .package(url: "https://github.com/SwiftUIX/SwiftUIX", from: "0.2.2"),
         .package(url: "https://github.com/siteline/swiftui-introspect", from: "1.1.2"),
-        .package(url: "https://github.com/SwiftUI-Plus/ActivityView", from: "1.0.0"),
+        .package(url: "https://github.com/shaps80/SwiftUIBackports", from: "2.8.1"),
         .package(url: "https://github.com/demharusnam/SwiftUIDrag", revision: "0686318a"),
         .package(url: "https://github.com/SvenTiigi/WhatsNewKit", from: "2.0.0"),
         .package(url: "https://github.com/bmoliveira/MarkdownKit", from: "1.7.1"),
@@ -70,6 +72,8 @@ let package = Package(
                 "Extensions",
                 .product(name: "GRDB", package: "GRDB.swift"),
                 .product(name: "Supabase", package: "supabase-swift"),
+                .product(name: "NukeUI", package: "Nuke"),
+                "SwiftUIBackports",
             ]
         ),
         .target(name: "ArticleReader", dependencies: [
@@ -81,6 +85,13 @@ let package = Package(
             .product(name: "Perception", package: "swift-perception"),
             .product(name: "Fakery", package: "Fakery"),
             .product(name: "NukeUI", package: "Nuke"),
+        ]),
+        .target(name: "AboutApp", dependencies: [
+            "Entities",
+            "Extensions",
+            "Library",
+            .product(name: "SwiftUIBackports", package: "SwiftUIBackports"),
+            .product(name: "SwiftUIIntrospect", package: "swiftui-introspect"),
         ]),
     ]
 )

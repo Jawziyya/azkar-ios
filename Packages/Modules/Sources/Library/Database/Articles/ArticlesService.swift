@@ -3,46 +3,21 @@ import Entities
 import Supabase
 import Combine
 
-public struct ArticlesAnalyticsEvent: Encodable {
-    public let actionType: AnalyticsRecord.ActionType
-    public let objectId: Int
-    public let recordType: String
-    
-    public init(
-        actionType: AnalyticsRecord.ActionType,
-        objectId: Int,
-        recordType: String
-    ) {
-        self.actionType = actionType
-        self.objectId = objectId
-        self.recordType = recordType
-    }
-}
-
-public protocol ArticlesServiceType {
-    func getArticles(limit: Int) -> AsyncThrowingStream<[Article], Error>
-    func getArticle(_ id: Article.ID) async throws -> Article?
-    func sendAnalyticsEvent(_ type: AnalyticsRecord.ActionType, articleId: Article.ID) async
-    func observeAnalyticsNumbers(articleId: Article.ID) async -> AsyncStream<ArticleAnalytics>
-}
-
 public final class ArticlesService: ArticlesServiceType {
     
-    private var localRepository: ArticlesRepository?
+    private let localRepository: ArticlesRepository
     private let remoteRepository: ArticlesRepository
     private let articlesAnalyticsService: ArticlesAnalyticsService
     
     public init(
         databasePath: String,
         language: Language
-    ) {
-        do {
-            localRepository = try ArticlesSQLiteDatabaseService(language: language, databaseFilePath: databasePath)
-        } catch {
-            print(error.localizedDescription)
-        }
+    ) throws {
+        let supabaseClient = try getSupabaseClient()
+        localRepository = try ArticlesSQLiteDatabaseService(language: language, databaseFilePath: databasePath)
         articlesAnalyticsService = ArticlesAnalyticsService(supabaseClient: supabaseClient)
         remoteRepository = ArticlesSupabaseRepository(
+            supabaseClient: supabaseClient,
             language: language,
             analyticsService: articlesAnalyticsService
         )
@@ -52,11 +27,7 @@ public final class ArticlesService: ArticlesServiceType {
         limit: Int
     ) -> AsyncThrowingStream<[Article], Error> {
         let remoteRepository = self.remoteRepository
-        guard let localRepository else {
-            return AsyncThrowingStream {
-                return try await remoteRepository.getArticles(limit: limit, newerThan: nil)
-            }
-        }
+        let localRepository = self.localRepository
                 
         return AsyncThrowingStream { continuation in
             Task {
@@ -64,11 +35,6 @@ public final class ArticlesService: ArticlesServiceType {
                 do {
                     let articles = try await localRepository.getArticles(limit: limit, newerThan: nil)
                     cachedArticles = articles
-                    Task.detached { [self, articles] in
-                        for article in articles {
-                            await updateAnalyticsNumbers(for: article.id)
-                        }
-                    }
                     if cachedArticles.isEmpty == false {
                         continuation.yield(cachedArticles)
                     }
@@ -76,12 +42,14 @@ public final class ArticlesService: ArticlesServiceType {
                     continuation.finish(throwing: error)
                 }
                 
-//                let newestArticleDate = cachedArticles.first?.createdAt
+                let newestArticleDate = cachedArticles.first?.createdAt
                 do {
-                    let articles = try await remoteRepository.getArticles(limit: limit, newerThan: nil)
+                    let articles = try await remoteRepository.getArticles(limit: limit, newerThan: newestArticleDate)
                     try await localRepository.saveArticles(articles)
-                    let allArticles = articles // + cachedArticles
-                    continuation.yield(allArticles.unique(by: \.id))
+                    let allArticles = (articles + cachedArticles).unique(by: \.id)
+                    if allArticles != cachedArticles {
+                        continuation.yield(allArticles)
+                    }
                     continuation.finish()
                 } catch {
                     continuation.finish(throwing: error)
@@ -90,34 +58,32 @@ public final class ArticlesService: ArticlesServiceType {
         }
     }
     
-    /// Get list of articles for a given language.
-    public func fetchArticles(
-        limit: Int
-    ) async throws -> [Article] {
-        return try await remoteRepository.getArticles(limit: limit, newerThan: nil)
-    }
-    
     /// Request an article using article.id
     public func getArticle(
         _ id: Article.ID
     ) async throws -> Article? {
-        if let article = try await localRepository?.getArticle(id) {
+        if let article = try await localRepository.getArticle(id) {
             return article
         } else {
             let article = try await remoteRepository.getArticle(id)
             if let article {
-                try? await localRepository?.saveArticles([article])
+                try? await localRepository.saveArticles([article])
             }
             return article
         }
     }
-    
-    private func updateAnalyticsNumbers(for articleId: Article.ID) async {
-        let analytics = await articlesAnalyticsService.getArticleAnalyticsCount(articleId)
-        if var article = try? await localRepository?.getArticle(articleId) {
-            article.views = analytics?.viewsCount
-            article.shares = analytics?.sharesCount
-            try? await localRepository?.saveArticle(article)
+        
+    public func updateAnalyticsNumbers(
+        for articleId: Article.ID,
+        views: Int,
+        shares: Int
+    ) {
+        Task {
+            if var article = try? await localRepository.getArticle(articleId) {
+                article.views = views
+                article.shares = shares
+                try? await localRepository.saveArticle(article)
+            }
         }
     }
 
@@ -125,8 +91,8 @@ public final class ArticlesService: ArticlesServiceType {
     public func sendAnalyticsEvent(
         _ type: AnalyticsRecord.ActionType,
         articleId: Article.ID
-    ) async {
-        await articlesAnalyticsService.sendAnalyticsEvent(type, articleId: articleId)
+    ) {
+        articlesAnalyticsService.sendAnalyticsEvent(type, articleId: articleId)
     }
     
     public func observeAnalyticsNumbers(

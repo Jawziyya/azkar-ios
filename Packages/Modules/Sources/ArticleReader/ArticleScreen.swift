@@ -147,7 +147,8 @@ private func getDemoVM(
                 imageFormat: coverImageFormat
             )
         ),
-        analyticsStream: { AsyncStream { _ in } }
+        analyticsStream: { AsyncStream { _ in } },
+        updateAnalytics: { _ in }
     )
 }
 
@@ -178,7 +179,8 @@ private struct ArticleScreenPreview: View {
     ArticleScreenPreview(
         viewModel: .init(
             article: .placeholder(),
-            analyticsStream: { AsyncStream { _ in } }
+            analyticsStream: { AsyncStream { _ in } },
+            updateAnalytics: { _ in }
         )
     )
 }

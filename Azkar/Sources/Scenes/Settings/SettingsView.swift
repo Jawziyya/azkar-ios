@@ -3,12 +3,7 @@
 import SwiftUI
 import Popovers
 import Entities
-
-extension URL: Identifiable {
-    public var id: String {
-        absoluteString
-    }
-}
+import Library
 
 extension Language: PickableItem {}
 
@@ -18,26 +13,31 @@ struct SettingsView: View {
         
     var body: some View {
         List {
-            content
-                .listRowBackground(Color.contentBackground)
+            Section {
+                content
+            }
+            .listRowBackground(Color.contentBackground)
+        }
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button(action: viewModel.navigateToAboutAppScreen) {
+                    Image(systemName: "info.circle")
+                }
+            }
         }
         .listStyle(.insetGrouped)
         .customScrollContentBackground()
         .background(Color.background, ignoresSafeAreaEdges: .all)
         .navigationTitle(L10n.Settings.title)
+        .removeSaturationIfNeeded()
     }
         
     var content: some View {
         Group {
-            switch viewModel.mode {
-            case .standart:
-                appearanceSection
-                counterSection
-                textSettingsSection
-                remindersSection
-            case .text:
-                textSettingsSection
-            }
+            appearanceSection
+            counterSection
+            textSettingsSection
+            remindersSection
         }
     }
     
@@ -133,7 +133,7 @@ struct SettingsView: View {
             action: viewModel.navigateToRemindersSettings
         )
     }
-        
+    
 }
 
 struct SettingsView_Previews: PreviewProvider {

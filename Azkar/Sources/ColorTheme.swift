@@ -1,26 +1,7 @@
 // Copyright © 2021 Al Jawziyya. All rights reserved. 
 
 import SwiftUI
-
-private let preferences = Preferences.shared
-
-var colorTheme: ColorTheme {
-    preferences.colorTheme
-}
-
-enum ColorTheme: String, CaseIterable, Equatable, Codable {
-    case `default`, sea, purpleRose, ink, roseQuartz
-    
-    var colorsNamespacePrefix: String {
-        switch self {
-        case .default: return ""
-        case .sea: return "Sea/"
-        case .purpleRose: return "PurpleRose/"
-        case .ink: return "Ink/"
-        case .roseQuartz: return "RoseQuartz/"
-        }
-    }
-}
+import Library
 
 extension ColorTheme: PickableItem {
     
@@ -38,20 +19,5 @@ extension ColorTheme: PickableItem {
             return L10n.Settings.Theme.ColorTheme.roseQuartz
         }
     }
-    
-    var image: Image? {
-        switch self {
-        case .default:
-            return nil
-        case .sea:
-            return nil
-        case .purpleRose:
-            return nil
-        case .ink:
-            return nil
-        case .roseQuartz:
-            return nil
-        }
-    }
-    
+
 }

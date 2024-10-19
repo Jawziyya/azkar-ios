@@ -1,5 +1,6 @@
 import SwiftUI
 import Combine
+import Library
 
 final class RootViewModel: ObservableObject {
     var mainMenuViewModel: MainMenuViewModel
@@ -8,7 +9,7 @@ final class RootViewModel: ObservableObject {
     @Published var title = ""
     
     private func getRandomEmoji() -> String {
-        ["🌙", "🌸", "☘️", "🌳", "🌴", "🌱", "🌼", "💫", "🌎", "🌍", "🌏", "🪐", "✨", "❄️"].randomElement()!
+        ["🌙", "🌸", "☘️", "🌳", "🌴", "🌱", "🌼", "💫", "🌎", "🌍", "🌏", "🪐", "✨", "❄️", "🤍", "🌌"].randomElement()!
     }
     
     init(
@@ -50,6 +51,7 @@ struct RootView: View {
             placement: .navigationBarDrawer(displayMode: .always)
         )
         .autocorrectionDisabled(true)
+        .attachSafariPresenter()
     }
 }
 

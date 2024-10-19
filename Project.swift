@@ -122,6 +122,7 @@ enum AzkarTarget: String, CaseIterable {
                     .package(product: "Entities"),
                     .package(product: "Extensions"),
                     .package(product: "Library"),
+                    .package(product: "AboutApp"),
                     .package(product: "ArticleReader"),
                     .package(product: "AudioPlayer"),
                     .package(product: "SwiftyStoreKit"),
@@ -132,7 +133,7 @@ enum AzkarTarget: String, CaseIterable {
                     .package(product: "NukeUI"),
                     .package(product: "RevenueCat"),
                     .package(product: "SwiftUIX"),
-                    .package(product: "ActivityView"),
+                    .package(product: "SwiftUIBackports"),
                     .package(product: "SwiftUIDrag"),
                     .package(product: "Popovers"),
                     .package(product: "WhatsNewKit"),
@@ -140,10 +141,16 @@ enum AzkarTarget: String, CaseIterable {
                     .package(product: "Stinsen"),
                     .package(product: "Supabase"),
                     .package(product: "SwiftUIIntrospect"),
+                    
+                    // Firebase
+                    .package(product: "FirebaseCore"),
+                    .package(product: "FirebaseAnalyticsWithoutAdIdSupport"),
+                    .package(product: "FirebaseMessaging"),
                 ],
                 settings: Settings.settings(
                     base: baseSettingsDictionary
                         .merging(["DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER": "NO"])
+                        .addingObjcLinkerFlag
                     ,
                     configurations: [
                         .debug(
@@ -279,13 +286,7 @@ let project = Project(
             shared: true,
             buildAction: .buildAction(targets: ["Azkar"]),
             runAction: RunAction.runAction(
-                executable: "Azkar",
-                arguments: Arguments.arguments(
-                    environmentVariables: [
-                        "SUPABASE_API_URL": .init(stringLiteral: env["SUPABASE_API_URL"] ?? ""),
-                        "SUPABASE_API_KEY": .init(stringLiteral: env["SUPABASE_API_KEY"] ?? ""),
-                    ]
-                )
+                executable: "Azkar"
             )
         ),
         Scheme.scheme(
