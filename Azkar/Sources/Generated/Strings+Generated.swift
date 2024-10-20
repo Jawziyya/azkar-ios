@@ -572,6 +572,10 @@ internal enum L10n {
     internal static let title = L10n.tr("Localizable", "updates.title", fallback: "What's new?")
   }
   internal enum Widgets {
+    internal enum Launcher {
+      /// Quick launch
+      internal static let title = L10n.tr("Localizable", "widgets.launcher.title", fallback: "Quick launch")
+    }
     internal enum Virtues {
       /// Different Ayas and ahadith describing virtues of remembering Allah Almighty
       internal static let description = L10n.tr("Localizable", "widgets.virtues.description", fallback: "Different Ayas and ahadith describing virtues of remembering Allah Almighty")
