@@ -198,11 +198,8 @@ final class MainMenuViewModel: ObservableObject {
     }
     
     @MainActor private func loadAds() async {
-        do {
-            let ads = try await adsService.fetchAds(newerThan: nil)
-            self.ad = ads.last
-        } catch {
-            print(error.localizedDescription)
+        for await ad in adsService.getAd() {
+            self.ad = ad
         }
     }
     

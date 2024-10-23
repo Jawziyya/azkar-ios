@@ -4,38 +4,59 @@ import Supabase
 
 public final class AdsService: AdsServiceType {
     
-    let supabaseClient: SupabaseClient
+    let localStorageRepository: AdsRepository
+    let remoteStorageRepository: AdsRepository
     let analyticsService: AnalyticsService
     
     public init(
+        databasePath: String,
+        language: Language
     ) throws {
-        self.supabaseClient = try getSupabaseClient()
+        let supabaseClient = try getSupabaseClient()
+        localStorageRepository = try AdsSQLiteRepository(
+            language: language,
+            databaseFilePath: databasePath
+        )
+        remoteStorageRepository = AdsSupabaseRepository(
+            supabaseClient: supabaseClient,
+            language: language
+        )
         analyticsService = AnalyticsService(supabaseClient: supabaseClient)
     }
     
-    public func fetchAds(newerThan: Date?) async throws -> [Ad] {
-        var adsQuery = supabaseClient
-            .from("ads")
-            .select()
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSSSSZ"
-        formatter.timeZone = TimeZone(secondsFromGMT: 0)
-        formatter.locale = Locale(identifier: "en_US_POSIX")
-        if let newerThan {
-            let date = formatter.string(from: newerThan.addingTimeInterval(1))
-            adsQuery = adsQuery
-                .greaterThan("created_at", value: date)
+    public func getAd() -> AsyncStream<Ad> {
+        AsyncStream { continuation in
+            Task {
+                do {
+                    var createdDate: Date?
+                    var updatedDate: Date?
+                    let localAds = try await localStorageRepository.getAds(
+                        newerThan: nil,
+                        orUpdatedAfter: nil,
+                        limit: 1
+                    )
+                    if let ad = localAds.first {
+                        createdDate = ad.createdAt
+                        updatedDate = ad.updatedAt
+                        continuation.yield(ad)
+                    }
+                    
+                    let remoteAds = try await remoteStorageRepository.getAds(
+                        newerThan: createdDate,
+                        orUpdatedAfter: updatedDate,
+                        limit: 1
+                    )
+                    if let ad = remoteAds.first {
+                        try await localStorageRepository.saveAd(ad)
+                        continuation.yield(ad)
+                    }
+                    
+                    continuation.finish()
+                } catch {
+                    continuation.finish()
+                }
+            }
         }
-        adsQuery = adsQuery.greaterThan(
-            "expire_date",
-            value: formatter.string(from: Date())
-        )
-        adsQuery = adsQuery.lowerThan(
-            "begin_date",
-            value: formatter.string(from: Date())
-        )
-        let ads: [Ad] = try await adsQuery.execute().value
-        return ads
     }
     
     public func sendAnalytics(for ad: Ad, action: AnalyticsRecord.ActionType) {

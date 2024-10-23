@@ -6,7 +6,7 @@ public enum AdSize: String, Codable, Hashable {
     case regular
 }
 
-public struct Ad: Identifiable, Decodable, Hashable {
+public struct Ad: Identifiable, Codable, Hashable {
     public let id: Int
     public let size: AdSize
     public var title: String?
@@ -17,6 +17,9 @@ public struct Ad: Identifiable, Decodable, Hashable {
     public var backgroundColor: String?
     public var foregroundColor: String?
     public var accentColor: String?
+    public var language = Language.english
+    public var createdAt = Date()
+    public var updatedAt = Date()
 }
 
 public extension Ad {

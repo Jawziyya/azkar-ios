@@ -76,13 +76,19 @@ final class RootCoordinator: NSObject, RouteTrigger, NavigationCoordinatable {
             .appGroupContainerURL
         
         do {
+            let language = preferences.contentLanguage.fallbackLanguage
             articlesService = try ArticlesService(
                 databasePath: appGroupFolder
                     .appendingPathComponent("articles.db")
                     .absoluteString,
-                language: preferences.contentLanguage.fallbackLanguage
+                language: language
             )
-            adsService = try AdsService()
+            adsService = try AdsService(
+                databasePath: appGroupFolder
+                    .appendingPathComponent("ads.db")
+                    .absoluteString,
+                language: language
+            )
             
             let preferencesDatabasePath = appGroupFolder
                 .appendingPathComponent("preferences.db")

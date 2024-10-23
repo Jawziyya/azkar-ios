@@ -3,8 +3,11 @@ import Entities
 import Library
 
 final class DemoAdsService: AdsServiceType {
-    func fetchAds(newerThan: Date?) async throws -> [Ad] {
-        return []
+    func getAd() -> AsyncStream<Entities.Ad> {
+        return AsyncStream<Ad> { continuation in
+            continuation.yield(Ad.telegramBotDemo)
+            continuation.finish()
+        }
     }
     func sendAnalytics(for ad: Ad, action: AnalyticsRecord.ActionType) {}
 }
