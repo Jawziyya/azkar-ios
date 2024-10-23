@@ -4,16 +4,8 @@ import Foundation
 
 /// Protocol that defines the required methods for any analytics reporting target.
 public protocol AnalyticsTarget {
-    /// Reports an event with a name and optional metadata.
-    /// - Parameters:
-    ///   - name: The name of the event.
-    ///   - metadata: Optional dictionary containing additional information about the event.
     func reportEvent(name: String, metadata: [String: Any]?)
-    
-    /// Sets a user attribute.
-    /// - Parameters:
-    ///   - type: The type of the user attribute.
-    ///   - value: The value of the user attribute.
+    func reportScreen(screenName: String, className: String?)
     func setUserAttribute(_ type: UserAttributeType, value: String)
 }
 
@@ -68,6 +60,18 @@ public final class AnalyticsReporter {
             }
         }
     }
+
+    /// Reports a screen view to all added analytics targets.
+    /// - Parameters:
+    ///   - screenName: The name of the screen.
+    ///   - className: The name of the class.
+    public static func reportScreen(_ screenName: String, className: String? = nil) {
+        shared.serialQueue.sync {
+            for target in shared.targets {
+                target.reportScreen(screenName: screenName, className: className)
+            }
+        }
+    }
     
     /// Sets a user attribute for all added analytics targets.
     /// - Parameters:
@@ -80,5 +84,5 @@ public final class AnalyticsReporter {
             }
         }
     }
-}
 
+}
