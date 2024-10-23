@@ -63,6 +63,9 @@ struct ZikrView: View {
             getContent()
                 .largeScreenPadding()
         }
+        .onAppear {
+            AnalyticsReporter.reportScreen("Zikr Reading", className: viewName)
+        }
         .environment(\.highlightPattern, viewModel.highlightPattern)
         .onAppear {
             Task {

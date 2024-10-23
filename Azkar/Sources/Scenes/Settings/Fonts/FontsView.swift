@@ -91,6 +91,9 @@ struct FontsView: View {
             .padding()
             .background(Color.background)
         }
+        .onAppear {
+            AnalyticsReporter.reportScreen("Settings", className: viewName)
+        }
     }
     
     func fontView(_ vm: AppFontViewModel) -> some View {

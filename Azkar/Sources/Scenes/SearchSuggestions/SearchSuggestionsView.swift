@@ -14,6 +14,9 @@ struct SearchSuggestionsView: View {
         .task {
             await viewModel.loadSuggestions()
         }
+        .onAppear {
+            AnalyticsReporter.reportScreen("Azkar Search", className: viewName)
+        }
     }
     
     @ViewBuilder

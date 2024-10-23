@@ -104,6 +104,9 @@ struct AppIconPackListView: View {
                 )
             }
         }
+        .onAppear {
+            AnalyticsReporter.reportScreen("App Icon Pack List", className: viewName)
+        }
     }
 
     private func closeIconPackInfoWithAnimation() {

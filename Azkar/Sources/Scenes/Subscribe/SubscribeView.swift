@@ -88,6 +88,9 @@ struct SubscribeView: View {
                         .padding()
                 }
             }
+            .onAppear {
+                AnalyticsReporter.reportScreen("Subscription", className: viewName)
+            }
     }
     
     var subscribeScrollableContent: some View {

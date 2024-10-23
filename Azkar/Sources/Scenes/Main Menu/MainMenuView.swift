@@ -30,6 +30,9 @@ struct MainMenuView: View {
             .textInputAutocapitalization(.never)
             .removeSaturationIfNeeded()
             .attachEnvironmentOverrides(viewModel: EnvironmentOverridesViewModel(preferences: viewModel.preferences))
+            .onAppear {
+                AnalyticsReporter.reportScreen("Main Menu", className: viewName)
+            }
             .background(
                 GeometryReader { proxy in
                     Color.clear

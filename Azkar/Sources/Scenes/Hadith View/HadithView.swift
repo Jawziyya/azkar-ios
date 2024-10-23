@@ -27,6 +27,9 @@ struct HadithView: View {
                 .largeScreenPadding(defaultPadding: 16)
                 .padding(.vertical)
         }
+        .onAppear {
+            AnalyticsReporter.reportScreen("Hadith View", className: viewName)
+        }
         .background(Color.background.edgesIgnoringSafeArea(.all))
     }
 
