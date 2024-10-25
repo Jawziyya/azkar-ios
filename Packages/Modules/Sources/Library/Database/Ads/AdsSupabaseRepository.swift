@@ -25,33 +25,36 @@ final class AdsSupabaseRepository: AdsRepository {
             .select()
             .eq("language", value: language.rawValue)
         
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSSSSZ"
-        formatter.timeZone = TimeZone(secondsFromGMT: 0)
-        formatter.locale = Locale(identifier: "en_US_POSIX")
-        if let newerThan {
-            let date = formatter.string(from: newerThan.addingTimeInterval(1))
+        if let orUpdatedAfter {
+            let updateDate = orUpdatedAfter.supabaseFormatted
+            if let newerThan {
+                let date = newerThan.addingTimeInterval(1).supabaseFormatted
+                adsQuery = adsQuery
+                    .or("created_at.gt.\(date),updated_at.gt.\(updateDate)")
+            } else {
+                adsQuery = adsQuery
+                    .greaterThan("updated_at", value: updateDate)
+            }
+        } else if let newerThan {
+            let date = newerThan.addingTimeInterval(1).supabaseFormatted
             adsQuery = adsQuery
                 .greaterThan("created_at", value: date)
         }
-        if let orUpdatedAfter {
-            let updateDate = formatter.string(from: orUpdatedAfter)
-            adsQuery = adsQuery
-                .greaterThan("updated_at", value: updateDate)
-        }
+
         adsQuery = adsQuery.greaterThan(
             "expire_date",
-            value: formatter.string(from: Date())
+            value: Date().supabaseFormatted
         )
         adsQuery = adsQuery.lowerThan(
             "begin_date",
-            value: formatter.string(from: Date())
+            value: Date().supabaseFormatted
         )
-        return try await adsQuery
+        let ads: [Ad] = try await adsQuery
             .order("created_at", ascending: false)
             .limit(limit)
             .execute()
             .value
+        return ads
     }
     
     func getAd(_ id: Ad.ID) async throws -> Ad? {
