@@ -43,6 +43,9 @@ struct ZikrPagesView: View, Equatable {
                     }
                 }
             )
+            .onAppear {
+                AnalyticsReporter.reportScreen("Azkar Pages", className: viewName)
+            }
     }
 
     var counterButton: some View {

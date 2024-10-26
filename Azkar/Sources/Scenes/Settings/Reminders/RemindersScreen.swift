@@ -15,6 +15,9 @@ struct RemindersScreen: View {
         .customScrollContentBackground()
         .background(Color.background, ignoresSafeAreaEdges: .all)
         .navigationTitle(L10n.Settings.Reminders.title)
+        .onAppear {
+            AnalyticsReporter.reportScreen("Settings", className: viewName)
+        }
     }
     
     var content: some View {

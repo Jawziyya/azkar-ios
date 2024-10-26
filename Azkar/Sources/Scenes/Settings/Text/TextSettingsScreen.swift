@@ -17,6 +17,9 @@ struct TextSettingsScreen: View {
         .customScrollContentBackground()
         .background(Color.background, ignoresSafeAreaEdges: .all)
         .navigationTitle(L10n.Settings.Text.title)
+        .onAppear {
+            AnalyticsReporter.reportScreen("Settings", className: viewName)
+        }
     }
     
     var content: some View {

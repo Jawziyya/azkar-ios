@@ -21,6 +21,9 @@ struct AzkarListView: View {
         ScrollView(.vertical, showsIndicators: true) {
             list
         }
+        .onAppear {
+            AnalyticsReporter.reportScreen("Azkar List", className: viewName)
+        }
         .navigationTitle(viewModel.title)
         .background(Color.background.edgesIgnoringSafeArea(.all))
         .onReceive(viewModel.selectedPage) { page in

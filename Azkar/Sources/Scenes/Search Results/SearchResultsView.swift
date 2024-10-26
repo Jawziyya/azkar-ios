@@ -10,6 +10,9 @@ struct SearchResultsView: View {
         content
             .customScrollContentBackground()
             .background(Color.background, ignoresSafeAreaEdges: .all)
+            .onAppear {
+                AnalyticsReporter.reportScreen("AzkarSearch", className: viewName)
+            }
     }
     
     @ViewBuilder

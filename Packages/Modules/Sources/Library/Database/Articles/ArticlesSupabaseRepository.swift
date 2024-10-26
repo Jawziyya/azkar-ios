@@ -43,11 +43,7 @@ final class ArticlesSupabaseRepository: ArticlesRepository {
             articlesQuery = articlesQuery.eq("is_published", value: true)
         
             if let newerThan {
-                let formatter = DateFormatter()
-                formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSSSSZ"
-                formatter.timeZone = TimeZone(secondsFromGMT: 0)
-                formatter.locale = Locale(identifier: "en_US_POSIX")
-                let date = formatter.string(from: newerThan.addingTimeInterval(1))
+                let date = newerThan.addingTimeInterval(1).supabaseFormatted
                 articlesQuery = articlesQuery
                     .greaterThan("created_at", value: date)
             }

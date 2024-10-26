@@ -62,6 +62,9 @@ struct JumuaRemindersView: View {
         .customScrollContentBackground()
         .background(Color.background.edgesIgnoringSafeArea(.all))
         .navigationTitle(L10n.Settings.Reminders.Jumua.label)
+        .onAppear {
+            AnalyticsReporter.reportScreen("Settings", className: viewName)
+        }
     }
     
     @ViewBuilder

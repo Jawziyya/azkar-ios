@@ -27,6 +27,9 @@ struct ZikrShareView: View {
         }
         .edgesIgnoringSafeArea(.all)
         .environment(\.dynamicTypeSize, .large)
+        .onAppear {
+            AnalyticsReporter.reportScreen("Zikr Share", className: viewName)
+        }
     }
 
     var content: some View {

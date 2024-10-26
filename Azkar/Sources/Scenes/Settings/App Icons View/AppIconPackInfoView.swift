@@ -160,6 +160,9 @@ struct AppIconPackInfoView: View {
         .padding()
         .background(Color.background)
         .clipShape(RoundedRectangle(cornerRadius: 20))
+        .onAppear {
+            AnalyticsReporter.reportScreen("App Icon Pack", className: viewName)
+        }
     }
 
     var stack: some View {

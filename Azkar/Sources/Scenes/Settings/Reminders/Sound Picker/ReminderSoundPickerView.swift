@@ -28,6 +28,9 @@ struct ReminderSoundPickerView: View {
         .customScrollContentBackground()
         .background(Color.background.edgesIgnoringSafeArea(.all))
         .navigationTitle(L10n.Settings.Reminders.Sounds.sound)
+        .onAppear {
+            AnalyticsReporter.reportScreen("Settings", className: viewName)
+        }
     }
     
     private func soundView(_ sound: ReminderSound) -> some View {

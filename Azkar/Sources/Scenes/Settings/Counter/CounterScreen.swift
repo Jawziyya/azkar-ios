@@ -86,6 +86,9 @@ struct CounterView: View {
                 .padding(.vertical, 3)
             }
         }
+        .onAppear {
+            AnalyticsReporter.reportScreen("Settings", className: viewName)
+        }
     }
     
 }
