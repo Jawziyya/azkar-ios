@@ -43,6 +43,7 @@ public struct AdButtonItem: Identifiable {
     let accentColor: Color
     let backgroundColor: Color
     let imageLink: URL?
+    let imageMode: AdImageMode?
 }
 
 extension AdButtonItem {
@@ -57,5 +58,6 @@ extension AdButtonItem {
         foregroundColor = ad.foregroundColor.flatMap(Color.init(hex:)) ?? Color.primary
         backgroundColor = ad.backgroundColor.flatMap(Color.init(hex:)) ?? Color(.systemBackground)
         imageLink = ad.imageLink
+        imageMode = ad.imageMode
     }
 }

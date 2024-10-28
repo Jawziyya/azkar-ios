@@ -3,6 +3,15 @@ import NukeUI
 import Entities
 import Extensions
 
+struct CustomContainerRelativeShape: Shape {
+    var cornerRadius: CGFloat = 25
+
+    func path(in rect: CGRect) -> Path {
+        let adaptiveRadius = min(rect.width, rect.height) * (cornerRadius / 100)
+        return RoundedRectangle(cornerRadius: adaptiveRadius).path(in: rect)
+    }
+}
+
 public struct AdButton: View {
 
     let item: AdButtonItem
@@ -32,29 +41,38 @@ public struct AdButton: View {
     private var accentColor: Color { item.accentColor }
 
     public var body: some View {
-        HStack(alignment: .bottom, spacing: size.scale * 10) {
-            VStack(alignment: .leading, spacing: size.scale * 8) {
-                if let title = item.title {
-                    Text(title)
-                        .foregroundColor(effectiveForegroundColor)
-                        .font(size.titleFont)
-                }
-                
-                if let subtitle = item.body {
-                    Text(subtitle)
-                        .foregroundColor(effectiveForegroundColor)
-                        .font(size.bodyFont)
-                }
+        HStack(alignment: .center, spacing: 0) {
+            if let imageLink = item.imageLink, item.imageMode == .icon {
+                iconImageView(imageLink)
+                    .clipShape(CustomContainerRelativeShape(cornerRadius: cornerRadius))
+                    .padding(.trailing)
+                    .shadow(color: item.accentColor.opacity(0.5), radius: 3)
             }
             
-            Spacer()
-            
-            if let actionTitle = item.actionTitle {
-                actionButton(actionTitle)
+            HStack(alignment: .bottom, spacing: size.scale * 10) {
+                VStack(alignment: .leading, spacing: size.scale * 8) {
+                    if let title = item.title {
+                        Text(title)
+                            .foregroundColor(effectiveForegroundColor)
+                            .font(size.titleFont)
+                    }
+                    
+                    if let subtitle = item.body {
+                        Text(subtitle)
+                            .foregroundColor(effectiveForegroundColor)
+                            .font(size.bodyFont)
+                    }
+                }
+                
+                Spacer()
+                
+                if let actionTitle = item.actionTitle {
+                    actionButton(actionTitle)
+                }
             }
         }
         .padding(.vertical, 20 * size.scale)
-        .padding(.horizontal, 25 * size.scale)
+        .padding(.horizontal, 20 * size.scale)
         .onTapGesture(perform: action)
         .overlay(alignment: .topTrailing) {
             GeometryReader { geometry in
@@ -74,15 +92,15 @@ public struct AdButton: View {
         .background(
             ZStack {
                 backgroundColor
-                if let imageLink = item.imageLink {
+                if let imageLink = item.imageLink, item.imageMode == .background {
                     backgroundImageView(for: imageLink)
                         .clipShape(RoundedRectangle(cornerRadius: cornerRadius))
                 }
             }
         )
-        .clipShape(RoundedRectangle(cornerRadius: cornerRadius))
+        .clipShape(CustomContainerRelativeShape(cornerRadius: cornerRadius))
         .overlay(
-            RoundedRectangle(cornerRadius: cornerRadius)
+            CustomContainerRelativeShape(cornerRadius: cornerRadius)
                 .stroke(accentColor, lineWidth: 2 * size.scale)
         )
     }
@@ -117,9 +135,24 @@ public struct AdButton: View {
             .shadow(color: item.accentColor.opacity(0.5), radius: 10, x: 0, y: 5)
             .padding(size.scale * 10)
             .background {
-                RoundedRectangle(cornerRadius: cornerRadius)
+                CustomContainerRelativeShape(cornerRadius: cornerRadius)
                     .fill(item.accentColor)
             }
+    }
+    
+    @ViewBuilder
+    private func iconImageView(_ url: URL) -> some View {
+        LazyImage(url: url) { state in
+            if let image = state.image {
+                image
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .overlay(Color.black.opacity(0.35))
+                    .frame(width: 80 * item.size.scale, height: 80 * item.size.scale)
+            } else if state.isLoading {
+                Color.black
+            }
+        }
     }
 
     @ViewBuilder
