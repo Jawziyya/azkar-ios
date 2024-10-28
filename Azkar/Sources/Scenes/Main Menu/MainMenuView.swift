@@ -20,6 +20,10 @@ struct MainMenuView: View {
     @State private var showAd = true
     
     private let articleCellHeight: CGFloat = 230
+    private let borderWidth: CGFloat = 2
+    private var borderColor: Color {
+        Color.accentColor.opacity(0.5)
+    }
 
     private var itemsBackgroundColor: SwiftUI.Color {
         Color.contentBackground
@@ -215,7 +219,7 @@ struct MainMenuView: View {
                     .clipShape(RoundedRectangle(cornerRadius: Constants.cornerRadius))
                     .overlay(
                         RoundedRectangle(cornerRadius: Constants.cornerRadius)
-                            .stroke(Color.accentColor.opacity(0.5), lineWidth: 3)
+                            .stroke(borderColor, lineWidth: borderWidth)
                     )
                     .padding(.horizontal, 20)
                 })
@@ -246,7 +250,7 @@ struct MainMenuView: View {
         .clipShape(RoundedRectangle(cornerRadius: Constants.cornerRadius))
         .overlay(
             RoundedRectangle(cornerRadius: Constants.cornerRadius)
-                .stroke(Color.accentColor.opacity(0.5), lineWidth: 3)
+                .stroke(borderColor, lineWidth: borderWidth)
         )
         .applyMenuPadding()
         .transition(.asymmetric(

@@ -33,7 +33,7 @@ public struct AdButton: View {
 
     // The color used for the text will automatically switch to white if a background image is specified
     private var effectiveForegroundColor: Color {
-        item.imageLink != nil ? .white : item.foregroundColor
+        item.imageMode == .background ? .white : item.foregroundColor
     }
     
     private var size: AdSize { item.size }
@@ -44,12 +44,12 @@ public struct AdButton: View {
         HStack(alignment: .center, spacing: 0) {
             if let imageLink = item.imageLink, item.imageMode == .icon {
                 iconImageView(imageLink)
+                    .frame(width: 80 * item.size.scale, height: 80 * item.size.scale)
                     .clipShape(CustomContainerRelativeShape(cornerRadius: cornerRadius))
-                    .padding(.trailing)
                     .shadow(color: item.accentColor.opacity(0.5), radius: 3)
             }
             
-            HStack(alignment: .bottom, spacing: size.scale * 10) {
+            HStack(alignment: .bottom, spacing: 0) {
                 VStack(alignment: .leading, spacing: size.scale * 8) {
                     if let title = item.title {
                         Text(title)
@@ -63,16 +63,18 @@ public struct AdButton: View {
                             .font(size.bodyFont)
                     }
                 }
-                
-                Spacer()
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal)
                 
                 if let actionTitle = item.actionTitle {
                     actionButton(actionTitle)
+                } else {
+                    closeButton.opacity(0) // for spacing.
                 }
             }
         }
         .padding(.vertical, 20 * size.scale)
-        .padding(.horizontal, 20 * size.scale)
+        .padding(.horizontal, 15 * size.scale)
         .onTapGesture(perform: action)
         .overlay(alignment: .topTrailing) {
             GeometryReader { geometry in
@@ -97,11 +99,6 @@ public struct AdButton: View {
                         .clipShape(RoundedRectangle(cornerRadius: cornerRadius))
                 }
             }
-        )
-        .clipShape(CustomContainerRelativeShape(cornerRadius: cornerRadius))
-        .overlay(
-            CustomContainerRelativeShape(cornerRadius: cornerRadius)
-                .stroke(accentColor, lineWidth: 2 * size.scale)
         )
     }
     
@@ -148,7 +145,6 @@ public struct AdButton: View {
                     .resizable()
                     .aspectRatio(contentMode: .fill)
                     .overlay(Color.black.opacity(0.35))
-                    .frame(width: 80 * item.size.scale, height: 80 * item.size.scale)
             } else if state.isLoading {
                 Color.black
             }
