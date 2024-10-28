@@ -1,2 +1,1 @@
-- Enhanced app stability and performance
-- Resolved bugs and some crashes
+- Improved app stability and performance
