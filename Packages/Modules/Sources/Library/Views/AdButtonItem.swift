@@ -12,15 +12,15 @@ extension AdSize {
     
     var titleFont: Font {
         switch self {
-        case .minimal: return Font.body.weight(.bold)
-        case .regular: return Font.title3.weight(.bold)
+        case .minimal: return Font.callout.weight(.medium)
+        case .regular: return Font.headline
         }
     }
     
     var bodyFont: Font {
         switch self {
         case .minimal: return Font.caption
-        case .regular: return Font.callout
+        case .regular: return Font.footnote
         }
     }
     
@@ -43,6 +43,7 @@ public struct AdButtonItem: Identifiable {
     let accentColor: Color
     let backgroundColor: Color
     let imageLink: URL?
+    let imageMode: AdImageMode?
 }
 
 extension AdButtonItem {
@@ -55,7 +56,8 @@ extension AdButtonItem {
         actionLink = ad.actionLink
         accentColor = ad.accentColor.flatMap(Color.init(hex:)) ?? Color.accentColor
         foregroundColor = ad.foregroundColor.flatMap(Color.init(hex:)) ?? Color.primary
-        backgroundColor = ad.backgroundColor.flatMap(Color.init(hex:)) ?? Color(.systemBackground)
+        backgroundColor = ad.backgroundColor.flatMap(Color.init(hex:)) ?? Color.background
         imageLink = ad.imageLink
+        imageMode = ad.imageMode
     }
 }

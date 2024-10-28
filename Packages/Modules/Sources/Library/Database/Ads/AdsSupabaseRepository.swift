@@ -26,11 +26,11 @@ final class AdsSupabaseRepository: AdsRepository {
             .eq("language", value: language.rawValue)
         
         if let orUpdatedAfter {
-            let updateDate = orUpdatedAfter.supabaseFormatted
+            let updateDate = orUpdatedAfter.addingTimeInterval(1).supabaseFormatted
             if let newerThan {
-                let date = newerThan.addingTimeInterval(1).supabaseFormatted
+                let createDate = newerThan.addingTimeInterval(1).supabaseFormatted
                 adsQuery = adsQuery
-                    .or("created_at.gt.\(date),updated_at.gt.\(updateDate)")
+                    .or("created_at.gt.\(createDate),updated_at.gt.\(updateDate)")
             } else {
                 adsQuery = adsQuery
                     .greaterThan("updated_at", value: updateDate)

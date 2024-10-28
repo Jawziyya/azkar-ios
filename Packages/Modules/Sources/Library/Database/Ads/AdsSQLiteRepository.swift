@@ -42,7 +42,8 @@ final class AdsSQLiteRepository: AdsRepository {
                 t.column("foreground_color", .text)
                 t.column("accent_color", .text)
                 
-                t.column("size", .blob).notNull()
+                t.column("size", .text).notNull()
+                t.column("image_mode", .text).notNull()
                 t.column("language", .text).notNull()
                 
                 t.column("created_at", .datetime).notNull()
