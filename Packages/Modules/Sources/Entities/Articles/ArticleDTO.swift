@@ -24,4 +24,5 @@ public struct ArticleDTO: Identifiable, Codable, Hashable {
     public let imageResourceName: String?
     public let views: Int?
     public let createdAt: Date
+    public let updatedAt: Date
 }

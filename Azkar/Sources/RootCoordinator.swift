@@ -298,6 +298,9 @@ extension RootCoordinator {
                             views: numbers.viewsCount,
                             shares: numbers.sharesCount
                         )
+                },
+                fetchArticle: { [unowned self] in
+                    try? await self.articlesService?.getArticle(article.id, updatedAfter: article.updatedAt)
                 }
             ),
             onShareButtonTap: { [unowned self] in

@@ -60,17 +60,14 @@ public final class ArticlesService: ArticlesServiceType {
     
     /// Request an article using article.id
     public func getArticle(
-        _ id: Article.ID
+        _ id: Article.ID,
+        updatedAfter: Date?
     ) async throws -> Article? {
-        if let article = try await localRepository.getArticle(id) {
-            return article
-        } else {
-            let article = try await remoteRepository.getArticle(id)
-            if let article {
-                try? await localRepository.saveArticles([article])
-            }
-            return article
+        let article = try await remoteRepository.getArticle(id, updatedAfter: updatedAfter)
+        if let article {
+            try? await localRepository.saveArticle(article)
         }
+        return article
     }
         
     public func updateAnalyticsNumbers(
@@ -79,7 +76,7 @@ public final class ArticlesService: ArticlesServiceType {
         shares: Int
     ) {
         Task {
-            if var article = try? await localRepository.getArticle(articleId) {
+            if var article = try? await localRepository.getArticle(articleId, updatedAfter: nil) {
                 article.views = views
                 article.shares = shares
                 try? await localRepository.saveArticle(article)

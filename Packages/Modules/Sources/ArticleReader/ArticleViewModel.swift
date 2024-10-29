@@ -5,7 +5,7 @@ import Entities
 @Perceptible @dynamicMemberLookup
 public final class ArticleViewModel {
     
-    let article: Article
+    var article: Article
     var views: Int?
     var viewsAbbreviated: String?
     var shares: Int?
@@ -13,6 +13,7 @@ public final class ArticleViewModel {
     
     private let analyticsStream: () async -> AsyncStream<ArticleAnalytics>
     private let updateAnalytics: (ArticleAnalytics) async -> Void
+    private let fetchArticle: () async -> Article?
     
     subscript<T>(dynamicMember keyPath: KeyPath<Article, T>) -> T {
         article[keyPath: keyPath]
@@ -21,20 +22,21 @@ public final class ArticleViewModel {
     public init(
         article: Article,
         analyticsStream: @escaping () async -> AsyncStream<ArticleAnalytics>,
-        updateAnalytics: @escaping (ArticleAnalytics) async -> Void
+        updateAnalytics: @escaping (ArticleAnalytics) async -> Void,
+        fetchArticle: @escaping () async -> Article?
     ) {
         self.article = article
         self.analyticsStream = analyticsStream
         self.updateAnalytics = updateAnalytics
-        if let views = article.views {
-            setViews(views)
-        }
-        if let shares = article.shares {
-            setShares(shares)
-        }
+        self.fetchArticle = fetchArticle
+        updateNumbers()
         
         Task {
             await observeAnalyticsNumbers()
+        }
+        
+        Task(priority: .utility) {
+            await updateArticle()
         }
     }
     
@@ -47,6 +49,22 @@ public final class ArticleViewModel {
             Task.detached {
                 await self.updateAnalytics(numbers)
             }
+        }
+    }
+    
+    @MainActor private func updateArticle() async {
+        if let updatedArticle = await fetchArticle() {
+            self.article = updatedArticle
+            self.updateNumbers()
+        }
+    }
+    
+    private func updateNumbers() {
+        if let views = article.views {
+            setViews(views)
+        }
+        if let shares = article.shares {
+            setShares(shares)
         }
     }
     

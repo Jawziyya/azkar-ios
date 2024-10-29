@@ -41,7 +41,7 @@ final class ArticlesSupabaseRepository: ArticlesRepository {
         
         if CommandLine.arguments.contains("LOAD_ALL_ARTICLES") == false {
             articlesQuery = articlesQuery.eq("is_published", value: true)
-        
+            
             if let newerThan {
                 let date = newerThan.addingTimeInterval(1).supabaseFormatted
                 articlesQuery = articlesQuery
@@ -54,23 +54,16 @@ final class ArticlesSupabaseRepository: ArticlesRepository {
             .execute()
             .value
         
-        let categories = try await getCategories()
-        
         var articles: [Article] = []
         
         let sortedArticles = articleObjects
             .sorted(by: { $0.createdAt > $1.createdAt })
         
         for articleObject in sortedArticles {
-            guard let category = categories.first(where: { $0.id == articleObject.category }) else {
-                continue
-            }
-            
             let analytics = await analyticsService.getArticleAnalyticsCount(articleObject.id)
             
             let article = Article(
                 articleObject,
-                category: category,
                 viewsCount: analytics?.viewsCount,
                 sharesCount: analytics?.sharesCount
             )
@@ -84,21 +77,29 @@ final class ArticlesSupabaseRepository: ArticlesRepository {
     }
     
     func saveArticle(_ article: Article) async throws {
-        // No effect in remote repository.    
+        // No effect in remote repository.
     }
     
-    func getArticle(_ id: ArticleDTO.ID) async throws -> Article? {
-        return nil
-    }
-    
-}
-
-private extension ArticlesSupabaseRepository {
-    func getCategories() async throws -> [ArticleCategory] {
-        try await supabaseClient
-            .from("articles_categories")
+    func getArticle(_ id: ArticleDTO.ID, updatedAfter: Date?) async throws -> Article? {
+        var query = supabaseClient
+            .from("articles")
             .select()
+        
+        if let updatedAfter {
+            query = query
+                .greaterThanOrEquals("updated_at", value: updatedAfter.supabaseFormatted)
+        }
+        
+        let article: ArticleDTO = try await query
+            .single()
             .execute()
             .value
+        let analytics = await analyticsService.getArticleAnalyticsCount(id)
+        return Article(
+            article,
+            viewsCount: analytics?.viewsCount,
+            sharesCount: analytics?.sharesCount
+        )
     }
+    
 }

@@ -6,7 +6,6 @@ public struct Article: Identifiable, Hashable, Codable, Equatable {
     public let language: Language
     public let title: String
     public let tags: [String]?
-    public let category: ArticleCategory
     public let text: String
     public let textFormat: ArticleDTO.TextFormat
     public let coverImage: CoverImage?
@@ -14,6 +13,7 @@ public struct Article: Identifiable, Hashable, Codable, Equatable {
     public var views: Int?
     public var shares: Int?
     public let createdAt: Date
+    public let updatedAt: Date
     
     public struct CoverImage: Hashable, Codable {
         public let imageType: ImageType
@@ -34,7 +34,6 @@ public struct Article: Identifiable, Hashable, Codable, Equatable {
 extension Article {
     public init(
         _ article: ArticleDTO,
-        category: ArticleCategory,
         viewsCount: Int?,
         sharesCount: Int?
     ) {
@@ -45,11 +44,11 @@ extension Article {
             "#" + tag
         }
         createdAt = article.createdAt
+        updatedAt = article.updatedAt
         text = article.text
         textFormat = article.textFormat
         self.views = viewsCount
         self.shares = sharesCount
-        self.category = category
         coverImageAltText = article.coverImageAltText
         
         if let coverImageFormat = article.coverImageFormat {
@@ -78,9 +77,9 @@ extension Article {
         language: Language = .russian,
         title: String? = nil,
         tags: [String]? = nil,
-        category: ArticleCategory = .placeholder(),
         text: String? = nil,
         createdAt: Date = Date(),
+        updatedAt: Date = Date(),
         textFormat: ArticleDTO.TextFormat = .plain,
         coverImage: CoverImage? = nil,
         coverImageAltText: String? = nil
@@ -93,7 +92,6 @@ extension Article {
             tags: tags ?? Array(repeating: {
                 "#" + faker.lorem.word()
             }(), count: Int.random(in: 1...5)),
-            category: category,
             text: text ?? faker.lorem.paragraphs(amount: 10)
                 .components(separatedBy: "\n")
                 .joined(separator: "\n\n"),
@@ -102,7 +100,8 @@ extension Article {
             coverImageAltText: coverImageAltText ?? faker.lorem.paragraphs(),
             views: Int.random(in: 0...1000),
             shares: Int.random(in: 0...1000),
-            createdAt: createdAt
+            createdAt: createdAt,
+            updatedAt: updatedAt
         )
     }
 }
