@@ -28,25 +28,21 @@ struct PatternView: View {
 public struct ArticleCellView: View {
     
     let title: String
-    let category: String
     let imageType: Article.ImageType?
     let maxHeight: CGFloat
     
     public init(
         title: String,
-        category: String,
         imageType: Article.ImageType?,
         maxHeight: CGFloat
     ) {
         self.title = title
-        self.category = category
         self.imageType = imageType
         self.maxHeight = maxHeight
     }
     
     public init(article: Article, imageMaxHeight: CGFloat) {
         title = article.title
-        category = article.category.title
         imageType = article.coverImage?.imageType
         maxHeight = imageMaxHeight
     }
@@ -102,7 +98,6 @@ public struct ArticleCellView: View {
     
     return ArticleCellView(
         title: faker.lorem.words().capitalized,
-        category: faker.lorem.word().capitalized,
         imageType: .link(demoImageURL),
         maxHeight: 200
     )
@@ -113,7 +108,6 @@ public struct ArticleCellView: View {
     
     return ArticleCellView(
         title: faker.lorem.words().capitalized,
-        category: faker.lorem.word().capitalized,
         imageType: nil,
         maxHeight: 200
     )

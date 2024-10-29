@@ -34,9 +34,9 @@ public final class ArticlesSQLiteDatabaseService: ArticlesRepository {
                 t.autoIncrementedPrimaryKey("id")
                 t.column("language", .text).notNull()
                 t.column("created_at", .datetime).notNull()
+                t.column("updated_at", .datetime).notNull()
                 t.column("title", .text).notNull()
                 t.column("text", .text).notNull()
-                t.column("category", .blob).notNull()
                 t.column("text_format", .blob).notNull()
                 t.column("cover_image", .blob)
                 t.column("cover_image_alt_text", .text)
@@ -83,7 +83,7 @@ public final class ArticlesSQLiteDatabaseService: ArticlesRepository {
             }
     }
     
-    func getArticle(_ id: ArticleDTO.ID) async throws -> Article? {
+    func getArticle(_ id: ArticleDTO.ID, updatedAfter: Date?) async throws -> Article? {
         return try await databasePool
             .read { db in
                 try Article.fetchOne(db, id: id)

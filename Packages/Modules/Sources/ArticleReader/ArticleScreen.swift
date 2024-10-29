@@ -148,7 +148,8 @@ private func getDemoVM(
             )
         ),
         analyticsStream: { AsyncStream { _ in } },
-        updateAnalytics: { _ in }
+        updateAnalytics: { _ in },
+        fetchArticle: { return nil }
     )
 }
 
@@ -180,7 +181,8 @@ private struct ArticleScreenPreview: View {
         viewModel: .init(
             article: .placeholder(),
             analyticsStream: { AsyncStream { _ in } },
-            updateAnalytics: { _ in }
+            updateAnalytics: { _ in },
+            fetchArticle: { return nil }
         )
     )
 }

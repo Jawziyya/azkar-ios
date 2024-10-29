@@ -28,7 +28,7 @@ public protocol ArticlesServiceType {
     ///
     /// - Parameter id: The unique identifier of the article to fetch.
     /// - Returns: The `Article` object if found, or `nil` if the article doesn't exist.
-    func getArticle(_ id: Article.ID) async throws -> Article?
+    func getArticle(_ id: Article.ID, updatedAfter: Date?) async throws -> Article?
     
     /// Sends an analytics event for a specific article.
     ///
