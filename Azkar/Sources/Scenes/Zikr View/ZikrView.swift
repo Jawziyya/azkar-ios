@@ -124,11 +124,7 @@ struct ZikrView: View {
 
     private func getContent() -> some View {
         VStack(alignment: .leading, spacing: 0) {
-            if viewModel.isNested {
-                titleView(viewModel.title)
-            } else {
-                Color.clear.frame(height: 10)
-            }
+            Color.clear.frame(height: 10)
             
             textContent
 
@@ -449,9 +445,9 @@ struct ZikrView: View {
         VStack(alignment: .leading, spacing: 0) {
             self.getCaption(label)
             Text(getAttributedString(text))
-                .if(underline, transform: { text in
+                .if(underline) { text in
                     text.underline()
-                })
+                }
                 .foregroundColor(.text)
                 .font(Font.system(.caption, design: .rounded).weight(.medium).smallCaps())
         }

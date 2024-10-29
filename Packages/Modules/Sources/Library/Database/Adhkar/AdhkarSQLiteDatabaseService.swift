@@ -177,37 +177,55 @@ public extension AdhkarSQLiteDatabaseService {
         }
     }
     
-    func getAdhkar(_ category: ZikrCategory, language: Language?) throws -> [Zikr] {
+    func getAdhkar(
+        _ category: ZikrCategory,
+        collection: ZikrCollectionSource,
+        language: Language?
+    ) throws -> [Zikr] {
         let lang = language ?? self.language
         return try getDatabaseQueue().read { db in
+            guard let collectionData = try ZikrCollectionData.fetchOne(
+                db,
+                sql: """
+                SELECT *
+                FROM azkar_groups
+                WHERE category = ?
+                AND source = ?
+                """,
+                arguments: [category.rawValue, collection.rawValue]
+            ) else {
+                return []
+            }
+            
+            let azkarIds = collectionData.azkarIds
+            let azkarIdsString = azkarIds.map { "\($0)" }.joined(separator: ", ")
             let records = try ZikrOrigin.fetchAll(
                 db,
                 sql: """
-                SELECT azkar.*
+                SELECT *
                 FROM azkar
-                JOIN "azkar+azkar_group" ON azkar.id = "azkar+azkar_group"."azkar_id"
-                WHERE "azkar+azkar_group"."group" = ?
-                ORDER BY "azkar+azkar_group"."order"
-                """,
-                arguments: [category.rawValue]
+                WHERE id IN (\(azkarIdsString))
+                """
             )
+            let azkarDict = Dictionary(uniqueKeysWithValues: records.map { ($0.id, $0) })
+            let orderedRecords = azkarIds.compactMap { azkarDict[$0] }
+            
             let translationTableName = lang.databaseTableName
             let translations = try ZikrTranslation.fetchAll(
                 db,
                 sql: """
                 SELECT \(translationTableName).*
                 FROM \(translationTableName)
-                JOIN "azkar+azkar_group" ON \(translationTableName).id = "azkar+azkar_group"."azkar_id"
-                WHERE "azkar+azkar_group"."group" = ?
-                ORDER BY "azkar+azkar_group"."order"
-                """,
-                arguments: [category.rawValue]
+                WHERE \(translationTableName).id IN (\(azkarIdsString))
+                """
             )
+            let translationDict = Dictionary(uniqueKeysWithValues: translations.map { ($0.id, $0) })
             
             let audios = try Audio.fetchAll(db)
             let audioTimings = try AudioTiming.fetchAll(db)
 
-            return zip(records, translations).map { zikr, translation -> Zikr in
+            return orderedRecords.compactMap { zikr in
+                let translation = translationDict[zikr.id]
                 let audio = audios.first(where: { $0.id == zikr.audioId })
                 
                 return Zikr(

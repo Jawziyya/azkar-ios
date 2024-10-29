@@ -5,6 +5,8 @@ import SwiftUI
 import Popovers
 import Entities
 
+extension ZikrCollectionSource: PickableItem {}
+
 struct TextSettingsScreen: View {
     
     @ObservedObject var viewModel: TextSettingsViewModel
@@ -24,20 +26,22 @@ struct TextSettingsScreen: View {
     
     var content: some View {
         Group {
+            genericPicker(
+                title: L10n.Settings.Text.AdhkarCollectionsSource.title,
+                binding: $viewModel.preferences.zikrCollectionSource,
+                items: ZikrCollectionSource.allCases,
+                itemTitle: \.title
+            )
+            .pickerStyle(.menu)
+            
             if viewModel.canChangeLanguage {
-                if #available(iOS 16.5, *) {
-                    languagePicker(
-                        title: L10n.Settings.Text.language,
-                        binding: $viewModel.preferences.contentLanguage
-                    )
-                    .pickerStyle(.menu)
-                } else {
-                    PickerView(
-                        label: L10n.Settings.Text.language,
-                        subtitle: viewModel.preferences.contentLanguage.title,
-                        destination: contentLanguagePicker
-                    )
-                }
+                genericPicker(
+                    title: L10n.Settings.Text.language,
+                    binding: $viewModel.preferences.contentLanguage,
+                    items: viewModel.getAvailableLanguages(),
+                    itemTitle: \.title
+                )
+                .pickerStyle(.menu)
             }
             
             NavigationLink {
@@ -113,9 +117,11 @@ struct TextSettingsScreen: View {
         }
     }
     
-    func languagePicker(
+    func genericPicker<T: Identifiable & Hashable>(
         title: String,
-        binding: Binding<Language>
+        binding: Binding<T>,
+        items: [T],
+        itemTitle: @escaping (T) -> String
     ) -> some View {
         Picker(
             selection: binding,
@@ -123,11 +129,11 @@ struct TextSettingsScreen: View {
                 .font(Font.system(.body, design: .rounded))
                 .padding(.vertical, 8)
         ) {
-            ForEach(viewModel.getAvailableLanguages()) { lang in
-                Text(lang.title)
-                    .font(Font.system(.body, design: .rounded))
-                    .id(lang.id)
-                    .tag(lang)
+            ForEach(items, id: \.self) { item in
+                Text(itemTitle(item))
+                    .font(Font.system(.callout, design: .rounded))
+                    .id(item.id)
+                    .tag(item)
             }
         }
     }
@@ -157,6 +163,14 @@ struct TextSettingsScreen: View {
     
     var translationFontsPicker: some View {
         FontsView(viewModel: viewModel.getFontsViewModel(fontsType: .translation))
+    }
+    
+    var adhkarSourcePicker: some View {
+        ItemPickerView(
+            selection: $viewModel.preferences.zikrCollectionSource,
+            items: ZikrCollectionSource.allCases,
+            dismissOnSelect: true
+        )
     }
     
     var contentLanguagePicker: some View {

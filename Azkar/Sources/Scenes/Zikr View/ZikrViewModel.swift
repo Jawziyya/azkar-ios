@@ -21,6 +21,7 @@ final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
 
     let zikr: Zikr
     let title: String
+    var row: String?
     /// Is nested into a container like page view or other.
     let isNested: Bool
 
@@ -109,13 +110,9 @@ final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
         self.preferences = preferences
         self.textProcessor = textProcessor
         self.player = player
-        
-        if let zikrTitle = zikr.title {
-            title = zikrTitle
-        } else if let row {
-            title = "\(L10n.Common.zikr) №\(row)"
-        } else {
-            title = L10n.Common.zikr
+        title = zikr.title ?? "n/a"
+        if let row {
+            self.row = "№\(row)"
         }
         
         text = textProcessor.processArabicText(zikr.text)

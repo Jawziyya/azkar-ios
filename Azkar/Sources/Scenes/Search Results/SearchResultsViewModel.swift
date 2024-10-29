@@ -42,8 +42,6 @@ extension SearchResultZikr {
                 title = zikrTitle
             } else if let translation = zikr.translation {
                 title = translation.prefix(50) + "..."
-            } else {
-                title = "\(L10n.Common.zikr) \(zikr.id)"
             }
         }
         
