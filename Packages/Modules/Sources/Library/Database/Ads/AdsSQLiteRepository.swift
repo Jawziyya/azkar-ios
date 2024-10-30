@@ -48,6 +48,8 @@ final class AdsSQLiteRepository: AdsRepository {
                 
                 t.column("created_at", .datetime).notNull()
                 t.column("updated_at", .datetime).notNull()
+                t.column("begin_date", .datetime).notNull()
+                t.column("expire_date", .datetime).notNull()
             }
         }
         migrator.eraseDatabaseOnSchemaChange = true
@@ -61,14 +63,37 @@ final class AdsSQLiteRepository: AdsRepository {
     
     func getAds(
         newerThan: Date?,
-        orUpdatedAfter: Date?, // Will be ignored for local cache.
+        orUpdatedAfter: Date?,
         limit: Int
     ) async throws -> [Ad] {
         let lang = language.rawValue
         return try await databasePool
             .read { db in
-                try Ad
+                var query = Ad
                     .filter(sql: "language = ?", arguments: [lang])
+                
+                if let orUpdatedAfter {
+                    let updateDate = orUpdatedAfter.addingTimeInterval(1).supabaseFormatted
+                    if let newerThan {
+                        let createDate = newerThan.addingTimeInterval(1).supabaseFormatted
+                        query = query
+                            .filter(sql: "created_at > ? OR updated_at > ?", arguments: [
+                                createDate,
+                                updateDate
+                            ])
+                    } else {
+                        query = query.filter(sql: "updated_at > ?", arguments: [updateDate])
+                    }
+                } else if let newerThan {
+                    let date = newerThan.addingTimeInterval(1).supabaseFormatted
+                    query = query.filter(sql: "created_at > ?", arguments: [date])
+                }
+                
+                let formattedDate = Date().supabaseFormatted
+                
+                return try query
+                    .filter(sql: "begin_date < ?", arguments: [formattedDate])
+                    .filter(sql: "expire_date > ?", arguments: [formattedDate])
                     .order(sql: "created_at DESC")
                     .limit(limit)
                     .fetchAll(db)

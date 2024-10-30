@@ -25,6 +25,8 @@ public struct Ad: Identifiable, Codable, Hashable {
     public var language = Language.english
     public var createdAt = Date()
     public var updatedAt = Date()
+    public var beginDate = Date()
+    public var expireDate = Date()
 }
 
 public extension Ad {

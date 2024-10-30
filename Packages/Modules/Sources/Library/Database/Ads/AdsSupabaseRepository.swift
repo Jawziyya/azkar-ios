@@ -41,15 +41,10 @@ final class AdsSupabaseRepository: AdsRepository {
                 .greaterThan("created_at", value: date)
         }
 
-        adsQuery = adsQuery.greaterThan(
-            "expire_date",
-            value: Date().supabaseFormatted
-        )
-        adsQuery = adsQuery.lowerThan(
-            "begin_date",
-            value: Date().supabaseFormatted
-        )
+        let currentDateFormatted = Date().supabaseFormatted
         let ads: [Ad] = try await adsQuery
+            .greaterThan("expire_date", value: currentDateFormatted)
+            .lowerThan("begin_date", value: currentDateFormatted)
             .order("created_at", ascending: false)
             .limit(limit)
             .execute()
