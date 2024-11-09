@@ -16,11 +16,13 @@ extension Language {
 public final class AdhkarSQLiteDatabaseService: AdhkarDatabaseService {
     
     public let language: Language
+    private let transcriptor: Transcriptor?
 
     public init(
         language: Language
     ) {
         self.language = language
+        transcriptor = TranscriptorProvider.createTranscriptor(for: language)
     }
 
     private func getDatabasePath() throws -> String {
@@ -227,12 +229,14 @@ public extension AdhkarSQLiteDatabaseService {
             return orderedRecords.compactMap { zikr in
                 let translation = translationDict[zikr.id]
                 let audio = audios.first(where: { $0.id == zikr.audioId })
+                let transliteration = zikr.source == "Quran" ? nil : transcriptor?.transcribe(zikr.text)
                 
                 return Zikr(
                     origin: zikr,
                     language: lang,
                     category: category,
                     translation: lang == .arabic ? nil : translation,
+                    transliteration: transliteration,
                     audio: audio,
                     audioTimings: audioTimings.filter { $0.audioId == audio?.id }
                 )
