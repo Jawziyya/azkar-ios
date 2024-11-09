@@ -132,7 +132,7 @@ final class RootCoordinator: NSObject, RouteTrigger, NavigationCoordinatable {
     
     func azkarForCategory(_ category: ZikrCategory) -> [ZikrViewModel] {
         do {
-            let adhkar = try databaseService.getAdhkar(category, collection: .hisnulMuslim)
+            let adhkar = try databaseService.getAdhkar(category, collection: preferences.zikrCollectionSource)
             let viewModels = try adhkar.enumerated().map { idx, zikr in
                 try ZikrViewModel(
                     zikr: zikr,

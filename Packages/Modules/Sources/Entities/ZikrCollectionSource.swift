@@ -2,7 +2,7 @@ import Foundation
 
 public enum ZikrCollectionSource: String, Codable, Identifiable, Hashable, CaseIterable {
     case hisnulMuslim = "hisn"
-    case azkarRU = "azkar.ru"
+    case azkarRU = "azkar_ru"
     
     public var id: Self {
         self
