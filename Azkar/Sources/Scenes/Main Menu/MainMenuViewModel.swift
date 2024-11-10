@@ -230,18 +230,18 @@ final class MainMenuViewModel: ObservableObject {
     func hideAd(_ ad: Ad) {
         self.ad = nil
         adsService.sendAnalytics(for: ad, action: .hide)
-        AnalyticsReporter.reportEvent("azkar_ads-hide", metadata: ["id": ad.id])
+        AnalyticsReporter.reportEvent("azkar_ads_hide", metadata: ["id": ad.id])
     }
     
     func handleAdSelection(_ ad: Ad) {
         UIApplication.shared.open(ad.actionLink)
         adsService.sendAnalytics(for: ad, action: .open)
-        AnalyticsReporter.reportEvent("azkar_ads-open", metadata: ["id": ad.id])
+        AnalyticsReporter.reportEvent("azkar_ads_open", metadata: ["id": ad.id])
     }
     
     func sendAdImpressionEvent(_ ad: Ad) {
         adsService.sendAnalytics(for: ad, action: .impression)
-        AnalyticsReporter.reportEvent("azkar_ads-impression", metadata: ["id": ad.id])
+        AnalyticsReporter.reportEvent("azkar_ads_impression", metadata: ["id": ad.id])
     }
     
     let faker = Faker()

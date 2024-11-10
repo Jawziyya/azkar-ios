@@ -76,6 +76,7 @@ extension Zikr {
         language: Language,
         category: ZikrCategory? = nil,
         translation: ZikrTranslation? = nil,
+        transliteration: String? = nil,
         audio: Audio? = nil,
         audioTimings: [AudioTiming]
     ) {
@@ -91,7 +92,7 @@ extension Zikr {
             }
             .joined(separator: ", ")
         title = translation?.title?.textOrNil
-        transliteration = translation?.transliteration?.textOrNil
+        self.transliteration = transliteration ?? translation?.transliteration?.textOrNil
         notes = translation?.notes?.textOrNil
         benefits = translation?.benefits?.textOrNil
         self.audio = audio

@@ -5,22 +5,22 @@ import Foundation
 import Entities
 import GRDB
 
-extension ZikrCounter: FetchableRecord, PersistableRecord {
+extension ZikrCounter: @retroactive FetchableRecord, @retroactive PersistableRecord {
     public static let databaseTableName = "counters"
     public static let databaseColumnDecodingStrategy: DatabaseColumnDecodingStrategy = .convertFromSnakeCase
     public static var databaseColumnEncodingStrategy: DatabaseColumnEncodingStrategy = .convertToSnakeCase
 }
 
-extension Audio: FetchableRecord, TableRecord {
+extension Audio: @retroactive FetchableRecord, @retroactive TableRecord {
     public static let databaseTableName = "audios"
 }
 
-extension ZikrOrigin: FetchableRecord, TableRecord {
+extension ZikrOrigin: @retroactive FetchableRecord, @retroactive TableRecord {
     public static let databaseTableName = "azkar"
     public static let databaseColumnDecodingStrategy = DatabaseColumnDecodingStrategy.convertFromSnakeCase
 }
 
-extension ZikrTranslation: FetchableRecord {
+extension ZikrTranslation: @retroactive FetchableRecord {
     public init(row: Row) {
         self.init(
             id: row["id"],
@@ -29,6 +29,22 @@ extension ZikrTranslation: FetchableRecord {
             benefits: row["benefits"],
             notes: row["notes"],
             transliteration: row["transliteration"]
+        )
+    }
+}
+
+extension ZikrCollectionData: @retroactive FetchableRecord {
+    public init(row: Row) {
+        let ids: String = row["azkar_ids"]
+        let source: String = row["source"]
+        let category: String = row["category"]
+        self.init(
+            id: row["id"],
+            category: ZikrCategory(rawValue: category) ?? .morning,
+            azkarIds: ids
+                .components(separatedBy: ",")
+                .compactMap { Int($0.trimmingCharacters(in: .whitespaces)) },
+            source: ZikrCollectionSource(rawValue: source) ?? .hisnulMuslim
         )
     }
 }
@@ -68,6 +84,6 @@ extension Fadl {
     }
 }
 
-extension AudioTiming: FetchableRecord, PersistableRecord {
+extension AudioTiming: @retroactive FetchableRecord, @retroactive PersistableRecord {
     public static let databaseTableName = "audio_timings"
 }

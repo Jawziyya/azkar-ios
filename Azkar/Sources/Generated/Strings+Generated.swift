@@ -42,6 +42,12 @@ internal enum L10n {
       internal static let writeToEmail = L10n.tr("Localizable", "about.support.write-to-email", fallback: "Write email")
     }
   }
+  internal enum AdhkarCollections {
+    /// Azkar.ru Website
+    internal static let azkarRu = L10n.tr("Localizable", "adhkar-collections.azkar-ru", fallback: "Azkar.ru Website")
+    /// Hisn Al Muslim
+    internal static let hisn = L10n.tr("Localizable", "adhkar-collections.hisn", fallback: "Hisn Al Muslim")
+  }
   internal enum Alerts {
     /// Select your favorite app icon
     internal static let checkoutIconPacks = L10n.tr("Localizable", "alerts.checkout-icon-packs", fallback: "Select your favorite app icon")
@@ -419,6 +425,10 @@ internal enum L10n {
       /// If this option is turned on Azkar app will use text size from iOS Settings (Settings — Display & Brightness — Text Size).
       /// If it's turned off you can choose desired text size below.
       internal static let useSystemFontSizeTip = L10n.tr("Localizable", "settings.text.use_system_font_size_tip", fallback: "If this option is turned on Azkar app will use text size from iOS Settings (Settings — Display & Brightness — Text Size).\nIf it's turned off you can choose desired text size below.")
+      internal enum AdhkarCollectionsSource {
+        /// Adhkar source
+        internal static let title = L10n.tr("Localizable", "settings.text.adhkar_collections_source.title", fallback: "Adhkar source")
+      }
       internal enum ReadingMode {
         /// Line by line
         internal static let lineByLine = L10n.tr("Localizable", "settings.text.reading_mode.line_by_line", fallback: "Line by line")
