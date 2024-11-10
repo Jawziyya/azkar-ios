@@ -3,6 +3,7 @@
 import Foundation
 
 enum Keys {
+    static let zikrCollectionSource = "kZikrCollectionSource"
     static let enableFunFeatures = "kEnableFunFeatures"
     static let expandTranslation = "kExpandTranslation"
     static let expandTransliteration = "kExpandTransliteration"
