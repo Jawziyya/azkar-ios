@@ -95,7 +95,7 @@ final class Preferences: ObservableObject, TextProcessingPreferences {
     
     static var shared = Preferences()
     
-    @Preference(Keys.zikrCollectionSource, defaultValue: ZikrCollectionSource.hisnulMuslim)
+    @Preference(Keys.zikrCollectionSource, defaultValue: ZikrCollectionSource.azkarRU)
     var zikrCollectionSource: ZikrCollectionSource
 
     @Preference(Keys.enableFunFeatures, defaultValue: true)
