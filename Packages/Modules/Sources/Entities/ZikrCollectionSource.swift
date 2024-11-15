@@ -11,8 +11,26 @@ public enum ZikrCollectionSource: String, Codable, Identifiable, Hashable, CaseI
     public var title: String {
         let localizationKey: String
         switch self {
-        case .hisnulMuslim: localizationKey = "adhkar-collections.hisn"
-        case .azkarRU: localizationKey = "adhkar-collections.azkar-ru"
+        case .hisnulMuslim: localizationKey = "adhkar-collections.hisn.title"
+        case .azkarRU: localizationKey = "adhkar-collections.azkar-ru.title"
+        }
+        return NSLocalizedString(localizationKey, comment: "")
+    }
+    
+    public var shortTitle: String? {
+        let localizationKey: String
+        switch self {
+        case .hisnulMuslim: localizationKey = "adhkar-collections.hisn.short-title"
+        case .azkarRU: localizationKey = "adhkar-collections.azkar-ru.short-title"
+        }
+        return NSLocalizedString(localizationKey, comment: "")
+    }
+    
+    public var description: String {
+        let localizationKey: String
+        switch self {
+        case .hisnulMuslim: localizationKey = "adhkar-collections.hisn.description"
+        case .azkarRU: localizationKey = "adhkar-collections.azkar-ru.description"
         }
         return NSLocalizedString(localizationKey, comment: "")
     }

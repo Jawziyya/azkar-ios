@@ -43,10 +43,24 @@ internal enum L10n {
     }
   }
   internal enum AdhkarCollections {
-    /// Azkar.ru Website
-    internal static let azkarRu = L10n.tr("Localizable", "adhkar-collections.azkar-ru", fallback: "Azkar.ru Website")
-    /// Hisn Al Muslim
-    internal static let hisn = L10n.tr("Localizable", "adhkar-collections.hisn", fallback: "Hisn Al Muslim")
+    /// 
+    internal static let orderExplanationText = L10n.tr("Localizable", "adhkar-collections.order-explanation-text", fallback: "")
+    /// Select collection
+    internal static let selectionScreenTitle = L10n.tr("Localizable", "adhkar-collections.selection-screen-title", fallback: "Select collection")
+    internal enum AzkarRu {
+      /// 
+      internal static let description = L10n.tr("Localizable", "adhkar-collections.azkar-ru.description", fallback: "")
+      /// Azkar.ru Website
+      internal static let title = L10n.tr("Localizable", "adhkar-collections.azkar-ru.title", fallback: "Azkar.ru Website")
+    }
+    internal enum Hisn {
+      /// 
+      internal static let description = L10n.tr("Localizable", "adhkar-collections.hisn.description", fallback: "")
+      /// 
+      internal static let shortTitle = L10n.tr("Localizable", "adhkar-collections.hisn.short-title", fallback: "")
+      /// Hisn Al Muslim
+      internal static let title = L10n.tr("Localizable", "adhkar-collections.hisn.title", fallback: "Hisn Al Muslim")
+    }
   }
   internal enum Alerts {
     /// Select your favorite app icon

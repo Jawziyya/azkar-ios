@@ -53,6 +53,12 @@ internal enum Asset {
   internal static let tertiaryText = ColorAsset(name: "tertiaryText")
   internal static let text = ColorAsset(name: "text")
   internal static let touchImageBlue = ImageAsset(name: "TouchImageBlue")
+  internal enum ZikrCollectionsOnboarding {
+    internal static let cardFileBox = ImageAsset(name: "ZikrCollectionsOnboarding/card-file-box")
+    internal static let confetti = ImageAsset(name: "ZikrCollectionsOnboarding/confetti")
+    internal static let header = ImageAsset(name: "ZikrCollectionsOnboarding/header")
+    internal static let paperAndMagnifier = ImageAsset(name: "ZikrCollectionsOnboarding/paper-and-magnifier")
+  }
   internal static let azkarGoldLogo = ImageAsset(name: "azkar-gold-logo")
   internal static let eidBackground = ImageAsset(name: "eid_background")
   internal static let mosque = ImageAsset(name: "mosque")
