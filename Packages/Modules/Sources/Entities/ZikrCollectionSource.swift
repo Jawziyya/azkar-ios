@@ -21,7 +21,7 @@ public enum ZikrCollectionSource: String, Codable, Identifiable, Hashable, CaseI
         let localizationKey: String
         switch self {
         case .hisnulMuslim: localizationKey = "adhkar-collections.hisn.short-title"
-        case .azkarRU: localizationKey = "adhkar-collections.azkar-ru.short-title"
+        case .azkarRU: return nil
         }
         return NSLocalizedString(localizationKey, comment: "")
     }
