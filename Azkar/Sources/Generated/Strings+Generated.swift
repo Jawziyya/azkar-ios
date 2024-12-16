@@ -61,6 +61,16 @@ internal enum L10n {
       /// Hisn Al Muslim
       internal static let title = L10n.tr("Localizable", "adhkar-collections.hisn.title", fallback: "Hisn Al Muslim")
     }
+    internal enum Onboarding {
+      /// 
+      internal static let step1 = L10n.tr("Localizable", "adhkar-collections.onboarding.step1", fallback: "")
+      /// 
+      internal static let step2 = L10n.tr("Localizable", "adhkar-collections.onboarding.step2", fallback: "")
+      /// 
+      internal static let step3 = L10n.tr("Localizable", "adhkar-collections.onboarding.step3", fallback: "")
+      /// 
+      internal static let title = L10n.tr("Localizable", "adhkar-collections.onboarding.title", fallback: "")
+    }
   }
   internal enum Alerts {
     /// Select your favorite app icon
@@ -587,6 +597,8 @@ internal enum L10n {
       internal static let nasai = L10n.tr("Localizable", "text.source.nasai", fallback: "an-Nasai")
       /// Quran
       internal static let quran = L10n.tr("Localizable", "text.source.quran", fallback: "Quran")
+      /// at-Tabarani
+      internal static let tabarani = L10n.tr("Localizable", "text.source.tabarani", fallback: "at-Tabarani")
       /// at-Tirmidhi
       internal static let tirmidhi = L10n.tr("Localizable", "text.source.tirmidhi", fallback: "at-Tirmidhi")
     }
