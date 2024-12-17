@@ -1,6 +1,7 @@
 // Copyright © 2021 Al Jawziyya. All rights reserved. 
 
 import UIKit
+import Library
 
 final class ZikrFeedbackActivity: UIActivity {
     

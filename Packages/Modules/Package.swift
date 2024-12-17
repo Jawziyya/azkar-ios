@@ -11,6 +11,7 @@ let package = Package(
         .library(name: "Extensions", targets: ["Extensions"]),
         .library(name: "Entities", targets: ["Entities"]),
         .library(name: "Library", targets: ["Library"]),
+        .library(name: "Components", targets: ["Components"]),
         .library(name: "AboutApp", targets: ["AboutApp"]),
         .library(name: "ArticleReader", targets: ["ArticleReader"]),
         .library(name: "AudioPlayer", targets: ["AudioPlayer"]),
@@ -41,7 +42,7 @@ let package = Package(
         // MARK: UI.
         .package(url: "https://github.com/aheze/Popovers", from: "1.3.2"),
         .package(url: "https://github.com/radianttap/Coordinator", from: "6.4.2"),
-        .package(url: "https://github.com/airbnb/lottie-ios", from: "4.0.0"),
+        .package(url: "https://github.com/airbnb/lottie-spm", from: "4.5.0"),
         .package(url: "https://github.com/SwiftUIX/SwiftUIX", from: "0.2.2"),
         .package(url: "https://github.com/siteline/swiftui-introspect", from: "1.1.2"),
         .package(url: "https://github.com/shaps80/SwiftUIBackports", from: "2.8.1"),
@@ -74,7 +75,21 @@ let package = Package(
                 .product(name: "GRDB", package: "GRDB.swift"),
                 .product(name: "Supabase", package: "supabase-swift"),
                 .product(name: "NukeUI", package: "Nuke"),
+            ]
+        ),
+        .target(
+            name: "Components",
+            dependencies: [
+                "Entities",
+                "Extensions",
+                "Library",
                 "SwiftUIBackports",
+                "Coordinator",
+                .product(name: "GRDB", package: "GRDB.swift"),
+                .product(name: "Supabase", package: "supabase-swift"),
+                .product(name: "NukeUI", package: "Nuke"),
+                .product(name: "Lottie", package: "lottie-spm"),
+                .product(name: "Stinsen", package: "stinsen"),
             ]
         ),
         .target(name: "ArticleReader", dependencies: [

@@ -1,5 +1,6 @@
 import SwiftUI
 import Lottie
+import Library
 
 public struct LottieView: UIViewRepresentable {
     

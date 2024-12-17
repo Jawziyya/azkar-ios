@@ -3,6 +3,7 @@
 import SwiftUI
 import Lottie
 import StoreKit
+import Components
 
 struct SubscribeView: View {
     

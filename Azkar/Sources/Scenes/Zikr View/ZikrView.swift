@@ -5,6 +5,7 @@ import Combine
 import SwiftUIDrag
 import Extensions
 import Library
+import Components
 
 /**
  This view shows contents of Zikr object:
