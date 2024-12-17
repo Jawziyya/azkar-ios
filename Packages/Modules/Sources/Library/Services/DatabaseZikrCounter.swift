@@ -20,20 +20,6 @@ public final class DatabaseZikrCounter: ZikrCounterType {
             let tableName = ZikrCounter.databaseTableName
             
             var migrator = DatabaseMigrator()
-            migrator.registerMigration("Add category column") { db in
-                do {
-                    try db.alter(table: tableName) { t in
-                        t.add(column: "category")
-                    }
-                    try db.execute(
-                        sql: "UPDATE counters SET category = ?",
-                        arguments: ["morning"]
-                    )
-                } catch {
-                    print(error.localizedDescription)
-                }
-            }
-            
             let queue = try DatabaseQueue(path: databasePath)
             try migrator.migrate(queue)
             
@@ -45,6 +31,20 @@ public final class DatabaseZikrCounter: ZikrCounterType {
                         t.column("zikr_id", .integer).notNull()
                         t.column("category", .text).notNull()
                     }
+                }
+            }
+            
+            migrator.registerMigration("Add category column") { db in
+                do {
+                    try db.alter(table: tableName) { t in
+                        t.add(column: "category")
+                    }
+                    try db.execute(
+                        sql: "UPDATE counters SET category = ?",
+                        arguments: ["morning"]
+                    )
+                } catch {
+                    print(error.localizedDescription)
                 }
             }
         } catch {
