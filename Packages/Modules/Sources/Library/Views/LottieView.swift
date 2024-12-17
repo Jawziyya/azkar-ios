@@ -1,17 +1,9 @@
-//
-//
-//  Azkar
-//
-//  Created on 20.08.2021
-//
-//
-
 import SwiftUI
 import Lottie
 
-struct LottieView: UIViewRepresentable {
+public struct LottieView: UIViewRepresentable {
     
-    typealias UIViewType = UIView
+    public typealias UIViewType = UIView
     
     let animationView = LottieAnimationView()
     let name: String
@@ -21,16 +13,32 @@ struct LottieView: UIViewRepresentable {
     var progress: CGFloat?
     var completionBlock: Action?
     
-    class Coordinator {
+    public init(
+        name: String,
+        loopMode: LottieLoopMode,
+        contentMode: UIView.ContentMode,
+        speed: CGFloat,
+        progress: CGFloat? = nil,
+        completionBlock: Action? = nil
+    ) {
+        self.name = name
+        self.loopMode = loopMode
+        self.contentMode = contentMode
+        self.speed = speed
+        self.progress = progress
+        self.completionBlock = completionBlock
+    }
+    
+    public class Coordinator {
         var colorScheme: ColorScheme?
         var completionBlock: Action?
     }
     
-    func makeCoordinator() -> Coordinator {
+    public func makeCoordinator() -> Coordinator {
         Coordinator()
     }
     
-    func makeUIView(context: UIViewRepresentableContext<LottieView>) -> UIView {
+    public func makeUIView(context: UIViewRepresentableContext<LottieView>) -> UIView {
         context.coordinator.colorScheme = context.environment.colorScheme
         context.coordinator.completionBlock = completionBlock
         animationView.animation = LottieAnimation.named(name)
@@ -55,7 +63,7 @@ struct LottieView: UIViewRepresentable {
         return view
     }
 
-    func updateUIView(_ uiView: UIView, context: UIViewRepresentableContext<LottieView>) {
+    public func updateUIView(_ uiView: UIView, context: UIViewRepresentableContext<LottieView>) {
         guard context.coordinator.colorScheme != context.environment.colorScheme else {
             return
         }
