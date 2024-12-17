@@ -43,33 +43,34 @@ internal enum L10n {
     }
   }
   internal enum AdhkarCollections {
-    /// 
-    internal static let orderExplanationText = L10n.tr("Localizable", "adhkar-collections.order-explanation-text", fallback: "")
+    /// There is no specific order for reciting adhkar mentioned in the Sunnah of the Prophet, peace and blessings be upon him. The compiler of a given collection arranges the adhkar at their discretion, and the reader is likewise free to choose an order that is convenient for them.
+    internal static let orderExplanationText = L10n.tr("Localizable", "adhkar-collections.order-explanation-text", fallback: "There is no specific order for reciting adhkar mentioned in the Sunnah of the Prophet, peace and blessings be upon him. The compiler of a given collection arranges the adhkar at their discretion, and the reader is likewise free to choose an order that is convenient for them.")
     /// Select collection
     internal static let selectionScreenTitle = L10n.tr("Localizable", "adhkar-collections.selection-screen-title", fallback: "Select collection")
     internal enum AzkarRu {
-      /// 
-      internal static let description = L10n.tr("Localizable", "adhkar-collections.azkar-ru.description", fallback: "")
+      /// This is a collection from the Azkar.ru website, which has been used in this application since its first release.
+      internal static let description = L10n.tr("Localizable", "adhkar-collections.azkar-ru.description", fallback: "This is a collection from the Azkar.ru website, which has been used in this application since its first release.")
       /// Azkar.ru Website
       internal static let title = L10n.tr("Localizable", "adhkar-collections.azkar-ru.title", fallback: "Azkar.ru Website")
     }
     internal enum Hisn {
-      /// 
-      internal static let description = L10n.tr("Localizable", "adhkar-collections.hisn.description", fallback: "")
-      /// 
-      internal static let shortTitle = L10n.tr("Localizable", "adhkar-collections.hisn.short-title", fallback: "")
+      /// A collection of morning and evening adhkar from the well-known compilation 'Fortress of the Muslim.'
+      /// This collection is used in the vast majority of adhkar reading applications.
+      internal static let description = L10n.tr("Localizable", "adhkar-collections.hisn.description", fallback: "A collection of morning and evening adhkar from the well-known compilation 'Fortress of the Muslim.'\nThis collection is used in the vast majority of adhkar reading applications.")
+      /// Fortress
+      internal static let shortTitle = L10n.tr("Localizable", "adhkar-collections.hisn.short-title", fallback: "Fortress")
       /// Hisn Al Muslim
       internal static let title = L10n.tr("Localizable", "adhkar-collections.hisn.title", fallback: "Hisn Al Muslim")
     }
     internal enum Onboarding {
-      /// 
-      internal static let step1 = L10n.tr("Localizable", "adhkar-collections.onboarding.step1", fallback: "")
-      /// 
-      internal static let step2 = L10n.tr("Localizable", "adhkar-collections.onboarding.step2", fallback: "")
-      /// 
-      internal static let step3 = L10n.tr("Localizable", "adhkar-collections.onboarding.step3", fallback: "")
-      /// 
-      internal static let title = L10n.tr("Localizable", "adhkar-collections.onboarding.title", fallback: "")
+      /// Based on numerous user requests, we have added a new collection of adhkar.
+      internal static let step1 = L10n.tr("Localizable", "adhkar-collections.onboarding.step1", fallback: "Based on numerous user requests, we have added a new collection of adhkar.")
+      /// Please select which collection you would like to use.
+      internal static let step2 = L10n.tr("Localizable", "adhkar-collections.onboarding.step2", fallback: "Please select which collection you would like to use.")
+      /// You can change your selection in the settings at any time.
+      internal static let step3 = L10n.tr("Localizable", "adhkar-collections.onboarding.step3", fallback: "You can change your selection in the settings at any time.")
+      /// Morning and Evening Adhkar Collections
+      internal static let title = L10n.tr("Localizable", "adhkar-collections.onboarding.title", fallback: "Morning and Evening Adhkar Collections")
     }
   }
   internal enum Alerts {
@@ -450,8 +451,8 @@ internal enum L10n {
       /// If it's turned off you can choose desired text size below.
       internal static let useSystemFontSizeTip = L10n.tr("Localizable", "settings.text.use_system_font_size_tip", fallback: "If this option is turned on Azkar app will use text size from iOS Settings (Settings — Display & Brightness — Text Size).\nIf it's turned off you can choose desired text size below.")
       internal enum AdhkarCollectionsSource {
-        /// Adhkar source
-        internal static let title = L10n.tr("Localizable", "settings.text.adhkar_collections_source.title", fallback: "Adhkar source")
+        /// Adhkar collection
+        internal static let title = L10n.tr("Localizable", "settings.text.adhkar_collections_source.title", fallback: "Adhkar collection")
       }
       internal enum ReadingMode {
         /// Line by line
@@ -591,6 +592,8 @@ internal enum L10n {
       internal static let darimi = L10n.tr("Localizable", "text.source.darimi", fallback: "ad-Darimi")
       /// Ibn Huzeyma
       internal static let ibnhuzeyma = L10n.tr("Localizable", "text.source.ibnhuzeyma", fallback: "Ibn Huzeyma")
+      /// Ibn Majah
+      internal static let ibnmaja = L10n.tr("Localizable", "text.source.ibnmaja", fallback: "Ibn Majah")
       /// Muslim
       internal static let muslim = L10n.tr("Localizable", "text.source.muslim", fallback: "Muslim")
       /// an-Nasai
