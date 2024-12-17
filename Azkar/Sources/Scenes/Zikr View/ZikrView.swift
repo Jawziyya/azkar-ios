@@ -61,7 +61,6 @@ struct ZikrView: View {
     var scrollView: some View {
         ScrollView {
             getContent()
-                .largeScreenPadding()
         }
         .onAppear {
             AnalyticsReporter.reportScreen("Zikr Reading", className: viewName)

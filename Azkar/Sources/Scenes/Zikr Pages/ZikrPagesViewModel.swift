@@ -1,13 +1,6 @@
-//
-//  ZikrPagesViewModel.swift
-//  Azkar
-//
-//  Created by Abdurahim Jauzee on 01.05.2020.
-//  Copyright © 2020 Al Jawziyya. All rights reserved.
-//
-
 import UIKit
 import Combine
+import Library
 
 final class ZikrPagesViewModel: ObservableObject, Equatable {
 
@@ -114,7 +107,7 @@ final class ZikrPagesViewModel: ObservableObject, Equatable {
             router: .empty,
             category: .other,
             title: ZikrCategory.morning.title,
-            azkar: [],
+            azkar: [.demo()],
             preferences: Preferences.shared,
             selectedPagePublisher: PassthroughSubject<Int, Never>().eraseToAnyPublisher(),
             initialPage: 0

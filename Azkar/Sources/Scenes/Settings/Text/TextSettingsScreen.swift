@@ -4,6 +4,7 @@
 import SwiftUI
 import Popovers
 import Entities
+import Library
 
 extension ZikrCollectionSource: PickableItem {}
 

@@ -3,12 +3,20 @@
 
 import SwiftUI
 
-struct ChevronButton: View {
+public struct ChevronButton: View {
     
     let title: String
     let action: () -> Void
     
-    var body: some View {
+    public init(
+        title: String,
+        action: @escaping () -> Void
+    ) {
+        self.title = title
+        self.action = action
+    }
+    
+    public var body: some View {
         Button(action: action) {
             HStack {
                 Text(title)
@@ -21,4 +29,8 @@ struct ChevronButton: View {
         .buttonStyle(.plain)
     }
     
+}
+
+#Preview {
+    ChevronButton(title: "Go to settings", action: {})
 }

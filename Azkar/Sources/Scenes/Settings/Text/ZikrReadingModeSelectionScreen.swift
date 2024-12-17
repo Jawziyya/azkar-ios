@@ -1,5 +1,6 @@
 import SwiftUI
 import Combine
+import Library
 
 private let minScale = 0.45
 private let maxScale = 1.0

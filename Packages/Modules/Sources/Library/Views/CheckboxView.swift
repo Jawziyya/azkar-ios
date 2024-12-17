@@ -1,18 +1,14 @@
-//
-//  CheckboxView.swift
-//  Azkar
-//
-//  Created by Abdurahim Jauzee on 04.05.2020.
-//  Copyright © 2020 Al Jawziyya. All rights reserved.
-//
-
 import SwiftUI
 
-struct CheckboxView: View {
+public struct CheckboxView: View {
 
     @Binding var isCheked: Bool
+    
+    public init(isCheked: Binding<Bool>) {
+        _isCheked = isCheked
+    }
 
-    var body: some View {
+    public var body: some View {
         Image(systemName: isCheked ? "checkmark.circle.fill" : "circle")
             .resizable()
             .scaledToFit()

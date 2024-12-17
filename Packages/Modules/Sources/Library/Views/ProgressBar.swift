@@ -1,14 +1,6 @@
-//
-//  ProgressBar.swift
-//  Azkar
-//
-//  Created by Al Jawziyya on 08.04.2020.
-//  Copyright © 2020 Al Jawziyya. All rights reserved.
-//
-
 import SwiftUI
 
-struct ProgressBar: View {
+public struct ProgressBar: View {
     
     private let value: Double
     private let maxValue: Double
@@ -16,7 +8,7 @@ struct ProgressBar: View {
     private let backgroundColor: Color
     private let foregroundColor: Color
     
-    init(
+    public init(
         value: Double,
         maxValue: Double,
         backgroundEnabled: Bool = true,
@@ -30,7 +22,7 @@ struct ProgressBar: View {
         self.foregroundColor = foregroundColor
     }
     
-    var body: some View {
+    public var body: some View {
         ZStack {
             GeometryReader { geometryReader in
                 if self.backgroundEnabled {

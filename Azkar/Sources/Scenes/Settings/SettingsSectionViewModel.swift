@@ -1,7 +1,5 @@
-// Copyright © 2023 Azkar
-// All Rights Reserved.
-
 import Foundation
+import Library
 
 /// Base view model for settings child sections.
 class SettingsSectionViewModel: PreferencesDependantViewModel {

@@ -1,7 +1,6 @@
-// Copyright © 2021 Al Jawziyya. All rights reserved. 
-
 import SwiftUI
 import Combine
+import Library
 
 struct JumuaRemindersView: View {
     

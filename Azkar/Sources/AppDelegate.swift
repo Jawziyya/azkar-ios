@@ -60,7 +60,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     }
         
     override func remoteControlReceived(with event: UIEvent?) {
-        guard let event = event else {
+        guard let event else {
             return
         }
 

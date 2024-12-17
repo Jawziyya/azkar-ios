@@ -1,8 +1,6 @@
-// Copyright © 2023 Azkar
-// All Rights Reserved.
-
 import Foundation
 import Combine
+import Library
 
 final class JumuaRemindersViewModel: ObservableObject {
     

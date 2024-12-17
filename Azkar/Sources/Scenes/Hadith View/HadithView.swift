@@ -24,7 +24,6 @@ struct HadithView: View {
     var body: some View {
         ScrollView {
             getContent()
-                .largeScreenPadding(defaultPadding: 16)
                 .padding(.vertical)
         }
         .onAppear {

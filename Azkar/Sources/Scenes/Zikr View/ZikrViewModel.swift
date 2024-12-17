@@ -273,3 +273,17 @@ final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
     }
 
 }
+
+extension ZikrViewModel {
+    
+    static func demo() -> ZikrViewModel {
+        ZikrViewModel(
+            zikr: Zikr.placeholder(),
+            isNested: true,
+            hadith: nil,
+            preferences: Preferences.shared,
+            player: Player.test
+        )
+    }
+    
+}
