@@ -138,21 +138,12 @@ struct ZikrView: View {
                 viewModel.zikr.notes.flatMap { notes in
                     ZikrNoteView(
                         text: notes,
-                        font: viewModel.preferences.preferredTranslationFont
+                        font: .customFont(viewModel.preferences.preferredTranslationFont)
                     )
                 }
 
                 viewModel.zikr.benefits.flatMap { text in
-                    HStack(alignment: .top, spacing: 8) {
-                        Text("💎")
-                            .minimumScaleFactor(0.1)
-                            .font(Font.largeTitle)
-                            .frame(maxWidth: 20, maxHeight: 15)
-                            .foregroundColor(Color.accent)
-                        Text(getAttributedString(text))
-                            .font(.customFont(viewModel.preferences.preferredTranslationFont, style: .footnote))
-                    }
-                    .padding()
+                    ZikrBenefitsView(text: text)
                 }
             }
 

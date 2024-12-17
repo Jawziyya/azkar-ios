@@ -1,14 +1,21 @@
 import SwiftUI
-import Library
 
-struct ZikrNoteView: View {
+public struct ZikrNoteView: View {
     
     let text: String
-    let font: TranslationFont
+    let font: Font
     @Environment(\.highlightPattern)
     var pattern: String?
     
-    var body: some View {
+    public init(
+        text: String,
+        font: Font
+    ) {
+        self.text = text
+        self.font = font
+    }
+    
+    public var body: some View {
         HStack(alignment: .top, spacing: 8) {
             Image(systemName: "lightbulb")
                 .resizable()
@@ -16,7 +23,7 @@ struct ZikrNoteView: View {
                 .frame(width: 15, height: 15)
                 .foregroundColor(Color.accent)
             Text(attributedString(text, highlighting: pattern))
-                .font(Font.customFont(font, style: .footnote))
+                .font(font)
         }
         .padding()
     }
@@ -24,6 +31,6 @@ struct ZikrNoteView: View {
 }
 
 #Preview {
-    ZikrNoteView(text: "Test", font: .courier)
+    ZikrNoteView(text: "Test", font: .callout)
         .environment(\.highlightPattern, "est")
 }
