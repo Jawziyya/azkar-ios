@@ -31,7 +31,9 @@ struct TextSettingsScreen: View {
                 title: L10n.Settings.Text.AdhkarCollectionsSource.title,
                 binding: $viewModel.preferences.zikrCollectionSource,
                 items: ZikrCollectionSource.allCases,
-                itemTitle: \.title
+                itemTitle: { item in
+                    item.shortTitle ?? item.title
+                }
             )
             .pickerStyle(.menu)
             

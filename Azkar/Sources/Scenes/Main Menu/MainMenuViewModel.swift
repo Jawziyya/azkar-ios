@@ -47,6 +47,9 @@ final class MainMenuViewModel: ObservableObject {
 
     @Preference("kDidDisplayIconPacksMessage", defaultValue: false)
     var didDisplayIconPacksMessage
+    
+    @Preference("kDidDisplayZikrCollectionsOnboarding", defaultValue: false)
+    var didDisplayZikrCollectionsOnboarding
 
     let player: Player
     private(set) var additionalAdhkar: [ZikrMenuItem]?
@@ -178,6 +181,13 @@ final class MainMenuViewModel: ObservableObject {
         
         Task {
             await loadAds()
+        }
+        
+        if didDisplayZikrCollectionsOnboarding != true {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+                router.trigger(.zikrCollectionsOnboarding)
+                self.didDisplayZikrCollectionsOnboarding = true
+            }
         }
     }
     

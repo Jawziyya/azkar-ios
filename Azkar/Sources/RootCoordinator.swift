@@ -10,6 +10,7 @@ import Library
 import ArticleReader
 import Entities
 import PDFKit
+import ZikrCollectionsOnboarding
 
 enum RootSection: Equatable, RouteKind {
     case category(ZikrCategory)
@@ -21,6 +22,7 @@ enum RootSection: Equatable, RouteKind {
     case whatsNew
     case shareOptions(Zikr)
     case article(Article)
+    case zikrCollectionsOnboarding
 }
 
 final class RootCoordinator: NSObject, RouteTrigger, NavigationCoordinatable {
@@ -37,6 +39,7 @@ final class RootCoordinator: NSObject, RouteTrigger, NavigationCoordinatable {
     @Route(.modal) var whatsNew = makeWhatsNewView
     @Route(.modal) var shareOptions = makeShareOptionsView
     @Route(.push) var articleView = makeArticleView
+    @Route(.modal) var zikrCollectionsOnboarding = makeZikrCollectionsOnboardingCoordinator
     
     let preferences: Preferences
     var databaseService: AzkarDatabase {
@@ -132,7 +135,12 @@ final class RootCoordinator: NSObject, RouteTrigger, NavigationCoordinatable {
     
     func azkarForCategory(_ category: ZikrCategory) -> [ZikrViewModel] {
         do {
-            let adhkar = try databaseService.getAdhkar(category, collection: preferences.zikrCollectionSource)
+            var zikrCollectionSource = preferences.zikrCollectionSource
+            if category != .morning && category != .evening {
+                zikrCollectionSource = .azkarRU
+            }
+            
+            let adhkar = try databaseService.getAdhkar(category, collection: zikrCollectionSource)
             let viewModels = try adhkar.enumerated().map { idx, zikr in
                 try ZikrViewModel(
                     zikr: zikr,
@@ -170,7 +178,7 @@ private extension RootCoordinator {
         switch section {
         case .category, .settings:
             selectedZikrPageIndex.send(0)
-        case .zikr, .zikrPages, .goToPage, .whatsNew, .shareOptions, .searchResult, .article:
+        default:
             break
         }
         
@@ -253,6 +261,9 @@ private extension RootCoordinator {
             
         case .shareOptions(let zikr):
             route(to: \.shareOptions, zikr)
+            
+        case .zikrCollectionsOnboarding:
+            route(to: \.zikrCollectionsOnboarding)
 
         }
     }
@@ -461,6 +472,17 @@ extension RootCoordinator {
             self.share(zikr: zikr, options: options, from: rootViewController)
         }
         .tint(Color.accent)
+    }
+    
+    func makeZikrCollectionsOnboardingCoordinator() -> NavigationViewCoordinator<ZikrCollectionsOnboardingCoordinator> {
+        NavigationViewCoordinator(
+            ZikrCollectionsOnboardingCoordinator(
+                preselectedCollection: InstallationDateChecker.isRecentlyInstalled(days: 3) ? .hisnulMuslim : .azkarRU,
+                onZikrCollectionSelect: { [weak self] newSource in
+                    self?.preferences.zikrCollectionSource = newSource
+                }
+            )
+        )
     }
     
 }

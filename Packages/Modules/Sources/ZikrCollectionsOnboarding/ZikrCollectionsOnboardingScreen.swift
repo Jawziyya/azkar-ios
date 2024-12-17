@@ -35,7 +35,7 @@ struct ZikrCollectionsOnboardingScreen: View {
             headerImage
                 .frame(width: 200, height: 200)
 
-            Text(L10n.AdhkarCollections.Onboarding.title)
+            Text("adhkar-collections.onboarding.title")
                 .font(Font.title.weight(.semibold))
                 .multilineTextAlignment(.center)
             
@@ -54,7 +54,7 @@ struct ZikrCollectionsOnboardingScreen: View {
         Button(action: {
             onShowCollectionPicker()
         }) {
-            Text(L10n.Common.continue)
+            Text("common.continue")
                 .font(Font.body.weight(.semibold))
         }
         .buttonStyle(.borderedProminent)
@@ -65,24 +65,24 @@ struct ZikrCollectionsOnboardingScreen: View {
         VStack(spacing: 21) {
             itemView(
                 imageName: "confetti",
-                text: L10n.AdhkarCollections.Onboarding.step1
+                text: "adhkar-collections.onboarding.step1"
             )
             
             itemView(
                 imageName: "paper-and-magnifier",
-                text: L10n.AdhkarCollections.Onboarding.step2
+                text: "adhkar-collections.onboarding.step2"
             )
             
             itemView(
                 imageName: "card-file-box",
-                text: L10n.AdhkarCollections.Onboarding.step3
+                text: "adhkar-collections.onboarding.step3"
             )
         }
     }
     
     func itemView(
         imageName: String,
-        text: String
+        text: LocalizedStringKey
     ) -> some View {
         HStack(alignment: .top, spacing: 20) {
             Image("ZikrCollectionsOnboarding/" + imageName)

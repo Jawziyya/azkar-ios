@@ -14,6 +14,7 @@ let package = Package(
         .library(name: "AboutApp", targets: ["AboutApp"]),
         .library(name: "ArticleReader", targets: ["ArticleReader"]),
         .library(name: "AudioPlayer", targets: ["AudioPlayer"]),
+        .library(name: "ZikrCollectionsOnboarding", targets: ["ZikrCollectionsOnboarding"]),
     ],
     dependencies: [
         // MARK: Data
@@ -93,5 +94,9 @@ let package = Package(
             .product(name: "SwiftUIBackports", package: "SwiftUIBackports"),
             .product(name: "SwiftUIIntrospect", package: "swiftui-introspect"),
         ]),
+        .target(name: "ZikrCollectionsOnboarding", dependencies: [
+            "Entities",
+            "Library",
+        ])
     ]
 )

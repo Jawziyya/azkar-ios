@@ -3,8 +3,16 @@ import Entities
 
 struct ZikrCollectionsSelectionScreen: View {
     
-    @State var selectedCollection: ZikrCollectionSource = .azkarRU
-    let onContinue: () -> Void
+    @State var selectedCollection: ZikrCollectionSource
+    let onContinue: (ZikrCollectionSource) -> Void
+    
+    init(
+        selectedCollection: ZikrCollectionSource,
+        onContinue: @escaping (ZikrCollectionSource) -> Void
+    ) {
+        _selectedCollection = .init(wrappedValue: selectedCollection)
+        self.onContinue = onContinue
+    }
     
     var body: some View {
         ScrollView {
@@ -21,12 +29,14 @@ struct ZikrCollectionsSelectionScreen: View {
         }
         .customScrollContentBackground()
         .background(Color.background)
-        .navigationTitle(L10n.AdhkarCollections.selectionScreenTitle)
+        .navigationTitle("adhkar-collections.selection-screen-title")
     }
     
     var mainActionButton: some View {
-        Button(action: onContinue) {
-            Text(L10n.Common.continue)
+        Button {
+            onContinue(selectedCollection)
+        } label: {
+            Text("common.done")
                 .font(Font.body.weight(.semibold))
         }
         .buttonStyle(.borderedProminent)
@@ -62,7 +72,7 @@ struct ZikrCollectionsSelectionScreen: View {
                 
                 Spacer()
                 
-                Image(_systemName: "checkmark")
+                Image(systemName: "checkmark")
                     .foregroundStyle(Color.accentColor)
                     .opacity(collection == selectedCollection ? 1 : 0)
             }
@@ -80,7 +90,7 @@ struct ZikrCollectionsSelectionScreen: View {
     var note: some View {
         HStack(alignment: .top) {
             Image(systemName: "info.circle.fill")
-            Text(L10n.AdhkarCollections.orderExplanationText)
+            Text("adhkar-collections.order-explanation-text")
         }
         .foregroundStyle(Color.secondaryText.opacity(0.5))
         .font(Font.caption2)
@@ -91,6 +101,9 @@ struct ZikrCollectionsSelectionScreen: View {
 
 #Preview {
     NavigationView {
-        ZikrCollectionsSelectionScreen(onContinue: {})
+        ZikrCollectionsSelectionScreen(
+            selectedCollection: .hisnulMuslim,
+            onContinue: { _ in }
+        )
     }
 }
