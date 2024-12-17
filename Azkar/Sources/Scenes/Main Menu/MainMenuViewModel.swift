@@ -253,19 +253,7 @@ final class MainMenuViewModel: ObservableObject {
         adsService.sendAnalytics(for: ad, action: .impression)
         AnalyticsReporter.reportEvent("azkar_ads_impression", metadata: ["id": ad.id])
     }
-    
-    let faker = Faker()
-    
-    func getSearchSuggestions() -> [String] {
-        return [
-            faker.lorem.word(),
-            faker.lorem.word(),
-            faker.lorem.word(),
-            faker.lorem.word(),
-            faker.lorem.word(),
-        ]
-    }
-
+        
 }
 
 extension MainMenuViewModel {
