@@ -76,21 +76,24 @@ struct ZikrView: View {
         .removeSaturationIfNeeded()
         .background(Color.background.edgesIgnoringSafeArea(.all))
         .onReceive(incrementAction, perform: incrementZikrCounter)
-        .onTapGesture(count: 2, perform: {
-            guard viewModel.preferences.counterType == .tap else {
-                return
-            }
-            incrementZikrCounter()
-        })
-        .onLongPressGesture(
-            minimumDuration: 1,
-            perform: {
-                guard viewModel.preferences.counterType == .tap else {
-                    return
+        .simultaneousGesture(
+            TapGesture(count: 2)
+                .onEnded {
+                    guard viewModel.preferences.counterType == .tap else {
+                        return
+                    }
+                    incrementZikrCounter()
                 }
-                isLongPressGestureActive = true
-                incrementZikrCounter()
-            }
+        )
+        .simultaneousGesture(
+            LongPressGesture(minimumDuration: 0.5)
+                .onEnded { _ in
+                    guard viewModel.preferences.counterType == .tap else {
+                        return
+                    }
+                    isLongPressGestureActive = true
+                    incrementZikrCounter()
+                }
         )
         .overlay(
             counterButton,
@@ -283,8 +286,9 @@ struct ZikrView: View {
     ) -> some View {
         let prefs = viewModel.preferences
         let spacing = isArabicText ? prefs.arabicLineAdjustment : prefs.translationLineAdjustment
+        let lines = Array(zip(text.indices, text))
         VStack(spacing: spacing) {
-            ForEach(Array(zip(text.indices, text)), id: \.0) { idx, line in
+            ForEach(lines, id: \.0) { idx, line in
                 let label = getReadingTextLine(
                     line,
                     isArabicText: isArabicText,
