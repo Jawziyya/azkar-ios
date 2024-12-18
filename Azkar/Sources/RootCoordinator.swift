@@ -477,7 +477,7 @@ extension RootCoordinator {
     func makeZikrCollectionsOnboardingCoordinator() -> NavigationViewCoordinator<ZikrCollectionsOnboardingCoordinator> {
         NavigationViewCoordinator(
             ZikrCollectionsOnboardingCoordinator(
-                preselectedCollection: InstallationDateChecker.isRecentlyInstalled(days: 3) ? .hisnulMuslim : .azkarRU,
+                preselectedCollection: .azkarRU,
                 onZikrCollectionSelect: { [weak self] newSource in
                     self?.preferences.zikrCollectionSource = newSource
                 }

@@ -183,7 +183,7 @@ final class MainMenuViewModel: ObservableObject {
             await loadAds()
         }
         
-        if didDisplayZikrCollectionsOnboarding != true {
+        if !didDisplayZikrCollectionsOnboarding, !InstallationDateChecker.isRecentlyInstalled(days: 3) {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
                 router.trigger(.zikrCollectionsOnboarding)
                 self.didDisplayZikrCollectionsOnboarding = true
