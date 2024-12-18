@@ -1,7 +1,5 @@
-// Copyright © 2023 Azkar
-// All Rights Reserved.
-
 import SwiftUI
+import Library
 
 struct RemindersScreen: View {
     

@@ -1,12 +1,5 @@
-//
-//  PlayerView.swift
-//  mp3quran
-//
-//  Created by Abdurahim Jauzee on 31.10.2019.
-//  Copyright © 2019 Jawziyya Ltd. All rights reserved.
-//
-
 import SwiftUI
+import Library
 
 struct PlayerView: View, Equatable {
 

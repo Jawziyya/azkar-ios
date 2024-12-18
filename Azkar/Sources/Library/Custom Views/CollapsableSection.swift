@@ -62,24 +62,23 @@ struct CollapsableSection: View, Equatable {
     
 }
 
-struct CollapsableSection_Previews: PreviewProvider {
-    static var previews: some View {
-        let zikr = Zikr.placeholder()
-        Stateful(initialState: false) { isExpanded in
-            CollapsableSection(
-                title: zikr.title ?? "Zikr",
-                text: zikr.translation ?? "",
-                highlightPattern: "Zikr",
-                isArabicText: false,
-                isExpanded: isExpanded,
-                font: TranslationFont.iowanOldStyle,
-                lineSpacing: 10,
-                tintColor: Color.blue,
-                expandingCallback: {
-                    isExpanded.wrappedValue.toggle()
-                }
-            )
+@available(iOS 17.0, *)
+#Preview {
+    @Previewable @State var isExpanded = false
+    
+    let zikr = Zikr.placeholder()
+    
+    CollapsableSection(
+        title: zikr.title ?? "Zikr",
+        text: zikr.translation ?? "",
+        highlightPattern: "Zikr",
+        isArabicText: false,
+        isExpanded: $isExpanded,
+        font: TranslationFont.iowanOldStyle,
+        lineSpacing: 10,
+        tintColor: Color.blue,
+        expandingCallback: {
+            isExpanded.toggle()
         }
-        .previewLayout(.fixed(width: 350, height: 200))
-    }
+    )
 }

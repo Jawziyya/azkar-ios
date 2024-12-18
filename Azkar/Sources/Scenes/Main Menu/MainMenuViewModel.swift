@@ -47,6 +47,9 @@ final class MainMenuViewModel: ObservableObject {
 
     @Preference("kDidDisplayIconPacksMessage", defaultValue: false)
     var didDisplayIconPacksMessage
+    
+    @Preference("kDidDisplayZikrCollectionsOnboarding", defaultValue: false)
+    var didDisplayZikrCollectionsOnboarding
 
     let player: Player
     private(set) var additionalAdhkar: [ZikrMenuItem]?
@@ -179,6 +182,13 @@ final class MainMenuViewModel: ObservableObject {
         Task {
             await loadAds()
         }
+        
+        if !didDisplayZikrCollectionsOnboarding, !InstallationDateChecker.isRecentlyInstalled(days: 3) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+                router.trigger(.zikrCollectionsOnboarding)
+                self.didDisplayZikrCollectionsOnboarding = true
+            }
+        }
     }
     
     private func loadArticles() async {
@@ -230,32 +240,20 @@ final class MainMenuViewModel: ObservableObject {
     func hideAd(_ ad: Ad) {
         self.ad = nil
         adsService.sendAnalytics(for: ad, action: .hide)
-        AnalyticsReporter.reportEvent("azkar_ads-hide", metadata: ["id": ad.id])
+        AnalyticsReporter.reportEvent("azkar_ads_hide", metadata: ["id": ad.id])
     }
     
     func handleAdSelection(_ ad: Ad) {
         UIApplication.shared.open(ad.actionLink)
         adsService.sendAnalytics(for: ad, action: .open)
-        AnalyticsReporter.reportEvent("azkar_ads-open", metadata: ["id": ad.id])
+        AnalyticsReporter.reportEvent("azkar_ads_open", metadata: ["id": ad.id])
     }
     
     func sendAdImpressionEvent(_ ad: Ad) {
         adsService.sendAnalytics(for: ad, action: .impression)
-        AnalyticsReporter.reportEvent("azkar_ads-impression", metadata: ["id": ad.id])
+        AnalyticsReporter.reportEvent("azkar_ads_impression", metadata: ["id": ad.id])
     }
-    
-    let faker = Faker()
-    
-    func getSearchSuggestions() -> [String] {
-        return [
-            faker.lorem.word(),
-            faker.lorem.word(),
-            faker.lorem.word(),
-            faker.lorem.word(),
-            faker.lorem.word(),
-        ]
-    }
-
+        
 }
 
 extension MainMenuViewModel {

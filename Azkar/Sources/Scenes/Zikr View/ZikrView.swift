@@ -5,6 +5,7 @@ import Combine
 import SwiftUIDrag
 import Extensions
 import Library
+import Components
 
 /**
  This view shows contents of Zikr object:
@@ -25,7 +26,6 @@ struct ZikrView: View {
 
     var counterFinishedCallback: Action?
 
-    @State var isLongPressGestureActive = false
     @State var isIncrementActionPerformed = false
     @State var counterFeedbackCompleted = false
     @Namespace var counterButtonAnimationNamespace
@@ -61,7 +61,6 @@ struct ZikrView: View {
     var scrollView: some View {
         ScrollView {
             getContent()
-                .largeScreenPadding()
         }
         .onAppear {
             AnalyticsReporter.reportScreen("Zikr Reading", className: viewName)
@@ -76,22 +75,6 @@ struct ZikrView: View {
         .removeSaturationIfNeeded()
         .background(Color.background.edgesIgnoringSafeArea(.all))
         .onReceive(incrementAction, perform: incrementZikrCounter)
-        .onTapGesture(count: 2, perform: {
-            guard viewModel.preferences.counterType == .tap else {
-                return
-            }
-            incrementZikrCounter()
-        })
-        .onLongPressGesture(
-            minimumDuration: 1,
-            perform: {
-                guard viewModel.preferences.counterType == .tap else {
-                    return
-                }
-                isLongPressGestureActive = true
-                incrementZikrCounter()
-            }
-        )
         .overlay(
             counterButton,
             alignment: viewModel.preferences.alignCounterButtonByLeadingSide ? .bottomLeading : .bottomTrailing
@@ -124,11 +107,7 @@ struct ZikrView: View {
 
     private func getContent() -> some View {
         VStack(alignment: .leading, spacing: 0) {
-            if viewModel.isNested {
-                titleView(viewModel.title)
-            } else {
-                Color.clear.frame(height: 10)
-            }
+            Color.clear.frame(height: 10)
             
             textContent
 
@@ -143,21 +122,12 @@ struct ZikrView: View {
                 viewModel.zikr.notes.flatMap { notes in
                     ZikrNoteView(
                         text: notes,
-                        font: viewModel.preferences.preferredTranslationFont
+                        font: .customFont(viewModel.preferences.preferredTranslationFont)
                     )
                 }
 
                 viewModel.zikr.benefits.flatMap { text in
-                    HStack(alignment: .top, spacing: 8) {
-                        Text("💎")
-                            .minimumScaleFactor(0.1)
-                            .font(Font.largeTitle)
-                            .frame(maxWidth: 20, maxHeight: 15)
-                            .foregroundColor(Color.accent)
-                        Text(getAttributedString(text))
-                            .font(.customFont(viewModel.preferences.preferredTranslationFont, style: .footnote))
-                    }
-                    .padding()
+                    ZikrBenefitsView(text: text)
                 }
             }
 
@@ -166,7 +136,6 @@ struct ZikrView: View {
             ZStack(alignment: .center) {
                 if viewModel.remainingRepeatsNumber == 0 {
                     LottieView(name: "checkmark", loopMode: .playOnce, contentMode: .scaleAspectFit, speed: 1.5, progress: !isIncrementActionPerformed ? 1 : 0) {
-                        self.isLongPressGestureActive = false
                     }
                     .onAppear {
                         if isIncrementActionPerformed, !counterFeedbackCompleted {
@@ -296,8 +265,9 @@ struct ZikrView: View {
     ) -> some View {
         let prefs = viewModel.preferences
         let spacing = isArabicText ? prefs.arabicLineAdjustment : prefs.translationLineAdjustment
+        let lines = Array(zip(text.indices, text))
         VStack(spacing: spacing) {
-            ForEach(Array(zip(text.indices, text)), id: \.0) { idx, line in
+            ForEach(lines, id: \.0) { idx, line in
                 let label = getReadingTextLine(
                     line,
                     isArabicText: isArabicText,
@@ -449,9 +419,9 @@ struct ZikrView: View {
         VStack(alignment: .leading, spacing: 0) {
             self.getCaption(label)
             Text(getAttributedString(text))
-                .if(underline, transform: { text in
+                .if(underline) { text in
                     text.underline()
-                })
+                }
                 .foregroundColor(.text)
                 .font(Font.system(.caption, design: .rounded).weight(.medium).smallCaps())
         }

@@ -1,11 +1,3 @@
-//
-//  Preferences.swift
-//  Azkar
-//
-//  Created by Abdurahim Jauzee on 03.05.2020.
-//  Copyright © 2020 Al Jawziyya. All rights reserved.
-//
-
 import UIKit
 import Combine
 import SwiftUI
@@ -94,6 +86,9 @@ final class Preferences: ObservableObject, TextProcessingPreferences {
     }
     
     static var shared = Preferences()
+    
+    @Preference(Keys.zikrCollectionSource, defaultValue: ZikrCollectionSource.azkarRU)
+    var zikrCollectionSource: ZikrCollectionSource
 
     @Preference(Keys.enableFunFeatures, defaultValue: true)
     var enableFunFeatures: Bool
@@ -174,8 +169,8 @@ final class Preferences: ObservableObject, TextProcessingPreferences {
     @Preference(Keys.enableGoToNextZikrOnCounterFinished, defaultValue: true)
     var enableGoToNextZikrOnCounterFinished: Bool
 
-    @Preference(Keys.azkarCounteType, defaultValue: CounterType.floatingButton)
-    var counterType: CounterType
+//    @Preference(Keys.azkarCounteType, defaultValue: CounterType.floatingButton)
+    var counterType: CounterType = .floatingButton
 
     @Preference(Keys.alignCounterByLeadingSide, defaultValue: true)
     var alignCounterButtonByLeadingSide

@@ -1,8 +1,6 @@
-// Copyright © 2023 Azkar
-// All Rights Reserved.
-
 import SwiftUI
 import Popovers
+import Library
 
 struct AppearanceScreen: View {
     

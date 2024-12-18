@@ -109,14 +109,7 @@ final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
         self.preferences = preferences
         self.textProcessor = textProcessor
         self.player = player
-        
-        if let zikrTitle = zikr.title {
-            title = zikrTitle
-        } else if let row {
-            title = "\(L10n.Common.zikr) №\(row)"
-        } else {
-            title = L10n.Common.zikr
-        }
+        title = zikr.title ?? "n/a"
         
         text = textProcessor.processArabicText(zikr.text)
         
@@ -275,4 +268,18 @@ final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
         player.pause()
     }
 
+}
+
+extension ZikrViewModel {
+    
+    static func demo() -> ZikrViewModel {
+        ZikrViewModel(
+            zikr: Zikr.placeholder(),
+            isNested: true,
+            hadith: nil,
+            preferences: Preferences.shared,
+            player: Player.test
+        )
+    }
+    
 }

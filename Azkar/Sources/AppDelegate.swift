@@ -11,6 +11,7 @@ import AudioPlayer
 import UserNotifications
 import SwiftUI
 import RevenueCat
+import Entities
 import Library
 import FirebaseCore
 import FirebaseMessaging
@@ -60,7 +61,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     }
         
     override func remoteControlReceived(with event: UIEvent?) {
-        guard let event = event else {
+        guard let event else {
             return
         }
 
@@ -94,6 +95,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
             Keys.translationLineSpacing: LineSpacing.s.rawValue,
             
             Keys.zikrReadingMode: ZikrReadingMode.normal.rawValue,
+            Keys.zikrCollectionSource: ZikrCollectionSource.hisnulMuslim.rawValue,
         ]
 
         UserDefaults.standard.register(defaults: defaults)

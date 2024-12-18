@@ -2,7 +2,7 @@ import SwiftUI
 import Combine
 import Extensions
 
-extension ContentSizeCategory: Comparable {}
+extension ContentSizeCategory: @retroactive Comparable {}
 
 extension EnvironmentValues {
     struct Diff: OptionSet {

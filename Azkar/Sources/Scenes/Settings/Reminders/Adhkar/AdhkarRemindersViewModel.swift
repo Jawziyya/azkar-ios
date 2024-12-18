@@ -1,7 +1,6 @@
-// Copyright © 2021 Al Jawziyya. All rights reserved. 
-
 import Foundation
 import Combine
+import Library
 
 final class AdhkarRemindersViewModel: ObservableObject {
     

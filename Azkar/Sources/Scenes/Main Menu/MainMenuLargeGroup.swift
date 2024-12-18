@@ -1,6 +1,7 @@
 // ASCollectionView. Created by Apptek Studios 2019
 
 import SwiftUI
+import Components
 
 struct MainMenuLargeGroupViewModel: Equatable, Identifiable {
     var id: String { category.title }

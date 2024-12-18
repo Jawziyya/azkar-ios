@@ -1,12 +1,5 @@
-//
-//  ItemPickerView.swift
-//  Azkar
-//
-//  Created by Abdurahim Jauzee on 04.05.2020.
-//  Copyright © 2020 Al Jawziyya. All rights reserved.
-//
-
 import SwiftUI
+import Library
 
 struct ItemPickerView<SelectionValue>: View where SelectionValue: Hashable & PickableItem {
 

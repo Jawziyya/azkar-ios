@@ -1,7 +1,5 @@
-// Copyright © 2023 Azkar
-// All Rights Reserved.
-
 import Foundation
+import Library
 
 final class RemindersViewModel: ObservableObject {
     

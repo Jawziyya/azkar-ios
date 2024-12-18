@@ -33,20 +33,17 @@ struct CollapsableView<Header: View, Content: View>: View {
 
 }
 
-struct CollapsableView_Previews: PreviewProvider {
-    static var previews: some View {
-        let zikr = Zikr.placeholder()
-        Stateful(initialState: false) { isExpanded in
-            CollapsableView(
-                isExpanded: isExpanded,
-                header: {
-                    Text("Test")
-                },
-                content: {
-                    Text(zikr.text)
-                }
-            )
+@available(iOS 17, *)
+#Preview {
+    @Previewable @State var isExpanded = false
+    
+    CollapsableView(
+        isExpanded: $isExpanded,
+        header: {
+            Text("Test")
+        },
+        content: {
+            Text(Zikr.placeholder().text)
         }
-        .previewLayout(.fixed(width: 350, height: 200))
-    }
+    )
 }

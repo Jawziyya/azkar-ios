@@ -1,10 +1,8 @@
-// Copyright © 2023 Azkar
-// All Rights Reserved.
-
 import UIKit
 import SwiftUI
 import Stinsen
 import AboutApp
+import Library
 
 enum SettingsRoute: Hashable, RouteKind {
     case subscribe, notificationsList

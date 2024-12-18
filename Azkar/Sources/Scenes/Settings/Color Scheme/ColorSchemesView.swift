@@ -4,8 +4,6 @@ import SwiftUI
 import Combine
 import Library
 
-typealias Action = () -> Void
-
 final class ColorSchemesViewModel: ObservableObject {
     
     var preferences: Preferences

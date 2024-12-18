@@ -1,6 +1,5 @@
-// Copyright © 2021 Al Jawziyya. All rights reserved. 
-
 import SwiftUI
+import Library
 
 struct ReminderSoundPickerView: View {
     
