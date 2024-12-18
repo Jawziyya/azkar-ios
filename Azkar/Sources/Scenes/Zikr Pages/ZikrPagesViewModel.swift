@@ -65,11 +65,11 @@ final class ZikrPagesViewModel: ObservableObject, Equatable {
             }
             .assign(to: &$currentZikrRemainingRepeatNumber)
 
-        preferences
-            .$counterType
-            .toVoid()
-            .sink(receiveValue: objectWillChange.send)
-            .store(in: &cancellables)
+//        preferences
+//            .$counterType
+//            .toVoid()
+//            .sink(receiveValue: objectWillChange.send)
+//            .store(in: &cancellables)
         
         selectedPagePublisher.dropFirst().assign(to: &$page)
     }
