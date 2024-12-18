@@ -485,6 +485,8 @@ internal enum L10n {
         internal static let ink = L10n.tr("Localizable", "settings.theme.color-theme.ink", fallback: "Ink")
         /// Purple Rose
         internal static let purpleRose = L10n.tr("Localizable", "settings.theme.color-theme.purple-rose", fallback: "Purple Rose")
+        /// E-reader
+        internal static let reader = L10n.tr("Localizable", "settings.theme.color-theme.reader", fallback: "E-reader")
         /// Rose Quartz
         internal static let roseQuartz = L10n.tr("Localizable", "settings.theme.color-theme.rose-quartz", fallback: "Rose Quartz")
         /// Sea
