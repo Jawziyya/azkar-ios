@@ -18,30 +18,7 @@ struct CounterView: View {
     
     var content: some View {
         Group {
-            HStack {
-                Text(L10n.Settings.Counter.counterType)
-                Spacer()
-
-                Templates.Menu {
-                    Text(L10n.Settings.Counter.counterTypeInfo)
-                        .padding()
-                        .cornerRadius(10)
-                } label: { _ in
-                    Image(systemName: "info.circle")
-                        .foregroundColor(Color.accent.opacity(0.75))
-                }
-
-                Picker(
-                    CounterType.allCases,
-                    id: \.self,
-                    selection: $viewModel.preferences.counterType,
-                    content: { type in
-                        Text(type.title)
-                    }
-                )
-                .pickerStyle(.segmented)
-            }
-            .padding(.vertical, 3)
+            // typePicker
             
             if viewModel.preferences.counterType == .floatingButton {
                 HStack {
@@ -87,6 +64,33 @@ struct CounterView: View {
         .onAppear {
             AnalyticsReporter.reportScreen("Settings", className: viewName)
         }
+    }
+    
+    private var typePicker: some View {
+        HStack {
+            Text(L10n.Settings.Counter.counterType)
+            Spacer()
+
+            Templates.Menu {
+                Text(L10n.Settings.Counter.counterTypeInfo)
+                    .padding()
+                    .cornerRadius(10)
+            } label: { _ in
+                Image(systemName: "info.circle")
+                    .foregroundColor(Color.accent.opacity(0.75))
+            }
+
+            Picker(
+                CounterType.allCases,
+                id: \.self,
+                selection: $viewModel.preferences.counterType,
+                content: { type in
+                    Text(type.title)
+                }
+            )
+            .pickerStyle(.segmented)
+        }
+        .padding(.vertical, 3)
     }
     
 }

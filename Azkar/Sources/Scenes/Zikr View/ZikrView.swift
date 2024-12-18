@@ -26,7 +26,6 @@ struct ZikrView: View {
 
     var counterFinishedCallback: Action?
 
-    @State var isLongPressGestureActive = false
     @State var isIncrementActionPerformed = false
     @State var counterFeedbackCompleted = false
     @Namespace var counterButtonAnimationNamespace
@@ -76,25 +75,6 @@ struct ZikrView: View {
         .removeSaturationIfNeeded()
         .background(Color.background.edgesIgnoringSafeArea(.all))
         .onReceive(incrementAction, perform: incrementZikrCounter)
-        .simultaneousGesture(
-            TapGesture(count: 2)
-                .onEnded {
-                    guard viewModel.preferences.counterType == .tap else {
-                        return
-                    }
-                    incrementZikrCounter()
-                }
-        )
-        .simultaneousGesture(
-            LongPressGesture(minimumDuration: 0.5)
-                .onEnded { _ in
-                    guard viewModel.preferences.counterType == .tap else {
-                        return
-                    }
-                    isLongPressGestureActive = true
-                    incrementZikrCounter()
-                }
-        )
         .overlay(
             counterButton,
             alignment: viewModel.preferences.alignCounterButtonByLeadingSide ? .bottomLeading : .bottomTrailing
@@ -156,7 +136,6 @@ struct ZikrView: View {
             ZStack(alignment: .center) {
                 if viewModel.remainingRepeatsNumber == 0 {
                     LottieView(name: "checkmark", loopMode: .playOnce, contentMode: .scaleAspectFit, speed: 1.5, progress: !isIncrementActionPerformed ? 1 : 0) {
-                        self.isLongPressGestureActive = false
                     }
                     .onAppear {
                         if isIncrementActionPerformed, !counterFeedbackCompleted {

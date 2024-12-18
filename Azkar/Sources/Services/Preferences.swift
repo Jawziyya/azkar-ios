@@ -169,8 +169,8 @@ final class Preferences: ObservableObject, TextProcessingPreferences {
     @Preference(Keys.enableGoToNextZikrOnCounterFinished, defaultValue: true)
     var enableGoToNextZikrOnCounterFinished: Bool
 
-    @Preference(Keys.azkarCounteType, defaultValue: CounterType.floatingButton)
-    var counterType: CounterType
+//    @Preference(Keys.azkarCounteType, defaultValue: CounterType.floatingButton)
+    var counterType: CounterType = .floatingButton
 
     @Preference(Keys.alignCounterByLeadingSide, defaultValue: true)
     var alignCounterButtonByLeadingSide
