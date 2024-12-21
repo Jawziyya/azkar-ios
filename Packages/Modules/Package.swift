@@ -95,6 +95,7 @@ let package = Package(
         .target(name: "ArticleReader", dependencies: [
             "Entities",
             "Extensions",
+            "Library",
             "RoughSwift",
             "Popovers",
             "MarkdownKit",
