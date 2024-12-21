@@ -1,7 +1,5 @@
-// Copyright © 2023 Azkar
-// All Rights Reserved.
-
 import SwiftUI
+import Library
 
 struct PickerView<T: View>: View {
 
@@ -15,18 +13,10 @@ struct PickerView<T: View>: View {
         NavigationLink(
             destination: destination.navigationBarTitle(navigationTitle ?? label, displayMode: titleDisplayMode)
         ) {
-            HStack(spacing: 8) {
-                Text(label)
-                    .font(Font.system(.body, design: .rounded))
-                    .foregroundColor(Color.text)
-                Spacer()
-                Text(subtitle)
-                    .multilineTextAlignment(.trailing)
-                    .font(Font.system(.body, design: .rounded))
-                    .foregroundColor(Color.secondary)
-            }
-            .padding(.vertical, 8)
-            .buttonStyle(PlainButtonStyle())
+            NavigationLabel(
+                title: label,
+                label: subtitle
+            )
         }
     }
 

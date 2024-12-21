@@ -6,49 +6,36 @@ struct AdhkarRemindersView: View {
     @StateObject var viewModel: AdhkarRemindersViewModel
     
     var body: some View {
-        List {
-            Group {
+        ScrollView {
+            VStack {
                 Section {
                     Toggle(isOn: $viewModel.isNotificationsEnabled.animation(), label: {
                         Text(L10n.Settings.Reminders.MorningEvening.switchLabel)
                             .fixedSize(horizontal: false, vertical: true)
                             .padding(.vertical, 8)
-                            .font(Font.system(.body, design: .rounded))
+                            .systemFont(.body)
+                            .foregroundStyle(Color.text)
                     })
+                    Divider()
                 }
                 
                 if viewModel.isNotificationsEnabled {
-                    Section(
-                        header:
-                            Text(L10n.Settings.Reminders.header)
-                    ) {
-                        timePicker
-                        
-                        if viewModel.notificationsDisabledViewModel.isAccessGranted {
-                            Button(
-                                action: viewModel.presentSoundPicker,
-                                label: {
-                                    HStack {
-                                        Text(L10n.Settings.Reminders.Sounds.sound)
-                                            .foregroundColor(Color.text)
-                                        
-                                        Spacer()
-                                        
-                                        Text(viewModel.preferences.adhkarReminderSound.title)
-                                            .foregroundColor(Color.secondary)
-                                        
-                                        Image(systemName: "chevron.right")
-                                            .foregroundColor(Color.secondary)
-                                    }
-                                    .font(Font.system(.body, design: .rounded))
-                            })
-                        } else {
-                            notificationsDisabledView
-                        }
+                    timePicker
+                    
+                    Divider()
+                    
+                    if viewModel.notificationsDisabledViewModel.isAccessGranted {
+                        NavigationButton(
+                            title: L10n.Settings.Reminders.Sounds.sound,
+                            label: viewModel.preferences.adhkarReminderSound.title,
+                            action: viewModel.presentSoundPicker
+                        )
+                    } else {
+                        notificationsDisabledView
                     }
                 }
             }
-            .listRowBackground(Color.contentBackground)
+            .applyContainerStyle()
         }
         .customScrollContentBackground()
         .background(Color.background.edgesIgnoringSafeArea(.all))
@@ -72,6 +59,8 @@ struct AdhkarRemindersView: View {
             HStack {
                 Text(L10n.Settings.Reminders.MorningEvening.morningLabel)
                     .fixedSize(horizontal: false, vertical: true)
+                    .systemFont(.body)
+                    .foregroundStyle(Color.text)
                 
                 Spacer()
                 
@@ -84,9 +73,13 @@ struct AdhkarRemindersView: View {
                 .labelsHidden()
             }
             
+            Divider()
+            
             HStack {
                 Text(L10n.Settings.Reminders.MorningEvening.eveningLabel)
                     .fixedSize(horizontal: false, vertical: true)
+                    .systemFont(.body)
+                    .foregroundStyle(Color.text)
                 
                 Spacer()
                 

@@ -21,7 +21,7 @@ public struct ZikrNoteView: View {
                 .resizable()
                 .scaledToFit()
                 .frame(width: 15, height: 15)
-                .foregroundColor(Color.accent)
+                .foregroundStyle(Color.accent)
             Text(attributedString(text, highlighting: pattern))
                 .font(font)
         }

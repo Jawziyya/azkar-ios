@@ -89,27 +89,27 @@ private struct NotificationsRowView: View {
         VStack(spacing: 8) {
             HStack(spacing: 8) {
                 Text("Notification #\(vm.row + 1)")
-                    .foregroundColor(.secondary)
+                    .foregroundStyle(.secondary)
                     .font(.callout.smallCaps())
                 
                 Spacer()
                 
                 Text(vm.date)
-                    .foregroundColor(Color.primary)
+                    .foregroundStyle(Color.primary)
                     .font(.footnote)
             }
             
             VStack(alignment: .leading, spacing: 8) {
                 HStack {
                     Text(vm.title)
-                        .foregroundColor(.primary)
+                        .foregroundStyle(.primary)
                         .font(.callout)
                         .multilineTextAlignment(.leading)
                     Spacer()
                 }
                 
                 Text(vm.details)
-                    .foregroundColor(.primary)
+                    .foregroundStyle(.primary)
                     .font(.caption)
                     .multilineTextAlignment(.leading)
             }
@@ -138,7 +138,7 @@ struct NotificationsListView: View {
                                 Text("Notifications")
                                     .font(.largeTitle.bold())
                                 Text(viewModel.numberOfNotifications)
-                                    .foregroundColor(.secondary)
+                                    .foregroundStyle(.secondary)
                                     .font(.callout)
                             }
                             .multilineTextAlignment(.leading)
@@ -153,7 +153,7 @@ struct NotificationsListView: View {
                         if viewModel.notifications.isEmpty {
                             Text("No scheduled notifications")
                                 .font(.callout)
-                                .foregroundColor(.secondary)
+                                .foregroundStyle(.secondary)
                         } else {
                             ForEach(viewModel.notifications, id: \.row) { vm in
                                 NotificationsRowView(vm: vm)
@@ -168,7 +168,7 @@ struct NotificationsListView: View {
         .background(
             Text("This view is only visible in test builds")
                 .edgesIgnoringSafeArea(.bottom)
-                .foregroundColor(.secondary)
+                .foregroundStyle(.secondary)
             ,
             alignment: .bottom
         )

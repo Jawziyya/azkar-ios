@@ -3,7 +3,7 @@ import SwiftUI
 public extension Color {
     
     private static func getColor(_ name: String = #function) -> Color {
-        if let color = UIColor(named: ColorTheme.current.colorsNamespacePrefix + name, in: Bundle.main, compatibleWith: nil) {
+        if let color = UIColor(named: ColorTheme.current.assetsNamespace + name, in: Bundle.main, compatibleWith: nil) {
             return Color(color)
         } else {
             return Color(name)

@@ -3,6 +3,7 @@ import NukeUI
 import Popovers
 import Extensions
 import Entities
+import Library
 
 extension Article.ImageType {
     @ViewBuilder @MainActor
@@ -53,6 +54,7 @@ struct ArticleHeaderView: View {
     
     let imageMaxHeight: CGFloat
     @State var showAltText = false
+    @Environment(\.colorTheme) var colorTheme
     
     var body: some View {
         imageAndTitle
@@ -88,7 +90,7 @@ struct ArticleHeaderView: View {
     func getTitleView(
         _ fontSize: CGFloat = 30,
         lineLimit: Int = 3,
-        tagsForegroundColor: Color = Color.secondary
+        tagsforegroundStyle: Color = Color.secondary
     ) -> some View {
         VStack(alignment: .leading, spacing: 6) {
             Text(title)
@@ -101,12 +103,12 @@ struct ArticleHeaderView: View {
             
             if #available(iOS 16, *) {
                 ScrollView(.horizontal) {
-                    horizontalScrollViewContent(foregroundColor: tagsForegroundColor)
+                    horizontalScrollViewContent(foregroundStyle: tagsforegroundStyle)
                 }
                 .scrollIndicators(.never)
             } else {
                 ScrollView(.horizontal, showsIndicators: false) {
-                    horizontalScrollViewContent(foregroundColor: tagsForegroundColor)
+                    horizontalScrollViewContent(foregroundStyle: tagsforegroundStyle)
                 }
             }
         }
@@ -114,9 +116,9 @@ struct ArticleHeaderView: View {
     }
     
     func horizontalScrollViewContent(
-        foregroundColor: Color
+        foregroundStyle: Color
     ) -> some View {
-        HStack(spacing: 8) {
+        HStack(alignment: .center, spacing: 8) {
             countView(
                 views,
                 abbreviatedNumber: viewsAbbreviated,
@@ -133,14 +135,14 @@ struct ArticleHeaderView: View {
                 tagsView
             }
         }
-        .foregroundStyle(foregroundColor)
+        .foregroundStyle(foregroundStyle)
     }
     
     @MainActor @ViewBuilder
     var standaloneImage: some View {
         image
             .clipped()
-            .clipShape(RoundedRectangle(cornerRadius: 15))
+            .clipShape(RoundedRectangle(cornerRadius: colorTheme.cornerRadius))
             .allowsHitTesting(false)
             .overlay(alignment: .topTrailing) {
                 altTextView
@@ -162,7 +164,7 @@ struct ArticleHeaderView: View {
                 getTitleView(
                     40,
                     lineLimit: 2,
-                    tagsForegroundColor: Color.white.opacity(0.55)
+                    tagsforegroundStyle: Color.white.opacity(0.55)
                 )
                 .foregroundStyle(Color.white)
                 .padding(.vertical)

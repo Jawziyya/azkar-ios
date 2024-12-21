@@ -6,10 +6,13 @@ struct RemindersScreen: View {
     @ObservedObject var viewModel: RemindersViewModel
     
     var body: some View {
-        List {
-            content
-                .listRowBackground(Color.contentBackground)
+        ScrollView {
+            VStack {
+                content
+            }
+            .applyContainerStyle()
         }
+        .foregroundStyle(Color.text)
         .customScrollContentBackground()
         .background(Color.background, ignoresSafeAreaEdges: .all)
         .navigationTitle(L10n.Settings.Reminders.title)
@@ -29,14 +32,16 @@ struct RemindersScreen: View {
                     Text(L10n.Settings.Reminders.enable)
                     .fixedSize(horizontal: false, vertical: true)
                     .padding(.vertical, 8)
-                    .font(Font.system(.body, design: .rounded))
+                    .systemFont(.body)
                 }
             
             if viewModel.preferences.enableNotifications && viewModel.notificationsDisabledViewModel.isAccessGranted {
+                Divider()
                 reminderTypes
             }
             
             if viewModel.preferences.enableNotifications && !viewModel.notificationsDisabledViewModel.isAccessGranted {
+                Divider()
                 notificationsDisabledView
             }
             
@@ -51,12 +56,14 @@ struct RemindersScreen: View {
     
     var reminderTypes: some View {
         Group {
-            ChevronButton(
+            NavigationButton(
                 title: L10n.Settings.Reminders.MorningEvening.label,
                 action: viewModel.navigateToAdhkarReminders
             )
             
-            ChevronButton(
+            Divider()
+            
+            NavigationButton(
                 title: L10n.Settings.Reminders.Jumua.label,
                 action: viewModel.navigateToJumuaReminders
             )

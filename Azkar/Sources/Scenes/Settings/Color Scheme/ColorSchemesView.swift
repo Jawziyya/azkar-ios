@@ -47,31 +47,47 @@ final class ColorSchemesViewModel: ObservableObject {
 struct ColorSchemesView: View {
     
     @ObservedObject var viewModel: ColorSchemesViewModel
+    @Environment(\.colorTheme) var colorTheme
     
     var body: some View {
-        List {
-            Group {
-                Section(header: L10n.Settings.Theme.colorScheme) {
+        ScrollView {
+            VStack(spacing: 16) {
+                Section {
                     ItemPickerView(
                         selection: $viewModel.preferences.theme,
                         items: Theme.allCases,
                         dismissOnSelect: false
                     )
+                } header: {
+                    headerView(L10n.Settings.Theme.colorScheme)
                 }
                  
-                Section(header: L10n.Settings.Theme.ColorTheme.header) {
+                Section {
                     ItemPickerView(
                         selection: .init(get: {
                             viewModel.preferences.colorTheme
                         }, set: { newValue in
                             viewModel.setColorTheme(newValue)
                         }),
-                        items: ColorTheme.allCases,
+                        items: ColorTheme.legacyThemes,
+                        dismissOnSelect: false
+                    )
+                } header: {
+                    headerView(L10n.Settings.Theme.ColorTheme.header)
+                }
+                
+                Section {
+                    ItemPickerView(
+                        selection: .init(get: {
+                            viewModel.preferences.colorTheme
+                        }, set: { newValue in
+                            viewModel.setColorTheme(newValue)
+                        }),
+                        items: ColorTheme.modernThemes,
                         dismissOnSelect: false
                     )
                 }
             }
-            .listRowBackground(Color.contentBackground)
         }
         .customScrollContentBackground()
         .background(Color.background, ignoresSafeAreaEdges: .all)
@@ -79,6 +95,16 @@ struct ColorSchemesView: View {
             AnalyticsReporter.reportScreen("Settings", className: viewName)
         }
     }
+    
+    func headerView(_ label: String) -> some View {
+        Text(label)
+            .systemFont(.title3, modification: .smallCaps)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .foregroundStyle(Color.secondaryText)
+            .padding(.horizontal)
+            .background(Color.background)
+    }
+    
 }
 
 #Preview("Color Schemes") {

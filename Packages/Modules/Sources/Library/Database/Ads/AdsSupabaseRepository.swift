@@ -25,26 +25,26 @@ final class AdsSupabaseRepository: AdsRepository {
             .select()
             .eq("language", value: language.rawValue)
         
-        if let orUpdatedAfter {
-            let updateDate = orUpdatedAfter.addingTimeInterval(1).supabaseFormatted
-            if let newerThan {
-                let createDate = newerThan.addingTimeInterval(1).supabaseFormatted
-                adsQuery = adsQuery
-                    .or("created_at.gt.\(createDate),updated_at.gt.\(updateDate)")
-            } else {
-                adsQuery = adsQuery
-                    .greaterThan("updated_at", value: updateDate)
-            }
-        } else if let newerThan {
-            let date = newerThan.addingTimeInterval(1).supabaseFormatted
-            adsQuery = adsQuery
-                .greaterThan("created_at", value: date)
-        }
+//        if let orUpdatedAfter {
+//            let updateDate = orUpdatedAfter.addingTimeInterval(1).supabaseFormatted
+//            if let newerThan {
+//                let createDate = newerThan.addingTimeInterval(1).supabaseFormatted
+//                adsQuery = adsQuery
+//                    .or("created_at.gt.\(createDate),updated_at.gt.\(updateDate)")
+//            } else {
+//                adsQuery = adsQuery
+//                    .greaterThan("updated_at", value: updateDate)
+//            }
+//        } else if let newerThan {
+//            let date = newerThan.addingTimeInterval(1).supabaseFormatted
+//            adsQuery = adsQuery
+//                .greaterThan("created_at", value: date)
+//        }
 
         let currentDateFormatted = Date().supabaseFormatted
         let ads: [Ad] = try await adsQuery
-            .greaterThan("expire_date", value: currentDateFormatted)
-            .lowerThan("begin_date", value: currentDateFormatted)
+//            .greaterThan("expire_date", value: currentDateFormatted)
+//            .lowerThan("begin_date", value: currentDateFormatted)
             .order("created_at", ascending: false)
             .limit(limit)
             .execute()

@@ -1,7 +1,7 @@
 import SwiftUI
 import Library
 
-struct ItemPickerView<SelectionValue>: View where SelectionValue: Hashable & PickableItem {
+struct ItemPickerView<SelectionValue>: View where SelectionValue: Hashable & Identifiable & PickableItem {
 
     @Environment(\.presentationMode) var presentationMode
     @Binding var selection: SelectionValue
@@ -12,28 +12,28 @@ struct ItemPickerView<SelectionValue>: View where SelectionValue: Hashable & Pic
     var enableHapticFeedback = true
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
+        VStack(alignment: .leading, spacing: 0) {
             if let header {
                 Text(header)
                     .font(Font.callout.smallCaps())
-                    .foregroundColor(Color.text)
+                    .foregroundStyle(Color.text)
             }
             
-            VStack {
+            LazyVStack(spacing: 0) {
                 content
-                    .padding(12)
             }
+            .padding(.horizontal)
             
             if let footer {
                 Text(footer)
                     .font(.caption)
-                    .foregroundColor(Color.secondaryText)
+                    .foregroundStyle(Color.secondaryText)
             }
         }
     }
 
     var content: some View {
-        ForEach(items, id: \.title) { item in
+        ForEachIndexed(items) { _, position, item in
             Button {
                 DispatchQueue.main.async {
                     if item != self.selection {
@@ -56,12 +56,12 @@ struct ItemPickerView<SelectionValue>: View where SelectionValue: Hashable & Pic
                     }
 
                     Text(item.title)
-                        .font(Font.system(.body, design: .rounded))
+                        .systemFont(.body)
                     Spacer()
                     item.subtitle.flatMap { text in
                         Text(text)
                             .font(item.subtitleFont)
-                            .foregroundColor(Color.secondary)
+                            .foregroundStyle(Color.secondary)
                     }
                     CheckboxView(isCheked: .constant(self.selection.hashValue == item.hashValue))
                         .frame(width: 20, height: 20)
@@ -69,7 +69,10 @@ struct ItemPickerView<SelectionValue>: View where SelectionValue: Hashable & Pic
                 .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
-            .foregroundColor(Color.text)
+            .foregroundStyle(Color.text)
+            .padding()
+            .background(Color.contentBackground)
+            .applyTheme(indexPosition: position)
         }
     }
 
@@ -77,8 +80,12 @@ struct ItemPickerView<SelectionValue>: View where SelectionValue: Hashable & Pic
 
 struct ItemPickerView_Previews: PreviewProvider {
 
-    enum TestItems: String, PickableItem, CaseIterable {
+    enum TestItems: String, Identifiable, PickableItem, CaseIterable {
         case one, two
+        
+        var id: Self {
+            self
+        }
 
         var title: String {
             return UUID().uuidString

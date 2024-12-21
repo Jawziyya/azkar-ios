@@ -6,20 +6,20 @@ public struct ProgressBar: View {
     private let maxValue: Double
     private let backgroundEnabled: Bool
     private let backgroundColor: Color
-    private let foregroundColor: Color
+    private let foregroundStyle: Color
     
     public init(
         value: Double,
         maxValue: Double,
         backgroundEnabled: Bool = true,
         backgroundColor: Color = Color.gray,
-        foregroundColor: Color = Color.black
+        foregroundStyle: Color = Color.black
     ) {
         self.value = value
         self.maxValue = maxValue
         self.backgroundEnabled = backgroundEnabled
         self.backgroundColor = backgroundColor
-        self.foregroundColor = foregroundColor
+        self.foregroundStyle = foregroundStyle
     }
     
     public var body: some View {
@@ -27,12 +27,12 @@ public struct ProgressBar: View {
             GeometryReader { geometryReader in
                 if self.backgroundEnabled {
                     Capsule()
-                        .foregroundColor(self.backgroundColor)
+                        .foregroundStyle(self.backgroundColor)
                 }
                 
                 Capsule()
                     .frame(width: geometryReader.size.width * (value / maxValue))
-                    .foregroundColor(self.foregroundColor)
+                    .foregroundStyle(self.foregroundStyle)
                     .animation(.easeIn, value: value)
             }
         }

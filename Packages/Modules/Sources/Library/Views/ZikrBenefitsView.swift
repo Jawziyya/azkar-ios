@@ -15,7 +15,7 @@ public struct ZikrBenefitsView: View {
                 .minimumScaleFactor(0.1)
                 .font(Font.largeTitle)
                 .frame(maxWidth: 20, maxHeight: 15)
-                .foregroundColor(Color.accent)
+                .foregroundStyle(Color.accent)
             Text(text)
                 .font(.footnote)
         }

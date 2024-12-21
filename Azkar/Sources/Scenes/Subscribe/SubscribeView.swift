@@ -4,12 +4,14 @@ import SwiftUI
 import Lottie
 import StoreKit
 import Components
+import Library
 
 struct SubscribeView: View {
     
     @ObservedObject var viewModel: SubscribeViewModel
     @State private var showWhyMessage = false
     @Environment(\.presentationManager) var presentation
+    @Environment(\.colorTheme) var colorTheme
         
     struct Feature: Equatable, Identifiable {
         var id: String {
@@ -43,7 +45,7 @@ struct SubscribeView: View {
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .frame(width: 25, height: 25)
-                            .foregroundColor(Color.text)
+                            .foregroundStyle(Color.text)
                             .padding(.vertical)
                             .padding(.horizontal, 16)
                             .opacity(viewModel.isPurchased ? 0 : 1)
@@ -69,7 +71,7 @@ struct SubscribeView: View {
                     
                     Button(action: viewModel.restorePurchases) {
                         Text(L10n.Subscribe.restore)
-                            .foregroundColor(Color.blue)
+                            .foregroundStyle(Color.blue)
                             .font(Font.caption)
                             .disabled(viewModel.selectedOption == nil)
                             .opacity(viewModel.isPurchasing || viewModel.isPurchased ? 0 : 1)
@@ -85,7 +87,7 @@ struct SubscribeView: View {
                 ScrollView {
                     Text(.init(L10n.Subscribe.Why.message))
                         .font(.system(.title3, design: .rounded))
-                        .foregroundColor(Color.text)
+                        .foregroundStyle(Color.text)
                         .padding()
                 }
             }
@@ -130,7 +132,7 @@ struct SubscribeView: View {
     var subscribedItems: some View {
         Group {
             Text(.init(L10n.Subscribe.Finish.thanks))
-                .font(Font.system(.title, design: .rounded))
+                .systemFont(.title)
                 .lineSpacing(1.5)
                 .multilineTextAlignment(.center)
                 .gradientForeground(colors: [Color.purple, Color.blue], startPoint: .bottomLeading, endPoint: .topTrailing)
@@ -144,7 +146,7 @@ struct SubscribeView: View {
                     .frame(maxWidth: .infinity)
                     .padding()
                     .background(Color.blue)
-                    .foregroundColor(Color.white)
+                    .foregroundStyle(Color.white)
                     .font(.body.bold())
             })
             .cornerRadius(10)
@@ -162,7 +164,7 @@ struct SubscribeView: View {
                 Text(L10n.Subscribe.cancel)
                     .frame(maxWidth: .infinity)
                     .padding()
-                    .foregroundColor(Color.primary)
+                    .foregroundStyle(Color.primary)
                     .font(.body.bold())
             })
         }
@@ -230,7 +232,7 @@ struct SubscribeView: View {
                 .frame(maxWidth: .infinity)
                 .padding()
                 .background(Color.blue)
-                .foregroundColor(Color.white)
+                .foregroundStyle(Color.white)
                 .font(.body.bold())
         }
         .cornerRadius(10)
@@ -245,11 +247,11 @@ struct SubscribeView: View {
                 .aspectRatio(contentMode: .fit)
                 .frame(width: 20, height: 20)
                 .padding(4)
-                .foregroundColor(feature.color)
+                .foregroundStyle(feature.color)
                 .cornerRadius(8)
             Text(feature.text)
-                .font(Font.system(.body, design: .rounded))
-                .foregroundColor(Color.secondaryText)
+                .systemFont(.body)
+                .foregroundStyle(Color.secondaryText)
                 .fixedSize(horizontal: false, vertical: true)
         }
     }
@@ -262,23 +264,23 @@ struct SubscribeView: View {
             VStack(spacing: 0) {
                 Color.clear.frame(height: 0)
                 Text(option.priceInfo)
-                    .font(Font.system(.title3, design: .rounded).bold())
+                    .systemFont(.title3, weight: .bold)
                     .padding(.horizontal, 30)
                 Color.clear.frame(height: 8)
                 Text(option.subtitle)
-                    .font(Font.system(.caption2, design: .rounded))
+                    .systemFont(.caption2)
                     .padding(.horizontal, 30)
             }
             .frame(maxWidth: .infinity)
             .frame(maxHeight: .infinity)
             .multilineTextAlignment(.center)
             .padding(12)
-            .foregroundColor(Color.text)
+            .foregroundStyle(Color.text)
             .cornerRadius(20)
             .shadow(color: Color.black.opacity(0.1), radius: 10, x: 0, y: 1)
             .overlay(
                 Image(systemName: viewModel.selectedOption == option ? "checkmark.circle.fill" : "circle")
-                    .foregroundColor(viewModel.selectedOption == option ? Color.accent : Color.gray)
+                    .foregroundStyle(viewModel.selectedOption == option ? Color.accent : Color.gray)
                     .padding(16)
                 ,
                 alignment: .trailing
@@ -301,20 +303,20 @@ struct SubscribeView: View {
                         UIApplication.shared.open(URL(string: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/")!)
                     }
                 Text(" and ")
-                    .foregroundColor(Color.secondaryText)
+                    .foregroundStyle(Color.secondaryText)
                 Text("Privacy Policy")
                     .underline()
                     .onTapGesture {
                         UIApplication.shared.open(URL(string: "https://raw.githubusercontent.com/Jawziyya/legal-info/master/privacy-policies/azkar-app.txt")!)
                     }
             }
-            .foregroundColor(Color.blue)
+            .foregroundStyle(Color.blue)
             Text(L10n.Subscribe.Billing.autoRenewing)
                 .opacity(viewModel.showSubscriptionWarningMessage ? 1 : 0)
                 .fixedSize(horizontal: false, vertical: true)
         }
         .font(Font.caption2)
-        .foregroundColor(Color.tertiaryText)
+        .foregroundStyle(Color.tertiaryText)
         .multilineTextAlignment(.center)
     }
     

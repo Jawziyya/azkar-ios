@@ -110,6 +110,7 @@ final class AppIconPackInfoViewModel: ObservableObject {
 struct AppIconPackInfoView: View {
 
     @ObservedObject var viewModel: AppIconPackInfoViewModel
+    @Environment(\.colorTheme) var colorTheme
 
     private let sampleIconSize: CGFloat = 60
     private var cornerRadius: CGFloat { sampleIconSize * 0.2 }
@@ -152,7 +153,7 @@ struct AppIconPackInfoView: View {
                 Image(systemName: "xmark.circle.fill")
                     .resizable()
             })
-            .foregroundColor(Color(.systemGray4))
+            .foregroundStyle(Color(.systemGray4))
             .frame(width: 30, height: 30)
             stack
         }
@@ -172,7 +173,7 @@ struct AppIconPackInfoView: View {
                 .frame(height: 0)
 
             Text(viewModel.pack.title)
-                .font(Font.system(.title2, design: .rounded).smallCaps())
+                .font(Font.system(.title2, design: colorTheme.fontDesign).smallCaps())
                 .kerning(1.5)
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 40)
@@ -187,16 +188,16 @@ struct AppIconPackInfoView: View {
             } else {
                 if viewModel.purchased {
                     Text("icon_pack.info.purchased-message", comment: "Item purchased label.")
-                        .font(Font.system(.body, design: .rounded).smallCaps())
-                        .foregroundColor(Color.accent)
+                        .systemFont(.body, modification: .smallCaps)
+                        .foregroundStyle(Color.accent)
                         .frame(height: 60)
                 } else if let price = viewModel.price {
                     Button {
                         self.viewModel.purchase()
                     } label: {
                         Text(price)
-                            .font(Font.system(.title3, design: .rounded).bold())
-                            .foregroundColor(Color.white)
+                            .systemFont(.title3, weight: .bold)
+                            .foregroundStyle(Color.white)
                             .frame(minHeight: 40, maxHeight: 40)
                             .padding(.horizontal, 60)
                             .background(Color.blue)
@@ -214,7 +215,7 @@ struct AppIconPackInfoView: View {
                 } label: {
                     Text("common.restore", comment: "Restore buton label.")
                         .minimumScaleFactor(0.3)
-                        .font(Font.system(.caption, design: .rounded).smallCaps())
+                        .systemFont(.caption, modification: .smallCaps)
                         .frame(height: 20)
                 }
                 .disabled(viewModel.processing || viewModel.purchased)

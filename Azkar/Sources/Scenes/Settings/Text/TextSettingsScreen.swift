@@ -11,11 +11,14 @@ extension ZikrCollectionSource: PickableItem {}
 struct TextSettingsScreen: View {
     
     @ObservedObject var viewModel: TextSettingsViewModel
+    @Environment(\.colorTheme) var colorTheme
 
     var body: some View {
-        List {
-            content
-                .listRowBackground(Color.contentBackground)
+        ScrollView {
+            VStack {
+                content
+            }
+            .applyContainerStyle()
         }
         .customScrollContentBackground()
         .background(Color.background, ignoresSafeAreaEdges: .all)
@@ -37,6 +40,8 @@ struct TextSettingsScreen: View {
             )
             .pickerStyle(.menu)
             
+            Divider()
+            
             if viewModel.canChangeLanguage {
                 genericPicker(
                     title: L10n.Settings.Text.language,
@@ -45,25 +50,31 @@ struct TextSettingsScreen: View {
                     itemTitle: \.title
                 )
                 .pickerStyle(.menu)
+                
+                Divider()
             }
             
             NavigationLink {
                 arabicFontsPicker
             } label: {
-                createNavigationPickerLabel(
-                    label: L10n.Settings.Text.arabicTextFont,
-                    value: viewModel.preferences.preferredArabicFont.name
+                NavigationLabel(
+                    title: L10n.Settings.Text.arabicTextFont,
+                    label: viewModel.preferences.preferredArabicFont.name
                 )
             }
+            
+            Divider()
             
             NavigationLink {
                 translationFontsPicker
             } label: {
-                createNavigationPickerLabel(
-                    label: L10n.Settings.Text.translationTextFont,
-                    value: viewModel.preferences.preferredTranslationFont.name
+                NavigationLabel(
+                    title: L10n.Settings.Text.translationTextFont,
+                    label: viewModel.preferences.preferredTranslationFont.name
                 )
             }
+            
+            Divider()
 
             Toggle(isOn: .init(get: {
                 return viewModel.selectedArabicFontSupportsVowels ? viewModel.preferences.showTashkeel : false
@@ -72,14 +83,16 @@ struct TextSettingsScreen: View {
             })) {
                 Text(L10n.Settings.Text.showTashkeel)
                     .padding(.vertical, 8)
-                    .font(Font.system(.body, design: .rounded))
+                    .systemFont(.body)
             }
             .disabled(!viewModel.selectedArabicFontSupportsVowels)
+            
+            Divider()
 
             Toggle(isOn: $viewModel.preferences.enableLineBreaks) {
                 HStack {
                     Text(L10n.Settings.Breaks.title)
-                        .font(Font.system(.body, design: .rounded))
+                        .systemFont(.body)
                     Spacer()
                     Templates.Menu {
                         Text(L10n.Settings.Breaks.info)
@@ -87,16 +100,18 @@ struct TextSettingsScreen: View {
                             .cornerRadius(10)
                     } label: { _ in
                         Image(systemName: "info.circle")
-                            .foregroundColor(Color.accent.opacity(0.75))
+                            .foregroundStyle(Color.accent.opacity(0.75))
                     }
                 }
                 .padding(.vertical, 8)
             }
             
+            Divider()
+            
             Toggle(isOn: $viewModel.preferences.useSystemFontSize) {
                 HStack {
                     Text(L10n.Settings.Text.useSystemFontSize)
-                        .font(Font.system(.body, design: .rounded))
+                        .systemFont(.body)
                     Spacer()
                     Templates.Menu {
                         Text(L10n.Settings.Text.useSystemFontSizeTip)
@@ -104,17 +119,22 @@ struct TextSettingsScreen: View {
                             .cornerRadius(10)
                     } label: { _ in
                         Image(systemName: "info.circle")
-                            .foregroundColor(Color.accent.opacity(0.75))
+                            .foregroundStyle(Color.accent.opacity(0.75))
                     }
                 }
                 .padding(.vertical, 8)
             }
+            
+            Divider()
 
             if viewModel.preferences.useSystemFontSize == false {
                 self.sizePicker
+                Divider()
             }
             
             lineSpacingView
+            
+            Divider()
             
             textDisplayModePicker
         }
@@ -126,18 +146,33 @@ struct TextSettingsScreen: View {
         items: [T],
         itemTitle: @escaping (T) -> String
     ) -> some View {
-        Picker(
-            selection: binding,
-            label: Text(title)
-                .font(Font.system(.body, design: .rounded))
-                .padding(.vertical, 8)
-        ) {
+        Menu {
             ForEach(items, id: \.self) { item in
-                Text(itemTitle(item))
-                    .font(Font.system(.callout, design: .rounded))
-                    .id(item.id)
-                    .tag(item)
+                Button {
+                    binding.wrappedValue = item
+                } label: {
+                    Text(itemTitle(item))
+                        .systemFont(.callout)
+                    if binding.wrappedValue == item {
+                        Image(systemName: "checkmark")
+                            .foregroundStyle(Color.accent)
+                    }
+                }
             }
+        } label: {
+            HStack {
+                Text(title)
+                    .systemFont(.body)
+                    .foregroundStyle(Color.text)
+                    .multilineTextAlignment(.leading)
+                Spacer()
+                Text(itemTitle(binding.wrappedValue))
+                    .systemFont(.callout)
+                    .foregroundStyle(Color.secondaryText)
+                Image(systemName: "chevron.down")
+                    .foregroundStyle(Color.secondaryText)
+            }
+            .padding(.vertical, 8)
         }
     }
     
@@ -147,15 +182,17 @@ struct TextSettingsScreen: View {
     ) -> some View {
         HStack {
             Text(label)
-                .font(Font.system(.body, design: .rounded))
-                .foregroundColor(Color.text)
+                .systemFont(.body)
+                .foregroundStyle(Color.text)
             Spacer()
             if let value {
                 Text(value)
                     .multilineTextAlignment(.trailing)
-                    .font(Font.system(.body, design: .rounded))
-                    .foregroundColor(Color.secondary)
+                    .systemFont(.body)
+                    .foregroundStyle(Color.secondary)
             }
+            Image(systemName: "chevron.right")
+                .foregroundStyle(Color.secondaryText)
         }
         .padding(.vertical, 8)
     }
@@ -188,12 +225,12 @@ struct TextSettingsScreen: View {
         Picker(
             selection: $viewModel.preferences.sizeCategory,
             label: Text(L10n.Settings.Text.fontSize)
-                .font(Font.system(.body, design: .rounded))
+                .systemFont(.body)
                 .padding(.vertical, 8)
         ) {
             ForEach(ContentSizeCategory.availableCases, id: \.title) { size in
                 Text(size.name)
-                    .font(Font.system(.body, design: .rounded))
+                    .systemFont(.body)
                     .environment(\.sizeCategory, size)
                     .tag(size)
             }
@@ -233,7 +270,7 @@ struct TextSettingsScreen: View {
         ) {
             ForEach(LineSpacing.allCases) { height in
                 Text(height.title)
-                    .font(Font.system(.body, design: .rounded))
+                    .systemFont(.body)
                     .tag(height)
             }
         }
@@ -247,7 +284,7 @@ struct TextSettingsScreen: View {
         ) {
             ForEach(LineSpacing.allCases) { height in
                 Text(height.title)
-                    .font(Font.system(.body, design: .rounded))
+                    .systemFont(.body)
                     .tag(height)
             }
         }
@@ -263,8 +300,7 @@ struct TextSettingsScreen: View {
             )
             .navigationTitle(L10n.Settings.Text.ReadingMode.title)
         } label: {
-            Text(L10n.Settings.Text.ReadingMode.title)
-                .padding(.vertical, 8)
+            NavigationLabel(title: L10n.Settings.Text.ReadingMode.title)
         }
     }
     

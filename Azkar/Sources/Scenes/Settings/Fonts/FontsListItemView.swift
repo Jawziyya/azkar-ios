@@ -37,7 +37,7 @@ struct FontsListItemView: View {
             if let imageURL = vm.imageURL {
                 FontsListItemView.fontImageView(imageURL, isRedacted: isRedacted)
                     .frame(width: 100, height: 40)
-                    .foregroundColor(Color.accent)
+                    .foregroundStyle(Color.accent)
                     .onTapGesture(perform: selectionCallback)
             }
             

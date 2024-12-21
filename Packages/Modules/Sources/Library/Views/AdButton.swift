@@ -32,7 +32,7 @@ public struct AdButton: View {
     }
 
     // The color used for the text will automatically switch to white if a background image is specified
-    private var effectiveForegroundColor: Color {
+    private var effectiveforegroundStyle: Color {
         item.imageMode == .background ? .white : item.foregroundColor
     }
     
@@ -47,19 +47,20 @@ public struct AdButton: View {
                     .frame(width: 80 * item.size.scale, height: 80 * item.size.scale)
                     .clipShape(CustomContainerRelativeShape(cornerRadius: cornerRadius))
                     .shadow(color: item.accentColor.opacity(0.5), radius: 3)
+                    .removeSaturationIfNeeded()
             }
             
             HStack(alignment: .bottom, spacing: 0) {
                 VStack(alignment: .leading, spacing: size.scale * 8) {
                     if let title = item.title {
                         Text(title)
-                            .foregroundColor(effectiveForegroundColor)
+                            .foregroundStyle(effectiveforegroundStyle)
                             .font(size.titleFont)
                     }
                     
                     if let subtitle = item.body {
                         Text(subtitle)
-                            .foregroundColor(effectiveForegroundColor)
+                            .foregroundStyle(effectiveforegroundStyle)
                             .font(size.bodyFont)
                     }
                 }
@@ -108,7 +109,7 @@ public struct AdButton: View {
             .aspectRatio(contentMode: .fit)
             .frame(width: size.scale * 10, height: size.scale * 10)
             .padding(size.scale * 5)
-            .foregroundStyle(effectiveForegroundColor.opacity(0.75))
+            .foregroundStyle(effectiveforegroundStyle.opacity(0.75))
     }
     
     private var closeButton: some View {
@@ -116,7 +117,7 @@ public struct AdButton: View {
             .resizable()
             .aspectRatio(contentMode: .fill)
             .frame(width: size.scale * 10, height: size.scale * 10)
-            .foregroundStyle(effectiveForegroundColor)
+            .foregroundStyle(effectiveforegroundStyle)
             .padding(size.scale * 5)
             .contentShape(Rectangle())
             .highPriorityGesture(

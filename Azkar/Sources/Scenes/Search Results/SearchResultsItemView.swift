@@ -14,7 +14,7 @@ struct SearchResultsItemView: View {
                 .padding(.horizontal, 7)
                 .padding(.vertical, 3)
                 .background(Color.secondaryBackground)
-                .foregroundStyle(Color.secondary)
+                .foregroundStyle(Color.secondaryText)
                 .cornerRadius(3)
         }
     }
@@ -36,20 +36,22 @@ struct SearchResultsItemView: View {
             }
             if let caption = result.caption {
                 Text(getText(caption))
-                    .font(.caption)
+                    .systemFont(.caption)
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
             if let caption2 = result.caption2 {
                 Text(getText(caption2))
-                    .font(.caption2)
+                    .systemFont(.caption2)
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
             if let footnote = result.footnote {
                 Text(getText(footnote))
-                    .font(.footnote)
+                    .systemFont(.footnote)
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
         }
+        .systemFont(.body)
+        .foregroundStyle(Color.text)
         .frame(maxWidth: .infinity)
         .multilineTextAlignment(.leading)
     }

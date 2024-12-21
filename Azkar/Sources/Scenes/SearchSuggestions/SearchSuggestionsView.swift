@@ -1,16 +1,23 @@
 import SwiftUI
 import SwiftUIX
 import Entities
+import Library
 
 struct SearchSuggestionsView: View {
     
+    @Environment(\.colorTheme) var colorTheme
     @ObservedObject var viewModel: SearchSuggestionsViewModel
+    
+    let onSearchSuggestionSelection: (String) -> Void
         
     var body: some View {
-        List {
-            content
+        ScrollView {
+            LazyVStack(spacing: 0) {
+                content
+            }
         }
-        .listStyle(.insetGrouped)
+        .customScrollContentBackground()
+        .background(Color.background.ignoresSafeArea())
         .task {
             await viewModel.loadSuggestions()
         }
@@ -31,48 +38,70 @@ struct SearchSuggestionsView: View {
     }
     
     var suggestedSearchQueriesSection: some View {
-        Section("search.suggested-queries") {
-            ForEach(viewModel.suggestedQueries) { query in
-                HStack {
-                    Image(systemName: .magnifyingglass)
-                        .foregroundStyle(Color.secondary)
-                    Text(query)
+        Section {
+            ForEachIndexed(viewModel.suggestedQueries) { idx, position, query in
+                Button {
+                    onSearchSuggestionSelection(query)
+                } label: {
+                    HStack {
+                        Image(systemName: .magnifyingglass)
+                            .foregroundStyle(Color.secondary)
+                        Text(query)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .contentShape(Rectangle())
                 }
-                .searchCompletion(query)
+                .buttonStyle(.plain)
+                .padding()
+                .foregroundStyle(Color.text)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(Color.contentBackground)
+                .applyTheme(indexPosition: position)
+                .padding(.horizontal)
             }
-            .onDelete { indexSet in
-                Task {
-                    await viewModel.removeRecentQueries(at: indexSet)
-                }
-            }
-            .foregroundStyle(Color.primary)
+        } header: {
+            headerView("search.suggested-queries")
         }
     }
     
     var suggestedAzkarSection: some View {
-        Section("search.suggested-adhkar") {
-            ForEach(viewModel.suggestedAzkar) { zikr in
-                Button(action: {
-                    viewModel.navigateToZikr(zikr)
-                }, label: {
-                    let text = zikr.title ?? zikr.translation ?? zikr.text
-                    Text(text.prefix(50) + "...")
-                })
+        Section {
+            ForEachIndexed(viewModel.suggestedAzkar) { idx, position, zikr in
+                let text = zikr.title ?? zikr.translation ?? zikr.text
+                NavigationButton(
+                    title: text.prefix(50) + "...",
+                    applyVerticalPadding: false,
+                    action: {
+                        viewModel.navigateToZikr(zikr)
+                    }
+                )
+                .padding()
+                .foregroundStyle(Color.text)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(Color.contentBackground)
+                .applyTheme(indexPosition: position)
+                .padding(.horizontal)
             }
-            .onDelete { indexSet in
-                Task {
-                    await viewModel.removeRecentAzkar(at: indexSet)
-                }
-            }
-            .foregroundStyle(Color.primary)
+        } header: {
+            headerView("search.suggested-adhkar")
         }
+    }
+    
+    func headerView(_ label: LocalizedStringKey) -> some View {
+        Text(label)
+            .foregroundStyle(Color.secondaryText)
+            .systemFont(.title3, modification: .smallCaps)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding()
+            .background(Color.background)
+            .padding(.top, 6)
     }
     
     func clearAllMenu(action: @escaping () -> Void) -> some View {
         Menu {
             Text("Please confirm this action")
                 .font(.caption)
-                .foregroundColor(.secondary)
+                .foregroundStyle(.secondary)
             Button(role: .destructive, action: action) {
                 Label("Clear", systemImage: "trash")
             }
@@ -86,7 +115,8 @@ struct SearchSuggestionsView: View {
 #Preview("Search Suggestions") {
     List {
         SearchSuggestionsView(
-            viewModel: .placeholder
+            viewModel: .placeholder,
+            onSearchSuggestionSelection: { _ in }
         )
     }
 }

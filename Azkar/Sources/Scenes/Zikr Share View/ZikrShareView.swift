@@ -16,8 +16,8 @@ struct ZikrShareView: View {
     var otherTextAlignment = TextAlignment.leading
     var useFullScreen: Bool
 
-    @Environment(\.colorScheme)
-    var colorScheme
+    @Environment(\.colorScheme) var colorScheme
+    @Environment(\.colorTheme) var colorTheme
 
     var body: some View {
         ScrollView {
@@ -84,14 +84,14 @@ struct ZikrShareView: View {
                 if includeSource {
                     Text(viewModel.source)
                         .font(Font.customFont(viewModel.preferences.preferredTranslationFont, style: .caption1, sizeCategory: .large))
-                        .foregroundColor(Color.secondaryText)
+                        .foregroundStyle(Color.secondaryText)
                         .padding(.horizontal)
                         .padding(.vertical, 8)
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
             }
             .background(Color.contentBackground)
-            .cornerRadius(Constants.cornerRadius)
+            .cornerRadius(colorTheme.cornerRadius)
             .shadow(color: colorScheme == .dark ? Color.clear : Color.black.opacity(0.1), radius: 5, x: 0, y: 1)
 
             if includeLogo {
@@ -103,7 +103,7 @@ struct ZikrShareView: View {
                             .cornerRadius(6)
                     }
                     Text(L10n.Share.sharedWithAzkar)
-                        .foregroundColor(Color.secondary)
+                        .foregroundStyle(Color.secondary)
                         .font(Font.system(size: 12, weight: .regular, design: .rounded).smallCaps())
                 }
                 .opacity(0.5)

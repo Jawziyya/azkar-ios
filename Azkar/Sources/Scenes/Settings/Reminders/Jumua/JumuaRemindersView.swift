@@ -8,50 +8,36 @@ struct JumuaRemindersView: View {
     @State private(set) var presentSoundPicker = false
     
     var body: some View {
-        List {
-            Group {
+        ScrollView {
+            VStack {
                 Section {
                     Toggle(isOn: $viewModel.isNotificationsEnabled.animation(), label: {
                         Text(L10n.Settings.Reminders.Jumua.switchLabel)
                             .fixedSize(horizontal: false, vertical: true)
                             .padding(.vertical, 8)
-                            .font(Font.system(.body, design: .rounded))
+                            .systemFont(.body)
                     })
+                    
+                    Divider()
                 }
                 
                 if viewModel.isNotificationsEnabled {
-                    Section(
-                        header:
-                            Text(L10n.Settings.Reminders.header)
-                    ) {
-                        timePicker
-                        
-                        if viewModel.notificationsDisabledViewModel.isAccessGranted {
-                            Button(
-                                action: viewModel.presentSoundPicker,
-                                label: {
-                                    HStack {
-                                        Text(L10n.Settings.Reminders.Sounds.sound)
-                                            .foregroundColor(Color.text)
-                                        
-                                        Spacer()
-                                        
-                                        Text(viewModel.soundPickerViewModel.preferredSound.title)
-                                            .foregroundColor(Color.secondary)
-                                        
-                                        Image(systemName: "chevron.right")
-                                            .foregroundColor(Color.secondary)
-                                    }
-                                    .font(Font.system(.body, design: .rounded))
-                                }
-                            )
-                        } else {
-                            notificationsDisabledView
-                        }
+                    timePicker
+                    
+                    Divider()
+                    
+                    if viewModel.notificationsDisabledViewModel.isAccessGranted {
+                        NavigationButton(
+                            title: L10n.Settings.Reminders.Sounds.sound,
+                            label: viewModel.soundPickerViewModel.preferredSound.title,
+                            action: viewModel.presentSoundPicker
+                        )
+                    } else {
+                        notificationsDisabledView
                     }
                 }
             }
-            .listRowBackground(Color.contentBackground)
+            .applyContainerStyle()
         }
         .sheet(isPresented: $presentSoundPicker) {
             NavigationView {
@@ -79,6 +65,8 @@ struct JumuaRemindersView: View {
         HStack {
             Text(L10n.Settings.Reminders.time)
                 .fixedSize(horizontal: false, vertical: true)
+                .systemFont(.body)
+                .foregroundStyle(Color.text)
             
             Spacer()
             

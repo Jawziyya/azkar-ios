@@ -8,6 +8,7 @@ public struct ArticleScreen: View {
     let viewModel: ArticleViewModel
     var shareOptions: ShareOptions?
     let onShareButtonTap: () -> Void
+    @Environment(\.colorTheme) var colorTheme
     
     public struct ShareOptions {
         let maxWidth: CGFloat
@@ -76,6 +77,7 @@ public struct ArticleScreen: View {
                 }
             }
         }
+        .background(Color.contentBackground.ignoresSafeArea())
     }
     
     var sharedWithAzkarView: some View {
@@ -85,8 +87,8 @@ public struct ArticleScreen: View {
                 .frame(width: 30, height: 30)
                 .cornerRadius(6)
             Text("share.shared-with-azkar")
-                .foregroundColor(Color.secondary)
-                .font(Font.system(size: 12, weight: .regular, design: .rounded).smallCaps())
+                .foregroundStyle(Color.secondary)
+                .systemFont(12, modification: .smallCaps)
         }
         .frame(maxWidth: .infinity, alignment: .center)
         .frame(height: 45)
@@ -111,6 +113,7 @@ public struct ArticleScreen: View {
             sharesAbbreviated: viewModel.sharesAbbreviated,
             imageMaxHeight: maxHeight
         )
+        .removeSaturationIfNeeded()
     }
     
     var scrollableContent: some View {

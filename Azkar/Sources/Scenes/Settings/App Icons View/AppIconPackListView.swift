@@ -1,11 +1,3 @@
-//
-//
-//  Azkar
-//  
-//  Created on 13.02.2021
-//  Copyright © 2021 Al Jawziyya. All rights reserved.
-//  
-
 import SwiftUI
 import Combine
 import Library
@@ -117,43 +109,46 @@ struct AppIconPackListView: View {
     }
 
     var list: some View {
-        List {
-            ForEach(viewModel.iconPacks) { pack in
-                iconPicker(pack)
+        ScrollView {
+            LazyVStack(spacing: 0) {
+                ForEach(viewModel.iconPacks) { pack in
+                    iconPicker(pack)
+                }
+                
+                Color.clear.frame(height: 20)
             }
-            .listRowBackground(Color.contentBackground)
         }
-        .listStyle(.insetGrouped)
         .customScrollContentBackground()
         .background(Color.background.edgesIgnoringSafeArea(.all))
     }
 
     func iconPicker(_ iconPack: AppIconPack) -> some View {
-        Section(
-            header:
-                VStack(spacing: 0) {
-                    HStack {
-                        Text(iconPack.title)
+        Section {
+            self.content(for: iconPack)
+        } header: {
+            VStack(spacing: 0) {
+                HStack {
+                    Text(iconPack.title)
+                        .foregroundStyle(Color.secondaryText)
+                        .systemFont(.headline, modification: .smallCaps)
 
-                        Spacer()
+                    Spacer()
 
-                        iconPack.link.flatMap { link in
-                            Button(action: {
-                                safariPresenter.set(link)
-                            }, label: {
-                                Image(systemName: "link")
-                            })
-                        }
+                    iconPack.link.flatMap { link in
+                        Button(action: {
+                            safariPresenter.set(link)
+                        }, label: {
+                            Image(systemName: "link")
+                        })
                     }
-                }, 
-            content: {
-                self.content(for: iconPack)
+                }
             }
-        )
+            .padding(20)
+        }
     }
 
     func content(for pack: AppIconPack) -> some View {
-        ForEach(pack.icons) { icon in
+        ForEachIndexed(pack.icons) { _, position, icon in
             HStack(spacing: 16) {
                 if let image = UIImage(named: icon.imageName) {
                     Image(uiImage: image)
@@ -165,7 +160,7 @@ struct AppIconPackListView: View {
                 }
 
                 Text(icon.title)
-                    .font(Font.system(.body, design: .rounded))
+                    .systemFont(.body)
                 
                 Spacer()
                 
@@ -174,6 +169,10 @@ struct AppIconPackListView: View {
             }
             .contentShape(Rectangle())
             .padding(.vertical, 8)
+            .padding(.horizontal)
+            .background(Color.contentBackground)
+            .applyTheme(indexPosition: position)
+            .padding(.horizontal)
             .onTapGesture {
                 DispatchQueue.main.async {
                     guard self.viewModel.isPackPurchased(pack) else {

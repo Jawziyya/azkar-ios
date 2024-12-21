@@ -78,7 +78,7 @@ struct ZikrPagesView: View, Equatable {
                             width: viewModel.preferences.counterSize.value,
                             height: viewModel.preferences.counterSize.value
                         )
-                        .foregroundColor(Color.white)
+                        .foregroundStyle(Color.white)
                         .background(Color.accent)
                         .clipShape(Circle())
                         .padding(.horizontal)

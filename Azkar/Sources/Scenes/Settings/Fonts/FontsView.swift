@@ -1,14 +1,14 @@
-// Copyright © 2021 Al Jawziyya. All rights reserved. 
-
 import SwiftUI
 import NukeUI
 import Nuke
 import Popovers
+import Library
 
 struct FontsView: View {
     
     @StateObject var viewModel: FontsViewModel
     @Environment(\.colorScheme) var colorScheme
+    @Environment(\.colorTheme) var colorTheme
     @State private var previewFont: AppFontViewModel?
     
     var sampleTextView: some View {
@@ -20,7 +20,7 @@ struct FontsView: View {
                 .padding()
                 .frame(maxWidth: .infinity)
                 .background(
-                    RoundedRectangle(cornerRadius: 15)
+                    RoundedRectangle(cornerRadius: colorTheme.cornerRadius)
                         .fill(Color.contentBackground)
                         .shadow(color: Color.accentColor.opacity(0.25), radius: 10, x: 0, y: 0)
                 )
@@ -30,22 +30,34 @@ struct FontsView: View {
     }
     
     var body: some View {
-        List {
-            ForEach(viewModel.fonts) { section in
-                Section(header: Text(section.type.title)) {
-                    ForEach(section.fonts) { font in
-                        fontView(font)
-                            .onTapGesture {
-                                Task {
-                                    await viewModel.changeSelectedFont(font)
+        ScrollView {
+            LazyVStack(spacing: 0) {
+                ForEach(viewModel.fonts) { section in
+                    Section {
+                        ForEachIndexed(section.fonts) { _, position, font in
+                            fontView(font)
+                                .padding(.horizontal)
+                                .background(Color.contentBackground)
+                                .applyTheme(indexPosition: position)
+                                .padding(.horizontal)
+                                .onTapGesture {
+                                    Task {
+                                        await viewModel.changeSelectedFont(font)
+                                    }
+                                    UISelectionFeedbackGenerator().selectionChanged()
                                 }
-                                UISelectionFeedbackGenerator().selectionChanged()
-                            }
+                        }
+                    } header: {
+                        Text(section.type.title)
+                            .systemFont(.headline, modification: .smallCaps)
+                            .padding()
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .multilineTextAlignment(.leading)
+                            .foregroundStyle(Color.secondaryText)
                     }
                 }
+                .redacted(reason: viewModel.didLoadData ? [] : .placeholder)
             }
-            .redacted(reason: viewModel.didLoadData ? [] : .placeholder)
-            .listRowBackground(Color.contentBackground)
             
             sampleTextView
                 .opacity(0)
@@ -55,7 +67,6 @@ struct FontsView: View {
             sampleTextView
         }
         .customScrollContentBackground()
-        .listStyle(.insetGrouped)
         .background(Color.background, ignoresSafeAreaEdges: .all)
         .onAppear(perform: viewModel.loadData)
         .navigationTitle(L10n.Fonts.title)
@@ -64,12 +75,12 @@ struct FontsView: View {
                 if viewModel.fontsType == .arabic {
                     Templates.Menu {
                         Text(L10n.Fonts.Arabic.info)
-                            .foregroundColor(Color.primary)
+                            .foregroundStyle(Color.primary)
                             .padding()
                             .cornerRadius(10)
                     } label: { _ in
                         Image(systemName: "info")
-                            .foregroundColor(Color.accent)
+                            .foregroundStyle(Color.accent)
                     }
                 }
             }
@@ -77,12 +88,12 @@ struct FontsView: View {
         .sheet(item: $previewFont) { font in
             VStack {
                 Text(font.name)
-                    .font(Font.system(.largeTitle, design: .rounded))
+                    .systemFont(.largeTitle)
                 Spacer()
                 
                 if let imageURL = font.imageURL {
                     FontsListItemView.fontImageView(imageURL, isRedacted: false)
-                        .foregroundColor(Color.text)
+                        .foregroundStyle(Color.text)
                     
                     Spacer()
                 }

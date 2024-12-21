@@ -15,6 +15,7 @@ struct MainMenuView: View {
 
     @ObservedObject var viewModel: MainMenuViewModel
     @Environment(\.colorScheme) var colorScheme
+    @Environment(\.colorTheme) var colorTheme
     @Environment(\.isSearching) var isSearching
     @Environment(\.dismissSearch) var dismissSearch
     @State private var showAd = true
@@ -25,14 +26,9 @@ struct MainMenuView: View {
         Color.accentColor.opacity(0.5)
     }
 
-    private var itemsBackgroundColor: SwiftUI.Color {
-        Color.contentBackground
-    }
-    
     var body: some View {
         displayContent
             .textInputAutocapitalization(.never)
-            .removeSaturationIfNeeded()
             .attachEnvironmentOverrides(viewModel: EnvironmentOverridesViewModel(preferences: viewModel.preferences))
             .onAppear {
                 AnalyticsReporter.reportScreen("Main Menu", className: viewName)
@@ -61,6 +57,7 @@ struct MainMenuView: View {
             VStack(spacing: 20) {
                 menuContent
             }
+            .padding(.vertical, 20)
         }
         .customScrollContentBackground()
         .toolbar {
@@ -90,7 +87,10 @@ struct MainMenuView: View {
     @ViewBuilder private var searchView: some View {
         if viewModel.searchQuery.isEmpty {
             SearchSuggestionsView(
-                viewModel: viewModel.searchSuggestionsViewModel
+                viewModel: viewModel.searchSuggestionsViewModel,
+                onSearchSuggestionSelection: { query in
+                    viewModel.searchQuery = query
+                }
             )
         } else {
             SearchResultsView(
@@ -119,35 +119,26 @@ struct MainMenuView: View {
     private var dayNightAzkar: some View {
         Section {
             HStack(spacing: 8) {
-                getMainMenuSectionView(MainMenuLargeGroupViewModel(
-                    category: .morning,
-                    title: L10n.Category.morning,
-                    animationName: "sun",
-                    animationSpeed: 0.5
-                ))
+                getMainMenuSectionView(.morning)
                 
                 Spacer()
                 
-                getMainMenuSectionView(MainMenuLargeGroupViewModel(
-                    category: .evening,
-                    title: L10n.Category.evening,
-                    animationName: colorScheme == .dark ? "moon" : "moon2",
-                    animationSpeed: 0.5
-                ))
+                getMainMenuSectionView(.evening)
             }
         }
         .frame(maxWidth: .infinity)
         .applyMenuPadding()
     }
     
-    private func getMainMenuSectionView(_ item: MainMenuLargeGroupViewModel) -> some View {
+    private func getMainMenuSectionView(_ category: ZikrCategory) -> some View {
         getMenuButton {
-            MainMenuLargeGroup(viewModel: item)
+            MainMenuLargeGroup(category: category)
                 .frame(maxWidth: .infinity)
-                .background(itemsBackgroundColor)
-                .clipShape(RoundedRectangle(cornerRadius: Constants.cornerRadius))
+                .removeSaturationIfNeeded()
+                .background(Color.contentBackground)
+                .applyTheme()
         } action: {
-            self.viewModel.navigateToCategory(item.category)
+            self.viewModel.navigateToCategory(category)
         }
         .frame(maxWidth: .infinity)
         .frame(height: 120)
@@ -167,18 +158,23 @@ struct MainMenuView: View {
                 }
             }
 
-            ForEach(viewModel.otherAzkarModels) { item in
+            ForEachIndexed(viewModel.otherAzkarModels) { _, position, item in
                 getMenuItem(
                     item: item,
                     action: {
                         viewModel.navigateToCategory(item.category)
                     }
                 )
+                
+                if position != .last {
+                    Divider()
+                }
             }
         }
         .padding()
+        .removeSaturationIfNeeded()
         .background(Color.contentBackground)
-        .clipShape(RoundedRectangle(cornerRadius: Constants.cornerRadius))
+        .applyTheme()
         .applyMenuPadding()
     }
     
@@ -191,7 +187,7 @@ struct MainMenuView: View {
             HStack {
                 MainMenuSmallGroup(item: item, flip: flipContents)
                 Image(systemName: "chevron.right")
-                    .foregroundColor(Color.tertiaryText)
+                    .foregroundStyle(Color.tertiaryText)
             }
         }, action: action)
     }
@@ -216,11 +212,7 @@ struct MainMenuView: View {
                         article: article,
                         imageMaxHeight: articleCellHeight
                     )
-                    .clipShape(RoundedRectangle(cornerRadius: Constants.cornerRadius))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: Constants.cornerRadius)
-                            .stroke(borderColor, lineWidth: borderWidth)
-                    )
+                    .applyTheme()
                     .padding(.horizontal, 20)
                 })
                 .buttonStyle(.plain)
@@ -228,12 +220,33 @@ struct MainMenuView: View {
         }
         .frame(height: articleCellHeight + 3)
         .tabViewStyle(.page(indexDisplayMode: .automatic))
+        .removeSaturationIfNeeded()
     }
     
     func adView(_ ad: Ad) -> some View {
+        Group {
+            if colorTheme == .flat || colorTheme == .reader {
+                adButton(ad).applyTheme()
+            } else {
+                adButton(ad)
+                    .clipShape(RoundedRectangle(cornerRadius: colorTheme.cornerRadius))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: colorTheme.cornerRadius)
+                            .stroke(borderColor, lineWidth: borderWidth)
+                    )
+            }
+        }
+        .applyMenuPadding()
+        .transition(.asymmetric(
+            insertion: .move(edge: .top).combined(with: .opacity),
+            removal: .move(edge: .bottom).combined(with: .opacity)
+        ))
+    }
+    
+    func adButton(_ ad: Ad) -> some View {
         AdButton(
             item: AdButtonItem(ad: ad),
-            cornerRadius: Constants.cornerRadius,
+            cornerRadius: colorTheme.cornerRadius,
             onClose: {
                 withAnimation(.spring) {
                     viewModel.hideAd(ad)
@@ -247,16 +260,6 @@ struct MainMenuView: View {
             viewModel.sendAdImpressionEvent(ad)
         }
         .frame(maxWidth: .infinity)
-        .clipShape(RoundedRectangle(cornerRadius: Constants.cornerRadius))
-        .overlay(
-            RoundedRectangle(cornerRadius: Constants.cornerRadius)
-                .stroke(borderColor, lineWidth: borderWidth)
-        )
-        .applyMenuPadding()
-        .transition(.asymmetric(
-            insertion: .move(edge: .top).combined(with: .opacity),
-            removal: .move(edge: .bottom).combined(with: .opacity)
-        ))
     }
     
 }

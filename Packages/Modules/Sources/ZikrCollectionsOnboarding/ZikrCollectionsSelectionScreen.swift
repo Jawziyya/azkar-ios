@@ -1,9 +1,11 @@
 import SwiftUI
 import Entities
+import Library
 
 struct ZikrCollectionsSelectionScreen: View {
     
     @State var selectedCollection: ZikrCollectionSource
+    @Environment(\.colorTheme) var colorTheme
     let onContinue: (ZikrCollectionSource) -> Void
     
     init(
@@ -84,7 +86,7 @@ struct ZikrCollectionsSelectionScreen: View {
         .padding(.horizontal, 30)
         .frame(maxWidth: .infinity)
         .background(Color.contentBackground)
-        .clipShape(RoundedRectangle(cornerRadius: 20))
+        .clipShape(RoundedRectangle(cornerRadius: colorTheme.cornerRadius))
     }
     
     var note: some View {

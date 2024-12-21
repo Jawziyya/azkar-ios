@@ -7,9 +7,11 @@ struct CounterView: View {
     @ObservedObject var viewModel: CounterViewModel
     
     var body: some View {
-        List {
-            content
-                .listRowBackground(Color.contentBackground)
+        ScrollView {
+            VStack {
+                content
+            }
+            .applyContainerStyle()
         }
         .customScrollContentBackground()
         .background(Color.background, ignoresSafeAreaEdges: .all)
@@ -34,18 +36,23 @@ struct CounterView: View {
                     )
                     .pickerStyle(.segmented)
                 }
+                
+                Divider()
             }
 
             Toggle(L10n.Settings.Counter.counterTicker, isOn: $viewModel.preferences.enableCounterTicker)
                 .padding(.vertical, 3)
 
+            Divider()
+            
             Toggle(L10n.Settings.Counter.counterHaptics, isOn: $viewModel.preferences.enableCounterHapticFeedback)
                 .padding(.vertical, 3)
 
+            Divider()
+            
             Toggle(isOn: $viewModel.preferences.enableGoToNextZikrOnCounterFinished) {
                 HStack {
                     Text(L10n.Settings.Counter.goToNextDhikr)
-                        .font(Font.system(.body, design: .rounded))
 
                     Spacer()
 
@@ -53,14 +60,17 @@ struct CounterView: View {
                         Text(L10n.Settings.Counter.goToNextDhikrTip)
                             .padding()
                             .cornerRadius(10)
+                            .foregroundStyle(Color.text)
                     } label: { _ in
                         Image(systemName: "info.circle")
-                            .foregroundColor(Color.accent.opacity(0.75))
+                            .foregroundStyle(Color.accent.opacity(0.75))
                     }
                 }
                 .padding(.vertical, 3)
             }
         }
+        .systemFont(.body)
+        .foregroundStyle(Color.text)
         .onAppear {
             AnalyticsReporter.reportScreen("Settings", className: viewName)
         }
@@ -77,7 +87,7 @@ struct CounterView: View {
                     .cornerRadius(10)
             } label: { _ in
                 Image(systemName: "info.circle")
-                    .foregroundColor(Color.accent.opacity(0.75))
+                    .foregroundStyle(Color.accent.opacity(0.75))
             }
 
             Picker(

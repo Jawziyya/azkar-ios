@@ -12,11 +12,11 @@ struct SettingsView: View {
     @ObservedObject var viewModel: SettingsViewModel
         
     var body: some View {
-        List {
-            Section {
+        ScrollView {
+            VStack {
                 content
             }
-            .listRowBackground(Color.contentBackground)
+            .applyContainerStyle()
         }
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
@@ -25,11 +25,9 @@ struct SettingsView: View {
                 }
             }
         }
-        .listStyle(.insetGrouped)
         .customScrollContentBackground()
         .background(Color.background, ignoresSafeAreaEdges: .all)
         .navigationTitle(L10n.Settings.title)
-        .removeSaturationIfNeeded()
         .onAppear {
             AnalyticsReporter.reportScreen("Settings", className: viewName)
         }
@@ -38,26 +36,15 @@ struct SettingsView: View {
     var content: some View {
         Group {
             appearanceSection
+            Divider()
             counterSection
+            Divider()
             textSettingsSection
+            Divider()
             remindersSection
         }
     }
-    
-    func getHeader(symbolName: String, title: String) -> some View {
-        HStack {
-            Image(systemName: symbolName)
-                .font(.caption.bold())
-                .aspectRatio(contentMode: .fit)
-                .padding(3)
-                .background(Color.accentColor.cornerRadius(4))
-            Text(title)
-                .font(Font.system(.caption, design: .rounded))
-                .foregroundColor(Color.secondaryText)
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-    }
-    
+        
     func getSectionButton(
         _ title: String,
         subtitle: String?,
@@ -76,14 +63,16 @@ struct SettingsView: View {
                     .foregroundStyle(Color.white)
                     .background(imageBackground)
                     .cornerRadius(8)
+                    .removeSaturationIfNeeded()
                 
                 VStack(alignment: .leading) {
                     Text(title)
-                        .foregroundStyle(Color.primary)
+                        .foregroundStyle(Color.text)
+                        .systemFont(.body)
                     if let subtitle {
                         Text(subtitle)
-                            .foregroundStyle(Color.secondary)
-                            .font(.callout)
+                            .foregroundStyle(Color.secondaryText)
+                            .systemFont(.callout)
                     }
                 }
                 
@@ -92,6 +81,7 @@ struct SettingsView: View {
                 Image(systemName: "chevron.right")
             }
             .padding(4)
+            .multilineTextAlignment(.leading)
         }
     }
     

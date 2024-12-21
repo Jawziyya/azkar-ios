@@ -75,8 +75,8 @@ struct ZikrShareOptionsView: View {
 
     var callback: (ShareOptions) -> Void
 
-    @Environment(\.presentationMode)
-    var presentation
+    @Environment(\.presentationMode) var presentation
+    @Environment(\.colorTheme) var colorTheme
 
     @AppStorage("kShareIncludeTitle")
     private var includeTitle: Bool = true
@@ -101,7 +101,6 @@ struct ZikrShareOptionsView: View {
                 .padding()
             
             content
-                .listStyle(.insetGrouped)
                 .customScrollContentBackground()
         }
         .background(Color.background, ignoresSafeAreaEdges: .all)
@@ -124,8 +123,8 @@ struct ZikrShareOptionsView: View {
     }
 
     var content: some View {
-        List {
-            Group {
+        ScrollView {
+            VStack {
                 shareAsSection
                 
                 shareOptions
@@ -136,15 +135,18 @@ struct ZikrShareOptionsView: View {
                     }
                 }
             }
-            .listRowBackground(Color.contentBackground)
+            .systemFont(.body)
+            .applyContainerStyle()
         }
     }
     
     var shareAsSection: some View {
-        Section(header: L10n.Share.shareAs) {
+        Section {
             ForEach(ShareType.availableCases) { type in
                 Button(action: {
-                    selectedShareType = type
+                    withAnimation(.spring) {
+                        selectedShareType = type
+                    }
                 }, label: {
                     HStack {
                         Text(type.title)
@@ -154,13 +156,19 @@ struct ZikrShareOptionsView: View {
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
                                 .frame(width: 15, height: 15)
-                                .foregroundColor(Color.accent)
+                                .foregroundStyle(Color.accent)
                         }
                     }
                     .contentShape(Rectangle())
                 })
                 .buttonStyle(.plain)
+                .padding(.vertical, 4)
             }
+        } header: {
+            Text(L10n.Share.shareAs)
+                .foregroundStyle(Color.secondaryText)
+                .systemFont(.headline, modification: .smallCaps)
+                .frame(maxWidth: .infinity, alignment: .leading)
         }
     }
     

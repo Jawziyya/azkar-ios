@@ -4,25 +4,38 @@ import Library
 struct ReminderSoundPickerView: View {
     
     @ObservedObject var viewModel: ReminderSoundPickerViewModel
+    @Environment(\.colorTheme) var colorTheme
     
     var body: some View {
-        List {
+        ScrollView {
             ForEach(viewModel.sections) { section in
-                Section(header: Text(section.title)) {
-                    ForEach(section.sounds) { sound in
-                        soundView(sound)
-                            .onTapGesture {
-                                DispatchQueue.main.async {
-                                    viewModel.playSound(sound)
-                                    viewModel.setPreferredSound(sound)
+                VStack(spacing: 0) {
+                    Text(section.title)
+                        .systemFont(.title3, modification: .smallCaps)
+                        .foregroundStyle(Color.secondaryText)
+                        .multilineTextAlignment(.leading)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.horizontal)
+                        .padding(.top, 8)
+                    
+                    VStack {
+                        ForEachIndexed(section.sounds) { _, position, sound in
+                            soundView(sound)
+                                .onTapGesture {
+                                    DispatchQueue.main.async {
+                                        viewModel.playSound(sound)
+                                        viewModel.setPreferredSound(sound)
+                                    }
                                 }
+                            if position != .last {
+                                Divider()
                             }
+                        }
                     }
+                    .applyContainerStyle()
                 }
             }
-            .listRowBackground(Color.contentBackground)
         }
-        .listStyle(.insetGrouped)
         .environment(\.horizontalSizeClass, .regular)
         .customScrollContentBackground()
         .background(Color.background.edgesIgnoringSafeArea(.all))
@@ -36,7 +49,7 @@ struct ReminderSoundPickerView: View {
         HStack(alignment: .center, spacing: 8) {
             Text(sound.title)
                 .multilineTextAlignment(.leading)
-                .font(Font.system(.body, design: .rounded))
+                .systemFont(.body)
             
             Spacer()
 

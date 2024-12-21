@@ -21,6 +21,7 @@ struct ZikrView: View {
 
     @ObservedObject var viewModel: ZikrViewModel
     @Environment(\.zikrReadingMode) var zikrReadingMode
+    @Environment(\.colorTheme) var colorTheme
 
     let incrementAction: AnyPublisher<Void, Never>
 
@@ -84,7 +85,7 @@ struct ZikrView: View {
     private var counterButton: some View {
         Group {
             Text("1")
-                .foregroundColor(Color.accent)
+                .foregroundStyle(Color.accent)
                 .font(Font.system(
                     size: viewModel.preferences.counterSize.value / 3,
                     weight: .regular,
@@ -95,7 +96,7 @@ struct ZikrView: View {
                     width: viewModel.preferences.counterSize.value,
                     height: viewModel.preferences.counterSize.value
                 )
-                .foregroundColor(Color.white)
+                .foregroundStyle(Color.white)
                 .background(Color.accent)
                 .clipShape(Capsule())
         }
@@ -154,7 +155,7 @@ struct ZikrView: View {
                 Group {
                     if viewModel.remainingRepeatsNumber == 0 {
                         Circle()
-                            .foregroundColor(Color.clear)
+                            .foregroundStyle(Color.clear)
                             .frame(width: 52, height: 52)
                             .matchedGeometryEffect(id: counterButtonAnimationId, in: counterButtonAnimationNamespace)
                     }
@@ -251,8 +252,8 @@ struct ZikrView: View {
     private func titleView(_ title: String) -> some View {
         Text(title)
             .equatable()
-            .font(Font.system(.headline, design: .rounded))
-            .foregroundColor(Color.secondaryText)
+            .systemFont(.headline)
+            .foregroundStyle(Color.secondaryText)
             .multilineTextAlignment(.center)
             .frame(maxWidth: .infinity, alignment: .center)
             .padding()
@@ -422,8 +423,8 @@ struct ZikrView: View {
                 .if(underline) { text in
                     text.underline()
                 }
-                .foregroundColor(.text)
-                .font(Font.system(.caption, design: .rounded).weight(.medium).smallCaps())
+                .foregroundStyle(Color.text)
+                .systemFont(.caption, weight: .medium, modification: .smallCaps)
         }
     }
 
@@ -433,8 +434,8 @@ struct ZikrView: View {
 
     private func getCaption(_ text: String) -> some View {
         Text(getAttributedString(text))
-            .font(Font.system(.caption2, design: .rounded).smallCaps())
-            .foregroundColor(Color.tertiaryText)
+            .systemFont(.caption2, modification: .smallCaps)
+            .foregroundStyle(Color.tertiaryText)
     }
 
     private func getAttributedString(_ text: String) -> AttributedString {

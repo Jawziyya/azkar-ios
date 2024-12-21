@@ -3,47 +3,66 @@
 import SwiftUI
 import Components
 
-struct MainMenuLargeGroupViewModel: Equatable, Identifiable {
-    var id: String { category.title }
-    let category: ZikrCategory
-    let title: String
-    let animationName: String
-    let animationSpeed: Double
-}
-
 struct MainMenuLargeGroup: View {
 
-    let viewModel: MainMenuLargeGroupViewModel
+    let category: ZikrCategory
+    @Environment(\.colorScheme) var colorScheme
+    @Environment(\.colorTheme) var colorTheme
 
 	var body: some View {
-        VStack(alignment: .center, spacing: 0) {
-            LottieView(
-                name: viewModel.animationName,
-                loopMode: .loop,
-                contentMode: .scaleAspectFit,
-                speed: CGFloat(viewModel.animationSpeed)
-            )
+        VStack(alignment: .center, spacing: 8) {
+            Group {
+                switch colorTheme {
+                case .reader, .flat:
+                    imageView
+                default:
+                    animationView
+                }
+            }
             .frame(width: 60, height: 60)
-            .padding(8)
 
-            Text(viewModel.title)
-                .font(Font.system(.body, design: .rounded))
-				.bold()
+            Text(category.title)
+                .systemFont(.body)
 				.multilineTextAlignment(.leading)
-				.foregroundColor(Color.secondaryText)
-                .padding(8)
+				.foregroundStyle(Color.text)
                 .layoutPriority(1)
 		}
+        .padding(15)
 	}
+    
+    var imageView: some View {
+        Image(imageName)
+            .foregroundStyle(Color.text)
+    }
+    
+    var imageName: String {
+        return colorTheme.assetsNamespace + category.rawValue
+    }
+    
+    var animationView: some View {
+        LottieView(
+            name: animationName,
+            loopMode: .loop,
+            contentMode: .scaleAspectFit,
+            speed: 0.5
+        )
+        
+    }
+    
+    var animationName: String {
+        switch category {
+        case .evening where colorScheme == .dark: return "moon"
+        case .evening where colorScheme == .light: return "moon2"
+        default: return "sun"
+        }
+    }
+    
 }
 
-#Preview("Main Menu Large Group item demo.") {
-    MainMenuLargeGroup(
-        viewModel: MainMenuLargeGroupViewModel(
-            category: .morning,
-            title: "Test",
-            animationName: "sun",
-            animationSpeed: 1
-        )
-    )
+#Preview("Morning") {
+    MainMenuLargeGroup(category: .morning)
+}
+
+#Preview("Evening") {
+    MainMenuLargeGroup(category: .evening)
 }
