@@ -1,2 +1,3 @@
 - Adhkar collection source picker (morning & evening adhkar in "Fortress of the Muslim" order)
 - Enhanced performance in reading mode
+- Fixed some recent problems
