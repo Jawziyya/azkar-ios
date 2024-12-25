@@ -109,7 +109,7 @@ final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
         self.preferences = preferences
         self.textProcessor = textProcessor
         self.player = player
-        title = zikr.title ?? "n/a"
+        title = zikr.title ?? row?.description ?? "\(Int(Date().timeIntervalSince1970))"
         
         text = textProcessor.processArabicText(zikr.text)
         

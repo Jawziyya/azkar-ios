@@ -504,8 +504,8 @@ extension RootCoordinator: MFMailComposeViewControllerDelegate {
             let view = ZikrShareView(
                 viewModel: currentViewModel,
                 includeTitle: options.includeTitle,
-                includeTranslation: preferences.expandTranslation,
-                includeTransliteration: preferences.expandTransliteration,
+                includeTranslation: options.includeTranslation,
+                includeTransliteration: options.includeTransliteration,
                 includeBenefits: options.includeBenefits,
                 includeLogo: options.includeLogo,
                 arabicTextAlignment: options.textAlignment.isCentered ? .center : .trailing,
