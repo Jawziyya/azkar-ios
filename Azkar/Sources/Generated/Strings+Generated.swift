@@ -495,6 +495,8 @@ internal enum L10n {
     }
   }
   internal enum Share {
+    /// Extra options
+    internal static let extraOptions = L10n.tr("Localizable", "share.extra-options", fallback: "Extra options")
     /// Image
     internal static let image = L10n.tr("Localizable", "share.image", fallback: "Image")
     /// Include Azkar logo
@@ -503,6 +505,10 @@ internal enum L10n {
     internal static let includeBenefit = L10n.tr("Localizable", "share.include-benefit", fallback: "Include text of benefit")
     /// Include title
     internal static let includeTitle = L10n.tr("Localizable", "share.include-title", fallback: "Include title")
+    /// Include translation
+    internal static let includeTranslation = L10n.tr("Localizable", "share.include-translation", fallback: "Include translation")
+    /// Include transliteration
+    internal static let includeTransliteration = L10n.tr("Localizable", "share.include-transliteration", fallback: "Include transliteration")
     /// Share as
     internal static let shareAs = L10n.tr("Localizable", "share.share-as", fallback: "Share as")
     /// Shared from Azkar App

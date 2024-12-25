@@ -229,7 +229,7 @@ public extension AdhkarSQLiteDatabaseService {
             return orderedRecords.compactMap { zikr in
                 let translation = translationDict[zikr.id]
                 let audio = audios.first(where: { $0.id == zikr.audioId })
-                let transliteration = zikr.source == "Quran" ? nil : transcriptor?.transcribe(zikr.text)
+                let transliteration = zikr.source == "Quran" ? nil : translation?.transliteration ?? transcriptor?.transcribe(zikr.text)
                 
                 return Zikr(
                     origin: zikr,

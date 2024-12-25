@@ -67,6 +67,8 @@ struct ZikrShareOptionsView: View {
 
     struct ShareOptions {
         let includeTitle: Bool
+        let includeTranslation: Bool
+        let includeTransliteration: Bool
         let includeBenefits: Bool
         let includeLogo: Bool
         var textAlignment: ShareTextAlignment = .start
@@ -77,9 +79,14 @@ struct ZikrShareOptionsView: View {
 
     @Environment(\.presentationMode)
     var presentation
+    
+    @State private var showExtraOptions = false
 
     @AppStorage("kShareIncludeTitle")
     private var includeTitle: Bool = true
+    
+    @State private var includeTranslation = Preferences.shared.expandTranslation
+    @State private var includeTransliteration = Preferences.shared.expandTransliteration
 
     @AppStorage("kShareIncludeBenefits")
     private var includeBenefits = true
@@ -114,9 +121,7 @@ struct ZikrShareOptionsView: View {
             }
             Spacer()
             Button(L10n.Common.share) {
-                Task {
-                    await share()
-                }
+                share()
             }
             .buttonStyle(.borderedProminent)
         }
@@ -129,12 +134,6 @@ struct ZikrShareOptionsView: View {
                 shareAsSection
                 
                 shareOptions
-                
-                if selectedShareType != .text {
-                    Section {
-                        Toggle(L10n.Share.includeAzkarLogo, isOn: $includeLogo)
-                    }
-                }
             }
             .listRowBackground(Color.contentBackground)
         }
@@ -165,10 +164,33 @@ struct ZikrShareOptionsView: View {
     }
     
     var shareOptions: some View {
+        VStack {
+            Button {
+                showExtraOptions.toggle()
+            } label: {
+                HStack {
+                    Text(L10n.Share.extraOptions)
+                    Spacer()
+                    Image(systemName: "chevron.right")
+                        .rotationEffect(.degrees(showExtraOptions ? 90 : 0))
+                }
+            }
+            
+            if showExtraOptions {
+                extraOptions
+            }
+        }
+    }
+    
+    var extraOptions: some View {
         Section {
             Toggle(L10n.Share.includeTitle, isOn: $includeTitle)
+            Toggle(L10n.Share.includeTranslation, isOn: $includeTranslation)
+            Toggle(L10n.Share.includeTransliteration, isOn: $includeTransliteration)
             Toggle(L10n.Share.includeBenefit, isOn: $includeBenefits)
-
+            
+            Divider()
+            
             if selectedShareType != .text {
                 HStack(spacing: 16) {
                     Text(L10n.Share.textAlignment)
@@ -180,6 +202,12 @@ struct ZikrShareOptionsView: View {
                         }
                     }
                 }
+                
+                Divider()
+                
+                Section {
+                    Toggle(L10n.Share.includeAzkarLogo, isOn: $includeLogo)
+                }
             }
         }
         .pickerStyle(.segmented)
@@ -189,6 +217,8 @@ struct ZikrShareOptionsView: View {
     private func share() {
         callback(ShareOptions(
             includeTitle: includeTitle,
+            includeTranslation: includeTranslation,
+            includeTransliteration: includeTransliteration,
             includeBenefits: includeBenefits,
             includeLogo: includeLogo,
             textAlignment: textAlignment,
