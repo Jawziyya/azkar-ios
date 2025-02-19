@@ -1,7 +1,6 @@
 import SwiftUI
 import NukeUI
 import Entities
-import Perception
 
 public struct ArticleScreen: View {
     
@@ -38,7 +37,7 @@ public struct ArticleScreen: View {
     }
     
     public var body: some View {
-        WithPerceptionTracking {
+        Group {
             if let shareOptions {
                 VStack(spacing: 20) {
                     content

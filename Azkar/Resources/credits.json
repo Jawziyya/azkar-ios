@@ -139,10 +139,6 @@
                     "link": "https://github.com/supabase-community/supabase-swift"
                 },
                 {
-                    "title": "Swift Perception",
-                    "link": "https://github.com/pointfreeco/swift-perception"
-                },
-                {
                     "title": "SwiftUI Backports",
                     "link": "https://github.com/shaps80/SwiftUIBackports"
                 },
