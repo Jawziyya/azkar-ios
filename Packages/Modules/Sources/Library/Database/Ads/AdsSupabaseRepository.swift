@@ -20,7 +20,8 @@ final class AdsSupabaseRepository: AdsRepository {
         orUpdatedAfter: Date?,
         limit: Int
     ) async throws -> [Ad] {
-        var adsQuery = supabaseClient
+        var adsQuery = await supabaseClient
+            .database
             .from("ads")
             .select()
             .eq("language", value: language.rawValue)

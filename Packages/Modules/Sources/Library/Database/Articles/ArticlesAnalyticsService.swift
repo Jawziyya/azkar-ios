@@ -30,6 +30,7 @@ final class ArticlesAnalyticsService {
     func getArticleAnalyticsCount(_ articleId: ArticleDTO.ID) async -> ArticleAnalytics? {
         do {
             return try await supabaseClient
+                .database
                 .from("article_analytics")
                 .select("*")
                 .eq("article_id", value: articleId)
@@ -48,10 +49,10 @@ final class ArticlesAnalyticsService {
         if let existingChannel = observationStreams[articleId] {
             return existingChannel
         } else {
-            channel = supabaseClient.realtimeV2.channel("analytics-\(articleId)")
+            channel = await supabaseClient.realtimeV2.channel("analytics-\(articleId)")
             observationChannels[articleId] = channel
         }
-        let anyChange = channel.postgresChange(
+        let anyChange = await channel.postgresChange(
             AnyAction.self,
             schema: "public",
             table: "article_analytics",

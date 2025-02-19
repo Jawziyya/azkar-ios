@@ -20,6 +20,7 @@ public struct AnalyticsService {
         Task {
             do {
                 try await supabaseClient
+                    .database
                     .from("analytics")
                     .insert(AnalyticsEvent(
                         objectId: objectId,

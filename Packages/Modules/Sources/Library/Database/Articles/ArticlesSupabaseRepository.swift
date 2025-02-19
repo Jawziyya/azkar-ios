@@ -24,7 +24,8 @@ final class ArticlesSupabaseRepository: ArticlesRepository {
             let createdAt: Date
         }
         
-        let spotlightArticlesQuery = supabaseClient
+        let spotlightArticlesQuery = await supabaseClient
+            .database
             .from("articles_spotlight")
             .select()
         
@@ -34,7 +35,8 @@ final class ArticlesSupabaseRepository: ArticlesRepository {
             .execute()
             .value
         
-        var articlesQuery = supabaseClient
+        var articlesQuery = await supabaseClient
+            .database
             .from("articles")
             .select()
             .eq("language", value: language.id)
@@ -50,7 +52,7 @@ final class ArticlesSupabaseRepository: ArticlesRepository {
         }
         
         let articleObjects: [ArticleDTO] = try await articlesQuery
-            .in("id", values: spotlightArticles.map(\.article))
+            .in("id", value: spotlightArticles.map(\.article))
             .execute()
             .value
         
@@ -81,7 +83,8 @@ final class ArticlesSupabaseRepository: ArticlesRepository {
     }
     
     func getArticle(_ id: ArticleDTO.ID, updatedAfter: Date?) async throws -> Article? {
-        var query = supabaseClient
+        var query = await supabaseClient
+            .database
             .from("articles")
             .select()
         
