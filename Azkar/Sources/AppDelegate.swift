@@ -15,6 +15,7 @@ import Entities
 import Library
 import FirebaseCore
 import FirebaseMessaging
+import SuperwallKit
 
 @MainActor
 final class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -58,6 +59,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         registerUserDefaults()
         setupRevenueCat()
         setupFirebase()
+        setupSuperwall()
     }
         
     override func remoteControlReceived(with event: UIEvent?) {
@@ -103,7 +105,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     
     private func setupRevenueCat() {
         Purchases.logLevel = .debug
-        Purchases.configure(withAPIKey: Bundle.main.object(forInfoDictionaryKey: "REVENUCE_CAT_API_KEY") as! String)
+        Purchases.configure(withAPIKey: readSecret(AzkarSecretKey.REVENUE_CAT_API_KEY)!)
         SubscriptionManager.shared.loadProducts()
     }
     
@@ -111,6 +113,15 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         FirebaseApp.configure()
         Messaging.messaging().delegate = notificationsHandler
         AnalyticsReporter.addTarget(FirebaseAnalyticsTarget.shared)
+    }
+    
+    private func setupSuperwall() {
+        let options = SuperwallOptions()
+        options.paywalls.shouldPreload = true
+        Superwall.configure(
+            apiKey: readSecret(AzkarSecretKey.SUPERWALL_API_KEY)!,
+            options: options
+        )
     }
     
 }

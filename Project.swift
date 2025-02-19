@@ -143,6 +143,7 @@ enum AzkarTarget: String, CaseIterable {
                     .package(product: "Stinsen"),
                     .package(product: "Supabase"),
                     .package(product: "SwiftUIIntrospect"),
+                    .package(product: "SuperwallKit"),
                     
                     // Firebase
                     .package(product: "FirebaseCore"),

@@ -226,6 +226,24 @@
       }
     },
     {
+      "identity" : "superscript-ios",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/superwall/Superscript-iOS",
+      "state" : {
+        "revision" : "9ecdb97d84e94cdde3bfa63401903ec764a8f414",
+        "version" : "0.1.17"
+      }
+    },
+    {
+      "identity" : "superwall-ios",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/superwall-me/Superwall-iOS",
+      "state" : {
+        "revision" : "bd32d30383bf0f2bab4a1725f778e5e28722fdcc",
+        "version" : "3.12.5"
+      }
+    },
+    {
       "identity" : "swift-concurrency-extras",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/swift-concurrency-extras",

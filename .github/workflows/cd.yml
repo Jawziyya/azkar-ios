@@ -31,6 +31,8 @@ jobs:
       PROVISIONING_PROFILE_SPECIFIER: ${{ secrets.PROVISIONING_PROFILE_SPECIFIER }}
       AZKAR_SUPABASE_API_URL: ${{ secrets.AZKAR_SUPABASE_API_URL }}
       AZKAR_SUPABASE_API_KEY: ${{ secrets.AZKAR_SUPABASE_API_KEY }}
+      REVENUE_CAT_API_KEY: ${{ secrets.REVENUE_CAT_API_KEY }}
+      SUPERWALL_API_KEY: ${{ secrets.SUPERWALL_API_KEY }}
 
     steps:
       - uses: jdx/mise-action@v2
@@ -45,12 +47,14 @@ jobs:
         run: |
           sudo defaults write /Library/Preferences/com.apple.dt.Xcode IDESkipMacroFingerprintValidation -bool YES
 
-      - name: Set Supabase Config
+      - name: Setup Secrets
         run: |
-          ./scripts/set_supabase_config.sh
+          ./scripts/configure_secrets.sh
         env:
           AZKAR_SUPABASE_API_URL: ${{ secrets.AZKAR_SUPABASE_API_URL }}
           AZKAR_SUPABASE_API_KEY: ${{ secrets.AZKAR_SUPABASE_API_KEY }}
+          REVENUE_CAT_API_KEY: ${{ secrets.REVENUE_CAT_API_KEYREVENUE_CAT_API_KEY }}
+          SUPERWALL_API_KEY: ${{ secrets.SUPERWALL_API_KEY }}
   
       - name: Generate Xcode project
         run: |
