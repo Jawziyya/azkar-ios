@@ -59,6 +59,7 @@ jobs:
       - name: Generate Xcode project
         run: |
           mise install tuist
+          mise x -- tuist install
           mise x -- tuist generate --no-open
 
       - name: Deploy iOS build to App Store
