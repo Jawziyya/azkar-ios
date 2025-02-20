@@ -27,6 +27,11 @@ private func getDefaultSettings(
     ]
 }
 
+let packages: [Package] = [
+    // MARK: Internal depedencies.
+    .local(path: "Packages/Modules"),
+]
+
 let baseSettingsDictionary = SettingsDictionary()
     .bitcodeEnabled(false)
     .merging([kDevelopmentTeam: SettingValue(stringLiteral: teamId)])
@@ -87,36 +92,36 @@ enum AzkarTarget: String, CaseIterable {
                     .post(path: "./scripts/swiftlint.sh", name: "SwiftLint")
                 ],
                 dependencies: [
-                    .target(name: "AzkarWidgets"), 
-                    .external(name: "Entities"),
-                    .external(name: "Extensions"),
-                    .external(name: "Library"),
-                    .external(name: "Components"),
-                    .external(name: "AboutApp"),
-                    .external(name: "ArticleReader"),
-                    .external(name: "ZikrCollectionsOnboarding"),
-                    .external(name: "AudioPlayer"),
-                    .external(name: "Lottie"),
-                    .external(name: "Alamofire"),
-                    .external(name: "ZIPFoundation"),
-                    .external(name: "NukeUI"),
-                    .external(name: "RevenueCat"),
-                    .external(name: "SwiftUIX"),
-                    .external(name: "SwiftUIBackports"),
-                    .external(name: "SwiftUIDrag"),
-                    .external(name: "Popovers"),
-                    .external(name: "WhatsNewKit"),
-                    .external(name: "IGStoryKit"),
-                    .external(name: "Stinsen"),
-                    .external(name: "Supabase"),
-                    .external(name: "SwiftUIIntrospect"),
-                    .external(name: "SwiftyStoreKit"),
-                    .external(name: "SuperwallKit"),
+                    .target(name: "AzkarWidgets"),
+                    .package(product: "Entities"),
+                    .package(product: "Extensions"),
+                    .package(product: "Library"),
+                    .package(product: "Components"),
+                    .package(product: "AboutApp"),
+                    .package(product: "ArticleReader"),
+                    .package(product: "ZikrCollectionsOnboarding"),
+                    .package(product: "AudioPlayer"),
+                    .package(product: "SwiftyStoreKit"),
+                    .package(product: "Lottie"),
+                    .package(product: "Alamofire"),
+                    .package(product: "ZIPFoundation"),
+                    .package(product: "NukeUI"),
+                    .package(product: "RevenueCat"),
+                    .package(product: "SwiftUIX"),
+                    .package(product: "SwiftUIBackports"),
+                    .package(product: "SwiftUIDrag"),
+                    .package(product: "Popovers"),
+                    .package(product: "WhatsNewKit"),
+                    .package(product: "IGStoryKit"),
+                    .package(product: "Stinsen"),
+                    .package(product: "Supabase"),
+                    .package(product: "SwiftUIIntrospect"),
+                    .package(product: "SuperwallKit"),
                     
                     // Firebase
-                    .external(name: "FirebaseCore"),
-                    .external(name: "FirebaseAnalyticsWithoutAdIdSupport"),
-                    .external(name: "FirebaseMessaging"),
+                    .package(product: "FirebaseCore"),
+                    .package(product: "FirebaseAnalyticsWithoutAdIdSupport"),
+                    .package(product: "FirebaseMessaging"),
                 ],
                 settings: Settings.settings(
                     base: baseSettingsDictionary
@@ -166,9 +171,9 @@ enum AzkarTarget: String, CaseIterable {
                 ],
                 entitlements: "AzkarWidgets/AzkarWidgets.entitlements",
                 dependencies: [
-                    .external(name: "Entities"),
-                    .external(name: "Extensions"),
-                    .external(name: "Library"),
+                    .package(product: "Entities"),
+                    .package(product: "Extensions"),
+                    .package(product: "Library"),
                 ],
                 settings: Settings.settings(
                     base: baseSettingsDictionary
@@ -248,6 +253,7 @@ let project = Project(
         developmentRegion: "en",
         disableSynthesizedResourceAccessors: true
     ),
+    packages: packages,
     settings: settings,
     targets: AzkarTarget.allCases.map(\.target),
     schemes: [
