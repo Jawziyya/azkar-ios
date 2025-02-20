@@ -13,32 +13,6 @@ let teamId = "486STKKP6Y"
 let projectName = "Azkar"
 let baseDomain = "io.jawziyya"
 
-var env: [String: String] {
-    let filePath = "./.env"
-    var dict = [String: String]()
-
-    // Ensure the file exists
-    guard let contents = try? String(contentsOfFile: filePath) else {
-        print("File at \(filePath) not found")
-        return dict
-    }
-
-    // Split the file contents into lines
-    let lines = contents.split(separator: "\n")
-    for line in lines {
-        // Split each line into key and value
-        let parts = line.split(separator: "=", maxSplits: 1, omittingEmptySubsequences: true)
-        if parts.count == 2 {
-            let key = String(parts[0]).trimmingCharacters(in: .whitespacesAndNewlines)
-            let value = String(parts[1]).trimmingCharacters(in: .whitespacesAndNewlines)
-            dict[key] = value
-        }
-    }
-
-    return dict
-}
-
-
 private func getDefaultSettings(
     bundleId: String,
     isDistribution: Bool
@@ -52,11 +26,6 @@ private func getDefaultSettings(
         "PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]": "match \(provisioningProfileType) \(bundleId) catalyst",
     ]
 }
-
-let packages: [Package] = [
-    // MARK: Internal depedencies.
-    .local(path: "Packages/Modules"),
-]
 
 let baseSettingsDictionary = SettingsDictionary()
     .bitcodeEnabled(false)
@@ -118,37 +87,36 @@ enum AzkarTarget: String, CaseIterable {
                     .post(path: "./scripts/swiftlint.sh", name: "SwiftLint")
                 ],
                 dependencies: [
-                    .target(name: "AzkarWidgets"),
-                    .package(product: "Entities"),
-                    .package(product: "Extensions"),
-                    .package(product: "Library"),
-                    .package(product: "Components"),
-                    .package(product: "AboutApp"),
-                    .package(product: "ArticleReader"),
-                    .package(product: "ZikrCollectionsOnboarding"),
-                    .package(product: "AudioPlayer"),
-                    .package(product: "SwiftyStoreKit"),
-                    .package(product: "Coordinator"),
-                    .package(product: "Lottie"),
-                    .package(product: "Alamofire"),
-                    .package(product: "ZIPFoundation"),
-                    .package(product: "NukeUI"),
-                    .package(product: "RevenueCat"),
-                    .package(product: "SwiftUIX"),
-                    .package(product: "SwiftUIBackports"),
-                    .package(product: "SwiftUIDrag"),
-                    .package(product: "Popovers"),
-                    .package(product: "WhatsNewKit"),
-                    .package(product: "IGStoryKit"),
-                    .package(product: "Stinsen"),
-                    .package(product: "Supabase"),
-                    .package(product: "SwiftUIIntrospect"),
-                    .package(product: "SuperwallKit"),
+                    .target(name: "AzkarWidgets"), 
+                    .external(name: "Entities"),
+                    .external(name: "Extensions"),
+                    .external(name: "Library"),
+                    .external(name: "Components"),
+                    .external(name: "AboutApp"),
+                    .external(name: "ArticleReader"),
+                    .external(name: "ZikrCollectionsOnboarding"),
+                    .external(name: "AudioPlayer"),
+                    .external(name: "Lottie"),
+                    .external(name: "Alamofire"),
+                    .external(name: "ZIPFoundation"),
+                    .external(name: "NukeUI"),
+                    .external(name: "RevenueCat"),
+                    .external(name: "SwiftUIX"),
+                    .external(name: "SwiftUIBackports"),
+                    .external(name: "SwiftUIDrag"),
+                    .external(name: "Popovers"),
+                    .external(name: "WhatsNewKit"),
+                    .external(name: "IGStoryKit"),
+                    .external(name: "Stinsen"),
+                    .external(name: "Supabase"),
+                    .external(name: "SwiftUIIntrospect"),
+                    .external(name: "SwiftyStoreKit"),
+                    .external(name: "SuperwallKit"),
                     
                     // Firebase
-                    .package(product: "FirebaseCore"),
-                    .package(product: "FirebaseAnalyticsWithoutAdIdSupport"),
-                    .package(product: "FirebaseMessaging"),
+                    .external(name: "FirebaseCore"),
+                    .external(name: "FirebaseAnalyticsWithoutAdIdSupport"),
+                    .external(name: "FirebaseMessaging"),
                 ],
                 settings: Settings.settings(
                     base: baseSettingsDictionary
@@ -198,9 +166,9 @@ enum AzkarTarget: String, CaseIterable {
                 ],
                 entitlements: "AzkarWidgets/AzkarWidgets.entitlements",
                 dependencies: [
-                    .package(product: "Entities"),
-                    .package(product: "Extensions"),
-                    .package(product: "Library"),
+                    .external(name: "Entities"),
+                    .external(name: "Extensions"),
+                    .external(name: "Library"),
                 ],
                 settings: Settings.settings(
                     base: baseSettingsDictionary
@@ -280,7 +248,6 @@ let project = Project(
         developmentRegion: "en",
         disableSynthesizedResourceAccessors: true
     ),
-    packages: packages,
     settings: settings,
     targets: AzkarTarget.allCases.map(\.target),
     schemes: [

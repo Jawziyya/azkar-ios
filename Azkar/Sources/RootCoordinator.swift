@@ -1,6 +1,5 @@
 import UIKit
 import SwiftUI
-import Coordinator
 import Combine
 import Stinsen
 import WhatsNewKit
