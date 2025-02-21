@@ -53,7 +53,7 @@ jobs:
         env:
           AZKAR_SUPABASE_API_URL: ${{ secrets.AZKAR_SUPABASE_API_URL }}
           AZKAR_SUPABASE_API_KEY: ${{ secrets.AZKAR_SUPABASE_API_KEY }}
-          REVENUE_CAT_API_KEY: ${{ secrets.REVENUE_CAT_API_KEYREVENUE_CAT_API_KEY }}
+          REVENUE_CAT_API_KEY: ${{ secrets.REVENUE_CAT_API_KEY }}
           SUPERWALL_API_KEY: ${{ secrets.SUPERWALL_API_KEY }}
   
       - name: Generate Xcode project
