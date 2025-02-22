@@ -7,6 +7,7 @@ import PackageDescription
     let packageSettings = PackageSettings(
         productTypes: [
             "GRDB": .framework,
+            "Fakery": .framework,
         ]
     )
 #endif
