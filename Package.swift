@@ -5,6 +5,9 @@ import PackageDescription
     import ProjectDescription
 
     let packageSettings = PackageSettings(
+        productTypes: [
+            "SuperwallKit": .staticLibrary,
+        ]
     )
 #endif
 
