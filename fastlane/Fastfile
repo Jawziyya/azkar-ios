@@ -19,6 +19,10 @@ def project_name
   "Azkar.xcodeproj"
 end
 
+def workspace_name
+  "Azkar.xcworkspace"
+end
+
 def app_name
   "Azkar"
 end
@@ -62,7 +66,7 @@ platform :ios do
       build_number: ENV['GITHUB_RUN_ID'],
       target: app_name
     )
-    build_app(project: project_name, scheme: 'Azkar')
+    build_app(workspace: workspace_name, scheme: 'Azkar')
   end
 
   desc "Push a new release build to the App Store"
@@ -107,6 +111,7 @@ platform :mac do
 
     changelog = File.read("./changelog")
     build_mac_app(
+      workspace: workspace_name,
       destination: "generic/platform=macOS,variant=Mac Catalyst",
       installer_cert_name:
         '3rd Party Mac Developer Installer: Al Jawziyya (486STKKP6Y)'
@@ -123,7 +128,7 @@ platform :mac do
       target: app_name
     )
 
-    build_app(project: project_name, scheme: 'Azkar')
+    build_app(workspace: workspace_name, scheme: 'Azkar')
     testflight(api_key: get_api_key, changelog: changelog)
   end
 
