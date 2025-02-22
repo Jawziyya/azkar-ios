@@ -70,6 +70,7 @@ jobs:
       - name: Install Fastlane Dependencies
         run: |
           gem install bundler
+          bundle lock --add-platform arm64-darwin-23
           bundle config set clean true
           bundle install
 
