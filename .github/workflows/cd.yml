@@ -65,12 +65,13 @@ jobs:
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.3.5'
-          bundler-cache: false
+          bundler-cache: true
 
       - name: Install Fastlane Dependencies
         run: |
           gem install bundler
-          bundle install --clean
+          bundle config set clean true
+          bundle install
 
       - name: Deploy iOS build to App Store
         if: github.ref == 'refs/heads/main'
