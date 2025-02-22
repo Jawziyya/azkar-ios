@@ -1,5 +1,5 @@
 import FirebaseAnalytics
-import Library
+import AzkarServices
 
 final class FirebaseAnalyticsTarget: AnalyticsTarget {
     
