@@ -62,6 +62,11 @@ jobs:
           mise x -- tuist install
           mise x -- tuist generate --no-open
 
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3.5'
+          bundler-cache: true
+
       - name: Deploy iOS build to App Store
         if: github.ref == 'refs/heads/main'
         uses: maierj/fastlane-action@v3.1.0
