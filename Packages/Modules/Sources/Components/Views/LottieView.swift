@@ -1,9 +1,9 @@
 import SwiftUI
 import Lottie
-import Library
 
 public struct LottieView: UIViewRepresentable {
     
+    public typealias Action = () -> Void
     public typealias UIViewType = UIView
     
     let animationView = LottieAnimationView()

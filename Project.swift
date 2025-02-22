@@ -93,8 +93,10 @@ enum AzkarTarget: String, CaseIterable {
                 ],
                 dependencies: [
                     .target(name: "AzkarWidgets"),
+                    
                     .external(name: "Entities"),
                     .external(name: "Extensions"),
+                    .external(name: "AzkarServices"),
                     .external(name: "Library"),
                     .external(name: "Components"),
                     .external(name: "AboutApp"),
@@ -105,7 +107,6 @@ enum AzkarTarget: String, CaseIterable {
                     .external(name: "SwiftyStoreKit"),
                     .external(name: "Lottie"),
                     .external(name: "Alamofire"),
-                    .external(name: "MacroCodableKit"),
                     .external(name: "NukeUI"),
                     .external(name: "RevenueCat"),
                     .external(name: "SwiftUIX"),
@@ -175,7 +176,8 @@ enum AzkarTarget: String, CaseIterable {
                 dependencies: [
                     .external(name: "Entities"),
                     .external(name: "Extensions"),
-                    .external(name: "Library"),
+                    .external(name: "AzkarServices"),
+                    .external(name: "DatabaseInteractors"),
                 ],
                 settings: Settings.settings(
                     base: baseSettingsDictionary

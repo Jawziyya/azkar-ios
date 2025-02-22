@@ -1,6 +1,6 @@
 import Foundation
 import Entities
-import Library
+import AzkarServices
 
 final class DemoAdsService: AdsServiceType {
     func getAd() -> AsyncStream<Entities.Ad> {

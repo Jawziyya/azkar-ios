@@ -1,6 +1,11 @@
-// swift-tools-version: 5.7
+// swift-tools-version: 5.9
 
 import PackageDescription
+
+let entities: Target.Dependency = .product(name: "Entities", package: "Core")
+let extensions: Target.Dependency = .product(name: "Extensions", package: "Core")
+let azkarServices: Target.Dependency = .product(name: "AzkarServices", package: "Core")
+let databaseInteractors = Target.Dependency.product(name: "DatabaseInteractors", package: "Interactors")
 
 let package = Package(
     name: "Modules",
@@ -8,8 +13,6 @@ let package = Package(
         .iOS(.v15),
     ],
     products: [
-        .library(name: "Extensions", targets: ["Extensions"]),
-        .library(name: "Entities", targets: ["Entities"]),
         .library(name: "Library", targets: ["Library"]),
         .library(name: "Components", targets: ["Components"]),
         .library(name: "AboutApp", targets: ["AboutApp"]),
@@ -18,15 +21,12 @@ let package = Package(
         .library(name: "ZikrCollectionsOnboarding", targets: ["ZikrCollectionsOnboarding"]),
     ],
     dependencies: [
-        // MARK: Data
-        .package(url: "https://github.com/groue/GRDB.swift", from: "6.29.3"),
-        
+        .package(path: "../Core"),
+        .package(path: "../Interactors"),
+
         // MARK: Services.
         .package(url: "https://github.com/supabase-community/supabase-swift", from: "2.0.0"),
-        
-        // MARK: Network.
-        .package(url: "https://github.com/Alamofire/Alamofire", from: "5.8.0"),
-        
+                
         // MARK: Utilities.
         .package(url: "https://github.com/rundfunk47/stinsen", from: "2.0.0"),
         .package(url: "https://github.com/vadymmarkov/Fakery", from: "5.1.0"),
@@ -46,23 +46,12 @@ let package = Package(
             dependencies: []
         ),
         .target(
-            name: "Extensions",
-            dependencies: [
-                "Alamofire"
-            ]
-        ),
-        .target(
-            name: "Entities",
-            dependencies: [
-                "Fakery",
-            ]
-        ),
-        .target(
             name: "Library",
             dependencies: [
-                "Entities",
-                "Extensions",
-                .product(name: "GRDB", package: "GRDB.swift"),
+                entities,
+                extensions,
+                azkarServices,
+                databaseInteractors,
                 .product(name: "Supabase", package: "supabase-swift"),
                 .product(name: "NukeUI", package: "Nuke"),
             ]
@@ -70,20 +59,12 @@ let package = Package(
         .target(
             name: "Components",
             dependencies: [
-                "Entities",
-                "Extensions",
-                "Library",
-                "SwiftUIBackports",
-                .product(name: "GRDB", package: "GRDB.swift"),
-                .product(name: "Supabase", package: "supabase-swift"),
-                .product(name: "NukeUI", package: "Nuke"),
-                .product(name: "Lottie", package: "lottie-spm"),
-                .product(name: "Stinsen", package: "stinsen"),
             ]
         ),
         .target(name: "ArticleReader", dependencies: [
-            "Entities",
-            "Extensions",
+            entities,
+            extensions,
+            azkarServices,
             "Library",
             "RoughSwift",
             "Popovers",
@@ -92,14 +73,15 @@ let package = Package(
             .product(name: "NukeUI", package: "Nuke"),
         ]),
         .target(name: "AboutApp", dependencies: [
-            "Entities",
-            "Extensions",
+            entities,
+            extensions,
+            azkarServices,
             "Library",
             .product(name: "SwiftUIBackports", package: "SwiftUIBackports"),
             .product(name: "SwiftUIIntrospect", package: "swiftui-introspect"),
         ]),
         .target(name: "ZikrCollectionsOnboarding", dependencies: [
-            "Entities",
+            entities,
             "Library",
         ])
     ]

@@ -6,6 +6,7 @@ import Fakery
 import ArticleReader
 import Library
 import SuperwallKit
+import AzkarServices
 
 typealias SearchToken = ZikrCategory
 

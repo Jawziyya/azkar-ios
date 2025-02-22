@@ -5,22 +5,19 @@ import PackageDescription
     import ProjectDescription
 
     let packageSettings = PackageSettings(
-        productTypes: [
-            "macro-codable-kit": .macro,
-        ]
     )
 #endif
 
 let package = Package(
     name: "Azkar",
     dependencies: [
+        .package(path: "Packages/Core"),
+        .package(path: "Packages/Interactors"),
         .package(path: "Packages/Modules"),
-        
-        .package(url: "https://github.com/mikhailmaslo/macro-codable-kit", from: "0.3.1"),
         
         // MARK: Data
         .package(url: "https://github.com/weichsel/ZIPFoundation", from: "0.9.0"),
-        // .package(url: "https://github.com/groue/GRDB.swift", from: "6.29.3"),
+        .package(url: "https://github.com/groue/GRDB.swift", from: "6.29.3"),
         
         // MARK: Services.
         .package(url: "https://github.com/firebase/firebase-ios-sdk", from: "11.3.0"),

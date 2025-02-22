@@ -1,6 +1,6 @@
 import Foundation
 import Entities
-import Library
+import AzkarServices
 
 final class DemoArticlesService: ArticlesServiceType {
     func getArticle(_ id: Article.ID, updatedAfter: Date?) async throws -> Article? { nil }
