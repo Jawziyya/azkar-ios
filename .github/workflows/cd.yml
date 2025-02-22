@@ -56,12 +56,6 @@ jobs:
           REVENUE_CAT_API_KEY: ${{ secrets.REVENUE_CAT_API_KEY }}
           SUPERWALL_API_KEY: ${{ secrets.SUPERWALL_API_KEY }}
   
-      - name: Generate Xcode project
-        run: |
-          mise install tuist
-          mise x -- tuist install
-          mise x -- tuist generate --no-open
-
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.3.5'
@@ -70,9 +64,14 @@ jobs:
       - name: Install Fastlane Dependencies
         run: |
           gem install bundler
-          bundle lock --add-platform arm64-darwin-23
           bundle config set clean true
           bundle install
+
+      - name: Generate Xcode project
+        run: |
+          mise install tuist
+          mise x -- tuist install
+          mise x -- tuist generate --no-open
 
       - name: Deploy iOS build to App Store
         if: github.ref == 'refs/heads/main'
