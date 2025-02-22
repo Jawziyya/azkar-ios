@@ -5,6 +5,9 @@ import PackageDescription
     import ProjectDescription
 
     let packageSettings = PackageSettings(
+        productTypes: [
+            "GRDB": .framework,
+        ]
     )
 #endif
 

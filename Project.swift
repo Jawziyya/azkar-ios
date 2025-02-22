@@ -178,6 +178,7 @@ enum AzkarTarget: String, CaseIterable {
                     .external(name: "Extensions"),
                     .external(name: "AzkarServices"),
                     .external(name: "DatabaseInteractors"),
+                    .external(name: "GRDB"),
                 ],
                 settings: Settings.settings(
                     base: baseSettingsDictionary
