@@ -30,6 +30,10 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         application.beginReceivingRemoteControlEvents()
         application.registerForRemoteNotifications()
         initialize()
+        Task {
+            let region = await SubscriptionManager.shared.getUserRegion()
+            print(region)
+        }
         return true
     }
     
@@ -106,7 +110,6 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     private func setupRevenueCat() {
         Purchases.logLevel = .debug
         Purchases.configure(withAPIKey: readSecret(AzkarSecretKey.REVENUE_CAT_API_KEY)!)
-        SubscriptionManager.shared.loadProducts()
     }
     
     private func setupFirebase() {
@@ -118,10 +121,13 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     private func setupSuperwall() {
         let options = SuperwallOptions()
         options.paywalls.shouldPreload = true
+        let purchaseController = SubscriptionManager.shared
         Superwall.configure(
             apiKey: readSecret(AzkarSecretKey.SUPERWALL_API_KEY)!,
+            purchaseController: purchaseController,
             options: options
         )
+        purchaseController.syncSubscriptionStatus()
     }
     
 }

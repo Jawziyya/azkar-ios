@@ -5,7 +5,6 @@ import Entities
 import Fakery
 import ArticleReader
 import Library
-import SuperwallKit
 import AzkarServices
 
 typealias SearchToken = ZikrCategory
@@ -92,9 +91,7 @@ final class MainMenuViewModel: ObservableObject {
         self.player = player
         self.articlesService = articlesService
         self.adsService = adsService
-        
-        Superwall.shared.register(event: "campaign_trigger")
-        
+                
         if Date().isRamadan {
             var adhkar: [ZikrMenuItem] = []
             if let fastindDua = databaseService.getZikrBeforeBreakingFast() {

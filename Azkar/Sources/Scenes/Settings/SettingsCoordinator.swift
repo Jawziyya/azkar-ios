@@ -23,7 +23,6 @@ final class SettingsCoordinator: RouteTrigger, Identifiable, NavigationCoordinat
     @Route(.push) var adhkarReminders = makeAdhkarRemindersView
     @Route(.push) var jumuaReminders = makeJumuaRemindersView
     @Route(.push) var soundPicker = makeSoundPickerView
-    @Route(.modal) var subscribe = makeSubscribeView
     @Route(.push) var aboutApp = makeAboutAppView
         
     private let databaseService: AzkarDatabase
@@ -55,7 +54,7 @@ final class SettingsCoordinator: RouteTrigger, Identifiable, NavigationCoordinat
             self.route(to: \.notificationsList)
             
         case .subscribe:
-            self.route(to: \.subscribe)
+            subscriptionManager.presentPaywall()
             
         case .appearance:
             self.route(to: \.appearance)
@@ -138,15 +137,11 @@ extension SettingsCoordinator {
         ReminderSoundPickerView(viewModel: ReminderSoundPickerViewModel(
             preferredSound: sound,
             subscribeScreenTrigger: {
-                self.route(to: \.subscribe)
+                self.trigger(.subscribe)
             }
         ))
     }
 
-    func makeSubscribeView() -> some View {
-        SubscribeView(viewModel: SubscribeViewModel())
-    }
-    
     func makeAboutAppView() -> some View {
         AppInfoView(viewModel: AppInfoViewModel(
             appVersion: {
