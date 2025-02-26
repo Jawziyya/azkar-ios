@@ -33,6 +33,7 @@ jobs:
       AZKAR_SUPABASE_API_KEY: ${{ secrets.AZKAR_SUPABASE_API_KEY }}
       REVENUE_CAT_API_KEY: ${{ secrets.REVENUE_CAT_API_KEY }}
       SUPERWALL_API_KEY: ${{ secrets.SUPERWALL_API_KEY }}
+      MIXPANEL_TOKEN: ${{ secrets.MIXPANEL_TOKEN }}
 
     steps:
       - uses: jdx/mise-action@v2
@@ -50,11 +51,6 @@ jobs:
       - name: Setup Secrets
         run: |
           ./scripts/configure_secrets.sh
-        env:
-          AZKAR_SUPABASE_API_URL: ${{ secrets.AZKAR_SUPABASE_API_URL }}
-          AZKAR_SUPABASE_API_KEY: ${{ secrets.AZKAR_SUPABASE_API_KEY }}
-          REVENUE_CAT_API_KEY: ${{ secrets.REVENUE_CAT_API_KEY }}
-          SUPERWALL_API_KEY: ${{ secrets.SUPERWALL_API_KEY }}
   
       - uses: ruby/setup-ruby@v1
         with:
