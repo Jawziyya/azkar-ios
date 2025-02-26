@@ -16,6 +16,7 @@ import Library
 import FirebaseCore
 import FirebaseMessaging
 import SuperwallKit
+import Mixpanel
 
 @MainActor
 final class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -29,11 +30,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     ) -> Bool {
         application.beginReceivingRemoteControlEvents()
         application.registerForRemoteNotifications()
-        initialize()
-        Task {
-            let region = await SubscriptionManager.shared.getUserRegion()
-            print(region)
-        }
+        initialize(launchOptions: launchOptions)
         return true
     }
     
@@ -44,7 +41,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         notificationsHandler.handlePushNotificationToken(deviceToken)
     }
 
-    private func initialize() {
+    private func initialize(launchOptions: [UIApplication.LaunchOptionsKey: Any]?) {
         FontsHelper.registerFonts()
 
         notificationsHandler.removeDeliveredNotifications()
@@ -64,6 +61,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         setupRevenueCat()
         setupFirebase()
         setupSuperwall()
+        setupMixpanel(launchOptions: launchOptions)
     }
         
     override func remoteControlReceived(with event: UIEvent?) {
@@ -116,6 +114,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         FirebaseApp.configure()
         Messaging.messaging().delegate = notificationsHandler
         AnalyticsReporter.addTarget(FirebaseAnalyticsTarget.shared)
+        AnalyticsReporter.addTarget(MixpanelAnalyticsTarget.shared)
     }
     
     private func setupSuperwall() {
@@ -128,6 +127,14 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
             options: options
         )
         purchaseController.syncSubscriptionStatus()
+    }
+
+    private func setupMixpanel(launchOptions: [UIApplication.LaunchOptionsKey: Any]?) {
+        Mixpanel.initialize(
+            token: readSecret(AzkarSecretKey.MIXPANEL_TOKEN)!,
+            launchOptions: launchOptions
+        )
+        Mixpanel.mainInstance().loggingEnabled = true
     }
     
 }

@@ -34,6 +34,8 @@ if [[ ! -f "$INFO_PLIST" ]]; then
     <string>$REVENUE_CAT_API_KEY</string>
     <key>SUPERWALL_API_KEY</key>
     <string>$SUPERWALL_API_KEY</string>
+    <key>MIXPANEL_TOKEN</key>
+    <string>$MIXPANEL_TOKEN</string>
 </dict>
 </plist>
 EOF
