@@ -41,10 +41,10 @@
 	<string></string>
 	<key>UIAppFonts</key>
 	<array>
+		<string>Handjet-Regular.ttf</string>
+		<string>Marhey-Regular.ttf</string>
 		<string>AdobeArabic-Regular.otf</string>
-		<string>Damascus.ttc</string>
 		<string>KFGQPCUthmanicScriptHAFS.otf</string>
-		<string>Scheherazade.ttf</string>
 		<string>NotoNaskhArabicUI-Regular.ttf</string>
 	</array>
 	<key>UIApplicationSceneManifest</key>

@@ -9,17 +9,15 @@ struct AdhkarRemindersView: View {
         ScrollView {
             VStack {
                 Section {
-                    Toggle(isOn: $viewModel.isNotificationsEnabled.animation(), label: {
-                        Text(L10n.Settings.Reminders.MorningEvening.switchLabel)
-                            .fixedSize(horizontal: false, vertical: true)
-                            .padding(.vertical, 8)
-                            .systemFont(.body)
-                            .foregroundStyle(Color.text)
-                    })
-                    Divider()
+                    Toggle(
+                        L10n.Settings.Reminders.MorningEvening.switchLabel,
+                        isOn: $viewModel.isNotificationsEnabled.animation(.smooth)
+                    )
                 }
                 
                 if viewModel.isNotificationsEnabled {
+                    Divider()
+                    
                     timePicker
                     
                     Divider()
@@ -37,6 +35,7 @@ struct AdhkarRemindersView: View {
             }
             .applyContainerStyle()
         }
+        .applyThemedToggleStyle()
         .customScrollContentBackground()
         .background(Color.background.edgesIgnoringSafeArea(.all))
         .navigationTitle(L10n.Settings.Reminders.MorningEvening.label)

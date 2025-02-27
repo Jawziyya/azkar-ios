@@ -19,10 +19,10 @@ extension ColorTheme: PickableItem {
             return L10n.Settings.Theme.ColorTheme.roseQuartz
         case .reader:
             return L10n.Settings.Theme.ColorTheme.reader
+        case .code:
+            return "Code"
         case .flat:
             return "Flat"
-        case .reader:
-            return "Reader"
         case .neomorphic:
             return "Neomorphic"
         }

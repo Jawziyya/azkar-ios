@@ -23,27 +23,13 @@ struct RemindersScreen: View {
     
     var content: some View {
         Group {
-            Toggle(
-                isOn: Binding(get: {
-                    viewModel.preferences.enableNotifications
-                }, set: { newValue in
-                    viewModel.enableReminders(newValue)
-                }).animation()) {
-                    Text(L10n.Settings.Reminders.enable)
-                    .fixedSize(horizontal: false, vertical: true)
-                    .padding(.vertical, 8)
-                    .systemFont(.body)
-                }
-            
-            if viewModel.preferences.enableNotifications && viewModel.notificationsDisabledViewModel.isAccessGranted {
-                Divider()
+            if viewModel.notificationsDisabledViewModel.isAccessGranted {
                 reminderTypes
-            }
-            
-            if viewModel.preferences.enableNotifications && !viewModel.notificationsDisabledViewModel.isAccessGranted {
-                Divider()
+            } else {
                 notificationsDisabledView
             }
+            
+            Divider()
             
             if UIApplication.shared.inDebugMode {
                 Button(action: viewModel.navigateToNotificationsList) {

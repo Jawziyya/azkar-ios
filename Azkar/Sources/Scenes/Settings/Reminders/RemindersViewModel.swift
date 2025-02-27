@@ -30,9 +30,5 @@ final class RemindersViewModel: ObservableObject {
     func navigateToJumuaReminders() {
         router.trigger(.jumuaReminders)
     }
-    
-    func enableReminders(_ flag: Bool) {
-        preferences.enableNotifications = flag
-    }
         
 }

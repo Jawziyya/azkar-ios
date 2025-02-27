@@ -9,9 +9,7 @@ public struct ThemeStyleModifier: ViewModifier {
     
     public func body(content: Content) -> some View {
         switch colorTheme {
-        case .default, .purpleRose, .roseQuartz, .sea, .ink:
-            content.roundedBorder(roundingCorners)
-        case .reader:
+        case .default, .purpleRose, .roseQuartz, .sea, .ink, .reader, .code:
             content.roundedBorder(roundingCorners)
         case .flat:
             applyFlatStyle(content)

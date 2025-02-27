@@ -11,17 +11,15 @@ struct JumuaRemindersView: View {
         ScrollView {
             VStack {
                 Section {
-                    Toggle(isOn: $viewModel.isNotificationsEnabled.animation(), label: {
-                        Text(L10n.Settings.Reminders.Jumua.switchLabel)
-                            .fixedSize(horizontal: false, vertical: true)
-                            .padding(.vertical, 8)
-                            .systemFont(.body)
-                    })
-                    
-                    Divider()
+                    Toggle(
+                        L10n.Settings.Reminders.Jumua.switchLabel,
+                        isOn: $viewModel.isNotificationsEnabled.animation(.smooth)
+                    )
                 }
                 
                 if viewModel.isNotificationsEnabled {
+                    Divider()
+                    
                     timePicker
                     
                     Divider()
@@ -39,6 +37,7 @@ struct JumuaRemindersView: View {
             }
             .applyContainerStyle()
         }
+        .applyThemedToggleStyle()
         .sheet(isPresented: $presentSoundPicker) {
             NavigationView {
                 ReminderSoundPickerView(viewModel: viewModel.soundPickerViewModel)

@@ -30,6 +30,13 @@ final class ColorSchemesViewModel: ObservableObject {
     func setColorTheme(_ theme: ColorTheme) {
         if subscriptionManager.isProUser() {
             preferences.colorTheme = theme
+            switch theme {
+            case .code:
+                preferences.setPreferredArabicFont(font: ArabicFont.handjet)
+                preferences.setPreferredTranslationFont(font: TranslationFont.courier)
+            default:
+                break
+            }
         } else {
             subscribeScreenTrigger()
         }

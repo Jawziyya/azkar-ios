@@ -13,6 +13,7 @@ struct CounterView: View {
             }
             .applyContainerStyle()
         }
+        .applyThemedToggleStyle()
         .customScrollContentBackground()
         .background(Color.background, ignoresSafeAreaEdges: .all)
         .navigationTitle(L10n.Settings.Counter.title)

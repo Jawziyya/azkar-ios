@@ -16,11 +16,9 @@ struct AzkarApp: App {
     @State var colorTheme: ColorTheme = ColorTheme.current
     
     init() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-            if let windowScene = UIApplication.shared.connectedScenes.first?.session.scene as? UIWindowScene {
-                SKStoreReviewController.requestReview(in: windowScene)
-            }
-        }
+        #if !DEBUG
+        requestAppReview()
+        #endif
     }
     
     var body: some Scene {
@@ -95,6 +93,14 @@ struct AzkarApp: App {
             font = systemFont
         }
         return font
+    }
+    
+    private func requestAppReview() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+            if let windowScene = UIApplication.shared.connectedScenes.first?.session.scene as? UIWindowScene {
+                SKStoreReviewController.requestReview(in: windowScene)
+            }
+        }
     }
     
 }

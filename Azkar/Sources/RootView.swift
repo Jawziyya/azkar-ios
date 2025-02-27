@@ -39,12 +39,13 @@ final class RootViewModel: ObservableObject {
 struct RootView: View {
     
     @ObservedObject var viewModel: RootViewModel
+    @Environment(\.colorTheme) var colorTheme
     
     var body: some View {
         MainMenuView(
             viewModel: viewModel.mainMenuViewModel
         )
-        .navigationBarTitle(viewModel.title)
+        .navigationBarTitle(appName)
         .navigationTitleMode(.large)
         .searchable(
             text: $viewModel.mainMenuViewModel.searchQuery,
@@ -53,6 +54,15 @@ struct RootView: View {
         .autocorrectionDisabled(true)
         .attachSafariPresenter()
     }
+    
+    var appName: String {
+        if colorTheme == .code {
+            return "~" + viewModel.title
+        } else {
+            return viewModel.title
+        }
+    }
+    
 }
 
 #Preview("Root View") {

@@ -10,6 +10,7 @@ extension Language: PickableItem {}
 struct SettingsView: View {
     
     @ObservedObject var viewModel: SettingsViewModel
+    @Environment(\.colorTheme) var colorTheme
         
     var body: some View {
         ScrollView {
@@ -62,7 +63,7 @@ struct SettingsView: View {
                     .padding(7)
                     .foregroundStyle(Color.white)
                     .background(imageBackground)
-                    .cornerRadius(8)
+                    .cornerRadius(colorTheme.cornerRadius > 0 ? 8 : 0)
                     .removeSaturationIfNeeded()
                 
                 VStack(alignment: .leading) {

@@ -109,13 +109,18 @@ public struct AppInfoView: View {
                 
                 VStack(spacing: 0) {
                     HStack(spacing: 0) {
-                        Text("app-name")
-                            .systemFont(.title2, weight: .heavy, modification: .smallCaps)
-                            .frame(alignment: .center)
-                            .foregroundStyle(Color.accent)
+                        HStack {
+                            if colorTheme == .code {
+                                Text("~")
+                            }
+                            Text("app-name")
+                        }
+                        .systemFont(.title2, weight: .heavy, modification: .smallCaps)
+                        .frame(alignment: .center)
+                        .foregroundStyle(Color.accent)
                         if !UIDevice.current.isMac, viewModel.isProUser {
                             Text(" PRO")
-                                .systemFont(.title3, weight: .heavy, modification: .smallCaps)
+                                .systemFont(.title2, weight: .heavy, modification: .smallCaps)
                                 .foregroundStyle(Color.blue)
                         }
                     }

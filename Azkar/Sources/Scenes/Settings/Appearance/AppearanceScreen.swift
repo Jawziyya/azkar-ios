@@ -59,6 +59,7 @@ struct AppearanceScreen: View {
                 }
                 .padding(.vertical, 8)
             }
+            .applyThemedToggleStyle()
         }
     }
     

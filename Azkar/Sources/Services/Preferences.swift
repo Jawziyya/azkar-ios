@@ -108,8 +108,8 @@ final class Preferences: ObservableObject, TextProcessingPreferences {
     @Preference(Keys.colorTheme, defaultValue: ColorTheme.default)
     var colorTheme: ColorTheme
 
-    @Preference(Keys.enableReminders, defaultValue: true)
-    var enableNotifications: Bool
+    @available(*, deprecated, message: "This property is deprecated and will be removed in a future release")
+    var enableNotifications: Bool { true }
     
     @Preference(Keys.enableAdhkarReminder, defaultValue: true)
     var enableAdhkarReminder: Bool

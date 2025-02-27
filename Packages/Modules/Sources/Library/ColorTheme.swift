@@ -20,10 +20,10 @@ public enum ColorTheme: String, CaseIterable, Equatable, Codable, Identifiable {
     public static var current = ColorTheme.default
     
     public static var legacyThemes: [ColorTheme] = [.default, .sea, .purpleRose, .ink, .roseQuartz]
-    public static var modernThemes: [ColorTheme] = [.reader, .flat, .neomorphic]
+    public static var modernThemes: [ColorTheme] = [.reader, .flat, .neomorphic, .code]
     
     case `default`, sea, purpleRose, ink, roseQuartz
-    case reader, flat, neomorphic
+    case reader, flat, neomorphic, code
     
     public var assetsNamespace: String {
         switch self {
@@ -34,6 +34,7 @@ public enum ColorTheme: String, CaseIterable, Equatable, Codable, Identifiable {
         case .reader: return "Reader/"
         case .flat: return "Flat/"
         case .neomorphic: return "Neomorphic/"
+        case .code: return "Code/"
         default: return ""
         }
     }
@@ -49,8 +50,8 @@ public enum ColorTheme: String, CaseIterable, Equatable, Codable, Identifiable {
         switch self {
         case .reader: return 10
         case .flat: return 0
-        case .neomorphic: return 15
-        default: return 20
+        case .code: return 0
+        default: return 15
         }
     }
     
@@ -78,7 +79,15 @@ public enum ColorTheme: String, CaseIterable, Equatable, Codable, Identifiable {
     public var fontDesign: Font.Design {
         switch self {
         case .reader: return .serif
-        default: return .rounded
+        case .code: return .monospaced
+        default: return .default
+        }
+    }
+    
+    public var font: String? {
+        switch self {
+        case .code: return "Menlo-Regular"
+        default: return nil
         }
     }
     

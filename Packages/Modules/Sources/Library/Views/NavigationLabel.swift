@@ -20,10 +20,13 @@ public struct NavigationLabel: View {
         HStack {
             Text(title)
                 .foregroundStyle(Color.text)
+                .multilineTextAlignment(.leading)
             Spacer()
             if let label {
                 Text(label)
                     .foregroundStyle(Color.secondaryText)
+                    .multilineTextAlignment(.trailing)
+                    .systemFont(.callout)
             }
             Image(systemName: "chevron.right")
                 .foregroundStyle(Color.secondaryText)

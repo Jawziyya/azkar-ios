@@ -20,6 +20,7 @@ struct TextSettingsScreen: View {
             }
             .applyContainerStyle()
         }
+        .applyThemedToggleStyle()
         .customScrollContentBackground()
         .background(Color.background, ignoresSafeAreaEdges: .all)
         .navigationTitle(L10n.Settings.Text.title)
