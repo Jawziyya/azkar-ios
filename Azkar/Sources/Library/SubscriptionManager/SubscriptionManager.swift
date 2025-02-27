@@ -44,13 +44,38 @@ final class SubscriptionManager: SubscriptionManagerType {
         }
     }
     
-    func presentPaywall() {
-        switch getUserRegion() {
-        case .russian:
-            Superwall.shared.register(placement: AzkarEntitlement.ultra.rawValue)
-        case .other:
-            Superwall.shared.register(placement: AzkarEntitlement.pro.rawValue)
+    func presentPaywall(sourceScreenName: String) {
+        let entitlement = getUserRegion() == .russian ? AzkarEntitlement.ultra : AzkarEntitlement.pro
+        let presentationHandler = PaywallPresentationHandler()
+        presentationHandler.onSkip { reason in
+            let event = "paywall_presentation_skip"
+            switch reason {
+            case .holdout(let experiment):
+                AnalyticsReporter.reportEvent(event, metadata: ["source": sourceScreenName, "reason": "holdout", "experiment_id": experiment.id])
+            case .noAudienceMatch:
+                AnalyticsReporter.reportEvent(event, metadata: ["source": sourceScreenName, "reason": "no_audience_match"])
+            case .placementNotFound:
+                AnalyticsReporter.reportEvent(event, metadata: ["source": sourceScreenName, "reason": "placement_not_found"])
+            }
         }
+        presentationHandler.onDismiss { info, result in
+            let event = "paywall_dismiss"
+            switch result {
+            case .declined:
+                AnalyticsReporter.reportEvent(event, metadata: ["reason": "declined", "source": sourceScreenName])
+            case .purchased(let product):
+                AnalyticsReporter.reportEvent(event, metadata: ["reason": "purchased", "source": sourceScreenName, "product": product.productIdentifier])
+            case .restored:
+                AnalyticsReporter.reportEvent(event, metadata: ["reason": "restored", "source": sourceScreenName])
+            }
+        }
+        presentationHandler.onError { error in
+            AnalyticsReporter.reportEvent("paywall_presentation_error", metadata: ["source": sourceScreenName, "error": error.localizedDescription])
+        }
+        presentationHandler.onPresent { info in
+            AnalyticsReporter.reportEvent("paywall_presentation", metadata: ["source": sourceScreenName])
+        }
+        Superwall.shared.register(placement: entitlement.rawValue, handler: presentationHandler)
     }
     
     func isProUser() -> Bool {
@@ -135,24 +160,31 @@ extension SubscriptionManager: PurchaseController {
     /// Makes a purchase with RevenueCat and returns its result. This gets called when
     /// someone tries to purchase a product on one of your paywalls.
     func purchase(product: SuperwallKit.StoreProduct) async -> SuperwallKit.PurchaseResult {
+        AnalyticsReporter.reportEvent("purchase_attempt", metadata: ["product": product.productIdentifier])
         do {
             guard let sk2Product = product.sk2Product else {
+                AnalyticsReporter.reportEvent("purchase_attempt_error", metadata: ["error": PurchasingError.sk2ProductNotFound.localizedDescription])
                 throw PurchasingError.sk2ProductNotFound
             }
             let storeProduct = RevenueCat.StoreProduct(sk2Product: sk2Product)
             let revenueCatResult = try await Purchases.shared.purchase(product: storeProduct)
             if revenueCatResult.userCancelled {
+                AnalyticsReporter.reportEvent("purchase_attempt_cancelled")
                 return .cancelled
             } else {
+                AnalyticsReporter.reportEvent("purchase_attempt_purchased")
                 return .purchased
             }
         } catch let error as ErrorCode {
             if error == .paymentPendingError {
+                AnalyticsReporter.reportEvent("purchase_attempt_payment_pending_error")
                 return .pending
             } else {
+                AnalyticsReporter.reportEvent("purchase_attempt_error", metadata: ["error": error.localizedDescription])
                 return .failed(error)
             }
         } catch {
+            AnalyticsReporter.reportEvent("purchase_attempt_error", metadata: ["error": error.localizedDescription])
             return .failed(error)
         }
     }

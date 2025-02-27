@@ -5,7 +5,7 @@ import AboutApp
 import Library
 
 enum SettingsRoute: Hashable, RouteKind {
-    case subscribe, notificationsList
+    case subscribe(sourceScreen: String), notificationsList
     case appearance, text, counter
     case reminders, adhkarReminders, jumuaReminders, soundPicker(ReminderSound)
     case aboutApp
@@ -53,8 +53,8 @@ final class SettingsCoordinator: RouteTrigger, Identifiable, NavigationCoordinat
         case .notificationsList:
             self.route(to: \.notificationsList)
             
-        case .subscribe:
-            subscriptionManager.presentPaywall()
+        case .subscribe(let sourceScreen):
+            subscriptionManager.presentPaywall(sourceScreenName: sourceScreen)
             
         case .appearance:
             self.route(to: \.appearance)
@@ -137,7 +137,7 @@ extension SettingsCoordinator {
         ReminderSoundPickerView(viewModel: ReminderSoundPickerViewModel(
             preferredSound: sound,
             subscribeScreenTrigger: {
-                self.trigger(.subscribe)
+                self.trigger(.subscribe(sourceScreen: ReminderSoundPickerView.viewName))
             }
         ))
     }

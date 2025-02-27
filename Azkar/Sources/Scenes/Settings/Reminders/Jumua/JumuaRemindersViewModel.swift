@@ -24,7 +24,7 @@ final class JumuaRemindersViewModel: ObservableObject {
             preferredSound: preferences.jumuahDuaReminderSound,
             subscriptionManager: subscriptionManager,
             subscribeScreenTrigger: {
-                router.trigger(.subscribe)
+                router.trigger(.subscribe(sourceScreen: JumuaRemindersView.viewName))
             }
         )
         

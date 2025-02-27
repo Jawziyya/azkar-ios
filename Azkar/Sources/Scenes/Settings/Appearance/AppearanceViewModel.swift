@@ -2,6 +2,7 @@
 // All Rights Reserved.
 
 import UIKit
+import AzkarServices
 
 final class AppearanceViewModel: SettingsSectionViewModel {
     
@@ -19,7 +20,7 @@ final class AppearanceViewModel: SettingsSectionViewModel {
     
     var colorSchemeViewModel: ColorSchemesViewModel {
         ColorSchemesViewModel(preferences: preferences) { [unowned router] in
-            router.trigger(.subscribe)
+            router.trigger(.subscribe(sourceScreen: ColorSchemesView.viewName))
         }
     }
     
