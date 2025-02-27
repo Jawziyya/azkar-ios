@@ -6,6 +6,7 @@ import Library
 import Entities
 import AudioPlayer
 import Stinsen
+import StoreKit
 
 @main
 struct AzkarApp: App {
@@ -13,6 +14,14 @@ struct AzkarApp: App {
     @UIApplicationDelegateAdaptor var delegate: AppDelegate
     @StateObject var preferences = Preferences.shared
     @State var colorTheme: ColorTheme = ColorTheme.current
+    
+    init() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+            if let windowScene = UIApplication.shared.connectedScenes.first?.session.scene as? UIWindowScene {
+                SKStoreReviewController.requestReview(in: windowScene)
+            }
+        }
+    }
     
     var body: some Scene {
         WindowGroup {
