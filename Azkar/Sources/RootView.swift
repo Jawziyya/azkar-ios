@@ -23,7 +23,7 @@ final class RootViewModel: ObservableObject {
             .$enableFunFeatures
             .map { [unowned self] flag in
                 if flag {
-                    return title + " \(self.getRandomEmoji())"
+                    return title + self.getRandomEmoji()
                 } else {
                     return title
                 }

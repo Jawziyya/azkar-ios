@@ -20,6 +20,10 @@ enum ReminderSound: String, Identifiable, Hashable, Codable {
     
     var id: String { rawValue }
     
+    var isProSound: Bool {
+        !ReminderSound.standardSounds.contains(self)
+    }
+    
     var title: String {
         switch self {
         case .standard:
@@ -101,7 +105,10 @@ final class ReminderSoundPickerViewModel: ObservableObject {
         case standard, custom
         
         var title: String {
-            return NSLocalizedString("settings.reminders.sounds." + rawValue, comment: "")
+            switch self {
+            case .standard: return L10n.Settings.Reminders.Sounds.standard
+            case .custom: return "PRO"
+            }
         }
         
         var id: String { rawValue }
@@ -151,8 +158,12 @@ final class ReminderSoundPickerViewModel: ObservableObject {
         player.play(item: audioItem)
     }
     
+    func hasAccessToSound(_ sound: ReminderSound) -> Bool {
+        return !sound.isProSound || subscriptionManager.isProUser()
+    }
+    
     func setPreferredSound(_ sound: ReminderSound) {
-        if subscriptionManager.isProUser() || ReminderSound.standardSounds.contains(sound) {
+        if !sound.isProSound || subscriptionManager.isProUser() {
             self.preferredSound = sound
         } else {
             subscribeScreenTrigger()

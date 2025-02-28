@@ -164,8 +164,12 @@ struct AppIconPackListView: View {
                 
                 Spacer()
                 
-                CheckboxView(isCheked:  .constant(self.viewModel.icon.referenceName == icon.referenceName))
-                    .frame(width: 20, height: 20)
+                if viewModel.isPackPurchased(pack) {
+                    CheckboxView(isCheked:  .constant(self.viewModel.icon.referenceName == icon.referenceName))
+                        .frame(width: 20, height: 20)
+                } else {
+                    ProBadgeView()
+                }
             }
             .contentShape(Rectangle())
             .padding(.vertical, 8)

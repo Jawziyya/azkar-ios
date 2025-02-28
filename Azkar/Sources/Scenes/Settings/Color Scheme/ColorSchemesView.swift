@@ -28,7 +28,7 @@ final class ColorSchemesViewModel: ObservableObject {
     }
     
     func setAppTheme(_ theme: AppTheme) {
-        if subscriptionManager.isProUser() {
+        if subscriptionManager.isProUser() || theme == .default {
             switch theme {
             case .code:
                 preferences.setPreferredArabicFont(font: ArabicFont.handjet)
@@ -43,7 +43,7 @@ final class ColorSchemesViewModel: ObservableObject {
     }
     
     func setColorTheme(_ theme: ColorTheme) {
-        if subscriptionManager.isProUser() {
+        if subscriptionManager.isProUser() || theme == .default {
             preferences.colorTheme = theme
         } else {
             subscribeScreenTrigger()
@@ -55,6 +55,24 @@ final class ColorSchemesViewModel: ObservableObject {
             preferences: Preferences.shared,
             subscribeScreenTrigger: {}
         )
+    }
+    
+    func isThemeProtected(_ theme: AppTheme) -> Bool {
+        switch theme {
+        case .default:
+            return false
+        default:
+            return !subscriptionManager.isProUser()
+        }
+    }
+    
+    func isColorThemeProtected(_ theme: ColorTheme) -> Bool {
+        switch theme {
+        case .default:
+            return false
+        default:
+            return !subscriptionManager.isProUser()
+        }
     }
     
 }
@@ -85,7 +103,8 @@ struct ColorSchemesView: View {
                             viewModel.setAppTheme(newValue)
                         }),
                         items: AppTheme.enabledThemes,
-                        dismissOnSelect: false
+                        dismissOnSelect: false,
+                        isItemProtected: viewModel.isThemeProtected(_:)
                     )
                 } header: {
                     headerView(L10n.Settings.Appearance.ColorTheme.header)
@@ -99,7 +118,8 @@ struct ColorSchemesView: View {
                             viewModel.setColorTheme(newValue)
                         }),
                         items: ColorTheme.allCases,
-                        dismissOnSelect: false
+                        dismissOnSelect: false,
+                        isItemProtected: viewModel.isColorThemeProtected(_:)
                     )
                 }
             }

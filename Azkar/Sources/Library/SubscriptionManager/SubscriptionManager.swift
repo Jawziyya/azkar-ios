@@ -155,7 +155,11 @@ extension SubscriptionManager: PurchaseController {
             SuperwallKit.Entitlement(id: id)
         }
         await MainActor.run { [superwallEntitlements] in
-            Superwall.shared.subscriptionStatus = .active(Set(superwallEntitlements))
+            if superwallEntitlements.isEmpty {
+                Superwall.shared.subscriptionStatus = .inactive
+            } else {            
+                Superwall.shared.subscriptionStatus = .active(Set(superwallEntitlements))
+            }
         }
     }
         

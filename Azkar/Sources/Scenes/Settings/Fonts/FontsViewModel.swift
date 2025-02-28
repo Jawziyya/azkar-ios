@@ -127,6 +127,10 @@ final class FontsViewModel: ObservableObject {
         }
     }
     
+    func hasAccessToFont(_ font: AppFont) -> Bool {
+        return font.isStandartPackFont == true || subscriptionManager.isProUser()
+    }
+    
     private func isFontInstalled(_ font: AppFontViewModel) -> Bool {
         guard let url = font.zipFileURL else {
             return true

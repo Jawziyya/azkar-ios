@@ -53,8 +53,12 @@ struct ReminderSoundPickerView: View {
             
             Spacer()
 
-            CheckboxView(isCheked: .constant(viewModel.preferredSound == sound))
-                .frame(width: 20, height: 20)
+            if viewModel.hasAccessToSound(sound) {
+                CheckboxView(isCheked: .constant(viewModel.preferredSound == sound))
+                    .frame(width: 20, height: 20)
+            } else {
+                ProBadgeView()
+            }
         }
         .contentShape(Rectangle())
         .frame(minHeight: 44)

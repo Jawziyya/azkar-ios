@@ -10,6 +10,7 @@ struct ItemPickerView<SelectionValue>: View where SelectionValue: Hashable & Ide
     var footer: String?
     var dismissOnSelect = false
     var enableHapticFeedback = true
+    var isItemProtected: (SelectionValue) -> Bool = { _ in false }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -63,8 +64,13 @@ struct ItemPickerView<SelectionValue>: View where SelectionValue: Hashable & Ide
                             .font(item.subtitleFont)
                             .foregroundStyle(Color.secondary)
                     }
-                    CheckboxView(isCheked: .constant(self.selection.hashValue == item.hashValue))
-                        .frame(width: 20, height: 20)
+                    
+                    if isItemProtected(item) {
+                        ProBadgeView()
+                    } else {
+                        CheckboxView(isCheked: .constant(self.selection.hashValue == item.hashValue))
+                            .frame(width: 20, height: 20)                        
+                    }
                 }
                 .contentShape(Rectangle())
             }

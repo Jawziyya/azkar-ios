@@ -34,6 +34,8 @@ public struct ArabicFont: AppFont, Identifiable, Codable, Hashable {
     
     public var postscriptName: String
     
+    public let isStandartPackFont: Bool?
+    
     public var sizeAdjustment: Float?
     
     public var lineAdjustment: Float?
@@ -57,28 +59,49 @@ public extension ArabicFont {
     static var systemArabic: ArabicFont {
         ArabicFont(
             name: NSLocalizedString("settings.text.standard-font-name", comment: "Standard font name string."),
-            postscriptName: ""
+            postscriptName: "",
+            isStandartPackFont: true
         )
     }
     
     static var adobe: ArabicFont {
-        ArabicFont(name: "Adobe", postscriptName: "AdobeArabic-Regular")
+        ArabicFont(
+            name: "Adobe",
+            postscriptName: "AdobeArabic-Regular",
+            isStandartPackFont: true
+        )
     }
     
     static var KFGQP: ArabicFont {
-        ArabicFont(name: "KFGQP", postscriptName: "KFGQPCUthmanicScriptHAFS")
+        ArabicFont(
+            name: "KFGQP",
+            postscriptName: "KFGQPCUthmanicScriptHAFS",
+            isStandartPackFont: true
+        )
     }
     
     static var noto: ArabicFont {
-        ArabicFont(name: "Noto Naskh", postscriptName: "NotoNaskhArabicUI")
+        ArabicFont(
+            name: "Noto Naskh",
+            postscriptName: "NotoNaskhArabicUI",
+            isStandartPackFont: true
+        )
     }
     
     static var handjet: ArabicFont {
-        ArabicFont(name: "Handjet", postscriptName: "Handjet")
+        ArabicFont(
+            name: "Handjet",
+            postscriptName: "Handjet",
+            isStandartPackFont: true
+        )
     }
     
     static var marhey: ArabicFont {
-        ArabicFont(name: "Marhey", postscriptName: "Marhey")
+        ArabicFont(
+            name: "Marhey",
+            postscriptName: "Marhey",
+            isStandartPackFont: true
+        )
     }
     
 }

@@ -12,6 +12,7 @@ struct FontsListItemView: View {
     let isArabicFontsType: Bool
     let isLoadingFont: Bool
     let isSelectedFont: Bool
+    let hasAccessToFont: Bool
     let selectionCallback: () -> Void
     var isRedacted = false
     
@@ -41,8 +42,12 @@ struct FontsListItemView: View {
                     .onTapGesture(perform: selectionCallback)
             }
             
-            CheckboxView(isCheked: .constant(isSelectedFont))
-                .frame(width: 20, height: 20)
+            if hasAccessToFont {
+                CheckboxView(isCheked: .constant(isSelectedFont))
+                    .frame(width: 20, height: 20)
+            } else {
+                ProBadgeView()
+            }
         }
         .contentShape(Rectangle())
         .frame(minHeight: 44)
@@ -84,6 +89,7 @@ struct FontsListItemView_Previews: PreviewProvider {
             isArabicFontsType: false,
             isLoadingFont: false,
             isSelectedFont: false,
+            hasAccessToFont: true,
             selectionCallback: {},
             isRedacted: false
         )

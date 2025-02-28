@@ -113,6 +113,7 @@ struct FontsView: View {
             isArabicFontsType: viewModel.fontsType == .arabic,
             isLoadingFont: viewModel.loadingFonts.contains(vm.id),
             isSelectedFont: viewModel.preferredFont.id == vm.font.id,
+            hasAccessToFont: viewModel.hasAccessToFont(vm.font),
             selectionCallback: {
                 self.previewFont = vm
             },
