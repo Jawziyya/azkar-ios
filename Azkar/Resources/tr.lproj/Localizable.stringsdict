@@ -3,7 +3,7 @@
 <!--
  Loco ios export: Xcode Stringsdict (legacy)
  Project: Azkar
- Locale: ru, Russian
+ Locale: tr, Turkish
  Exported by: Abdurahim Jauzee
  Exported at: Fri, 28 Feb 2025 02:41:54 +0200
 -->
@@ -20,13 +20,9 @@
         <key>NSStringFormatValueTypeKey</key>
         <string>d</string>
         <key>one</key>
-        <string>ещё %d раз</string>
-        <key>few</key>
-        <string>ещё %d раза</string>
+        <string>%d kez daha</string>
         <key>other</key>
-        <string>ещё %d раз</string>
-        <key>zero</key>
-        <string>завершено</string>
+        <string></string>
       </dict>
     </dict>
     <key>repeats_number</key>
@@ -40,13 +36,9 @@
         <key>NSStringFormatValueTypeKey</key>
         <string>d</string>
         <key>one</key>
-        <string>один раз</string>
-        <key>few</key>
-        <string>%d раза</string>
+        <string>bir kez</string>
         <key>other</key>
-        <string>%d раз</string>
-        <key>zero</key>
-        <string>завершено</string>
+        <string>%d kez</string>
       </dict>
     </dict>
   </dict>
