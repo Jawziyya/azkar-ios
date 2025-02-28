@@ -21,7 +21,9 @@ struct CounterView: View {
     
     var content: some View {
         Group {
-            // typePicker
+             typePicker
+            
+            Divider()
             
             if viewModel.preferences.counterType == .floatingButton {
                 HStack {

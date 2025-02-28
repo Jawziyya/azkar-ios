@@ -76,6 +76,14 @@ struct ZikrView: View {
         .removeSaturationIfNeeded()
         .background(Color.background.edgesIgnoringSafeArea(.all))
         .onReceive(incrementAction, perform: incrementZikrCounter)
+        .simultaneousGesture(
+            TapGesture(count: 2)
+                .onEnded { _ in
+                    if viewModel.preferences.counterType == .tap {
+                        incrementZikrCounter()
+                    }
+                }
+        )
         .overlay(
             counterButton,
             alignment: viewModel.preferences.alignCounterButtonByLeadingSide ? .bottomLeading : .bottomTrailing
