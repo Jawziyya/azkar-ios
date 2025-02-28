@@ -1,10 +1,10 @@
 import SwiftUI
 
 public struct ShadowModifier: ViewModifier {
-    @Environment(\.colorTheme) private var colorTheme
+    @Environment(\.appTheme) private var appTheme
     
     public func body(content: Content) -> some View {
-        if let shadowStyle = colorTheme.shadowStyle {
+        if let shadowStyle = appTheme.shadowStyle {
             content
                 .shadow(
                     color: shadowStyle.color,

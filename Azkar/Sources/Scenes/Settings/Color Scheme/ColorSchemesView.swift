@@ -27,16 +27,24 @@ final class ColorSchemesViewModel: ObservableObject {
             .store(in: &cancellables)
     }
     
-    func setColorTheme(_ theme: ColorTheme) {
+    func setAppTheme(_ theme: AppTheme) {
         if subscriptionManager.isProUser() {
-            preferences.colorTheme = theme
             switch theme {
             case .code:
                 preferences.setPreferredArabicFont(font: ArabicFont.handjet)
                 preferences.setPreferredTranslationFont(font: TranslationFont.courier)
+                preferences.appTheme = theme
             default:
-                break
+                preferences.appTheme = theme
             }
+        } else {
+            subscribeScreenTrigger()
+        }
+    }
+    
+    func setColorTheme(_ theme: ColorTheme) {
+        if subscriptionManager.isProUser() {
+            preferences.colorTheme = theme
         } else {
             subscribeScreenTrigger()
         }
@@ -54,7 +62,7 @@ final class ColorSchemesViewModel: ObservableObject {
 struct ColorSchemesView: View {
     
     @ObservedObject var viewModel: ColorSchemesViewModel
-    @Environment(\.colorTheme) var colorTheme
+    @Environment(\.appTheme) var appTheme
     
     var body: some View {
         ScrollView {
@@ -65,8 +73,22 @@ struct ColorSchemesView: View {
                         items: Theme.allCases,
                         dismissOnSelect: false
                     )
+                } footer: {
+                    footerView(viewModel.preferences.theme.description)
+                }
+                
+                Section {
+                    ItemPickerView(
+                        selection: .init(get: {
+                            viewModel.preferences.appTheme
+                        }, set: { newValue in
+                            viewModel.setAppTheme(newValue)
+                        }),
+                        items: AppTheme.enabledThemes,
+                        dismissOnSelect: false
+                    )
                 } header: {
-                    headerView(L10n.Settings.Theme.colorScheme)
+                    headerView(L10n.Settings.Appearance.ColorTheme.header)
                 }
                  
                 Section {
@@ -76,21 +98,7 @@ struct ColorSchemesView: View {
                         }, set: { newValue in
                             viewModel.setColorTheme(newValue)
                         }),
-                        items: ColorTheme.legacyThemes,
-                        dismissOnSelect: false
-                    )
-                } header: {
-                    headerView(L10n.Settings.Theme.ColorTheme.header)
-                }
-                
-                Section {
-                    ItemPickerView(
-                        selection: .init(get: {
-                            viewModel.preferences.colorTheme
-                        }, set: { newValue in
-                            viewModel.setColorTheme(newValue)
-                        }),
-                        items: ColorTheme.modernThemes,
+                        items: ColorTheme.allCases,
                         dismissOnSelect: false
                     )
                 }
@@ -110,6 +118,17 @@ struct ColorSchemesView: View {
             .foregroundStyle(Color.secondaryText)
             .padding(.horizontal)
             .background(Color.background)
+    }
+    
+    func footerView(_ label: String) -> some View {
+        Text(label)
+            .systemFont(.caption)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .foregroundStyle(Color.secondaryText)
+            .padding(.horizontal)
+            .background(Color.background)
+            .padding(.horizontal)
+            .padding(.bottom)
     }
     
 }

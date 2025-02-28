@@ -11,7 +11,7 @@ final class AppearanceViewModel: SettingsSectionViewModel {
     }
     
     var themeTitle: String {
-        "\(preferences.theme.title), \(preferences.colorTheme.title)"
+        "\(preferences.appTheme.title), \(preferences.colorTheme.title)"
     }
     
     var appIconPackListViewModel: AppIconPackListViewModel {

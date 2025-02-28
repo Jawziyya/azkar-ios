@@ -7,7 +7,7 @@ public struct ArticleScreen: View {
     let viewModel: ArticleViewModel
     var shareOptions: ShareOptions?
     let onShareButtonTap: () -> Void
-    @Environment(\.colorTheme) var colorTheme
+    @Environment(\.appTheme) var appTheme
     
     public struct ShareOptions {
         let maxWidth: CGFloat

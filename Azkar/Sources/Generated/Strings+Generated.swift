@@ -294,6 +294,52 @@ internal enum L10n {
     internal static let useFunFeatures = L10n.tr("Localizable", "settings.use_fun_features", fallback: "Fun Features")
     /// These are features which make Azkar app a bit beautiful but some people find useless and annoying.
     internal static let useFunFeaturesTip = L10n.tr("Localizable", "settings.use_fun_features_tip", fallback: "These are features which make Azkar app a bit beautiful but some people find useless and annoying.")
+    internal enum Appearance {
+      /// Themes and app icons
+      internal static let subtitle = L10n.tr("Localizable", "settings.appearance.subtitle", fallback: "Themes and app icons")
+      /// Appearance
+      internal static let title = L10n.tr("Localizable", "settings.appearance.title", fallback: "Appearance")
+      internal enum AppTheme {
+        /// Flat
+        internal static let flat = L10n.tr("Localizable", "settings.appearance.app-theme.flat", fallback: "Flat")
+        /// E-reader
+        internal static let reader = L10n.tr("Localizable", "settings.appearance.app-theme.reader", fallback: "E-reader")
+        /// Themes
+        internal static let title = L10n.tr("Localizable", "settings.appearance.app-theme.title", fallback: "Themes")
+      }
+      internal enum ColorScheme {
+        internal enum Auto {
+          /// The app automatically adapts to your iOS appearance setting.
+          internal static let description = L10n.tr("Localizable", "settings.appearance.color-scheme.auto.description", fallback: "The app automatically adapts to your iOS appearance setting.")
+          /// System
+          internal static let title = L10n.tr("Localizable", "settings.appearance.color-scheme.auto.title", fallback: "System")
+        }
+        internal enum Dark {
+          /// The app always uses a dark appearance
+          internal static let description = L10n.tr("Localizable", "settings.appearance.color-scheme.dark.description", fallback: "The app always uses a dark appearance")
+          /// Dark
+          internal static let title = L10n.tr("Localizable", "settings.appearance.color-scheme.dark.title", fallback: "Dark")
+        }
+        internal enum Light {
+          /// The app always uses a light appearance
+          internal static let description = L10n.tr("Localizable", "settings.appearance.color-scheme.light.description", fallback: "The app always uses a light appearance")
+          /// Light
+          internal static let title = L10n.tr("Localizable", "settings.appearance.color-scheme.light.title", fallback: "Light")
+        }
+      }
+      internal enum ColorTheme {
+        /// Color scheme
+        internal static let header = L10n.tr("Localizable", "settings.appearance.color-theme.header", fallback: "Color scheme")
+        /// Ink
+        internal static let ink = L10n.tr("Localizable", "settings.appearance.color-theme.ink", fallback: "Ink")
+        /// Purple Rose
+        internal static let purpleRose = L10n.tr("Localizable", "settings.appearance.color-theme.purple-rose", fallback: "Purple Rose")
+        /// Rose Quartz
+        internal static let roseQuartz = L10n.tr("Localizable", "settings.appearance.color-theme.rose-quartz", fallback: "Rose Quartz")
+        /// Sea
+        internal static let sea = L10n.tr("Localizable", "settings.appearance.color-theme.sea", fallback: "Sea")
+      }
+    }
     internal enum Breaks {
       /// If enabled, Azkar will insert line-breaks after each sentence in dhikr/dua.
       internal static let info = L10n.tr("Localizable", "settings.breaks.info", fallback: "If enabled, Azkar will insert line-breaks after each sentence in dhikr/dua.")
@@ -461,36 +507,6 @@ internal enum L10n {
         internal static let normal = L10n.tr("Localizable", "settings.text.reading_mode.normal", fallback: "Normal")
         /// Reading mode
         internal static let title = L10n.tr("Localizable", "settings.text.reading_mode.title", fallback: "Reading mode")
-      }
-    }
-    internal enum Theme {
-      /// System
-      internal static let auto = L10n.tr("Localizable", "settings.theme.auto", fallback: "System")
-      /// Color scheme
-      internal static let colorScheme = L10n.tr("Localizable", "settings.theme.color-scheme", fallback: "Color scheme")
-      /// Dark
-      internal static let dark = L10n.tr("Localizable", "settings.theme.dark", fallback: "Dark")
-      /// Light
-      internal static let light = L10n.tr("Localizable", "settings.theme.light", fallback: "Light")
-      /// Themes and app icons
-      internal static let subtitle = L10n.tr("Localizable", "settings.theme.subtitle", fallback: "Themes and app icons")
-      /// Themes
-      internal static let themesTitle = L10n.tr("Localizable", "settings.theme.themes-title", fallback: "Themes")
-      /// Appearance
-      internal static let title = L10n.tr("Localizable", "settings.theme.title", fallback: "Appearance")
-      internal enum ColorTheme {
-        /// Color theme
-        internal static let header = L10n.tr("Localizable", "settings.theme.color-theme.header", fallback: "Color theme")
-        /// Ink
-        internal static let ink = L10n.tr("Localizable", "settings.theme.color-theme.ink", fallback: "Ink")
-        /// Purple Rose
-        internal static let purpleRose = L10n.tr("Localizable", "settings.theme.color-theme.purple-rose", fallback: "Purple Rose")
-        /// E-reader
-        internal static let reader = L10n.tr("Localizable", "settings.theme.color-theme.reader", fallback: "E-reader")
-        /// Rose Quartz
-        internal static let roseQuartz = L10n.tr("Localizable", "settings.theme.color-theme.rose-quartz", fallback: "Rose Quartz")
-        /// Sea
-        internal static let sea = L10n.tr("Localizable", "settings.theme.color-theme.sea", fallback: "Sea")
       }
     }
   }

@@ -28,13 +28,13 @@ public struct RectangularToggleStyle: ToggleStyle {
 }
 
 private struct ApplyRectangularToggleStyle: ViewModifier {
-    @Environment(\.colorTheme) var colorTheme
+    @Environment(\.appTheme) var appTheme
     
     func body(content: Content) -> some View {
-        if colorTheme.cornerRadius == 0 {
+        if appTheme.cornerRadius == 0 {
             content.toggleStyle(.rectangular)
         } else {
-            content.toggleStyle(.switch)
+            content.toggleStyle(SwitchToggleStyle(tint: Color.accent))
         }
     }
 }

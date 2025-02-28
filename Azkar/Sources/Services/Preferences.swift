@@ -83,6 +83,16 @@ final class Preferences: ObservableObject, TextProcessingPreferences {
                 ColorTheme.current = theme
             }
             .store(in: &cancellables)
+        
+        $appTheme
+            .sink { theme in
+                AppTheme.current = theme
+            }
+            .store(in: &cancellables)
+        
+        storageChangesPublisher()
+            .sink(receiveValue: objectWillChange.send)
+            .store(in: &cancellables)
     }
     
     static var shared = Preferences()
@@ -104,6 +114,9 @@ final class Preferences: ObservableObject, TextProcessingPreferences {
 
     @Preference(Keys.theme, defaultValue: .automatic)
     var theme: Theme
+    
+    @Preference(Keys.appTheme, defaultValue: AppTheme.current)
+    var appTheme: AppTheme
     
     @Preference(Keys.colorTheme, defaultValue: ColorTheme.default)
     var colorTheme: ColorTheme

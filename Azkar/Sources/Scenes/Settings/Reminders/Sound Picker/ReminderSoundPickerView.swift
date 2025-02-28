@@ -4,7 +4,7 @@ import Library
 struct ReminderSoundPickerView: View {
     
     @ObservedObject var viewModel: ReminderSoundPickerViewModel
-    @Environment(\.colorTheme) var colorTheme
+    @Environment(\.appTheme) var appTheme
     
     var body: some View {
         ScrollView {

@@ -2,19 +2,20 @@ import SwiftUI
 
 public struct ThemeStyleModifier: ViewModifier {
     
+    @Environment(\.appTheme) private var appTheme
     @Environment(\.colorTheme) private var colorTheme
     
     var indexPosition: IndexPosition?
     let roundingCorners: UIRectCorner
     
     public func body(content: Content) -> some View {
-        switch colorTheme {
-        case .default, .purpleRose, .roseQuartz, .sea, .ink, .reader, .code:
-            content.roundedBorder(roundingCorners)
+        switch appTheme {
         case .flat:
             applyFlatStyle(content)
         case .neomorphic:
             applyNeomorphicStyle(content)
+        default:
+            content.roundedBorder(roundingCorners)
         }
     }
     
@@ -101,5 +102,21 @@ public extension View {
             .background(Color.contentBackground)
             .applyTheme(roundingCorners: roundingCorners)
             .padding()
+            .reloadWhenThemeChanges()
+    }
+    
+    /// Reloads the view when the theme changes
+    func reloadWhenThemeChanges() -> some View {
+        self.modifier(ThemeReloadModifier())
+    }
+}
+
+/// A modifier that forces view reload when theme changes
+fileprivate struct ThemeReloadModifier: ViewModifier {
+    @Environment(\.appTheme) private var appTheme
+    @Environment(\.colorTheme) private var colorTheme
+    
+    func body(content: Content) -> some View {
+        content.id("theme-\(appTheme)-\(colorTheme)")
     }
 }

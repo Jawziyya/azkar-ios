@@ -3,13 +3,13 @@ import Extensions
 
 public struct RoundedBorderModifier: ViewModifier {
     
-    @Environment(\.colorTheme) private var colorTheme
+    @Environment(\.appTheme) private var appTheme
      
     let roundingCorners: UIRectCorner
     let borderColor: Color?
     
     public func body(content: Content) -> some View {
-        if let borderStyle = colorTheme.borderStyle {
+        if let borderStyle = appTheme.borderStyle {
             content
                 .clipShape(roundingShape)
                 .overlay(
@@ -22,7 +22,7 @@ public struct RoundedBorderModifier: ViewModifier {
     }
     
     private var roundingShape: some Shape {
-        RoundedCornersShape(radius: colorTheme.cornerRadius, corners: roundingCorners)
+        RoundedCornersShape(radius: appTheme.cornerRadius, corners: roundingCorners)
     }
     
 }

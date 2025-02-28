@@ -78,7 +78,7 @@ final class NotificationsDisabledViewModel: ObservableObject {
 struct NotificationsDisabledView: View {
     
     @StateObject var viewModel: NotificationsDisabledViewModel
-    @Environment(\.colorTheme) var colorTheme
+    @Environment(\.appTheme) var appTheme
     
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {

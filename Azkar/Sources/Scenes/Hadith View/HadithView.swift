@@ -14,7 +14,7 @@ struct HadithView: View {
 
     @State private var textHeight: CGFloat = 0
     @State private var translationHeight: CGFloat = 0
-    @Environment(\.colorTheme) var colorTheme
+    @Environment(\.appTheme) var appTheme
     var sizeCategory: ContentSizeCategory {
         return viewModel.preferences.sizeCategory
     }

@@ -15,7 +15,7 @@ struct MainMenuView: View {
 
     @ObservedObject var viewModel: MainMenuViewModel
     @Environment(\.colorScheme) var colorScheme
-    @Environment(\.colorTheme) var colorTheme
+    @Environment(\.appTheme) var appTheme
     @Environment(\.isSearching) var isSearching
     @Environment(\.dismissSearch) var dismissSearch
     @State private var showAd = true
@@ -29,7 +29,7 @@ struct MainMenuView: View {
     var body: some View {
         displayContent
             .textInputAutocapitalization(.never)
-            .attachEnvironmentOverrides(viewModel: EnvironmentOverridesViewModel(preferences: viewModel.preferences))
+//            .attachEnvironmentOverrides(viewModel: EnvironmentOverridesViewModel(preferences: viewModel.preferences))
             .onAppear {
                 AnalyticsReporter.reportScreen("Main Menu", className: viewName)
             }
@@ -225,13 +225,13 @@ struct MainMenuView: View {
     
     func adView(_ ad: Ad) -> some View {
         Group {
-            if colorTheme == .flat || colorTheme == .reader {
+            if appTheme == .flat || appTheme == .reader {
                 adButton(ad).applyTheme()
             } else {
                 adButton(ad)
-                    .clipShape(RoundedRectangle(cornerRadius: colorTheme.cornerRadius))
+                    .clipShape(RoundedRectangle(cornerRadius: appTheme.cornerRadius))
                     .overlay(
-                        RoundedRectangle(cornerRadius: colorTheme.cornerRadius)
+                        RoundedRectangle(cornerRadius: appTheme.cornerRadius)
                             .stroke(borderColor, lineWidth: borderWidth)
                     )
             }
@@ -246,7 +246,7 @@ struct MainMenuView: View {
     func adButton(_ ad: Ad) -> some View {
         AdButton(
             item: AdButtonItem(ad: ad),
-            cornerRadius: colorTheme.cornerRadius,
+            cornerRadius: appTheme.cornerRadius,
             onClose: {
                 withAnimation(.spring) {
                     viewModel.hideAd(ad)
@@ -265,36 +265,7 @@ struct MainMenuView: View {
 }
 
 #Preview("Menu Default") {
-    Preferences.shared.colorTheme = .default
-    return MainMenuView(
-        viewModel: MainMenuViewModel.placeholder
-    )
-}
-
-#Preview("Menu Ink") {
-    Preferences.shared.colorTheme = .ink
-    return MainMenuView(
-        viewModel: MainMenuViewModel.placeholder
-    )
-}
-
-#Preview("Menu Sea") {
-    Preferences.shared.colorTheme = .sea
-    return MainMenuView(
-        viewModel: MainMenuViewModel.placeholder
-    )
-}
-
-#Preview("Menu Purple Rose") {
-    Preferences.shared.colorTheme = .purpleRose
-    return MainMenuView(
-        viewModel: MainMenuViewModel.placeholder
-    )
-}
-
-#Preview("Menu Rose Quartz") {
-    Preferences.shared.colorTheme = .roseQuartz
-    return MainMenuView(
+    MainMenuView(
         viewModel: MainMenuViewModel.placeholder
     )
 }

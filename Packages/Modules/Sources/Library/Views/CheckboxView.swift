@@ -3,7 +3,7 @@ import SwiftUI
 public struct CheckboxView: View {
 
     @Binding var isCheked: Bool
-    @Environment(\.colorTheme) var colorTheme
+    @Environment(\.appTheme) var appTheme
     
     public init(isCheked: Binding<Bool>) {
         _isCheked = isCheked
@@ -26,7 +26,7 @@ public struct CheckboxView: View {
     
     private var shapeBackground: some View {
         Group {
-            if colorTheme.cornerRadius > 0 {
+            if appTheme.cornerRadius > 0 {
                 Circle()
                     .strokeBorder(isCheked ? Color.accent : Color.gray, lineWidth: 1.5)
                     .background(isCheked ? Circle().fill(Color.accent) : nil)

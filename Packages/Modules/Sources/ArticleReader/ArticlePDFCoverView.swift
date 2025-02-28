@@ -8,7 +8,7 @@ public struct ArticlePDFCoverView: View {
     let maxHeight: CGFloat
     let logoImage: UIImage?
     let logoSubtitle: String
-    @Environment(\.colorTheme) var colorTheme
+    @Environment(\.appTheme) var appTheme
     
     public init(
         article: Article,

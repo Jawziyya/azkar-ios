@@ -10,7 +10,7 @@ extension Language: PickableItem {}
 struct SettingsView: View {
     
     @ObservedObject var viewModel: SettingsViewModel
-    @Environment(\.colorTheme) var colorTheme
+    @Environment(\.appTheme) var appTheme
         
     var body: some View {
         ScrollView {
@@ -63,7 +63,7 @@ struct SettingsView: View {
                     .padding(7)
                     .foregroundStyle(Color.white)
                     .background(imageBackground)
-                    .cornerRadius(colorTheme.cornerRadius > 0 ? 8 : 0)
+                    .cornerRadius(appTheme.cornerRadius > 0 ? 8 : 0)
                     .removeSaturationIfNeeded()
                 
                 VStack(alignment: .leading) {
@@ -89,8 +89,8 @@ struct SettingsView: View {
     // MARK: - Appearance
     var appearanceSection: some View {
         getSectionButton(
-            L10n.Settings.Theme.title,
-            subtitle: L10n.Settings.Theme.subtitle,
+            L10n.Settings.Appearance.title,
+            subtitle: L10n.Settings.Appearance.subtitle,
             image: "paintbrush.fill",
             imageBackground: Color(.systemTeal),
             action: viewModel.navigateToAppearanceSettings

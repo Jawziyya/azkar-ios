@@ -24,34 +24,68 @@ internal typealias AssetImageTypeAlias = ImageAsset.Image
 
 // swiftlint:disable identifier_name line_length nesting type_body_length type_name
 internal enum Asset {
-  internal enum Ink {
-    internal static let accent = ColorAsset(name: "Ink/accent")
-    internal static let background = ColorAsset(name: "Ink/background")
-    internal static let contentBackground = ColorAsset(name: "Ink/contentBackground")
-  }
-  internal enum PurpleRose {
-    internal static let accent = ColorAsset(name: "PurpleRose/accent")
-    internal static let background = ColorAsset(name: "PurpleRose/background")
-    internal static let contentBackground = ColorAsset(name: "PurpleRose/contentBackground")
-  }
-  internal enum RoseQuartz {
-    internal static let accent = ColorAsset(name: "RoseQuartz/accent")
-    internal static let background = ColorAsset(name: "RoseQuartz/background")
-    internal static let contentBackground = ColorAsset(name: "RoseQuartz/contentBackground")
-  }
-  internal enum Sea {
-    internal static let accent = ColorAsset(name: "Sea/accent")
-    internal static let background = ColorAsset(name: "Sea/background")
-    internal static let contentBackground = ColorAsset(name: "Sea/contentBackground")
-  }
   internal static let accent = ColorAsset(name: "accent")
-  internal static let alternativeAccent = ColorAsset(name: "alternative-accent")
   internal static let background = ColorAsset(name: "background")
   internal static let contentBackground = ColorAsset(name: "contentBackground")
   internal static let secondaryBackground = ColorAsset(name: "secondaryBackground")
   internal static let secondaryText = ColorAsset(name: "secondaryText")
   internal static let tertiaryText = ColorAsset(name: "tertiaryText")
   internal static let text = ColorAsset(name: "text")
+  internal enum AppThemes {
+    internal enum Code {
+      internal static let accent = ColorAsset(name: "AppThemes/Code/accent")
+      internal static let background = ColorAsset(name: "AppThemes/Code/background")
+      internal static let contentBackground = ColorAsset(name: "AppThemes/Code/contentBackground")
+      internal static let secondaryBackground = ColorAsset(name: "AppThemes/Code/secondaryBackground")
+      internal static let secondaryText = ColorAsset(name: "AppThemes/Code/secondaryText")
+      internal static let tertiaryText = ColorAsset(name: "AppThemes/Code/tertiaryText")
+      internal static let text = ColorAsset(name: "AppThemes/Code/text")
+    }
+    internal enum Flat {
+      internal static let evening = ImageAsset(name: "AppThemes/Flat/evening")
+      internal static let morning = ImageAsset(name: "AppThemes/Flat/morning")
+    }
+    internal enum Neomorphic {
+      internal static let accent = ColorAsset(name: "AppThemes/Neomorphic/accent")
+      internal static let background = ColorAsset(name: "AppThemes/Neomorphic/background")
+      internal static let contentBackground = ColorAsset(name: "AppThemes/Neomorphic/contentBackground")
+      internal static let evening = ImageAsset(name: "AppThemes/Neomorphic/evening")
+      internal static let morning = ImageAsset(name: "AppThemes/Neomorphic/morning")
+      internal static let secondaryText = ColorAsset(name: "AppThemes/Neomorphic/secondaryText")
+      internal static let text = ColorAsset(name: "AppThemes/Neomorphic/text")
+    }
+    internal enum Reader {
+      internal static let accent = ColorAsset(name: "AppThemes/Reader/accent")
+      internal static let background = ColorAsset(name: "AppThemes/Reader/background")
+      internal static let contentBackground = ColorAsset(name: "AppThemes/Reader/contentBackground")
+      internal static let evening = ImageAsset(name: "AppThemes/Reader/evening")
+      internal static let morning = ImageAsset(name: "AppThemes/Reader/morning")
+      internal static let secondaryText = ColorAsset(name: "AppThemes/Reader/secondaryText")
+      internal static let text = ColorAsset(name: "AppThemes/Reader/text")
+    }
+  }
+  internal enum ColorThemes {
+    internal enum Ink {
+      internal static let accent = ColorAsset(name: "ColorThemes/Ink/accent")
+      internal static let background = ColorAsset(name: "ColorThemes/Ink/background")
+      internal static let contentBackground = ColorAsset(name: "ColorThemes/Ink/contentBackground")
+    }
+    internal enum PurpleRose {
+      internal static let accent = ColorAsset(name: "ColorThemes/PurpleRose/accent")
+      internal static let background = ColorAsset(name: "ColorThemes/PurpleRose/background")
+      internal static let contentBackground = ColorAsset(name: "ColorThemes/PurpleRose/contentBackground")
+    }
+    internal enum RoseQuartz {
+      internal static let accent = ColorAsset(name: "ColorThemes/RoseQuartz/accent")
+      internal static let background = ColorAsset(name: "ColorThemes/RoseQuartz/background")
+      internal static let contentBackground = ColorAsset(name: "ColorThemes/RoseQuartz/contentBackground")
+    }
+    internal enum Sea {
+      internal static let accent = ColorAsset(name: "ColorThemes/Sea/accent")
+      internal static let background = ColorAsset(name: "ColorThemes/Sea/background")
+      internal static let contentBackground = ColorAsset(name: "ColorThemes/Sea/contentBackground")
+    }
+  }
   internal static let touchImageBlue = ImageAsset(name: "TouchImageBlue")
   internal enum ZikrCollectionsOnboarding {
     internal static let cardFileBox = ImageAsset(name: "ZikrCollectionsOnboarding/card-file-box")

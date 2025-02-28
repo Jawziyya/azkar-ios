@@ -5,7 +5,7 @@ import Library
 struct ZikrCollectionsSelectionScreen: View {
     
     @State var selectedCollection: ZikrCollectionSource
-    @Environment(\.colorTheme) var colorTheme
+    @Environment(\.appTheme) var appTheme
     let onContinue: (ZikrCollectionSource) -> Void
     
     init(
@@ -86,7 +86,7 @@ struct ZikrCollectionsSelectionScreen: View {
         .padding(.horizontal, 30)
         .frame(maxWidth: .infinity)
         .background(Color.contentBackground)
-        .clipShape(RoundedRectangle(cornerRadius: colorTheme.cornerRadius))
+        .clipShape(RoundedRectangle(cornerRadius: appTheme.cornerRadius))
     }
     
     var note: some View {

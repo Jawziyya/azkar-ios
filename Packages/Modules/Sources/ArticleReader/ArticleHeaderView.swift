@@ -54,7 +54,7 @@ struct ArticleHeaderView: View {
     
     let imageMaxHeight: CGFloat
     @State var showAltText = false
-    @Environment(\.colorTheme) var colorTheme
+    @Environment(\.appTheme) var appTheme
     
     var body: some View {
         imageAndTitle
@@ -142,7 +142,7 @@ struct ArticleHeaderView: View {
     var standaloneImage: some View {
         image
             .clipped()
-            .clipShape(RoundedRectangle(cornerRadius: colorTheme.cornerRadius))
+            .clipShape(RoundedRectangle(cornerRadius: appTheme.cornerRadius))
             .allowsHitTesting(false)
             .overlay(alignment: .topTrailing) {
                 altTextView

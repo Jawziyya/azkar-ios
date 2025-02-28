@@ -110,7 +110,7 @@ final class AppIconPackInfoViewModel: ObservableObject {
 struct AppIconPackInfoView: View {
 
     @ObservedObject var viewModel: AppIconPackInfoViewModel
-    @Environment(\.colorTheme) var colorTheme
+    @Environment(\.appTheme) var appTheme
 
     private let sampleIconSize: CGFloat = 60
     private var cornerRadius: CGFloat { sampleIconSize * 0.2 }
@@ -173,7 +173,7 @@ struct AppIconPackInfoView: View {
                 .frame(height: 0)
 
             Text(viewModel.pack.title)
-                .font(Font.system(.title2, design: colorTheme.fontDesign).smallCaps())
+                .font(Font.system(.title2, design: appTheme.fontDesign).smallCaps())
                 .kerning(1.5)
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 40)

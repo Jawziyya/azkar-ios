@@ -5,7 +5,7 @@ import Library
 
 struct SearchSuggestionsView: View {
     
-    @Environment(\.colorTheme) var colorTheme
+    @Environment(\.appTheme) var appTheme
     @ObservedObject var viewModel: SearchSuggestionsViewModel
     
     let onSearchSuggestionSelection: (String) -> Void

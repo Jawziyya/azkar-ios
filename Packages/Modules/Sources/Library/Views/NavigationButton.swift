@@ -9,7 +9,7 @@ public struct NavigationButton: View {
     let label: String?
     let action: () -> Void
     let applyVerticalPadding: Bool
-    @Environment(\.colorTheme) var colorTheme
+    @Environment(\.appTheme) var appTheme
     
     public init(
         title: String,

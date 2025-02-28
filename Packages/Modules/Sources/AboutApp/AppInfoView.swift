@@ -10,7 +10,7 @@ public struct AppInfoView: View {
 
     @ObservedObject var viewModel: AppInfoViewModel
     @Environment(\.safariPresenter) var safariPresenter
-    @Environment(\.colorTheme) var colorTheme
+    @Environment(\.appTheme) var appTheme
     
     public init(viewModel: AppInfoViewModel) {
         self.viewModel = viewModel
@@ -109,8 +109,8 @@ public struct AppInfoView: View {
                 
                 VStack(spacing: 0) {
                     HStack(spacing: 0) {
-                        HStack {
-                            if colorTheme == .code {
+                        HStack(spacing: 0) {
+                            if appTheme == .code {
                                 Text("~")
                             }
                             Text("app-name")
@@ -188,6 +188,8 @@ public struct AppInfoView: View {
         }
         .padding(20)
         .opacity(0.5)
+        .frame(maxWidth: .infinity)
+        .background(Color.background)
     }
     
 }

@@ -15,7 +15,7 @@ struct AppearanceScreen: View {
         }
         .customScrollContentBackground()
         .background(Color.background, ignoresSafeAreaEdges: .all)
-        .navigationTitle(L10n.Settings.Theme.title)
+        .navigationTitle(L10n.Settings.Appearance.title)
         .onAppear {
             AnalyticsReporter.reportScreen("Settings", className: viewName)
         }
@@ -24,7 +24,7 @@ struct AppearanceScreen: View {
     var content: some View {
         Group {
             PickerView(
-                label: L10n.Settings.Theme.themesTitle,
+                label: L10n.Settings.Appearance.AppTheme.title,
                 subtitle: viewModel.themeTitle,
                 destination: themePicker
             )

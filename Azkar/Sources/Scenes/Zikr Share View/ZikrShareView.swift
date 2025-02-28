@@ -17,7 +17,7 @@ struct ZikrShareView: View {
     var useFullScreen: Bool
 
     @Environment(\.colorScheme) var colorScheme
-    @Environment(\.colorTheme) var colorTheme
+    @Environment(\.appTheme) var appTheme
 
     var body: some View {
         ScrollView {
@@ -91,7 +91,7 @@ struct ZikrShareView: View {
                 }
             }
             .background(Color.contentBackground)
-            .cornerRadius(colorTheme.cornerRadius)
+            .cornerRadius(appTheme.cornerRadius)
             .shadow(color: colorScheme == .dark ? Color.clear : Color.black.opacity(0.1), radius: 5, x: 0, y: 1)
 
             if includeLogo {

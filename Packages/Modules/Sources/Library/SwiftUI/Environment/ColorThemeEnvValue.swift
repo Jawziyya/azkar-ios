@@ -1,7 +1,7 @@
 import SwiftUI
 
 private struct ColorThemeKey: EnvironmentKey {
-    static let defaultValue: ColorTheme = .default
+    static let defaultValue: ColorTheme = ColorTheme.current
 }
 
 extension EnvironmentValues {

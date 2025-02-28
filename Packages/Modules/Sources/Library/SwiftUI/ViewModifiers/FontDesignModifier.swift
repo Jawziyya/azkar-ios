@@ -19,7 +19,7 @@ public struct FontDesignModifier: ViewModifier {
         public static let italic = FontModification(rawValue: 1 << 3)
     }
     
-    @Environment(\.colorTheme) var colorTheme
+    @Environment(\.appTheme) var appTheme
     
     let fontSizeType: FontSizeType
     let fontWeight: Font.Weight?
@@ -53,9 +53,9 @@ public struct FontDesignModifier: ViewModifier {
     var font: Font {
         switch fontSizeType {
         case .size(let size):
-            return Font.system(size: size, weight: .regular, design: colorTheme.fontDesign)
+            return Font.system(size: size, weight: .regular, design: appTheme.fontDesign)
         case .style(let style):
-            return Font.system(style, design: colorTheme.fontDesign)
+            return Font.system(style, design: appTheme.fontDesign)
         }
     }
     

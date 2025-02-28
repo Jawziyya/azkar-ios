@@ -30,7 +30,7 @@ public struct ArticleCellView: View {
     let title: String
     let imageType: Article.ImageType?
     let maxHeight: CGFloat
-    @Environment(\.colorTheme) var colorTheme
+    @Environment(\.appTheme) var appTheme
     
     public init(
         title: String,

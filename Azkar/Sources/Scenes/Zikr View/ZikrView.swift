@@ -21,7 +21,7 @@ struct ZikrView: View {
 
     @ObservedObject var viewModel: ZikrViewModel
     @Environment(\.zikrReadingMode) var zikrReadingMode
-    @Environment(\.colorTheme) var colorTheme
+    @Environment(\.appTheme) var appTheme
 
     let incrementAction: AnyPublisher<Void, Never>
 
@@ -455,11 +455,11 @@ struct ZikrView: View {
 }
 
 private struct ZikrViewPreview: View {
-    var theme: ColorTheme
+    var theme: AppTheme
     
     var body: some View {
         let prefs = Preferences.shared
-        prefs.colorTheme = theme
+        prefs.appTheme = theme
         return ZikrView(
             viewModel: ZikrViewModel(
                 zikr: Zikr.placeholder(),
@@ -474,15 +474,15 @@ private struct ZikrViewPreview: View {
 }
 
 #Preview("Default") {
-    ZikrViewPreview(theme: .default)
+    ZikrViewPreview(theme: .code)
 }
 
 #Preview("Sea") {
-    ZikrViewPreview(theme: .sea)
+    ZikrViewPreview(theme: .flat)
         .environment(\.zikrReadingMode, .lineByLine)
 }
 
 #Preview("Ink") {
-    ZikrViewPreview(theme: .ink)
+    ZikrViewPreview(theme: .reader)
         .environment(\.zikrReadingMode, .lineByLine)
 }

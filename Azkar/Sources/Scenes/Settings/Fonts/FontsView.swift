@@ -8,7 +8,7 @@ struct FontsView: View {
     
     @StateObject var viewModel: FontsViewModel
     @Environment(\.colorScheme) var colorScheme
-    @Environment(\.colorTheme) var colorTheme
+    @Environment(\.appTheme) var appTheme
     @State private var previewFont: AppFontViewModel?
     
     var sampleTextView: some View {
@@ -20,7 +20,7 @@ struct FontsView: View {
                 .padding()
                 .frame(maxWidth: .infinity)
                 .background(
-                    RoundedRectangle(cornerRadius: colorTheme.cornerRadius)
+                    RoundedRectangle(cornerRadius: appTheme.cornerRadius)
                         .fill(Color.contentBackground)
                         .shadow(color: Color.accentColor.opacity(0.25), radius: 10, x: 0, y: 0)
                 )

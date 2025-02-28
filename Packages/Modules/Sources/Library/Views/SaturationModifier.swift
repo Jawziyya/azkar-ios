@@ -2,12 +2,13 @@ import SwiftUI
 
 public struct SaturationModifier: ViewModifier {
     
+    @Environment(\.appTheme) var appTheme
     @Environment(\.colorTheme) var colorTheme
     
     public init() {}
     
     public func body(content: Content) -> some View {
-        content.saturation(colorTheme.isBlackWhite ? 0.1 : 1)
+        content.saturation(colorTheme.isBlackWhite || appTheme.isBlackWhite ? 0.1 : 1)
     }
     
 }

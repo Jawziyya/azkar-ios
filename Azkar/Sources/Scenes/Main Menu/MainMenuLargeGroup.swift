@@ -7,12 +7,12 @@ struct MainMenuLargeGroup: View {
 
     let category: ZikrCategory
     @Environment(\.colorScheme) var colorScheme
-    @Environment(\.colorTheme) var colorTheme
+    @Environment(\.appTheme) var appTheme
 
 	var body: some View {
         VStack(alignment: .center, spacing: 8) {
             Group {
-                switch colorTheme {
+                switch appTheme {
                 case .reader, .flat:
                     imageView
                 default:
@@ -36,7 +36,7 @@ struct MainMenuLargeGroup: View {
     }
     
     var imageName: String {
-        return colorTheme.assetsNamespace + category.rawValue
+        return appTheme.assetsNamespace + category.rawValue
     }
     
     var animationView: some View {

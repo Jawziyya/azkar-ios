@@ -12,8 +12,7 @@ import StoreKit
 struct AzkarApp: App {
     
     @UIApplicationDelegateAdaptor var delegate: AppDelegate
-    @StateObject var preferences = Preferences.shared
-    @State var colorTheme: ColorTheme = ColorTheme.current
+    let preferences = Preferences.shared
     
     init() {
         #if !DEBUG
@@ -31,23 +30,23 @@ struct AzkarApp: App {
                 )
             )
             .view()
-            .id(colorTheme)
             .tint(Color.accent)
-            .toggleStyle(SwitchToggleStyle(tint: Color.accent))
-            .onReceive(preferences.$colorTheme) { newTheme in
-                setNavigationBarFont(theme: newTheme)
-                colorTheme = newTheme
+            .onReceive(preferences.$appTheme) { newTheme in
+                setNavigationBarFont(theme: newTheme, colorTheme: preferences.colorTheme)
+            }
+            .onReceive(preferences.$colorTheme) { colorTheme in
+                setNavigationBarFont(theme: preferences.appTheme, colorTheme: colorTheme)
             }
             .onReceive(preferences.$theme) { theme in
                 let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene
                 let window = scene?.keyWindow
                 window?.overrideUserInterfaceStyle = theme.userInterfaceStyle
             }
-            .environment(\.colorTheme, preferences.colorTheme)
+            .connectAppTheme()
         }
     }
     
-    private func setNavigationBarFont(theme: ColorTheme) {
+    private func setNavigationBarFont(theme: AppTheme, colorTheme: ColorTheme) {
         let standardAppearance = UINavigationBarAppearance()
         standardAppearance.configureWithOpaqueBackground()
         
@@ -82,6 +81,21 @@ struct AzkarApp: App {
         UINavigationBar.appearance().standardAppearance = standardAppearance
         UINavigationBar.appearance().scrollEdgeAppearance = scrollEdgeAppearance
         UINavigationBar.appearance().tintColor = UIColor(Color.text)
+
+        // Apply appearance to all existing navigation controllers
+        if let scenes = UIApplication.shared.connectedScenes as? Set<UIWindowScene> {
+            scenes.forEach { scene in
+                scene.windows.forEach { window in
+                    window.rootViewController?.allChildViewControllers.forEach { viewController in
+                        if let navigationController = viewController as? UINavigationController {
+                            navigationController.navigationBar.standardAppearance = standardAppearance
+                            navigationController.navigationBar.scrollEdgeAppearance = scrollEdgeAppearance
+                            navigationController.navigationBar.tintColor = UIColor(Color.text)
+                        }
+                    }
+                }
+            }
+        }
     }
     
     private func getSystemFont(style: UIFont.TextStyle, design: UIFontDescriptor.SystemDesign) -> UIFont {
@@ -103,4 +117,15 @@ struct AzkarApp: App {
         }
     }
     
+}
+
+// Extension to get all child view controllers recursively
+extension UIViewController {
+    var allChildViewControllers: [UIViewController] {
+        var all = [self]
+        for child in children {
+            all.append(contentsOf: child.allChildViewControllers)
+        }
+        return all
+    }
 }

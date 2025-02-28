@@ -76,7 +76,7 @@ struct ZikrShareOptionsView: View {
     var callback: (ShareOptions) -> Void
 
     @Environment(\.presentationMode) var presentation
-    @Environment(\.colorTheme) var colorTheme
+    @Environment(\.appTheme) var appTheme
 
     @AppStorage("kShareIncludeTitle")
     private var includeTitle: Bool = true

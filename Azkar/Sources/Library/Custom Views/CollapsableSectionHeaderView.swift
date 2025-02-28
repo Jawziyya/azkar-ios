@@ -7,7 +7,6 @@ struct CollapsableSectionHeaderView: View {
     let title: String?
     let isExpanded: Bool
     let isExpandable: Bool
-    @Environment(\.colorTheme) var colorTheme
 
     var body: some View {
         HStack {

@@ -16,9 +16,6 @@ final class RootViewModel: ObservableObject {
         mainMenuViewModel: MainMenuViewModel
     ) {
         self.mainMenuViewModel = mainMenuViewModel
-        mainMenuViewModel.objectWillChange
-            .sink(receiveValue: objectWillChange.send)
-            .store(in: &cancellables)
         
         let appName = L10n.appName
         let title = "\(appName)"
@@ -39,7 +36,7 @@ final class RootViewModel: ObservableObject {
 struct RootView: View {
     
     @ObservedObject var viewModel: RootViewModel
-    @Environment(\.colorTheme) var colorTheme
+    @Environment(\.appTheme) var appTheme
     
     var body: some View {
         MainMenuView(
@@ -56,7 +53,7 @@ struct RootView: View {
     }
     
     var appName: String {
-        if colorTheme == .code {
+        if appTheme == .code {
             return "~" + viewModel.title
         } else {
             return viewModel.title

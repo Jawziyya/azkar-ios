@@ -3,7 +3,7 @@ import Extensions
 
 struct SearchResultsView: View {
     
-    @Environment(\.colorTheme) var colorTheme
+    @Environment(\.appTheme) var appTheme
     @ObservedObject var viewModel: SearchResultsViewModel
     var onSelect: (SearchResultZikr) -> Void
 

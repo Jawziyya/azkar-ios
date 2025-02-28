@@ -11,7 +11,7 @@ extension ZikrCollectionSource: PickableItem {}
 struct TextSettingsScreen: View {
     
     @ObservedObject var viewModel: TextSettingsViewModel
-    @Environment(\.colorTheme) var colorTheme
+    @Environment(\.appTheme) var appTheme
 
     var body: some View {
         ScrollView {
@@ -109,7 +109,7 @@ struct TextSettingsScreen: View {
             
             Divider()
             
-            Toggle(isOn: $viewModel.preferences.useSystemFontSize) {
+            Toggle(isOn: $viewModel.preferences.useSystemFontSize.animation(.smooth)) {
                 HStack {
                     Text(L10n.Settings.Text.useSystemFontSize)
                         .systemFont(.body)
@@ -130,6 +130,7 @@ struct TextSettingsScreen: View {
 
             if viewModel.preferences.useSystemFontSize == false {
                 self.sizePicker
+                    .animation(.smooth, value: viewModel.preferences.useSystemFontSize)
                 Divider()
             }
             
