@@ -5,7 +5,8 @@ import Combine
 import StoreKit
 
 enum UserRegion: String, Hashable {
-    case russian = "RUS"
+    case russia = "RUS"
+    case usa = "USA"
     case other
 }
 

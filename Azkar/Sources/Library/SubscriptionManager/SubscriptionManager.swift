@@ -45,7 +45,7 @@ final class SubscriptionManager: SubscriptionManagerType {
     }
     
     func presentPaywall(sourceScreenName: String) {
-        let entitlement = getUserRegion() == .russian ? AzkarEntitlement.ultra : AzkarEntitlement.pro
+        let entitlement = getUserRegion() == .russia ? AzkarEntitlement.ultra : AzkarEntitlement.pro
         let presentationHandler = PaywallPresentationHandler()
         presentationHandler.onSkip { reason in
             let event = "paywall_presentation_skip"

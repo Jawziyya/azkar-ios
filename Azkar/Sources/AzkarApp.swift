@@ -31,6 +31,7 @@ struct AzkarApp: App {
             )
             .view()
             .tint(Color.accent)
+            .task { await presentPaywall() }
             .onReceive(preferences.$appTheme) { newTheme in
                 setNavigationBarFont(theme: newTheme, colorTheme: preferences.colorTheme)
             }
@@ -114,6 +115,17 @@ struct AzkarApp: App {
             if let windowScene = UIApplication.shared.connectedScenes.first?.session.scene as? UIWindowScene {
                 SKStoreReviewController.requestReview(in: windowScene)
             }
+        }
+    }
+    
+    private func presentPaywall() async {
+        let userRegion = SubscriptionManager.shared.getUserRegion()
+        switch userRegion {
+        case .russia:
+            break
+        default:
+            try? await Task.sleep(nanoseconds: 1_500_000_000)
+            SubscriptionManager.shared.presentPaywall(sourceScreenName: "app_launch")
         }
     }
     
