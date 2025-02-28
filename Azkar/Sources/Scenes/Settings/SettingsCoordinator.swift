@@ -54,7 +54,7 @@ final class SettingsCoordinator: RouteTrigger, Identifiable, NavigationCoordinat
             self.route(to: \.notificationsList)
             
         case .subscribe(let sourceScreen):
-            subscriptionManager.presentPaywall(sourceScreenName: sourceScreen)
+            subscriptionManager.presentPaywall(sourceScreenName: sourceScreen, completion: nil)
             
         case .appearance:
             self.route(to: \.appearance)

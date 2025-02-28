@@ -44,7 +44,7 @@ final class SubscriptionManager: SubscriptionManagerType {
         }
     }
     
-    func presentPaywall(sourceScreenName: String) {
+    func presentPaywall(sourceScreenName: String, completion: (() -> Void)? = nil) {
         let entitlement = getUserRegion() == .russia ? AzkarEntitlement.ultra : AzkarEntitlement.pro
         let presentationHandler = PaywallPresentationHandler()
         presentationHandler.onSkip { reason in
@@ -57,6 +57,14 @@ final class SubscriptionManager: SubscriptionManagerType {
             case .placementNotFound:
                 AnalyticsReporter.reportEvent(event, metadata: ["source": sourceScreenName, "reason": "placement_not_found"])
             }
+            completion?()
+        }
+        presentationHandler.onError { error in
+            AnalyticsReporter.reportEvent("paywall_presentation_error", metadata: ["source": sourceScreenName, "error": error.localizedDescription])
+            completion?()
+        }
+        presentationHandler.onPresent { info in
+            AnalyticsReporter.reportEvent("paywall_presentation", metadata: ["source": sourceScreenName])
         }
         presentationHandler.onDismiss { info, result in
             let event = "paywall_dismiss"
@@ -68,12 +76,7 @@ final class SubscriptionManager: SubscriptionManagerType {
             case .restored:
                 AnalyticsReporter.reportEvent(event, metadata: ["reason": "restored", "source": sourceScreenName])
             }
-        }
-        presentationHandler.onError { error in
-            AnalyticsReporter.reportEvent("paywall_presentation_error", metadata: ["source": sourceScreenName, "error": error.localizedDescription])
-        }
-        presentationHandler.onPresent { info in
-            AnalyticsReporter.reportEvent("paywall_presentation", metadata: ["source": sourceScreenName])
+            completion?()
         }
         Superwall.shared.register(placement: entitlement.rawValue, handler: presentationHandler)
     }

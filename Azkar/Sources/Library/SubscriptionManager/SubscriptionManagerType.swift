@@ -20,6 +20,6 @@ protocol SubscriptionManagerType {
     
     func getUserRegion() -> UserRegion
     
-    func presentPaywall(sourceScreenName: String)
+    func presentPaywall(sourceScreenName: String, completion: (() -> Void)?)
     
 }

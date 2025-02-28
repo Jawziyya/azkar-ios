@@ -13,13 +13,7 @@ struct AzkarApp: App {
     
     @UIApplicationDelegateAdaptor var delegate: AppDelegate
     let preferences = Preferences.shared
-    
-    init() {
-        #if !DEBUG
-        requestAppReview()
-        #endif
-    }
-    
+        
     var body: some Scene {
         WindowGroup {
             NavigationViewCoordinator(
@@ -111,21 +105,28 @@ struct AzkarApp: App {
     }
     
     private func requestAppReview() {
+        #if !DEBUG
         DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
             if let windowScene = UIApplication.shared.connectedScenes.first?.session.scene as? UIWindowScene {
                 SKStoreReviewController.requestReview(in: windowScene)
             }
         }
+        #endif
     }
     
     private func presentPaywall() async {
         let userRegion = SubscriptionManager.shared.getUserRegion()
         switch userRegion {
         case .russia:
-            break
+            requestAppReview()
         default:
             try? await Task.sleep(nanoseconds: 1_500_000_000)
-            SubscriptionManager.shared.presentPaywall(sourceScreenName: "app_launch")
+            SubscriptionManager.shared.presentPaywall(
+                sourceScreenName: "app_launch",
+                completion: {
+                    requestAppReview()
+                }
+            )
         }
     }
     
