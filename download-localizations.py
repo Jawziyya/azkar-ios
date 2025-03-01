@@ -7,7 +7,7 @@ from os import system, path
 from shutil import move, rmtree
 
 def url(key):
-    return 'http://localise.biz/api/export/archive/' + key + '/ru/en/tr/ar.zip'
+    return 'http://localise.biz/api/export/archive/' + key + '/ru/en.zip'
 
 strings_url = url('strings')
 plural_string_url = url('stringsdict')

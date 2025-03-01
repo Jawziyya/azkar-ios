@@ -16,10 +16,18 @@ internal enum L10n {
   internal static func remainingRepeats(_ p1: Int) -> String {
     return L10n.tr("Localizable", "remaining-repeats", p1, fallback: "Plural format key: \"%#@value@\"")
   }
+  /// 
+  internal static let remainingRepeatsPlural4 = L10n.tr("Localizable", "remaining-repeats-plural-4", fallback: "")
+  /// 
+  internal static let remainingRepeatsPlural5 = L10n.tr("Localizable", "remaining-repeats-plural-5", fallback: "")
   /// Plural format key: "%#@value@"
   internal static func repeatsNumber(_ p1: Int) -> String {
     return L10n.tr("Localizable", "repeats_number", p1, fallback: "Plural format key: \"%#@value@\"")
   }
+  /// 
+  internal static let repeatsNumberPlural4 = L10n.tr("Localizable", "repeats_number-plural-4", fallback: "")
+  /// 
+  internal static let repeatsNumberPlural5 = L10n.tr("Localizable", "repeats_number-plural-5", fallback: "")
   internal enum About {
     /// About
     internal static let title = L10n.tr("Localizable", "about.title", fallback: "About")
@@ -235,8 +243,6 @@ internal enum L10n {
     /// Morning adhkar 🌅
     internal static let morningNotificationTitle = L10n.tr("Localizable", "notifications.morning-notification-title", fallback: "Morning adhkar 🌅")
     internal enum Jumua {
-      /// 
-      internal static let body = L10n.tr("Localizable", "notifications.jumua.body", fallback: "")
       /// Dua in Jumua day
       internal static let title = L10n.tr("Localizable", "notifications.jumua.title", fallback: "Dua in Jumua day")
     }
@@ -328,6 +334,8 @@ internal enum L10n {
         }
       }
       internal enum ColorTheme {
+        /// Forest
+        internal static let forest = L10n.tr("Localizable", "settings.appearance.color-theme.forest", fallback: "Forest")
         /// Color scheme
         internal static let header = L10n.tr("Localizable", "settings.appearance.color-theme.header", fallback: "Color scheme")
         /// Ink
@@ -410,8 +418,8 @@ internal enum L10n {
         internal static let maccinzMountains = L10n.tr("Localizable", "settings.icon.list.maccinz_mountains", fallback: "In mountains")
         /// Ramadan night
         internal static let maccinzRamadanNight = L10n.tr("Localizable", "settings.icon.list.maccinz_ramadan_night", fallback: "Ramadan night")
-        /// 
-        internal static let midjourney001 = L10n.tr("Localizable", "settings.icon.list.midjourney001", fallback: "")
+        /// MidJourney v0.0.1
+        internal static let midjourney001 = L10n.tr("Localizable", "settings.icon.list.midjourney001", fallback: "MidJourney v0.0.1")
         /// Ramadan
         internal static let ramadan = L10n.tr("Localizable", "settings.icon.list.ramadan", fallback: "Ramadan")
       }

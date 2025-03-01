@@ -121,6 +121,9 @@ struct AzkarApp: App {
             requestAppReview()
         default:
             try? await Task.sleep(nanoseconds: 1_500_000_000)
+            guard SubscriptionManager.shared.isProUser() == false else {
+                return
+            }
             SubscriptionManager.shared.presentPaywall(
                 sourceScreenName: "app_launch",
                 completion: {

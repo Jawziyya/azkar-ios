@@ -14,6 +14,8 @@ extension ColorTheme: PickableItem {
             return L10n.Settings.Appearance.ColorTheme.ink
         case .roseQuartz:
             return L10n.Settings.Appearance.ColorTheme.roseQuartz
+        case .forest:
+            return L10n.Settings.Appearance.ColorTheme.forest
         case .default:
             return L10n.Common.default
         }

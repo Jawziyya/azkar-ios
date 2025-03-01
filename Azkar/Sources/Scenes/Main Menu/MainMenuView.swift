@@ -105,6 +105,8 @@ struct MainMenuView: View {
         dayNightAzkar
 
         otherAzkar
+        
+        additionalAdhkar
 
         if viewModel.articles.isEmpty == false {
             articlesView
@@ -147,17 +149,6 @@ struct MainMenuView: View {
     // MARK: - Other Azkar
     private var otherAzkar: some View {
         VStack {
-            if let dua = viewModel.additionalAdhkar {
-                ForEach(dua) { item in
-                    getMenuItem(
-                        item: item,
-                        action: {
-                            viewModel.navigateToZikr(item.zikr)
-                        }
-                    )
-                }
-            }
-
             ForEachIndexed(viewModel.otherAzkarModels) { _, position, item in
                 getMenuItem(
                     item: item,
@@ -176,6 +167,31 @@ struct MainMenuView: View {
         .background(Color.contentBackground)
         .applyTheme()
         .applyMenuPadding()
+    }
+    
+    @ViewBuilder
+    private var additionalAdhkar: some View {
+        if let dua = viewModel.additionalAdhkar {
+            VStack {
+                ForEachIndexed(dua) { _, position, item in
+                    getMenuItem(
+                        item: item,
+                        action: {
+                            viewModel.navigateToZikr(item.zikr)
+                        }
+                    )
+                    
+                    if position != .last {
+                        Divider()
+                    }
+                }
+            }
+            .padding()
+            .removeSaturationIfNeeded()
+            .background(Color.contentBackground)
+            .applyTheme()
+            .applyMenuPadding()
+        }
     }
     
     private func getMenuItem(
