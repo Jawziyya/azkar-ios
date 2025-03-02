@@ -11,7 +11,7 @@ on:
 jobs:
   deploy:
     name: Deploying to Testflight
-    runs-on: macos-14
+    runs-on: macos-15
 
     env:
       APPLE_ID: ${{ secrets.APPLE_ID }}
