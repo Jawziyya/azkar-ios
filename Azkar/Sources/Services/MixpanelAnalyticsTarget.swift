@@ -18,10 +18,12 @@ final class MixpanelAnalyticsTarget: AnalyticsTarget {
     }
     
     func reportScreen(screenName: String, className: String?) {
+        #if MIXPANEL_REPORT_SCREEN_VIEW
         Mixpanel.mainInstance().track(
             event: "screen_view",
             properties: ["screen_name": screenName, "class_name": className as MixpanelType]
         )
+        #endif
     }
     
     func setUserAttribute(_ type: UserAttributeType, value: String) {

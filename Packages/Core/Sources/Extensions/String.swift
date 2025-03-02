@@ -41,6 +41,24 @@ public extension String {
         .subtracting(CharacterSet(charactersIn: "ّ"))
       return components(separatedBy: arabicVowelsSet).joined()
     }
+
+    /// Normalizes the string for use in URLs or file paths.
+    /// - Returns: A normalized string with special characters removed/replaced, spaces converted to hyphens, and lowercase.
+    func normalizeForPath() -> String {
+        let decomposedString = self.folding(options: .diacriticInsensitive, locale: .current)
+        
+        let allowedCharacters = CharacterSet.alphanumerics.union(CharacterSet(charactersIn: ".-_"))
+        let components = decomposedString.components(separatedBy: allowedCharacters.inverted)
+        let filteredString = components.joined(separator: "-")
+        
+        // Replace multiple consecutive hyphens with a single one
+        var normalizedString = filteredString.replacingOccurrences(of: "-+", with: "-", options: .regularExpression)
+        
+        // Remove leading and trailing hyphens
+        normalizedString = normalizedString.trimmingCharacters(in: CharacterSet(charactersIn: "-"))
+        
+        return normalizedString.lowercased()
+    }
     
 }
 
@@ -100,5 +118,5 @@ public extension String {
             return SearchContext(resultRange: resultRange, context: context, contextRange: contextRange)
         }
     }
-    
+
 }

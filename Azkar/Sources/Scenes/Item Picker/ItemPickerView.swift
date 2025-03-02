@@ -16,7 +16,7 @@ struct ItemPickerView<SelectionValue>: View where SelectionValue: Hashable & Ide
         VStack(alignment: .leading, spacing: 0) {
             if let header {
                 Text(header)
-                    .font(Font.callout.smallCaps())
+                    .systemFont(.callout, modification: .smallCaps)
                     .foregroundStyle(Color.text)
             }
             
@@ -27,7 +27,7 @@ struct ItemPickerView<SelectionValue>: View where SelectionValue: Hashable & Ide
             
             if let footer {
                 Text(footer)
-                    .font(.caption)
+                    .systemFont(.caption)
                     .foregroundStyle(Color.secondaryText)
             }
         }
@@ -61,14 +61,14 @@ struct ItemPickerView<SelectionValue>: View where SelectionValue: Hashable & Ide
                     Spacer()
                     item.subtitle.flatMap { text in
                         Text(text)
-                            .font(item.subtitleFont)
+                            .systemFont(.footnote)
                             .foregroundStyle(Color.secondary)
                     }
                     
-                    if isItemProtected(item) {
+                    if isItemProtected(item) && selection.hashValue != item.hashValue {
                         ProBadgeView()
                     } else {
-                        CheckboxView(isCheked: .constant(self.selection.hashValue == item.hashValue))
+                        CheckboxView(isCheked: .constant(selection.hashValue == item.hashValue))
                             .frame(width: 20, height: 20)                        
                     }
                 }

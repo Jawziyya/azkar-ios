@@ -48,12 +48,8 @@ struct FontsView: View {
                                 }
                         }
                     } header: {
-                        Text(section.type.title)
-                            .systemFont(.headline, modification: .smallCaps)
-                            .padding()
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .multilineTextAlignment(.leading)
-                            .foregroundStyle(Color.secondaryText)
+                        HeaderView(title: section.type.title)
+                            .padding(.vertical, 15)
                     }
                 }
                 .redacted(reason: viewModel.didLoadData ? [] : .placeholder)

@@ -1,7 +1,7 @@
 import SwiftUI
 
 public enum IndexPosition {
-    case first, last, other
+    case first, last, other, only
 }
 
 /// A view that renders a collection of identified data.
@@ -20,7 +20,15 @@ public struct ForEachIndexed<Data, Item, Content: View>: View where Data: Random
         ForEach(Array(zip(indices, sequence)), id: \.1) { index, item in
             self.content(
                 index,
-                index == indices.first ? .first : index == indices.last ? .last : .other,
+                {
+                    let isFirst = index == indices.first
+                    let isLast = index == indices.last
+                    
+                    if isFirst && isLast { return .only }
+                    if isFirst { return .first }
+                    if isLast { return .last }
+                    return .other
+                }(),
                 item
             )
         }

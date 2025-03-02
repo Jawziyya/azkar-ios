@@ -38,7 +38,7 @@ struct AzkarListView: View {
                     self.viewModel.navigateToZikr(viewModel.azkar[index], index: index)
                 } label: {
                     HStack {
-                        Text(viewModel.azkar[index].title)
+                        Text(viewModel.azkar[index].title ?? index.description)
                             .contentShape(Rectangle())
                         Spacer(minLength: 8)
                         Image(systemName: "chevron.right")

@@ -18,7 +18,7 @@ extension EnvironmentValues {
 }
 
 extension View {
-    func attachEnvironmentOverrides(viewModel: EnvironmentOverridesViewModel, onChange: ((EnvironmentValues.Diff) -> Void)? = nil) -> some View {
+    func attachEnvironmentOverrides(viewModel: EnvironmentOverridesViewModel = .init(preferences: Preferences.shared), onChange: ((EnvironmentValues.Diff) -> Void)? = nil) -> some View {
         modifier(EnvironmentOverridesModifier(viewModel: viewModel, onChange: onChange))
     }
 }
@@ -44,11 +44,18 @@ struct EnvironmentOverridesModifier: ViewModifier {
     @ObservedObject var viewModel: EnvironmentOverridesViewModel
 
     @Environment(\.sizeCategory) private var defaultSizeCategory: ContentSizeCategory
+    @State private var previousSizeCategory: ContentSizeCategory?
     let onChange: ((EnvironmentValues.Diff) -> Void)?
     
     func body(content: Content) -> some View {
         content
             .onAppear { self.copyDefaultSettings() }
+            .onChange(of: contentSizeCategory) { newValue in
+                if let previousValue = previousSizeCategory, previousValue != newValue {
+                    onChange?(.sizeCategory)
+                }
+                previousSizeCategory = newValue
+            }
     }
 
     private var contentSizeCategory: ContentSizeCategory {
@@ -65,6 +72,7 @@ struct EnvironmentOverridesModifier: ViewModifier {
         if viewModel.preferences.useSystemFontSize {
             viewModel.preferences.sizeCategory = defaultSizeCategory
         }
+        previousSizeCategory = contentSizeCategory
     }
     
 }

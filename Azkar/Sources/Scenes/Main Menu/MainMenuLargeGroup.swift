@@ -23,7 +23,7 @@ struct MainMenuLargeGroup: View {
 
             Text(category.title)
                 .systemFont(.body)
-				.multilineTextAlignment(.leading)
+                .multilineTextAlignment(.center)
 				.foregroundStyle(Color.text)
                 .layoutPriority(1)
 		}

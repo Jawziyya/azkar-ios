@@ -126,24 +126,25 @@ struct AppIconPackListView: View {
         Section {
             self.content(for: iconPack)
         } header: {
-            VStack(spacing: 0) {
-                HStack {
-                    Text(iconPack.title)
-                        .foregroundStyle(Color.secondaryText)
-                        .systemFont(.headline, modification: .smallCaps)
-
-                    Spacer()
-
-                    iconPack.link.flatMap { link in
-                        Button(action: {
-                            safariPresenter.set(link)
-                        }, label: {
-                            Image(systemName: "link")
-                        })
-                    }
+            HStack {
+                Text(iconPack.title)
+                    .systemFont(.title3, modification: .smallCaps)
+                    .foregroundStyle(Color.secondaryText)
+                    .multilineTextAlignment(.leading)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                
+                Spacer()
+                
+                iconPack.link.flatMap { link in
+                    Button(action: {
+                        safariPresenter.set(link)
+                    }, label: {
+                        Image(systemName: "link")
+                    })
                 }
             }
-            .padding(20)
+            .padding(.horizontal, 30)
+            .padding(.vertical, 16)
         }
     }
 
@@ -172,7 +173,7 @@ struct AppIconPackListView: View {
                 }
             }
             .contentShape(Rectangle())
-            .padding(.vertical, 8)
+            .padding(.vertical, 12)
             .padding(.horizontal)
             .background(Color.contentBackground)
             .applyTheme(indexPosition: position)

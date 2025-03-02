@@ -83,7 +83,7 @@ public enum AppTheme: String, CaseIterable, Equatable, Codable, Identifiable {
     
     public var font: String? {
         switch self {
-        case .code: return "Menlo-Regular"
+        case .code: return "JetBrainsMono-Regular"
         default: return nil
         }
     }

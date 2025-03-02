@@ -24,8 +24,14 @@ struct AzkarApp: App {
                 )
             )
             .view()
-            .tint(Color.accent)
+            .connectAppTheme()
+            .attachEnvironmentOverrides(onChange: { _ in            
+                setNavigationBarFont(theme: preferences.appTheme, colorTheme: preferences.colorTheme)
+            })
             .task { await presentPaywall() }
+            .onAppear {
+                setNavigationBarFont(theme: preferences.appTheme, colorTheme: preferences.colorTheme)
+            }
             .onReceive(preferences.$appTheme) { newTheme in
                 setNavigationBarFont(theme: newTheme, colorTheme: preferences.colorTheme)
             }
@@ -37,7 +43,6 @@ struct AzkarApp: App {
                 let window = scene?.keyWindow
                 window?.overrideUserInterfaceStyle = theme.userInterfaceStyle
             }
-            .connectAppTheme()
         }
     }
     
@@ -57,11 +62,11 @@ struct AzkarApp: App {
         }
         
         let largeTitleTextAttributes = [
-            NSAttributedString.Key.font: getSystemFont(style: .largeTitle, design: fontDesign),
+            NSAttributedString.Key.font: getFont(customName: theme.font, style: .largeTitle, design: fontDesign),
             .foregroundColor: UIColor(Color.text)
         ]
         let titleTextAttributes = [
-            NSAttributedString.Key.font: getSystemFont(style: .title3, design: fontDesign),
+            NSAttributedString.Key.font: getFont(customName: theme.font, style: .title3, design: fontDesign),
             .foregroundColor: UIColor(Color.text)
         ]
         
@@ -81,23 +86,43 @@ struct AzkarApp: App {
         if let scenes = UIApplication.shared.connectedScenes as? Set<UIWindowScene> {
             scenes.forEach { scene in
                 scene.windows.forEach { window in
-                    window.rootViewController?.allChildViewControllers.forEach { viewController in
-                        if let navigationController = viewController as? UINavigationController {
-                            navigationController.navigationBar.standardAppearance = standardAppearance
-                            navigationController.navigationBar.scrollEdgeAppearance = scrollEdgeAppearance
-                            navigationController.navigationBar.tintColor = UIColor(Color.text)
-                        }
+                    var navigationControllers: [UINavigationController] = []
+                    if let navigationController = window.rootViewController as? UINavigationController {
+                        navigationControllers.append(navigationController)
+                    }
+                    let childControllers = window.rootViewController?.allChildViewControllers.compactMap { $0 as? UINavigationController }
+                    navigationControllers.append(contentsOf: childControllers ?? [])
+                    for navigationController in navigationControllers {
+                        navigationController.navigationBar.standardAppearance = standardAppearance
+                        navigationController.navigationBar.scrollEdgeAppearance = scrollEdgeAppearance
+                        navigationController.navigationBar.tintColor = UIColor(Color.text)
                     }
                 }
             }
         }
     }
     
-    private func getSystemFont(style: UIFont.TextStyle, design: UIFontDescriptor.SystemDesign) -> UIFont {
+    private func setNavigationControllerAppearance(
+        navigationController: UINavigationController,
+        standardAppearance: UINavigationBarAppearance,
+        scrollEdgeAppearance: UINavigationBarAppearance,
+        tintColor: UIColor
+    ) {
+        navigationController.navigationBar.standardAppearance = standardAppearance
+        navigationController.navigationBar.scrollEdgeAppearance = scrollEdgeAppearance
+        navigationController.navigationBar.tintColor = tintColor
+    }
+        
+    
+    private func getFont(customName: String?, style: UIFont.TextStyle, design: UIFontDescriptor.SystemDesign) -> UIFont {
         let systemFont = UIFont.preferredFont(forTextStyle: style)
         let font: UIFont
         if let descriptor = systemFont.fontDescriptor.withDesign(design) {
-            font = UIFont(descriptor: descriptor, size: systemFont.pointSize)
+            if let customName {
+                font = UIFont(name: customName, size: descriptor.pointSize) ?? UIFont(descriptor: descriptor, size: systemFont.pointSize)
+            } else {
+                font = UIFont(descriptor: descriptor, size: systemFont.pointSize)
+            }
         } else {
             font = systemFont
         }
@@ -121,7 +146,7 @@ struct AzkarApp: App {
             requestAppReview()
         default:
             try? await Task.sleep(nanoseconds: 1_500_000_000)
-            guard SubscriptionManager.shared.isProUser() == false else {
+            guard SubscriptionManager.shared.isProUser() == false && CommandLine.arguments.contains("DISABLE_LAUNCH_PAYWALL") == false else {
                 return
             }
             SubscriptionManager.shared.presentPaywall(

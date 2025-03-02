@@ -8,6 +8,7 @@ private struct AppThemeModifier: ViewModifier {
         content
             .environment(\.appTheme, preferences.appTheme)
             .environment(\.colorTheme, preferences.colorTheme)
+            .tint(Color.accent)
     }
 }
 

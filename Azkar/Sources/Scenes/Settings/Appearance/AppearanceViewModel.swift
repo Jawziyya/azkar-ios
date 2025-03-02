@@ -11,7 +11,14 @@ final class AppearanceViewModel: SettingsSectionViewModel {
     }
     
     var themeTitle: String {
-        "\(preferences.appTheme.title), \(preferences.colorTheme.title)"
+        var title = ""
+        if preferences.appTheme != .default {
+            title += preferences.appTheme.title
+        }
+        if preferences.colorTheme != .default {
+            title += title.isEmpty ? preferences.colorTheme.title : ", \(preferences.colorTheme.title)"
+        }
+        return title
     }
     
     var appIconPackListViewModel: AppIconPackListViewModel {

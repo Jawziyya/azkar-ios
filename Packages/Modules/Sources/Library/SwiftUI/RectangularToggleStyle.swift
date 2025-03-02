@@ -1,7 +1,11 @@
 import SwiftUI
 
 public struct RectangularToggleStyle: ToggleStyle {
-    public init() {}
+    let showProBadge: Bool
+    
+    public init(showProBadge: Bool = false) {
+        self.showProBadge = showProBadge
+    }
     
     public func makeBody(configuration: Configuration) -> some View {
         HStack {
@@ -19,6 +23,14 @@ public struct RectangularToggleStyle: ToggleStyle {
                         .fill(Color.white)
                         .frame(width: 20, height: 20)
                         .padding(5)
+                        .overlay(alignment: .center) {
+                            if showProBadge {
+                                Image(systemName: "lock.fill")
+                                    .font(.system(size: 10))
+                                    .foregroundColor(Color.accent)
+                                    .padding(2)
+                            }
+                        }
                 }
                 .animation(.smooth, value: configuration.isOn)
             }
@@ -29,19 +41,24 @@ public struct RectangularToggleStyle: ToggleStyle {
 
 private struct ApplyRectangularToggleStyle: ViewModifier {
     @Environment(\.appTheme) var appTheme
+    let showProBadge: Bool
+    
+    init(showProBadge: Bool = false) {
+        self.showProBadge = showProBadge
+    }
     
     func body(content: Content) -> some View {
         if appTheme.cornerRadius == 0 {
-            content.toggleStyle(.rectangular)
+            content.toggleStyle(.rectangular(showProBadge: showProBadge))
         } else {
-            content.toggleStyle(SwitchToggleStyle(tint: Color.accent))
+            content.toggleStyle(.standard(showProBadge: showProBadge))
         }
     }
 }
 
 extension View {
-    public func applyThemedToggleStyle() -> some View {
-        modifier(ApplyRectangularToggleStyle())
+    public func applyThemedToggleStyle(showProBadge: Bool = false) -> some View {
+        modifier(ApplyRectangularToggleStyle(showProBadge: showProBadge))
     }
 }
 
@@ -49,12 +66,22 @@ extension ToggleStyle where Self == RectangularToggleStyle {
     public static var rectangular: RectangularToggleStyle {
         RectangularToggleStyle()
     }
+    
+    public static func rectangular(showProBadge: Bool) -> RectangularToggleStyle {
+        RectangularToggleStyle(showProBadge: showProBadge)
+    }
 }
 
 @available(iOS 17.0, *)
 #Preview {
     @Previewable @State var isOn = true
-    Toggle("Toggle", isOn: $isOn)
-        .toggleStyle(RectangularToggleStyle())
-        .padding()
+    VStack {
+        Toggle("Regular Toggle", isOn: $isOn)
+            .toggleStyle(RectangularToggleStyle())
+            .padding()
+        
+        Toggle("Pro Feature Toggle", isOn: $isOn)
+            .toggleStyle(RectangularToggleStyle(showProBadge: true))
+            .padding()
+    }
 }

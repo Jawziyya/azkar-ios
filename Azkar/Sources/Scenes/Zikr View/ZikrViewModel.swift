@@ -22,7 +22,7 @@ final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
     }
 
     let zikr: Zikr
-    let title: String
+    let title: String?
     /// Is nested into a container like page view or other.
     let isNested: Bool
 
@@ -111,7 +111,7 @@ final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
         self.preferences = preferences
         self.textProcessor = textProcessor
         self.player = player
-        title = zikr.title ?? "n/a"
+        title = zikr.title
         
         text = textProcessor.processArabicText(zikr.text)
         
@@ -130,7 +130,7 @@ final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
         if let url = audioURL {
             let timings = zikr.audioTimings
             let playerViewModel = PlayerViewModel(
-                title: title,
+                title: title ?? zikr.id.description,
                 subtitle: zikr.category?.title,
                 audioURL: url,
                 timings: timings,

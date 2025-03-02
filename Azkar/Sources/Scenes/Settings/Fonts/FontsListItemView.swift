@@ -21,7 +21,7 @@ struct FontsListItemView: View {
             Group {
                 if isArabicFontsType {
                     Text(vm.name)
-                        .font(.system(.body))
+                        .systemFont(.body)
                 } else {
                     Text(vm.name)
                         .font(Font.customFont(vm.font, style: .body, sizeCategory: nil))
@@ -42,7 +42,7 @@ struct FontsListItemView: View {
                     .onTapGesture(perform: selectionCallback)
             }
             
-            if hasAccessToFont {
+            if hasAccessToFont || isSelectedFont {
                 CheckboxView(isCheked: .constant(isSelectedFont))
                     .frame(width: 20, height: 20)
             } else {
@@ -50,7 +50,7 @@ struct FontsListItemView: View {
             }
         }
         .contentShape(Rectangle())
-        .frame(minHeight: 44)
+        .frame(minHeight: 50)
     }
     
     @MainActor

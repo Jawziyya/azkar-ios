@@ -87,6 +87,8 @@ public extension View {
                     return [.topLeft, .topRight]
                 case .last:
                     return [.bottomLeft, .bottomRight]
+                case .only:
+                    return .allCorners
                 case .other:
                     return []
                 }

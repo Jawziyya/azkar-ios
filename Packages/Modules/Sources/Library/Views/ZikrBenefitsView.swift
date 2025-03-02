@@ -3,21 +3,21 @@ import SwiftUI
 public struct ZikrBenefitsView: View {
     
     public let text: String
-    // TODO: Support for Translation font.
+    public let font: AppFont
     
-    public init(text: String) {
+    public init(text: String, font: AppFont) {
         self.text = text
+        self.font = font
     }
     
     public var body: some View {
         HStack(alignment: .top, spacing: 8) {
-            Text("💎")
-                .minimumScaleFactor(0.1)
-                .font(Font.largeTitle)
+            Image("gem-stone")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
                 .frame(maxWidth: 20, maxHeight: 15)
-                .foregroundStyle(Color.accent)
             Text(text)
-                .systemFont(.footnote)
+                .font(.custom(font.postscriptName, size: 12, relativeTo: .footnote))
         }
         .padding()
     }
@@ -29,5 +29,5 @@ public struct ZikrBenefitsView: View {
     #Preview {
         ZikrBenefitsView(text: "")
     }
-    """)
+    """, font: TranslationFont.iowanOldStyle)
 }

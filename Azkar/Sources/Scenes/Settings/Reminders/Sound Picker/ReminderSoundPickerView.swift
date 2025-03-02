@@ -1,6 +1,18 @@
 import SwiftUI
 import Library
 
+struct HeaderView: View {
+    let title: String
+    var body: some View {
+        Text(title)
+            .systemFont(.title3, modification: .smallCaps)
+            .foregroundStyle(Color.secondaryText)
+            .multilineTextAlignment(.leading)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.horizontal, 30)
+    }
+}
+
 struct ReminderSoundPickerView: View {
     
     @ObservedObject var viewModel: ReminderSoundPickerViewModel
@@ -10,13 +22,7 @@ struct ReminderSoundPickerView: View {
         ScrollView {
             ForEach(viewModel.sections) { section in
                 VStack(spacing: 0) {
-                    Text(section.title)
-                        .systemFont(.title3, modification: .smallCaps)
-                        .foregroundStyle(Color.secondaryText)
-                        .multilineTextAlignment(.leading)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(.horizontal)
-                        .padding(.top, 8)
+                    HeaderView(title: section.title)
                     
                     VStack {
                         ForEachIndexed(section.sounds) { _, position, sound in
@@ -53,7 +59,7 @@ struct ReminderSoundPickerView: View {
             
             Spacer()
 
-            if viewModel.hasAccessToSound(sound) {
+            if viewModel.hasAccessToSound(sound) || viewModel.preferredSound == sound {
                 CheckboxView(isCheked: .constant(viewModel.preferredSound == sound))
                     .frame(width: 20, height: 20)
             } else {

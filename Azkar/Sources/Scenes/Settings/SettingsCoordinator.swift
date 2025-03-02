@@ -7,7 +7,7 @@ import Library
 enum SettingsRoute: Hashable, RouteKind {
     case subscribe(sourceScreen: String), notificationsList
     case appearance, text, counter
-    case reminders, adhkarReminders, jumuaReminders, soundPicker(ReminderSound)
+    case reminders, soundPicker(ReminderSound)
     case aboutApp
 }
 
@@ -20,8 +20,6 @@ final class SettingsCoordinator: RouteTrigger, Identifiable, NavigationCoordinat
     @Route(.push) var text = makeTextView
     @Route(.push) var counter = makeCounterView
     @Route(.push) var reminders = makeRemindersView
-    @Route(.push) var adhkarReminders = makeAdhkarRemindersView
-    @Route(.push) var jumuaReminders = makeJumuaRemindersView
     @Route(.push) var soundPicker = makeSoundPickerView
     @Route(.push) var aboutApp = makeAboutAppView
         
@@ -68,12 +66,6 @@ final class SettingsCoordinator: RouteTrigger, Identifiable, NavigationCoordinat
         case .reminders:
             self.route(to: \.reminders)
             
-        case .adhkarReminders:
-            self.route(to: \.adhkarReminders)
-            
-        case .jumuaReminders:
-            self.route(to: \.jumuaReminders)
-            
         case .soundPicker(let currentSound):
             self.route(to: \.soundPicker, currentSound)
             
@@ -119,18 +111,6 @@ extension SettingsCoordinator {
     
     func makeRemindersView() -> some View {
         RemindersScreen(viewModel: RemindersViewModel(router: createRouter()))
-    }
-    
-    func makeAdhkarRemindersView() -> some View {
-        AdhkarRemindersView(viewModel: AdhkarRemindersViewModel(
-            router: self.createRouter()
-        ))
-    }
-    
-    func makeJumuaRemindersView() -> some View {
-        JumuaRemindersView(viewModel: JumuaRemindersViewModel(
-            router: self.createRouter()
-        ))
     }
     
     func makeSoundPickerView(_ sound: ReminderSound) -> some View {

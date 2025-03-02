@@ -136,7 +136,7 @@ struct ZikrView: View {
                 }
 
                 viewModel.zikr.benefits.flatMap { text in
-                    ZikrBenefitsView(text: text)
+                    ZikrBenefitsView(text: text, font: viewModel.preferences.preferredTranslationFont)
                 }
             }
 
@@ -410,7 +410,7 @@ struct ZikrView: View {
                 .disabled(viewModel.hadithViewModel == nil)
             }
         }
-        .font(.caption)
+        .systemFont(.caption)
         .padding()
     }
 

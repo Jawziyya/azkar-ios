@@ -167,7 +167,6 @@ extension SubscriptionManager: PurchaseController {
     /// Makes a purchase with RevenueCat and returns its result. This gets called when
     /// someone tries to purchase a product on one of your paywalls.
     func purchase(product: SuperwallKit.StoreProduct) async -> SuperwallKit.PurchaseResult {
-        AnalyticsReporter.reportEvent("purchase_attempt", metadata: ["product": product.productIdentifier])
         do {
             guard let sk2Product = product.sk2Product else {
                 AnalyticsReporter.reportEvent("purchase_attempt_error", metadata: ["error": PurchasingError.sk2ProductNotFound.localizedDescription])
@@ -176,10 +175,8 @@ extension SubscriptionManager: PurchaseController {
             let storeProduct = RevenueCat.StoreProduct(sk2Product: sk2Product)
             let revenueCatResult = try await Purchases.shared.purchase(product: storeProduct)
             if revenueCatResult.userCancelled {
-                AnalyticsReporter.reportEvent("purchase_attempt_cancelled")
                 return .cancelled
             } else {
-                AnalyticsReporter.reportEvent("purchase_attempt_purchased")
                 return .purchased
             }
         } catch let error as ErrorCode {

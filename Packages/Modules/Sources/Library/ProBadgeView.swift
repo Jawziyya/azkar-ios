@@ -5,11 +5,12 @@ public struct ProBadgeView: View {
     public init() {}
     
     public var body: some View {
-        Image("lock")
+        Image(systemName: "lock.fill")
             .resizable()
             .aspectRatio(contentMode: .fit)
-            .frame(width: 15, height: 15)
+            .frame(width: 13, height: 13)
             .opacity(0.75)
+            .foregroundStyle(Color.blue)
     }
     
 }

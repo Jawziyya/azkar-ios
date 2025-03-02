@@ -29,7 +29,6 @@ struct MainMenuView: View {
     var body: some View {
         displayContent
             .textInputAutocapitalization(.never)
-//            .attachEnvironmentOverrides(viewModel: EnvironmentOverridesViewModel(preferences: viewModel.preferences))
             .onAppear {
                 AnalyticsReporter.reportScreen("Main Menu", className: viewName)
             }
@@ -142,8 +141,7 @@ struct MainMenuView: View {
         } action: {
             self.viewModel.navigateToCategory(category)
         }
-        .frame(maxWidth: .infinity)
-        .frame(height: 120)
+        .frame(maxWidth: .infinity, minHeight: 120)
     }
     
     // MARK: - Other Azkar

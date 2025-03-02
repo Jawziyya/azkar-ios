@@ -3,6 +3,7 @@ import Entities
 import NukeUI
 import Fakery
 import RoughSwift
+import Library
 
 struct PatternView: View {
     var body: some View {

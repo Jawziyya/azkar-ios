@@ -48,7 +48,7 @@ public struct TranslationFont: Codable, Identifiable, Hashable, AppFont {
 public extension TranslationFont {
     
     static var standardFonts: [TranslationFont] {
-        [systemFont, courier, iowanOldStyle, baskerville]
+        [systemFont, courier, iowanOldStyle, baskerville, modernDotDigital]
     }
     
     static var systemFont: TranslationFont {
@@ -83,6 +83,15 @@ public extension TranslationFont {
         TranslationFont(
             name: "Baskerville",
             postscriptName: "Baskerville",
+            isStandartPackFont: true,
+            isCyrillic: 1
+        )
+    }
+    
+    static var modernDotDigital: TranslationFont {
+        TranslationFont(
+            name: "Modern Dot Digital 7",
+            postscriptName: "ModernDotDigital-7",
             isStandartPackFont: true,
             isCyrillic: 1
         )

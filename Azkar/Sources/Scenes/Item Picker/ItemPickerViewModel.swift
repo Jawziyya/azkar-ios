@@ -12,7 +12,6 @@ protocol PickableItem {
     var title: String { get }
     var image: Image? { get }
     var subtitle: String? { get }
-    var subtitleFont: Font { get }
 }
 
 extension String: PickableItem {
@@ -29,10 +28,6 @@ extension PickableItem {
 
     var subtitle: String? {
         nil
-    }
-
-    var subtitleFont: Font {
-        Font.footnote
     }
 
 }

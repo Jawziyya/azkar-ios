@@ -132,12 +132,7 @@ struct ColorSchemesView: View {
     }
     
     func headerView(_ label: String) -> some View {
-        Text(label)
-            .systemFont(.title3, modification: .smallCaps)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .foregroundStyle(Color.secondaryText)
-            .padding(.horizontal)
-            .background(Color.background)
+        HeaderView(title: label)
     }
     
     func footerView(_ label: String) -> some View {

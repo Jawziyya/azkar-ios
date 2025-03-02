@@ -173,14 +173,12 @@ struct AppIconPackInfoView: View {
                 .frame(height: 0)
 
             Text(viewModel.pack.title)
-                .font(Font.system(.title2, design: appTheme.fontDesign).smallCaps())
-                .kerning(1.5)
+                .systemFont(.title2, modification: .smallCaps)
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 40)
 
             Text(viewModel.pack.description)
-                .kerning(1.5)
-                .font(.body)
+                .systemFont(.body)
 
             if viewModel.processing {
                 ActivityIndicator(style: .medium, color: .accent)

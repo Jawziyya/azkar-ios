@@ -14,9 +14,9 @@ import PackageDescription
 let package = Package(
     name: "Azkar",
     dependencies: [
-        .package(path: "Packages/Core"),
-        .package(path: "Packages/Interactors"),
-        .package(path: "Packages/Modules"),
+        .package(path: "../Packages/Core"),
+        .package(path: "../Packages/Interactors"),
+        .package(path: "../Packages/Modules"),
         
         // MARK: Data
         .package(url: "https://github.com/weichsel/ZIPFoundation", from: "0.9.0"),
