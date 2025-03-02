@@ -53,7 +53,7 @@ public struct ArabicFont: AppFont, Identifiable, Codable, Hashable {
 public extension ArabicFont {
     
     static var standardFonts: [AppFont] {
-        [systemArabic, adobe, KFGQP, noto, handjet, marhey]
+        [systemArabic, adobe, KFGQP, noto, marhey]
     }
     
     static var systemArabic: ArabicFont {
@@ -84,14 +84,6 @@ public extension ArabicFont {
         ArabicFont(
             name: "Noto Naskh",
             postscriptName: "NotoNaskhArabicUI",
-            isStandartPackFont: true
-        )
-    }
-    
-    static var handjet: ArabicFont {
-        ArabicFont(
-            name: "Handjet",
-            postscriptName: "Handjet",
             isStandartPackFont: true
         )
     }
