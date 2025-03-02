@@ -145,7 +145,6 @@ struct AzkarApp: App {
         case .russia:
             requestAppReview()
         default:
-            try? await Task.sleep(nanoseconds: 1_500_000_000)
             guard SubscriptionManager.shared.isProUser() == false && CommandLine.arguments.contains("DISABLE_LAUNCH_PAYWALL") == false else {
                 return
             }
