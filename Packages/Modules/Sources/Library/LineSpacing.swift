@@ -16,9 +16,9 @@ public enum LineSpacing: String, Codable, CaseIterable, Identifiable {
     public var value: CGFloat {
         switch self {
         case .s: return 0
-        case .m: return 10
-        case .l: return 20
-        case .xl: return 35
+        case .m: return 5
+        case .l: return 10
+        case .xl: return 25
         }
     }
 }

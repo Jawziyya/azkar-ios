@@ -84,7 +84,8 @@ extension ContentSizeCategory: Codable {
             .extraLarge,
             .extraExtraLarge,
             .accessibilityMedium,
-            .accessibilityLarge
+            .accessibilityLarge,
+            .accessibilityExtraExtraLarge
         ]
     }
     

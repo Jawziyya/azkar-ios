@@ -129,14 +129,13 @@ struct ZikrView: View {
                 }
 
                 viewModel.zikr.notes.flatMap { notes in
-                    ZikrNoteView(
-                        text: notes,
-                        font: .customFont(viewModel.preferences.preferredTranslationFont)
-                    )
+                    ZikrNoteView(text: notes)
+                        .customFont(viewModel.preferences.preferredTranslationFont)
                 }
 
                 viewModel.zikr.benefits.flatMap { text in
-                    ZikrBenefitsView(text: text, font: viewModel.preferences.preferredTranslationFont)
+                    ZikrBenefitsView(text: text)
+                        .customFont(viewModel.preferences.preferredTranslationFont, style: .footnote)
                 }
             }
 
@@ -315,11 +314,11 @@ struct ZikrView: View {
             font: isArabicText ? prefs.preferredArabicFont : prefs.preferredTranslationFont,
             lineSpacing: prefs.enableLineBreaks ? spacing : 0
         )
-        .padding(5)
         .background(
             Group {
                 if idx == viewModel.indexToHighlight, viewModel.highlightCurrentIndex {
                     backgroundColor
+                        .padding(-10)
                         .cornerRadius(6)
                 }
             }

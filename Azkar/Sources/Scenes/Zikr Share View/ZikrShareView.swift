@@ -3,6 +3,7 @@
 import SwiftUI
 import NukeUI
 import Nuke
+import Library
 
 struct ZikrShareView: View {
 
@@ -16,11 +17,13 @@ struct ZikrShareView: View {
     var backgroundColor = Color.background
     var arabicTextAlignment = TextAlignment.trailing
     var otherTextAlignment = TextAlignment.leading
+    var nestIntoScrollView: Bool
     var useFullScreen: Bool
     var selectedBackground: ZikrShareBackgroundItem
 
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.appTheme) var appTheme
+    @Environment(\.colorTheme) var colorTheme
     @State private var dynamicColorScheme: ColorScheme?
 
     // New computed property to check if background is an image
@@ -28,25 +31,32 @@ struct ZikrShareView: View {
         switch selectedBackground.backgroundType {
         case .solidColor:
             return false
-        case .patternImage, .remoteImage:
+        case .localImage, .remoteImage:
             return true
         }
     }
     
     var body: some View {
-        ScrollView {
+        container
+            .edgesIgnoringSafeArea(.all)
+            .environment(\.dynamicTypeSize, .large)
+            .environment(\.colorScheme, customColorScheme)
+            .onAppear {
+                AnalyticsReporter.reportScreen("Zikr Share", className: viewName)
+            }
+            .onChange(of: selectedBackground) { _ in
+                dynamicColorScheme = nil
+            }
+    }
+    
+    @ViewBuilder
+    var container: some View {
+        if nestIntoScrollView {
+            ScrollView {
+                content
+            }
+        } else {
             content
-                .frame(minHeight: useFullScreen ? UIScreen.main.bounds.height : 100)
-                .background(backgroundForContent)
-        }
-        .edgesIgnoringSafeArea(.all)
-        .environment(\.dynamicTypeSize, .large)
-        .environment(\.colorScheme, customColorScheme)
-        .onAppear {
-            AnalyticsReporter.reportScreen("Zikr Share", className: viewName)
-        }
-        .onChange(of: selectedBackground) { _ in
-            dynamicColorScheme = nil
         }
     }
     
@@ -59,13 +69,13 @@ struct ZikrShareView: View {
             switch selectedBackground.backgroundType {
             case .solidColor(let color):
                 color
-            case .patternImage(let image):
+            case .localImage(let image):
                 renderImage(image)
-            case .remoteImage(let url):
-                if useFullScreen, let cachedImage = getCachedImage(for: url) {
+            case .remoteImage(let item):
+                if useFullScreen, let cachedImage = getCachedImage(for: item.originalURL) {
                     renderImage(cachedImage)
                 } else {
-                    LazyImage(url: url) { state in
+                    LazyImage(url: item.originalURL) { state in
                         if let image = state.image {
                             image
                                 .resizable()
@@ -133,8 +143,8 @@ struct ZikrShareView: View {
 
             VStack(spacing: 0) {
                 Text(.init(viewModel.text.joined(separator: "\n")))
-                    .font(Font.customFont(viewModel.preferences.preferredArabicFont, style: .title1, sizeCategory: .large))
-                    .frame(maxWidth: .infinity, alignment: .trailing)
+                    .customFont(viewModel.preferences.preferredArabicFont, style: .title1)
+                    .frame(alignment: .trailing)
                     .multilineTextAlignment(arabicTextAlignment)
                     .padding()
 
@@ -142,44 +152,36 @@ struct ZikrShareView: View {
                     Divider()
 
                     Text(viewModel.translation.joined(separator: "\n"))
-                        .font(Font.customFont(viewModel.preferences.preferredTranslationFont, style: .body, sizeCategory: .large))
+                        .customFont(viewModel.preferences.preferredTranslationFont, style: .body)
                         .multilineTextAlignment(otherTextAlignment)
                         .padding()
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
 
-                if includeTransliteration {
+                if includeTransliteration, !viewModel.transliteration.isEmpty {
                     Divider()
 
                     Text(viewModel.transliteration.joined(separator: "\n"))
-                        .font(Font.customFont(viewModel.preferences.preferredTranslationFont, style: .body, sizeCategory: .large))
+                        .customFont(viewModel.preferences.preferredTranslationFont, style: .body)
                         .multilineTextAlignment(.leading)
                         .padding()
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
 
-                if includeBenefits, let text = viewModel.zikr.benefits {
+                if includeBenefits, let text = viewModel.zikr.benefits?.textOrNil {
                     Divider()
-
-                    HStack(alignment: .top, spacing: 8) {
-                        Image("gem-stone")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(maxWidth: 20, maxHeight: 15)
-                        Text(text)
-                            .font(.customFont(viewModel.preferences.preferredTranslationFont, style: .footnote))
-                    }
-                    .padding()
-                    .frame(maxWidth: .infinity, alignment: .leading)
+                    
+                    ZikrBenefitsView(text: text)
+                        .customFont(viewModel.preferences.preferredTranslationFont, style: .footnote)
+                        .frame(maxWidth: .infinity, alignment: .leading)
                 }
 
-                if includeSource {
-                    Text(viewModel.source)
-                        .font(Font.customFont(viewModel.preferences.preferredTranslationFont, style: .caption1, sizeCategory: .large))
+                if includeSource, let source = viewModel.source.textOrNil {
+                    Text(source)
+                        .customFont(viewModel.preferences.preferredTranslationFont, style: .caption1)
                         .foregroundStyle(Color.secondaryText)
                         .padding(.horizontal)
                         .padding(.vertical, 8)
-                        .frame(maxWidth: .infinity, alignment: .leading)
                 }
             }
             .background {
@@ -209,8 +211,13 @@ struct ZikrShareView: View {
                 .opacity(0.5)
             }
         }
-        .padding(.horizontal, 20)
+        .padding(.horizontal, 25)
         .padding(.vertical, 30)
+        .frame(
+            maxWidth: .infinity,
+            minHeight: useFullScreen ? UIScreen.main.bounds.height : 100
+        )
+        .background(backgroundForContent)
     }
 
 }
@@ -225,6 +232,7 @@ struct ZikrShareView_Previews: PreviewProvider {
                 preferences: Preferences.shared,
                 player: Player.test
             ),
+            nestIntoScrollView: false,
             useFullScreen: true,
             selectedBackground: .defaultBackground
         )

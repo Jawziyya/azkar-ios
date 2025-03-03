@@ -2,6 +2,7 @@
 
 import SwiftUI
 import AudioPlayer
+import Library
 
 struct ZikrShareOptionsView: View {
     
@@ -11,6 +12,8 @@ struct ZikrShareOptionsView: View {
         let includeTitle: Bool
         let includeBenefits: Bool
         let includeLogo: Bool
+        let includeTranslation: Bool
+        let includeTransliteration: Bool
         var textAlignment: ZikrShareTextAlignment = .start
         let shareType: ZikrShareType
         var selectedBackground: ZikrShareBackgroundItem
@@ -22,11 +25,15 @@ struct ZikrShareOptionsView: View {
 
     var callback: (ShareOptions) -> Void
 
+    @EnvironmentObject var backgroundsService: ShareBackgroundService
     @Environment(\.presentationMode) var presentation
     @Environment(\.appTheme) var appTheme
     let subscriptionManager = SubscriptionManager.shared
     
     let preferences = Preferences.shared
+    
+    @AppStorage("kShareShowExtraOptions")
+    private var showExtraOptions = false
 
     @AppStorage("kShareIncludeTitle")
     private var includeTitle: Bool = true
@@ -36,28 +43,67 @@ struct ZikrShareOptionsView: View {
 
     @AppStorage("kShareIncludeLogo")
     private var includeLogo = true
-
+    
+    @AppStorage("kShareIncludeTranslation")
+    private var includeTranslation = true
+    
+    @AppStorage("kShareIncludeTransliteration")
+    private var includeTransliteration = true
+    
     @AppStorage("kShareShareType")
     private var selectedShareType = ZikrShareType.image
 
     @AppStorage("kShareTextAlignment")
     private var textAlignment = ZikrShareTextAlignment.start
     
-    let backgrounds = ZikrShareBackgroundItem.all
-    @State private var selectedBackground: ZikrShareBackgroundItem = .defaultBackground
-
-    private let alignments: [ZikrShareTextAlignment] = [.center, .start]
+    @State var backgrounds = ZikrShareBackgroundItem.preset
     
+    @AppStorage("kShareBackground")
+    private var selectedBackgroundId: String?
+
+    @State private var selectedBackground: ZikrShareBackgroundItem = .defaultBackground
+    
+    @State private var shareViewSize: CGSize = .zero
+    
+    private let alignments: [ZikrShareTextAlignment] = [.center, .start]
+            
     var body: some View {
         VStack(spacing: 0) {
             toolbar
                 .padding()
-            
+                    
             content
                 .customScrollContentBackground()
         }
         .applyThemedToggleStyle()
         .background(Color.background, ignoresSafeAreaEdges: .all)
+        .task {
+            do {
+                let remoteImageBackgrounds = try await backgroundsService.loadBackgrounds()
+                backgrounds = ZikrShareBackgroundItem.preset + remoteImageBackgrounds
+                
+                // Set selectedBackground based on selectedBackgroundId after backgrounds are loaded
+                if let selectedBackgroundId = selectedBackgroundId,
+                   let foundBackground = backgrounds.first(where: { $0.id == selectedBackgroundId }) {
+                    selectedBackground = foundBackground
+                }
+            } catch {
+                print(error)
+            }
+        }
+        .screenshotProtected(isProtected: isProItemSelected && !subscriptionManager.isProUser())
+        .background {
+            if isProItemSelected && !subscriptionManager.isProUser() {
+                Image("lock-dynamic-color")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .padding(50)
+            }
+        }
+    }
+    
+    private var isProItemSelected: Bool {
+        selectedBackground.isProItem || includeLogo == false
     }
     
     var toolbar: some View {
@@ -71,7 +117,7 @@ struct ZikrShareOptionsView: View {
                     share()
                 }
             }, label: {
-                if subscriptionManager.isProUser() == false && (selectedBackground.isProItem || includeLogo == false) {
+                if subscriptionManager.isProUser() == false && isProItemSelected {
                     Label(L10n.Common.share, systemImage: "lock.fill")
                 } else {
                     Text(L10n.Common.share)
@@ -90,15 +136,25 @@ struct ZikrShareOptionsView: View {
                 
                 shareAsSection
                 
-                shareOptions
+                Divider()
+                
+                Toggle(L10n.Share.showExtraOptions, isOn: $showExtraOptions)
                     .padding(.horizontal, 16)
                 
+                if showExtraOptions {
+                    shareOptions
+                        .padding(.horizontal, 16)
+                        .transition(.opacity.combined(with: .move(edge: .top)))
+                }
+                
+                Divider()
+                
                 if selectedShareType != .text {
-                    Section {
-                        Toggle(L10n.Share.includeAzkarLogo, isOn: $includeLogo.animation(.smooth))
-                            .applyThemedToggleStyle(showProBadge: !subscriptionManager.isProUser())
-                    }
-                    .padding(.horizontal, 16)
+                    Toggle(L10n.Share.includeAzkarLogo, isOn: $includeLogo.animation(.smooth))
+                        .applyThemedToggleStyle(showProBadge: !subscriptionManager.isProUser())
+                        .padding(.horizontal, 16)
+                    
+                    Divider()
                 }
                 
                 if selectedShareType != .text {
@@ -106,12 +162,6 @@ struct ZikrShareOptionsView: View {
                         .padding(.vertical)
                     
                     shareViewPreview
-                        .clipShape(RoundedRectangle(cornerRadius: appTheme.cornerRadius))
-                        .overlay(
-                            RoundedRectangle(cornerRadius: appTheme.cornerRadius).stroke(Color.accentColor.opacity(0.5), lineWidth: 1)
-                        )
-                        .allowsHitTesting(false)
-                        .frame(maxWidth: .infinity, alignment: .center)
                 } else {
                     Color.clear.frame(height: 10)
                 }
@@ -119,6 +169,7 @@ struct ZikrShareOptionsView: View {
             .systemFont(.body)
             .background(Color.contentBackground)
             .applyTheme()
+            .animation(.smooth, value: showExtraOptions)
             .padding()
         }
     }
@@ -133,28 +184,42 @@ struct ZikrShareOptionsView: View {
                 player: .test
             ),
             includeTitle: includeTitle,
-            includeTranslation: preferences.expandTranslation,
-            includeTransliteration: preferences.expandTransliteration,
+            includeTranslation: includeTranslation,
+            includeTransliteration: includeTransliteration,
             includeBenefits: includeBenefits,
             includeLogo: includeLogo,
             arabicTextAlignment: textAlignment.isCentered ? .center : .trailing,
             otherTextAlignment: textAlignment.isCentered ? .center : .leading,
+            nestIntoScrollView: false,
             useFullScreen: false,
             selectedBackground: selectedBackground
         )
+        .clipShape(RoundedRectangle(cornerRadius: appTheme.cornerRadius))
+        .overlay(
+            RoundedRectangle(cornerRadius: appTheme.cornerRadius).stroke(Color.accentColor.opacity(0.5), lineWidth: 1)
+        )
+        .allowsHitTesting(false)
     }
     
     var backgroundPickerSection: some View {
         Section {
             VStack(alignment: .leading, spacing: 8) {
-                Text("Background")
+                Text(L10n.Share.backgroundHeader)
                     .foregroundStyle(Color.secondaryText)
                     .systemFont(.subheadline, modification: .smallCaps)
                     .padding(.horizontal, 16)
                 
-                ZikrSHareBackgroundPickerView(
+                ZikrShareBackgroundPickerView(
                     backgrounds: backgrounds,
-                    selectedBackground: $selectedBackground
+                    selectedBackground: Binding(
+                        get: { self.selectedBackground },
+                        set: { newValue in 
+                            self.selectedBackground = newValue
+                            if !newValue.isProItem || subscriptionManager.isProUser() {
+                                self.selectedBackgroundId = newValue.id
+                            }
+                        }
+                    )
                 )
             }
         }
@@ -165,8 +230,8 @@ struct ZikrShareOptionsView: View {
             HStack(spacing: 16) {
                 Text(L10n.Share.shareAs)
                 Spacer()
-                Picker(L10n.Share.shareAs, selection: $selectedShareType) {
-                    ForEach(ZikrShareType.availableCases) { type in
+                Picker(L10n.Share.shareAs, selection: $selectedShareType.animation(.smooth)) {
+                    ForEach(ZikrShareType.allCases) { type in
                         Label(type.title, systemImage: type.imageName)
                             .tag(type)
                     }
@@ -182,6 +247,12 @@ struct ZikrShareOptionsView: View {
         Section {
             if zikr.title != nil {
                 Toggle(L10n.Share.includeTitle, isOn: $includeTitle)
+            }
+            if zikr.translation != nil {
+                Toggle(L10n.Share.includeTranslation, isOn: $includeTranslation)
+            }
+            if zikr.transliteration != nil {
+                Toggle(L10n.Share.includeTransliteration, isOn: $includeTransliteration)
             }
             if zikr.benefits != nil {
                 Toggle(L10n.Share.includeBenefit, isOn: $includeBenefits)
@@ -209,6 +280,8 @@ struct ZikrShareOptionsView: View {
             includeTitle: includeTitle,
             includeBenefits: includeBenefits,
             includeLogo: includeLogo,
+            includeTranslation: includeTranslation,
+            includeTransliteration: includeTransliteration,
             textAlignment: textAlignment,
             shareType: selectedShareType,
             selectedBackground: selectedBackground)

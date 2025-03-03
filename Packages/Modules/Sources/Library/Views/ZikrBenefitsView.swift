@@ -3,11 +3,9 @@ import SwiftUI
 public struct ZikrBenefitsView: View {
     
     public let text: String
-    public let font: AppFont
     
-    public init(text: String, font: AppFont) {
+    public init(text: String) {
         self.text = text
-        self.font = font
     }
     
     public var body: some View {
@@ -15,9 +13,8 @@ public struct ZikrBenefitsView: View {
             Image("gem-stone")
                 .resizable()
                 .aspectRatio(contentMode: .fit)
-                .frame(maxWidth: 20, maxHeight: 15)
+                .frame(maxWidth: 15, maxHeight: 15)
             Text(text)
-                .font(.custom(font.postscriptName, size: 12, relativeTo: .footnote))
         }
         .padding()
     }
@@ -29,5 +26,6 @@ public struct ZikrBenefitsView: View {
     #Preview {
         ZikrBenefitsView(text: "")
     }
-    """, font: TranslationFont.iowanOldStyle)
+    """
+    )
 }

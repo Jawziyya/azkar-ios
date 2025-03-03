@@ -48,8 +48,7 @@ struct CollapsableSection: View, Equatable {
                         highlightPattern: highlightPattern,
                         isArabicText: isArabicText,
                         font: font,
-                        lineSpacing: lineSpacing,
-                        sizeCategory: sizeCategory
+                        lineSpacing: lineSpacing
                     )
                     .clipped()
                     .transition(.move(edge: .top).combined(with: .opacity))

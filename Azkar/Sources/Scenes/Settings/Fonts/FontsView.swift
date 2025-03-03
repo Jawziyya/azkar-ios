@@ -16,7 +16,7 @@ struct FontsView: View {
             Divider()
             
             Text(viewModel.sampleText)
-                .font(Font.custom(viewModel.preferredFont.postscriptName, size: UIFont.preferredFont(forTextStyle: .title1).pointSize))
+                .font(Font.custom(viewModel.preferredFont.postscriptName, size: min(30, UIFont.preferredFont(forTextStyle: .title1).pointSize)))
                 .padding()
                 .frame(maxWidth: .infinity)
                 .background(
@@ -115,6 +115,7 @@ struct FontsView: View {
             },
             isRedacted: !viewModel.didLoadData
         )
+        .fontSizeCategory(nil)
     }
     
 }

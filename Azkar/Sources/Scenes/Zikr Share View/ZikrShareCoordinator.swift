@@ -91,40 +91,33 @@ final class ZikrShareCoordinator: NavigationCoordinatable {
             includeLogo: options.includeLogo,
             arabicTextAlignment: options.textAlignment.isCentered ? .center : .trailing,
             otherTextAlignment: options.textAlignment.isCentered ? .center : .leading,
+            nestIntoScrollView: false, 
             useFullScreen: options.shareType != .text,
             selectedBackground: options.selectedBackground
         )
-        .environment(\.colorScheme, .light)
-        .preferredColorScheme(.light)
         .frame(width: UIScreen.main.bounds.width)
         .frame(maxHeight: .infinity)
         
         let image = view.snapshot()
         
-        if options.shareType == .image {
-            let tempDir = FileManager.default.temporaryDirectory
-            let title = viewModel.title ?? viewModel.zikr.id.description
-            let imgFileName = "\(title).png".normalizeForPath()
-            let tempImagePath = tempDir.appendingPathComponent(imgFileName)
-            try? image.pngData()?.write(to: tempImagePath)
-            
-            let activityController = UIActivityViewController(
-                activityItems: [tempImagePath],
-                applicationActivities: [ZikrFeedbackActivity(prepareAction: {
-                    self.presentMailComposer(from: rootViewController)
-                })]
-            )
-            
-            activityController.excludedActivityTypes = [
-                .init(rawValue: "com.apple.reminders.sharingextension")
-            ]
-            
-            rootViewController.present(activityController, animated: true)
-        } else if options.shareType == .instagramStories {
-            let story = IGStory(contentSticker: image, background: .color(color: UIColor(Color.background)))
-            let dispatcher = IGDispatcher(story: story, facebookAppID: "n/a")
-            dispatcher.start()
-        }
+        let tempDir = FileManager.default.temporaryDirectory
+        let title = viewModel.title ?? viewModel.zikr.id.description
+        let imgFileName = "\(title).png".normalizeForPath()
+        let tempImagePath = tempDir.appendingPathComponent(imgFileName)
+        try? image.pngData()?.write(to: tempImagePath)
+        
+        let activityController = UIActivityViewController(
+            activityItems: [tempImagePath],
+            applicationActivities: [ZikrFeedbackActivity(prepareAction: {
+                self.presentMailComposer(from: rootViewController)
+            })]
+        )
+        
+        activityController.excludedActivityTypes = [
+            .init(rawValue: "com.apple.reminders.sharingextension")
+        ]
+        
+        rootViewController.present(activityController, animated: true)
     }
     
     private func presentMailComposer(from viewController: UIViewController) {

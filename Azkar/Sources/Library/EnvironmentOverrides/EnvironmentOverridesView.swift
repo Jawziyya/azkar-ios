@@ -13,7 +13,8 @@ extension EnvironmentValues {
         }
 
         public static let colorScheme = Diff(rawValue: 1 << 1)
-        public static let sizeCategory = Diff(rawValue: 1 << 2)
+        public static let dynamicTypeSize = Diff(rawValue: 1 << 2)
+        public static let fontSizeCategory = Diff(rawValue: 1 << 3)
     }
 }
 
@@ -43,36 +44,43 @@ struct EnvironmentOverridesModifier: ViewModifier {
 
     @ObservedObject var viewModel: EnvironmentOverridesViewModel
 
+    @Environment(\.dynamicTypeSize) var dynamicTypeSize
+    @State private var previousDynamicTypeSize: DynamicTypeSize?
+    
     @Environment(\.sizeCategory) private var defaultSizeCategory: ContentSizeCategory
-    @State private var previousSizeCategory: ContentSizeCategory?
+    @State private var previousFontSizeCategory: ContentSizeCategory?
+    
     let onChange: ((EnvironmentValues.Diff) -> Void)?
     
     func body(content: Content) -> some View {
         content
             .onAppear { self.copyDefaultSettings() }
+            .environment(\.fontSizeCategory, contentSizeCategory)
+            .environment(\.dynamicTypeSize, dynamicTypeSize)
             .onChange(of: contentSizeCategory) { newValue in
-                if let previousValue = previousSizeCategory, previousValue != newValue {
-                    onChange?(.sizeCategory)
+                if previousFontSizeCategory != newValue {
+                    onChange?(.fontSizeCategory)
+                    previousFontSizeCategory = newValue
                 }
-                previousSizeCategory = newValue
+            }
+            .onChange(of: dynamicTypeSize) { newValue in
+                if previousDynamicTypeSize != newValue {
+                    onChange?(.dynamicTypeSize)
+                    previousDynamicTypeSize = newValue
+                }
             }
     }
 
-    private var contentSizeCategory: ContentSizeCategory {
-        if viewModel.preferences.useSystemFontSize {
-            let smallestAvailableContentSize = ContentSizeCategory.availableCases.first!
-            let biggestAvailableContentSize = ContentSizeCategory.availableCases.last!
-            return max(smallestAvailableContentSize, min(biggestAvailableContentSize, defaultSizeCategory))
-        } else {
-            return viewModel.preferences.sizeCategory
+    private var contentSizeCategory: ContentSizeCategory? {
+        guard viewModel.preferences.useSystemFontSize == false else {
+            return nil
         }
+        return viewModel.preferences.sizeCategory
     }
     
     private func copyDefaultSettings() {
-        if viewModel.preferences.useSystemFontSize {
-            viewModel.preferences.sizeCategory = defaultSizeCategory
-        }
-        previousSizeCategory = contentSizeCategory
+        previousFontSizeCategory = contentSizeCategory
+        previousDynamicTypeSize = dynamicTypeSize
     }
     
 }

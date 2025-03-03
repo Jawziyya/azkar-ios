@@ -1,6 +1,6 @@
 import SwiftUI
 
-public enum AppTheme: String, CaseIterable, Equatable, Codable, Identifiable {
+public enum AppTheme: String, CaseIterable, Hashable, Codable, Identifiable {
     
     case `default`, reader, flat, neomorphic, code
     
@@ -83,7 +83,7 @@ public enum AppTheme: String, CaseIterable, Equatable, Codable, Identifiable {
     
     public var font: String? {
         switch self {
-        case .code: return "JetBrainsMono-Regular"
+        case .code: return "Menlo-Regular"
         default: return nil
         }
     }

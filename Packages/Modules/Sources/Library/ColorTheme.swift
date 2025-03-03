@@ -1,6 +1,6 @@
 import SwiftUI
 
-public enum ColorTheme: String, CaseIterable, Equatable, Codable, Identifiable {
+public enum ColorTheme: String, CaseIterable, Hashable, Codable, Identifiable {
     
     public var id: Self {
         self

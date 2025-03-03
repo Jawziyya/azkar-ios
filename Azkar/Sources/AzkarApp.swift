@@ -43,6 +43,7 @@ struct AzkarApp: App {
                 let window = scene?.keyWindow
                 window?.overrideUserInterfaceStyle = theme.userInterfaceStyle
             }
+            .environmentObject(ShareBackgroundService())
         }
     }
     
@@ -118,8 +119,9 @@ struct AzkarApp: App {
         let systemFont = UIFont.preferredFont(forTextStyle: style)
         let font: UIFont
         if let descriptor = systemFont.fontDescriptor.withDesign(design) {
+            let size = min(30, descriptor.pointSize)
             if let customName {
-                font = UIFont(name: customName, size: descriptor.pointSize) ?? UIFont(descriptor: descriptor, size: systemFont.pointSize)
+                font = UIFont(name: customName, size: size) ?? UIFont(descriptor: descriptor, size: size)
             } else {
                 font = UIFont(descriptor: descriptor, size: systemFont.pointSize)
             }

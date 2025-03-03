@@ -20,7 +20,6 @@ struct ExtraTextSettingsScreen: View {
         .applyThemedToggleStyle()
         .customScrollContentBackground()
         .background(Color.background, ignoresSafeAreaEdges: .all)
-//        .navigationTitle(L10n.Settings.Text.advancedSettings)
     }
     
     var content: some View {
@@ -100,7 +99,6 @@ struct ExtraTextSettingsScreen: View {
             ForEach(ContentSizeCategory.availableCases, id: \.title) { size in
                 Text(size.name)
                     .systemFont(.body)
-                    .environment(\.sizeCategory, size)
                     .tag(size)
             }
         }
@@ -125,10 +123,7 @@ struct ExtraTextSettingsScreen: View {
             .navigationBarTitle(L10n.Settings.Text.lineSpacing)
             .background(Color.background, ignoresSafeAreaEdges: .all)
         } label: {
-            createNavigationPickerLabel(
-                label: L10n.Settings.Text.lineSpacing,
-                value: ""
-            )
+            NavigationLabel(title: L10n.Settings.Text.lineSpacing)
         }
     }
 
@@ -173,26 +168,6 @@ struct ExtraTextSettingsScreen: View {
         }
     }
     
-    private func createNavigationPickerLabel(
-        label: String,
-        value: String?
-    ) -> some View {
-        HStack {
-            Text(label)
-                .systemFont(.body)
-                .foregroundStyle(Color.text)
-            Spacer()
-            if let value {
-                Text(value)
-                    .multilineTextAlignment(.trailing)
-                    .systemFont(.body)
-                    .foregroundStyle(Color.secondary)
-            }
-            Image(systemName: "chevron.right")
-                .foregroundStyle(Color.secondaryText)
-        }
-        .padding(.vertical, 8)
-    }
 }
 
 #Preview {

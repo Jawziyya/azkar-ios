@@ -5,7 +5,7 @@ import NukeUI
 import Nuke
 import Library
 
-struct ZikrSHareBackgroundPickerView: View {
+struct ZikrShareBackgroundPickerView: View {
     let backgrounds: [ZikrShareBackgroundItem]
     @Binding var selectedBackground: ZikrShareBackgroundItem
     @Environment(\.appTheme) var appTheme
@@ -49,6 +49,7 @@ struct ZikrShareBackgroundCardView: View {
                 ProBadgeView()
                     .padding(6)
                     .allowsHitTesting(false)
+                    .shadow(color: Color.yellow.opacity(0.8), radius: 2, x: 0, y: 0)
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
                 : nil
             )
@@ -65,12 +66,12 @@ struct ZikrShareBackgroundCardView: View {
         switch item.backgroundType {
         case .solidColor(let color):
             color
-        case .patternImage(let image):
+        case .localImage(let image):
             Image(uiImage: image)
                 .resizable()
                 .scaledToFill()
-        case .remoteImage(let url):
-            LazyImage(url: url) { state in
+        case .remoteImage(let item):
+            LazyImage(url: item.previewURL) { state in
                 if let image = state.image {
                     image
                         .resizable()
@@ -91,8 +92,8 @@ struct ZikrShareBackgroundCardView: View {
 
 struct HorizontalBackgroundPicker_Previews: PreviewProvider {
     static var previews: some View {
-        ZikrSHareBackgroundPickerView(
-            backgrounds: ZikrShareBackgroundItem.all,
+        ZikrShareBackgroundPickerView(
+            backgrounds: ZikrShareBackgroundItem.preset,
             selectedBackground: .constant(ZikrShareBackgroundItem.defaultBackground)
         )
         .padding()

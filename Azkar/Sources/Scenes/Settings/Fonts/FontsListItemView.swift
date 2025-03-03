@@ -24,7 +24,7 @@ struct FontsListItemView: View {
                         .systemFont(.body)
                 } else {
                     Text(vm.name)
-                        .font(Font.customFont(vm.font, style: .body, sizeCategory: nil))
+                        .customFont(vm.font, style: .body)
                 }
             }
             .multilineTextAlignment(.leading)

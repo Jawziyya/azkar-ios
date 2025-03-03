@@ -34,14 +34,7 @@ public struct TranslationFont: Codable, Identifiable, Hashable, AppFont {
     }
     
     public static var placeholder: TranslationFont {
-        return TranslationFont(
-            name: UUID().uuidString,
-            referenceName: UUID().uuidString,
-            postscriptName: "test",
-            isStandartPackFont: true,
-            type: FontType.serif,
-            isCyrillic: 1
-        )
+        return systemFont
     }
 }
 
