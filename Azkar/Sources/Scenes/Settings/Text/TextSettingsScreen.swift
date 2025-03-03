@@ -31,9 +31,9 @@ struct TextSettingsScreen: View {
     
     var content: some View {
         Group {
-            genericPicker(
+            PickerMenu(
                 title: L10n.Settings.Text.AdhkarCollectionsSource.title,
-                binding: $viewModel.preferences.zikrCollectionSource,
+                selection: $viewModel.preferences.zikrCollectionSource,
                 items: ZikrCollectionSource.allCases,
                 itemTitle: { item in
                     item.shortTitle ?? item.title
@@ -44,9 +44,9 @@ struct TextSettingsScreen: View {
             Divider()
             
             if viewModel.canChangeLanguage {
-                genericPicker(
+                PickerMenu(
                     title: L10n.Settings.Text.language,
-                    binding: $viewModel.preferences.contentLanguage,
+                    selection: $viewModel.preferences.contentLanguage,
                     items: viewModel.getAvailableLanguages(),
                     itemTitle: \.title
                 )
@@ -82,42 +82,6 @@ struct TextSettingsScreen: View {
             } label: {
                 NavigationLabel(title: "Advanced Settings")
             }
-        }
-    }
-    
-    func genericPicker<T: Identifiable & Hashable>(
-        title: String,
-        binding: Binding<T>,
-        items: [T],
-        itemTitle: @escaping (T) -> String
-    ) -> some View {
-        Menu {
-            ForEach(items, id: \.self) { item in
-                Button {
-                    binding.wrappedValue = item
-                } label: {
-                    Text(itemTitle(item))
-                        .systemFont(.callout)
-                    if binding.wrappedValue == item {
-                        Image(systemName: "checkmark")
-                            .foregroundStyle(Color.accent)
-                    }
-                }
-            }
-        } label: {
-            HStack {
-                Text(title)
-                    .systemFont(.body)
-                    .foregroundStyle(Color.text)
-                    .multilineTextAlignment(.leading)
-                Spacer()
-                Text(itemTitle(binding.wrappedValue))
-                    .systemFont(.callout)
-                    .foregroundStyle(Color.secondaryText)
-                Image(systemName: "chevron.down")
-                    .foregroundStyle(Color.secondaryText)
-            }
-            .padding(.vertical, 8)
         }
     }
     
