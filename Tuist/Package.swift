@@ -36,7 +36,6 @@ let package = Package(
         .package(url: "https://github.com/rundfunk47/stinsen", from: "2.0.0"),
         .package(url: "https://github.com/vadymmarkov/Fakery", from: "5.1.0"),
         .package(url: "https://github.com/bizz84/SwiftyStoreKit", from: "0.16.3"),
-        .package(url: "https://github.com/SwapnanilDhol/IGStoryKit", from: "1.1.1"),
         .package(url: "https://github.com/kean/Nuke", from: "12.0.0"),
         .package(url: "https://github.com/onmyway133/RoughSwift", from: "2.0.0"),
         

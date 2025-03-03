@@ -4,7 +4,6 @@ import UIKit
 import SwiftUI
 import MessageUI
 import Library
-import IGStoryKit
 
 final class ZikrPagesViewController: UIHostingController<ZikrPagesView> {
 
