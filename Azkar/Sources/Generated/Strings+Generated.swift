@@ -214,21 +214,9 @@ internal enum L10n {
     }
   }
   internal enum IconPack {
-    internal enum Darsigova {
-      /// Sunsets and sunrises as our faith keepers which has signs of the mercy of our Lord.
-      internal static let description = L10n.tr("Localizable", "icon_pack.darsigova.description", fallback: "Sunsets and sunrises as our faith keepers which has signs of the mercy of our Lord.")
-      /// App Icon Pack «Faith keepers»
-      internal static let title = L10n.tr("Localizable", "icon_pack.darsigova.title", fallback: "App Icon Pack «Faith keepers»")
-    }
     internal enum Info {
       /// You have purchased this App Icon pack 🎉
       internal static let purchasedMessage = L10n.tr("Localizable", "icon_pack.info.purchased-message", fallback: "You have purchased this App Icon pack 🎉")
-    }
-    internal enum Maccinz {
-      /// Soft colors, at home feeling.
-      internal static let description = L10n.tr("Localizable", "icon_pack.maccinz.description", fallback: "Soft colors, at home feeling.")
-      /// App Icon Pack «Illustrations»
-      internal static let title = L10n.tr("Localizable", "icon_pack.maccinz.title", fallback: "App Icon Pack «Illustrations»")
     }
     internal enum Standard {
       ///  
@@ -386,38 +374,10 @@ internal enum L10n {
       internal enum List {
         /// Dark night
         internal static let darkNight = L10n.tr("Localizable", "settings.icon.list.dark_night", fallback: "Dark night")
-        /// A moment
-        internal static let darsigova1 = L10n.tr("Localizable", "settings.icon.list.darsigova_1", fallback: "A moment")
-        /// In the arms of the evening
-        internal static let darsigova10 = L10n.tr("Localizable", "settings.icon.list.darsigova_10", fallback: "In the arms of the evening")
-        /// Binding threads
-        internal static let darsigova2 = L10n.tr("Localizable", "settings.icon.list.darsigova_2", fallback: "Binding threads")
-        /// On the edge of time
-        internal static let darsigova3 = L10n.tr("Localizable", "settings.icon.list.darsigova_3", fallback: "On the edge of time")
-        /// Freedom
-        internal static let darsigova4 = L10n.tr("Localizable", "settings.icon.list.darsigova_4", fallback: "Freedom")
-        /// Light in a town
-        internal static let darsigova5 = L10n.tr("Localizable", "settings.icon.list.darsigova_5", fallback: "Light in a town")
-        /// Aerial moment
-        internal static let darsigova6 = L10n.tr("Localizable", "settings.icon.list.darsigova_6", fallback: "Aerial moment")
-        /// Shining stars in the sky
-        internal static let darsigova7 = L10n.tr("Localizable", "settings.icon.list.darsigova_7", fallback: "Shining stars in the sky")
-        /// Color's fly
-        internal static let darsigova8 = L10n.tr("Localizable", "settings.icon.list.darsigova_8", fallback: "Color's fly")
-        /// Tender
-        internal static let darsigova9 = L10n.tr("Localizable", "settings.icon.list.darsigova_9", fallback: "Tender")
         /// Gold
         internal static let gold = L10n.tr("Localizable", "settings.icon.list.gold", fallback: "Gold")
         /// Ink
         internal static let ink = L10n.tr("Localizable", "settings.icon.list.ink", fallback: "Ink")
-        /// Sunny day
-        internal static let maccinzDay = L10n.tr("Localizable", "settings.icon.list.maccinz_day", fallback: "Sunny day")
-        /// Eid vibes
-        internal static let maccinzHouse = L10n.tr("Localizable", "settings.icon.list.maccinz_house", fallback: "Eid vibes")
-        /// In mountains
-        internal static let maccinzMountains = L10n.tr("Localizable", "settings.icon.list.maccinz_mountains", fallback: "In mountains")
-        /// Ramadan night
-        internal static let maccinzRamadanNight = L10n.tr("Localizable", "settings.icon.list.maccinz_ramadan_night", fallback: "Ramadan night")
         /// MidJourney v0.0.1
         internal static let midjourney001 = L10n.tr("Localizable", "settings.icon.list.midjourney001", fallback: "MidJourney v0.0.1")
         /// Ramadan
@@ -519,6 +479,8 @@ internal enum L10n {
     }
   }
   internal enum Share {
+    /// Background
+    internal static let backgroundHeader = L10n.tr("Localizable", "share.background-header", fallback: "Background")
     /// Image
     internal static let image = L10n.tr("Localizable", "share.image", fallback: "Image")
     /// Include Azkar logo
@@ -527,10 +489,16 @@ internal enum L10n {
     internal static let includeBenefit = L10n.tr("Localizable", "share.include-benefit", fallback: "Include text of benefit")
     /// Include title
     internal static let includeTitle = L10n.tr("Localizable", "share.include-title", fallback: "Include title")
+    /// Translation Text
+    internal static let includeTranslation = L10n.tr("Localizable", "share.include-translation", fallback: "Translation Text")
+    /// Transliteration Text
+    internal static let includeTransliteration = L10n.tr("Localizable", "share.include-transliteration", fallback: "Transliteration Text")
     /// Share as
     internal static let shareAs = L10n.tr("Localizable", "share.share-as", fallback: "Share as")
     /// Shared from Azkar App
     internal static let sharedWithAzkar = L10n.tr("Localizable", "share.shared-with-azkar", fallback: "Shared from Azkar App")
+    /// Show Extra Options
+    internal static let showExtraOptions = L10n.tr("Localizable", "share.show-extra-options", fallback: "Show Extra Options")
     /// Text
     internal static let text = L10n.tr("Localizable", "share.text", fallback: "Text")
     /// Text alignment

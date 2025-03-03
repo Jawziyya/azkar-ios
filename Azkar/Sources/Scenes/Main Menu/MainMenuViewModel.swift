@@ -65,16 +65,6 @@ final class MainMenuViewModel: ObservableObject {
         UIDevice.current.isIpad
     }
 
-    private lazy var iconsPackMessage: AzkarMenuOtherItem = {
-        let title = L10n.Alerts.checkoutIconPacks
-        var item = AzkarMenuOtherItem(imageName: AppIconPack.maccinz.icons.randomElement()!.imageName, title: title, color: Color.red, iconType: .bundled, imageCornerRadius: 4)
-        item.action = { [unowned self] in
-            self.didDisplayIconPacksMessage = true
-            self.navigateToIconPacksList()
-        }
-        return item
-    }()
-
     init(
         databaseService: AzkarDatabase,
         preferencesDatabase: PreferencesDatabase,

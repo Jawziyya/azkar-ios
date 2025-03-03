@@ -225,9 +225,8 @@ struct AppIconPackInfoView: View {
 
 struct AppIconPackInfoView_Previews: PreviewProvider {
     static var previews: some View {
-        let vm = AppIconPackInfoViewModel(preferences: Preferences.shared, pack: .darsigova, icon: AppIcon.darsigova_1)
+        let vm = AppIconPackInfoViewModel(preferences: Preferences.shared, pack: .standard, icon: AppIcon.ink)
         return AppIconPackInfoView(viewModel: vm)
-            .previewDevice("iPhone 12 mini")
             .padding()
             .background(Color.red)
     }

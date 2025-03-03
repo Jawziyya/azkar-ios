@@ -31,6 +31,12 @@ internal enum Asset {
   internal static let secondaryText = ColorAsset(name: "secondaryText")
   internal static let tertiaryText = ColorAsset(name: "tertiaryText")
   internal static let text = ColorAsset(name: "text")
+  internal enum Patterns {
+    internal static let blueGradient = ImageAsset(name: "Patterns/blue-gradient")
+    internal static let gradientYellowToBlue = ImageAsset(name: "Patterns/gradient-yellow-to-blue")
+    internal static let paper = ImageAsset(name: "Patterns/paper")
+    internal static let paper2 = ImageAsset(name: "Patterns/paper2")
+  }
   internal enum AppThemes {
     internal enum Code {
       internal static let accent = ColorAsset(name: "AppThemes/Code/accent")
@@ -99,14 +105,10 @@ internal enum Asset {
     internal static let paperAndMagnifier = ImageAsset(name: "ZikrCollectionsOnboarding/paper-and-magnifier")
   }
   internal static let azkarGoldLogo = ImageAsset(name: "azkar-gold-logo")
-  internal static let flash = ImageAsset(name: "flash")
   internal static let gemStone = ImageAsset(name: "gem-stone")
   internal static let eidBackground = ImageAsset(name: "eid_background")
   internal static let mosque = ImageAsset(name: "mosque")
-  internal static let lock = ImageAsset(name: "lock")
-  internal static let premiumGem = ImageAsset(name: "premium-gem")
-  internal static let premiumLock = ImageAsset(name: "premium-lock")
-  internal static let proUserTag = ImageAsset(name: "pro-user-tag")
+  internal static let inkIcon = ImageAsset(name: "ink-icon")
 }
 // swiftlint:enable identifier_name line_length nesting type_body_length type_name
 
