@@ -8,12 +8,12 @@ import Library
 struct ZikrShareView: View {
 
     let viewModel: ZikrViewModel
-    var includeTitle = true
-    var includeTranslation = true
-    var includeTransliteration =  false
-    var includeBenefits = true
-    var includeLogo = true
-    var includeSource = false
+    let includeTitle: Bool
+    let includeTranslation: Bool
+    let includeTransliteration: Bool
+    let includeBenefits: Bool
+    let includeLogo: Bool
+    let includeSource: Bool
     var backgroundColor = Color.background
     var arabicTextAlignment = TextAlignment.trailing
     var otherTextAlignment = TextAlignment.leading
@@ -143,7 +143,7 @@ struct ZikrShareView: View {
 
             VStack(spacing: 0) {
                 Text(.init(viewModel.text.joined(separator: "\n")))
-                    .customFont(viewModel.preferences.preferredArabicFont, style: .title1)
+                    .customFont(.title1, isArabic: true)
                     .frame(alignment: .trailing)
                     .multilineTextAlignment(arabicTextAlignment)
                     .padding()
@@ -152,7 +152,7 @@ struct ZikrShareView: View {
                     Divider()
 
                     Text(viewModel.translation.joined(separator: "\n"))
-                        .customFont(viewModel.preferences.preferredTranslationFont, style: .body)
+                        .customFont(.body)
                         .multilineTextAlignment(otherTextAlignment)
                         .padding()
                         .frame(maxWidth: .infinity, alignment: .leading)
@@ -162,7 +162,7 @@ struct ZikrShareView: View {
                     Divider()
 
                     Text(viewModel.transliteration.joined(separator: "\n"))
-                        .customFont(viewModel.preferences.preferredTranslationFont, style: .body)
+                        .customFont(.body)
                         .multilineTextAlignment(.leading)
                         .padding()
                         .frame(maxWidth: .infinity, alignment: .leading)
@@ -172,13 +172,13 @@ struct ZikrShareView: View {
                     Divider()
                     
                     ZikrBenefitsView(text: text)
-                        .customFont(viewModel.preferences.preferredTranslationFont, style: .footnote)
+                        .customFont(.footnote)
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
 
                 if includeSource, let source = viewModel.source.textOrNil {
                     Text(source)
-                        .customFont(viewModel.preferences.preferredTranslationFont, style: .caption1)
+                        .customFont(.caption1)
                         .foregroundStyle(Color.secondaryText)
                         .padding(.horizontal)
                         .padding(.vertical, 8)
@@ -232,6 +232,12 @@ struct ZikrShareView_Previews: PreviewProvider {
                 preferences: Preferences.shared,
                 player: Player.test
             ),
+            includeTitle: true,
+            includeTranslation: true,
+            includeTransliteration: true,
+            includeBenefits: true,
+            includeLogo: true,
+            includeSource: true,
             nestIntoScrollView: false,
             useFullScreen: true,
             selectedBackground: .defaultBackground

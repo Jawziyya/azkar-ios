@@ -56,6 +56,7 @@ public final class ScreenshotPreventingView: UIView {
     // MARK: - 🏗 UI
 
     private func setupUI() {
+        backgroundColor = .clear
         textField.backgroundColor = .clear
         textField.isUserInteractionEnabled = false
 

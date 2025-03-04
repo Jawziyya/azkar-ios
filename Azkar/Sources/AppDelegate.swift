@@ -56,7 +56,6 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
                 }
             })
 
-        InAppPurchaseService.shared.completeTransactions()
         registerUserDefaults()
         setupRevenueCat()
         setupFirebase()

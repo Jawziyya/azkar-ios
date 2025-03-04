@@ -1,6 +1,7 @@
 import SwiftUI
 import Combine
 import Extensions
+import Library
 
 extension ContentSizeCategory: @retroactive Comparable {}
 
@@ -15,6 +16,8 @@ extension EnvironmentValues {
         public static let colorScheme = Diff(rawValue: 1 << 1)
         public static let dynamicTypeSize = Diff(rawValue: 1 << 2)
         public static let fontSizeCategory = Diff(rawValue: 1 << 3)
+        public static let translationFont = Diff(rawValue: 1 << 4)
+        public static let arabicFont = Diff(rawValue: 1 << 5)
     }
 }
 
@@ -50,6 +53,9 @@ struct EnvironmentOverridesModifier: ViewModifier {
     @Environment(\.sizeCategory) private var defaultSizeCategory: ContentSizeCategory
     @State private var previousFontSizeCategory: ContentSizeCategory?
     
+    @State private var previousTranslationFont: TranslationFont?
+    @State private var previousArabicFont: ArabicFont?
+    
     let onChange: ((EnvironmentValues.Diff) -> Void)?
     
     func body(content: Content) -> some View {
@@ -67,6 +73,18 @@ struct EnvironmentOverridesModifier: ViewModifier {
                 if previousDynamicTypeSize != newValue {
                     onChange?(.dynamicTypeSize)
                     previousDynamicTypeSize = newValue
+                }
+            }
+            .onChange(of: viewModel.preferences.preferredTranslationFont) { newValue in
+                if previousTranslationFont != newValue {
+                    onChange?(.translationFont)
+                    previousTranslationFont = newValue
+                }
+            }
+            .onChange(of: viewModel.preferences.preferredArabicFont) { newValue in
+                if previousArabicFont != newValue {
+                    onChange?(.arabicFont)
+                    previousArabicFont = newValue
                 }
             }
     }

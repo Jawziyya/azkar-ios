@@ -12,7 +12,12 @@ import StoreKit
 struct AzkarApp: App {
     
     @UIApplicationDelegateAdaptor var delegate: AppDelegate
+    
     let preferences = Preferences.shared
+    
+    init() {
+        setNavigationBarFont(theme: preferences.appTheme, colorTheme: preferences.colorTheme)
+    }
         
     var body: some Scene {
         WindowGroup {
@@ -24,14 +29,12 @@ struct AzkarApp: App {
                 )
             )
             .view()
+            .task { await presentPaywall() }
             .connectAppTheme()
-            .attachEnvironmentOverrides(onChange: { _ in            
+            .connectCustomFonts()
+            .attachEnvironmentOverrides(onChange: { change in
                 setNavigationBarFont(theme: preferences.appTheme, colorTheme: preferences.colorTheme)
             })
-            .task { await presentPaywall() }
-            .onAppear {
-                setNavigationBarFont(theme: preferences.appTheme, colorTheme: preferences.colorTheme)
-            }
             .onReceive(preferences.$appTheme) { newTheme in
                 setNavigationBarFont(theme: newTheme, colorTheme: preferences.colorTheme)
             }

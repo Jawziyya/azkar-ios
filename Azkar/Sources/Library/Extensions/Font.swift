@@ -16,7 +16,6 @@ extension EnvironmentValues {
     }
 }
 
-@available(iOS 13, macCatalyst 13, tvOS 13, watchOS 6, *)
 struct CustomFontModifier: ViewModifier {
     @Environment(\.sizeCategory) var sizeCategory
     @Environment(\.fontSizeCategory) var fontSizeCategory
@@ -32,7 +31,6 @@ struct CustomFontModifier: ViewModifier {
     }
 }
 
-@available(iOS 13, macCatalyst 13, tvOS 13, watchOS 6, *)
 struct CustomNamedFontModifier: ViewModifier {
     @Environment(\.sizeCategory) var sizeCategory
     @Environment(\.fontSizeCategory) var fontSizeCategory
@@ -46,7 +44,6 @@ struct CustomNamedFontModifier: ViewModifier {
     }
 }
 
-@available(iOS 13, macCatalyst 13, tvOS 13, watchOS 6, *)
 extension View {
     func customFont(_ font: AppFont, style: UIFont.TextStyle = .body) -> some View {
         self.modifier(CustomFontModifier(font: font, style: style))

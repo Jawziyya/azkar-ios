@@ -154,9 +154,6 @@ final class Preferences: ObservableObject, TextProcessingPreferences {
     @Preference(Keys.zikrReadingMode, defaultValue: ZikrReadingMode.normal)
     var zikrReadingMode: ZikrReadingMode
 
-    @Preference(Keys.purchasedIconPacks, defaultValue: [AppIconPack.standard])
-    var purchasedIconPacks
-
     @Preference(Keys.sizeCategory, defaultValue: ContentSizeCategory.medium)
     var sizeCategory
     

@@ -22,7 +22,12 @@ final class AppearanceViewModel: SettingsSectionViewModel {
     }
     
     var appIconPackListViewModel: AppIconPackListViewModel {
-        .init(preferences: preferences)
+        AppIconPackListViewModel(
+            preferences: preferences,
+            subscribeScreenTrigger: { [unowned router] in
+                router.trigger(.subscribe(sourceScreen: AppIconPackListView.viewName))
+            }
+        )
     }
     
     var colorSchemeViewModel: ColorSchemesViewModel {

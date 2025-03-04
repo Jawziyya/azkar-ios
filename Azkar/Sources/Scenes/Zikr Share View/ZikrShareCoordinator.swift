@@ -85,16 +85,19 @@ final class ZikrShareCoordinator: NavigationCoordinatable {
         let view = ZikrShareView(
             viewModel: viewModel,
             includeTitle: options.includeTitle,
-            includeTranslation: preferences.expandTranslation,
-            includeTransliteration: preferences.expandTransliteration,
+            includeTranslation: options.includeTranslation,
+            includeTransliteration: options.includeTransliteration,
             includeBenefits: options.includeBenefits,
             includeLogo: options.includeLogo,
+            includeSource: false,
             arabicTextAlignment: options.textAlignment.isCentered ? .center : .trailing,
             otherTextAlignment: options.textAlignment.isCentered ? .center : .leading,
             nestIntoScrollView: false, 
             useFullScreen: options.shareType != .text,
             selectedBackground: options.selectedBackground
         )
+        .environment(\.arabicFont, preferences.preferredArabicFont)
+        .environment(\.translationFont, preferences.preferredTranslationFont)
         .frame(width: UIScreen.main.bounds.width)
         .frame(maxHeight: .infinity)
         

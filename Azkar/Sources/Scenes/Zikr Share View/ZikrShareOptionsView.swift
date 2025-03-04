@@ -91,15 +91,6 @@ struct ZikrShareOptionsView: View {
                 print(error)
             }
         }
-        .screenshotProtected(isProtected: isProItemSelected && !subscriptionManager.isProUser())
-        .background {
-            if isProItemSelected && !subscriptionManager.isProUser() {
-                Image("lock-dynamic-color")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .padding(50)
-            }
-        }
     }
     
     private var isProItemSelected: Bool {
@@ -161,7 +152,30 @@ struct ZikrShareOptionsView: View {
                     backgroundPickerSection
                         .padding(.vertical)
                     
-                    shareViewPreview
+                    ZStack {
+                        shareViewPreview
+                            .frame(width: shareViewSize.width, height: shareViewSize.height)
+                            .screenshotProtected(isProtected: isProItemSelected && !subscriptionManager.isProUser())
+                            .background {
+                                if isProItemSelected && !subscriptionManager.isProUser() {
+                                    VStack(alignment: .center) {
+                                        Spacer()
+                                        Image(systemName: "lock.fill")
+                                            .resizable()
+                                            .aspectRatio(contentMode: .fit)
+                                            .frame(width: 100, height: 100)
+                                            .foregroundStyle(Color.accentColor)
+                                        Spacer()
+                                    }
+                                }
+                            }
+                        
+                        shareViewPreview
+                            .opacity(0)
+                            .getViewBoundsGeometry { proxy in
+                                shareViewSize = proxy.size
+                            }
+                    }
                 } else {
                     Color.clear.frame(height: 10)
                 }
@@ -188,12 +202,15 @@ struct ZikrShareOptionsView: View {
             includeTransliteration: includeTransliteration,
             includeBenefits: includeBenefits,
             includeLogo: includeLogo,
+            includeSource: false,
             arabicTextAlignment: textAlignment.isCentered ? .center : .trailing,
             otherTextAlignment: textAlignment.isCentered ? .center : .leading,
             nestIntoScrollView: false,
             useFullScreen: false,
             selectedBackground: selectedBackground
         )
+        .environment(\.arabicFont, preferences.preferredArabicFont)
+        .environment(\.translationFont, preferences.preferredTranslationFont)
         .clipShape(RoundedRectangle(cornerRadius: appTheme.cornerRadius))
         .overlay(
             RoundedRectangle(cornerRadius: appTheme.cornerRadius).stroke(Color.accentColor.opacity(0.5), lineWidth: 1)

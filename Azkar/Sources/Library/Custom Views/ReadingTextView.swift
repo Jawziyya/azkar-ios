@@ -14,11 +14,11 @@ struct ReadingTextView: View {
         Group {
             if isArabicText {
                 Text(attributedString(text, highlighting: highlightPattern))
-                    .customFont(font, style: .body)
+                    .customFont(.body, isArabic: true)
                     .lineSpacing(lineSpacing)
             } else {
                 Text(attributedString(text, highlighting: highlightPattern))
-                    .customFont(font, style: .body)
+                    .customFont(.body)
                     .lineSpacing(lineSpacing)
             }
         }

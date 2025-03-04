@@ -31,6 +31,16 @@ internal enum Asset {
   internal static let secondaryText = ColorAsset(name: "secondaryText")
   internal static let tertiaryText = ColorAsset(name: "tertiaryText")
   internal static let text = ColorAsset(name: "text")
+  internal enum IconPreviews {
+    internal static let crescent = ImageAsset(name: "IconPreviews/crescent")
+    internal static let gold = ImageAsset(name: "IconPreviews/gold")
+    internal static let ink = ImageAsset(name: "IconPreviews/ink")
+    internal static let light = ImageAsset(name: "IconPreviews/light")
+    internal static let midjourney001 = ImageAsset(name: "IconPreviews/midjourney001")
+    internal static let serpentine = ImageAsset(name: "IconPreviews/serpentine")
+    internal static let spring = ImageAsset(name: "IconPreviews/spring")
+    internal static let vibrantMoon = ImageAsset(name: "IconPreviews/vibrant-moon")
+  }
   internal enum Patterns {
     internal static let blueGradient = ImageAsset(name: "Patterns/blue-gradient")
     internal static let gradientYellowToBlue = ImageAsset(name: "Patterns/gradient-yellow-to-blue")
@@ -109,6 +119,7 @@ internal enum Asset {
   internal static let eidBackground = ImageAsset(name: "eid_background")
   internal static let mosque = ImageAsset(name: "mosque")
   internal static let inkIcon = ImageAsset(name: "ink-icon")
+  internal static let lockDynamicColor = ImageAsset(name: "lock-dynamic-color")
 }
 // swiftlint:enable identifier_name line_length nesting type_body_length type_name
 

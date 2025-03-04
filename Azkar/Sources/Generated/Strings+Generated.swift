@@ -383,6 +383,18 @@ internal enum L10n {
         /// Ramadan
         internal static let ramadan = L10n.tr("Localizable", "settings.icon.list.ramadan", fallback: "Ramadan")
       }
+      internal enum Pro {
+        /// Crescent
+        internal static let crescent = L10n.tr("Localizable", "settings.icon.pro.crescent", fallback: "Crescent")
+        /// Light
+        internal static let light = L10n.tr("Localizable", "settings.icon.pro.light", fallback: "Light")
+        /// Moon Serpentine
+        internal static let serpentine = L10n.tr("Localizable", "settings.icon.pro.serpentine", fallback: "Moon Serpentine")
+        /// Spring
+        internal static let spring = L10n.tr("Localizable", "settings.icon.pro.spring", fallback: "Spring")
+        /// Vibrant Crescent
+        internal static let vibrantMoon = L10n.tr("Localizable", "settings.icon.pro.vibrant-moon", fallback: "Vibrant Crescent")
+      }
     }
     internal enum Reminders {
       /// Enable reminders

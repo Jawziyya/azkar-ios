@@ -130,12 +130,12 @@ struct ZikrView: View {
 
                 viewModel.zikr.notes.flatMap { notes in
                     ZikrNoteView(text: notes)
-                        .customFont(viewModel.preferences.preferredTranslationFont)
+                        .customFont(.body)
                 }
 
                 viewModel.zikr.benefits.flatMap { text in
                     ZikrBenefitsView(text: text)
-                        .customFont(viewModel.preferences.preferredTranslationFont, style: .footnote)
+                        .customFont(.footnote)
                 }
             }
 
