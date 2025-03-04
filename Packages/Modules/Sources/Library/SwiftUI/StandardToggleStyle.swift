@@ -25,6 +25,7 @@ public struct StandardToggleStyle: ToggleStyle {
                         .fill(Color.white)
                         .shadow(radius: 1)
                         .frame(width: 27, height: 27)
+                        .padding(2)
                         .overlay(alignment: .center) {
                             if showProBadge {
                                 Image(systemName: "lock.fill")
@@ -37,6 +38,7 @@ public struct StandardToggleStyle: ToggleStyle {
                 .animation(.smooth, value: configuration.isOn)
             }
         }
+        .hapticFeedback(.impact(flexibility: .soft), trigger: configuration.isOn)
     }
 }
 

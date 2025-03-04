@@ -46,7 +46,7 @@ struct ZikrView: View {
             await viewModel.incrementZikrCount()
         }
         if viewModel.remainingRepeatsNumber > 0, viewModel.preferences.enableCounterHapticFeedback {
-            Haptic.toggleFeedback()
+            HapticGenerator.performFeedback(.impact(flexibility: .soft))
         }
     }
     
@@ -148,7 +148,7 @@ struct ZikrView: View {
                     .onAppear {
                         if isIncrementActionPerformed, !counterFeedbackCompleted {
                             if viewModel.preferences.enableCounterHapticFeedback {
-                                Haptic.successFeedback()
+                                HapticGenerator.performFeedback(.success)
                             }
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                                 counterFinishedCallback?()
@@ -203,7 +203,7 @@ struct ZikrView: View {
                     let prefs = viewModel.preferences
                     
                     Button {
-                        Haptic.tapFeedback()
+                        HapticGenerator.performFeedback(.selection)
                         viewModel.playAudio(at: idx)
                     } label: {
                         VStack {
@@ -286,7 +286,7 @@ struct ZikrView: View {
                 )
                 if viewModel.preferences.enableLineBreaks {
                     Button(action: {
-                        Haptic.tapFeedback()
+                        HapticGenerator.performFeedback(.selection)
                         viewModel.playAudio(at: idx)
                     }, label: {
                         label

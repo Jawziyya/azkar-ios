@@ -55,7 +55,7 @@ final class NotificationsListViewModel: ObservableObject {
             let dateFormatter = DateFormatter()
             dateFormatter.dateStyle = .short
             dateFormatter.timeStyle = .medium
-            self.notifications = notifications.enumerated().map { index, notification in
+            let notificationViewModels = notifications.enumerated().map { index, notification in
                 let time = dateFormatter.string(from: notification.date)
                 return NotificationsRowViewModel(
                     row: index,
@@ -64,6 +64,9 @@ final class NotificationsListViewModel: ObservableObject {
                     date: time,
                     details: notification.details
                 )
+            }
+            await MainActor.run {
+                self.notifications = notificationViewModels
             }
         }
     }

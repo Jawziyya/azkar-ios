@@ -36,6 +36,7 @@ public struct RectangularToggleStyle: ToggleStyle {
             }
             .buttonStyle(PlainButtonStyle())
         }
+        .hapticFeedback(.impact(flexibility: .soft), trigger: configuration.isOn)
     }
 }
 
