@@ -32,6 +32,7 @@ internal enum Asset {
   internal static let tertiaryText = ColorAsset(name: "tertiaryText")
   internal static let text = ColorAsset(name: "text")
   internal enum IconPreviews {
+    internal static let adhkar = ImageAsset(name: "IconPreviews/adhkar")
     internal static let crescent = ImageAsset(name: "IconPreviews/crescent")
     internal static let gold = ImageAsset(name: "IconPreviews/gold")
     internal static let ink = ImageAsset(name: "IconPreviews/ink")
@@ -39,7 +40,7 @@ internal enum Asset {
     internal static let midjourney001 = ImageAsset(name: "IconPreviews/midjourney001")
     internal static let serpentine = ImageAsset(name: "IconPreviews/serpentine")
     internal static let spring = ImageAsset(name: "IconPreviews/spring")
-    internal static let vibrantMoon = ImageAsset(name: "IconPreviews/vibrant-moon")
+    internal static let vibrantMoon = ImageAsset(name: "IconPreviews/vibrantMoon")
   }
   internal enum Patterns {
     internal static let blueGradient = ImageAsset(name: "Patterns/blue-gradient")

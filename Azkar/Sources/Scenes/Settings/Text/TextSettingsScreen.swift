@@ -80,7 +80,7 @@ struct TextSettingsScreen: View {
             NavigationLink {
                 ExtraTextSettingsScreen(viewModel: viewModel)
             } label: {
-                NavigationLabel(title: "Advanced Settings")
+                NavigationLabel(title: L10n.Settings.Text.extra)
             }
         }
     }

@@ -393,7 +393,7 @@ internal enum L10n {
         /// Spring
         internal static let spring = L10n.tr("Localizable", "settings.icon.pro.spring", fallback: "Spring")
         /// Vibrant Crescent
-        internal static let vibrantMoon = L10n.tr("Localizable", "settings.icon.pro.vibrant-moon", fallback: "Vibrant Crescent")
+        internal static let vibrantMoon = L10n.tr("Localizable", "settings.icon.pro.vibrantMoon", fallback: "Vibrant Crescent")
       }
     }
     internal enum Reminders {
@@ -453,6 +453,8 @@ internal enum L10n {
       internal static let arabicLineSpacing = L10n.tr("Localizable", "settings.text.arabic-line-spacing", fallback: "Line spacing (arabic)")
       /// Arabic font
       internal static let arabicTextFont = L10n.tr("Localizable", "settings.text.arabic-text-font", fallback: "Arabic font")
+      /// Extra settings
+      internal static let extra = L10n.tr("Localizable", "settings.text.extra", fallback: "Extra settings")
       /// Text size
       internal static let fontSize = L10n.tr("Localizable", "settings.text.font-size", fallback: "Text size")
       /// Language
