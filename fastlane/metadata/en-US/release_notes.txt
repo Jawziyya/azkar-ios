@@ -1,5 +1,4 @@
-- New Themes – Fresh themes added for a better visual experience.
-- New Fonts — List of custom fonts was extended.
-- Enhanced Share Functionality – Now you can include a background image and customize sharing options even more.
-- Stability Enhancements – The app is now more stable and performs better.
-- Tap Counter Restored – The counter functionality using taps is back.
+- New Themes: Enjoy a refreshed visual experience with our latest theme collection
+- Expanded Font Library: Access more typographic options with additional custom fonts
+- Enhanced Sharing: Personalize your shares with background images and more customization options
+- Performance Boost: Improved stability and overall app performance
