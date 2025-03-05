@@ -83,6 +83,16 @@ final class Preferences: ObservableObject, TextProcessingPreferences {
                 ColorTheme.current = theme
             }
             .store(in: &cancellables)
+        
+        $appTheme
+            .sink { theme in
+                AppTheme.current = theme
+            }
+            .store(in: &cancellables)
+        
+        storageChangesPublisher()
+            .sink(receiveValue: objectWillChange.send)
+            .store(in: &cancellables)
     }
     
     static var shared = Preferences()
@@ -105,11 +115,14 @@ final class Preferences: ObservableObject, TextProcessingPreferences {
     @Preference(Keys.theme, defaultValue: .automatic)
     var theme: Theme
     
+    @Preference(Keys.appTheme, defaultValue: AppTheme.current)
+    var appTheme: AppTheme
+    
     @Preference(Keys.colorTheme, defaultValue: ColorTheme.default)
     var colorTheme: ColorTheme
 
-    @Preference(Keys.enableReminders, defaultValue: true)
-    var enableNotifications: Bool
+    @available(*, deprecated, message: "This property is deprecated and will be removed in a future release")
+    var enableNotifications: Bool { true }
     
     @Preference(Keys.enableAdhkarReminder, defaultValue: true)
     var enableAdhkarReminder: Bool
@@ -141,9 +154,6 @@ final class Preferences: ObservableObject, TextProcessingPreferences {
     @Preference(Keys.zikrReadingMode, defaultValue: ZikrReadingMode.normal)
     var zikrReadingMode: ZikrReadingMode
 
-    @Preference(Keys.purchasedIconPacks, defaultValue: [AppIconPack.standard])
-    var purchasedIconPacks
-
     @Preference(Keys.sizeCategory, defaultValue: ContentSizeCategory.medium)
     var sizeCategory
     
@@ -169,8 +179,8 @@ final class Preferences: ObservableObject, TextProcessingPreferences {
     @Preference(Keys.enableGoToNextZikrOnCounterFinished, defaultValue: true)
     var enableGoToNextZikrOnCounterFinished: Bool
 
-//    @Preference(Keys.azkarCounteType, defaultValue: CounterType.floatingButton)
-    var counterType: CounterType = .floatingButton
+    @Preference(Keys.azkarCounteType, defaultValue: CounterType.floatingButton)
+    var counterType: CounterType
 
     @Preference(Keys.alignCounterByLeadingSide, defaultValue: true)
     var alignCounterButtonByLeadingSide

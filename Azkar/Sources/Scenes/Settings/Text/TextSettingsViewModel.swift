@@ -44,7 +44,7 @@ final class TextSettingsViewModel: SettingsSectionViewModel {
             fontsType: fontsType,
             service: FontsService(),
             subscribeScreenTrigger: { [unowned self] in
-                self.router.trigger(.subscribe)
+                self.router.trigger(.subscribe(sourceScreen: FontsView.viewName))
             }
         )
     }

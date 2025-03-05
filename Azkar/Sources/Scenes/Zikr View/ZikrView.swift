@@ -21,6 +21,7 @@ struct ZikrView: View {
 
     @ObservedObject var viewModel: ZikrViewModel
     @Environment(\.zikrReadingMode) var zikrReadingMode
+    @Environment(\.appTheme) var appTheme
 
     let incrementAction: AnyPublisher<Void, Never>
 
@@ -45,7 +46,7 @@ struct ZikrView: View {
             await viewModel.incrementZikrCount()
         }
         if viewModel.remainingRepeatsNumber > 0, viewModel.preferences.enableCounterHapticFeedback {
-            Haptic.toggleFeedback()
+            HapticGenerator.performFeedback(.impact(flexibility: .soft))
         }
     }
     
@@ -75,6 +76,14 @@ struct ZikrView: View {
         .removeSaturationIfNeeded()
         .background(Color.background.edgesIgnoringSafeArea(.all))
         .onReceive(incrementAction, perform: incrementZikrCounter)
+        .simultaneousGesture(
+            TapGesture(count: 2)
+                .onEnded { _ in
+                    if viewModel.preferences.counterType == .tap {
+                        incrementZikrCounter()
+                    }
+                }
+        )
         .overlay(
             counterButton,
             alignment: viewModel.preferences.alignCounterButtonByLeadingSide ? .bottomLeading : .bottomTrailing
@@ -84,7 +93,7 @@ struct ZikrView: View {
     private var counterButton: some View {
         Group {
             Text("1")
-                .foregroundColor(Color.accent)
+                .foregroundStyle(Color.accent)
                 .font(Font.system(
                     size: viewModel.preferences.counterSize.value / 3,
                     weight: .regular,
@@ -95,7 +104,7 @@ struct ZikrView: View {
                     width: viewModel.preferences.counterSize.value,
                     height: viewModel.preferences.counterSize.value
                 )
-                .foregroundColor(Color.white)
+                .foregroundStyle(Color.white)
                 .background(Color.accent)
                 .clipShape(Capsule())
         }
@@ -120,14 +129,13 @@ struct ZikrView: View {
                 }
 
                 viewModel.zikr.notes.flatMap { notes in
-                    ZikrNoteView(
-                        text: notes,
-                        font: .customFont(viewModel.preferences.preferredTranslationFont)
-                    )
+                    ZikrNoteView(text: notes)
+                        .customFont(.body)
                 }
 
                 viewModel.zikr.benefits.flatMap { text in
                     ZikrBenefitsView(text: text)
+                        .customFont(.footnote)
                 }
             }
 
@@ -140,7 +148,7 @@ struct ZikrView: View {
                     .onAppear {
                         if isIncrementActionPerformed, !counterFeedbackCompleted {
                             if viewModel.preferences.enableCounterHapticFeedback {
-                                Haptic.successFeedback()
+                                HapticGenerator.performFeedback(.success)
                             }
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                                 counterFinishedCallback?()
@@ -154,7 +162,7 @@ struct ZikrView: View {
                 Group {
                     if viewModel.remainingRepeatsNumber == 0 {
                         Circle()
-                            .foregroundColor(Color.clear)
+                            .foregroundStyle(Color.clear)
                             .frame(width: 52, height: 52)
                             .matchedGeometryEffect(id: counterButtonAnimationId, in: counterButtonAnimationNamespace)
                     }
@@ -195,7 +203,7 @@ struct ZikrView: View {
                     let prefs = viewModel.preferences
                     
                     Button {
-                        Haptic.tapFeedback()
+                        HapticGenerator.performFeedback(.selection)
                         viewModel.playAudio(at: idx)
                     } label: {
                         VStack {
@@ -251,8 +259,8 @@ struct ZikrView: View {
     private func titleView(_ title: String) -> some View {
         Text(title)
             .equatable()
-            .font(Font.system(.headline, design: .rounded))
-            .foregroundColor(Color.secondaryText)
+            .systemFont(.headline)
+            .foregroundStyle(Color.secondaryText)
             .multilineTextAlignment(.center)
             .frame(maxWidth: .infinity, alignment: .center)
             .padding()
@@ -278,7 +286,7 @@ struct ZikrView: View {
                 )
                 if viewModel.preferences.enableLineBreaks {
                     Button(action: {
-                        Haptic.tapFeedback()
+                        HapticGenerator.performFeedback(.selection)
                         viewModel.playAudio(at: idx)
                     }, label: {
                         label
@@ -306,11 +314,11 @@ struct ZikrView: View {
             font: isArabicText ? prefs.preferredArabicFont : prefs.preferredTranslationFont,
             lineSpacing: prefs.enableLineBreaks ? spacing : 0
         )
-        .padding(5)
         .background(
             Group {
                 if idx == viewModel.indexToHighlight, viewModel.highlightCurrentIndex {
                     backgroundColor
+                        .padding(-10)
                         .cornerRadius(6)
                 }
             }
@@ -401,7 +409,7 @@ struct ZikrView: View {
                 .disabled(viewModel.hadithViewModel == nil)
             }
         }
-        .font(.caption)
+        .systemFont(.caption)
         .padding()
     }
 
@@ -422,8 +430,8 @@ struct ZikrView: View {
                 .if(underline) { text in
                     text.underline()
                 }
-                .foregroundColor(.text)
-                .font(Font.system(.caption, design: .rounded).weight(.medium).smallCaps())
+                .foregroundStyle(Color.text)
+                .systemFont(.caption, weight: .medium, modification: .smallCaps)
         }
     }
 
@@ -433,8 +441,8 @@ struct ZikrView: View {
 
     private func getCaption(_ text: String) -> some View {
         Text(getAttributedString(text))
-            .font(Font.system(.caption2, design: .rounded).smallCaps())
-            .foregroundColor(Color.tertiaryText)
+            .systemFont(.caption2, modification: .smallCaps)
+            .foregroundStyle(Color.tertiaryText)
     }
 
     private func getAttributedString(_ text: String) -> AttributedString {
@@ -454,11 +462,11 @@ struct ZikrView: View {
 }
 
 private struct ZikrViewPreview: View {
-    var theme: ColorTheme
+    var theme: AppTheme
     
     var body: some View {
         let prefs = Preferences.shared
-        prefs.colorTheme = theme
+        prefs.appTheme = theme
         return ZikrView(
             viewModel: ZikrViewModel(
                 zikr: Zikr.placeholder(),
@@ -473,15 +481,15 @@ private struct ZikrViewPreview: View {
 }
 
 #Preview("Default") {
-    ZikrViewPreview(theme: .default)
+    ZikrViewPreview(theme: .code)
 }
 
 #Preview("Sea") {
-    ZikrViewPreview(theme: .sea)
+    ZikrViewPreview(theme: .flat)
         .environment(\.zikrReadingMode, .lineByLine)
 }
 
 #Preview("Ink") {
-    ZikrViewPreview(theme: .ink)
+    ZikrViewPreview(theme: .reader)
         .environment(\.zikrReadingMode, .lineByLine)
 }

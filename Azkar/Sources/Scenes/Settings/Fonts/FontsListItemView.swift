@@ -12,6 +12,7 @@ struct FontsListItemView: View {
     let isArabicFontsType: Bool
     let isLoadingFont: Bool
     let isSelectedFont: Bool
+    let hasAccessToFont: Bool
     let selectionCallback: () -> Void
     var isRedacted = false
     
@@ -20,10 +21,10 @@ struct FontsListItemView: View {
             Group {
                 if isArabicFontsType {
                     Text(vm.name)
-                        .font(.system(.body))
+                        .systemFont(.body)
                 } else {
                     Text(vm.name)
-                        .font(Font.customFont(vm.font, style: .body, sizeCategory: nil))
+                        .customFont(vm.font, style: .body)
                 }
             }
             .multilineTextAlignment(.leading)
@@ -37,15 +38,19 @@ struct FontsListItemView: View {
             if let imageURL = vm.imageURL {
                 FontsListItemView.fontImageView(imageURL, isRedacted: isRedacted)
                     .frame(width: 100, height: 40)
-                    .foregroundColor(Color.accent)
+                    .foregroundStyle(Color.accent)
                     .onTapGesture(perform: selectionCallback)
             }
             
-            CheckboxView(isCheked: .constant(isSelectedFont))
-                .frame(width: 20, height: 20)
+            if hasAccessToFont || isSelectedFont {
+                CheckboxView(isCheked: .constant(isSelectedFont))
+                    .frame(width: 20, height: 20)
+            } else {
+                ProBadgeView()
+            }
         }
         .contentShape(Rectangle())
-        .frame(minHeight: 44)
+        .frame(minHeight: 50)
     }
     
     @MainActor
@@ -84,6 +89,7 @@ struct FontsListItemView_Previews: PreviewProvider {
             isArabicFontsType: false,
             isLoadingFont: false,
             isSelectedFont: false,
+            hasAccessToFont: true,
             selectionCallback: {},
             isRedacted: false
         )

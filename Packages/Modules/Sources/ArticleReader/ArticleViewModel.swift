@@ -1,15 +1,14 @@
 import SwiftUI
-import Perception
 import Entities
 
-@Perceptible @dynamicMemberLookup
-public final class ArticleViewModel {
+@dynamicMemberLookup
+public final class ArticleViewModel: ObservableObject {
     
     var article: Article
-    var views: Int?
-    var viewsAbbreviated: String?
-    var shares: Int?
-    var sharesAbbreviated: String?
+    @Published var views: Int?
+    @Published var viewsAbbreviated: String?
+    @Published var shares: Int?
+    @Published var sharesAbbreviated: String?
     
     private let analyticsStream: () async -> AsyncStream<ArticleAnalytics>
     private let updateAnalytics: (ArticleAnalytics) async -> Void

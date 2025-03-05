@@ -16,10 +16,18 @@ internal enum L10n {
   internal static func remainingRepeats(_ p1: Int) -> String {
     return L10n.tr("Localizable", "remaining-repeats", p1, fallback: "Plural format key: \"%#@value@\"")
   }
+  /// 
+  internal static let remainingRepeatsPlural4 = L10n.tr("Localizable", "remaining-repeats-plural-4", fallback: "")
+  /// 
+  internal static let remainingRepeatsPlural5 = L10n.tr("Localizable", "remaining-repeats-plural-5", fallback: "")
   /// Plural format key: "%#@value@"
   internal static func repeatsNumber(_ p1: Int) -> String {
     return L10n.tr("Localizable", "repeats_number", p1, fallback: "Plural format key: \"%#@value@\"")
   }
+  /// 
+  internal static let repeatsNumberPlural4 = L10n.tr("Localizable", "repeats_number-plural-4", fallback: "")
+  /// 
+  internal static let repeatsNumberPlural5 = L10n.tr("Localizable", "repeats_number-plural-5", fallback: "")
   internal enum About {
     /// About
     internal static let title = L10n.tr("Localizable", "about.title", fallback: "About")
@@ -206,21 +214,9 @@ internal enum L10n {
     }
   }
   internal enum IconPack {
-    internal enum Darsigova {
-      /// Sunsets and sunrises as our faith keepers which has signs of the mercy of our Lord.
-      internal static let description = L10n.tr("Localizable", "icon_pack.darsigova.description", fallback: "Sunsets and sunrises as our faith keepers which has signs of the mercy of our Lord.")
-      /// App Icon Pack «Faith keepers»
-      internal static let title = L10n.tr("Localizable", "icon_pack.darsigova.title", fallback: "App Icon Pack «Faith keepers»")
-    }
     internal enum Info {
       /// You have purchased this App Icon pack 🎉
       internal static let purchasedMessage = L10n.tr("Localizable", "icon_pack.info.purchased-message", fallback: "You have purchased this App Icon pack 🎉")
-    }
-    internal enum Maccinz {
-      /// Soft colors, at home feeling.
-      internal static let description = L10n.tr("Localizable", "icon_pack.maccinz.description", fallback: "Soft colors, at home feeling.")
-      /// App Icon Pack «Illustrations»
-      internal static let title = L10n.tr("Localizable", "icon_pack.maccinz.title", fallback: "App Icon Pack «Illustrations»")
     }
     internal enum Standard {
       ///  
@@ -235,8 +231,6 @@ internal enum L10n {
     /// Morning adhkar 🌅
     internal static let morningNotificationTitle = L10n.tr("Localizable", "notifications.morning-notification-title", fallback: "Morning adhkar 🌅")
     internal enum Jumua {
-      /// 
-      internal static let body = L10n.tr("Localizable", "notifications.jumua.body", fallback: "")
       /// Dua in Jumua day
       internal static let title = L10n.tr("Localizable", "notifications.jumua.title", fallback: "Dua in Jumua day")
     }
@@ -294,6 +288,54 @@ internal enum L10n {
     internal static let useFunFeatures = L10n.tr("Localizable", "settings.use_fun_features", fallback: "Fun Features")
     /// These are features which make Azkar app a bit beautiful but some people find useless and annoying.
     internal static let useFunFeaturesTip = L10n.tr("Localizable", "settings.use_fun_features_tip", fallback: "These are features which make Azkar app a bit beautiful but some people find useless and annoying.")
+    internal enum Appearance {
+      /// Themes and app icons
+      internal static let subtitle = L10n.tr("Localizable", "settings.appearance.subtitle", fallback: "Themes and app icons")
+      /// Appearance
+      internal static let title = L10n.tr("Localizable", "settings.appearance.title", fallback: "Appearance")
+      internal enum AppTheme {
+        /// Flat
+        internal static let flat = L10n.tr("Localizable", "settings.appearance.app-theme.flat", fallback: "Flat")
+        /// E-reader
+        internal static let reader = L10n.tr("Localizable", "settings.appearance.app-theme.reader", fallback: "E-reader")
+        /// Themes
+        internal static let title = L10n.tr("Localizable", "settings.appearance.app-theme.title", fallback: "Themes")
+      }
+      internal enum ColorScheme {
+        internal enum Auto {
+          /// The app automatically adapts to your iOS appearance setting.
+          internal static let description = L10n.tr("Localizable", "settings.appearance.color-scheme.auto.description", fallback: "The app automatically adapts to your iOS appearance setting.")
+          /// System
+          internal static let title = L10n.tr("Localizable", "settings.appearance.color-scheme.auto.title", fallback: "System")
+        }
+        internal enum Dark {
+          /// The app always uses a dark appearance
+          internal static let description = L10n.tr("Localizable", "settings.appearance.color-scheme.dark.description", fallback: "The app always uses a dark appearance")
+          /// Dark
+          internal static let title = L10n.tr("Localizable", "settings.appearance.color-scheme.dark.title", fallback: "Dark")
+        }
+        internal enum Light {
+          /// The app always uses a light appearance
+          internal static let description = L10n.tr("Localizable", "settings.appearance.color-scheme.light.description", fallback: "The app always uses a light appearance")
+          /// Light
+          internal static let title = L10n.tr("Localizable", "settings.appearance.color-scheme.light.title", fallback: "Light")
+        }
+      }
+      internal enum ColorTheme {
+        /// Forest
+        internal static let forest = L10n.tr("Localizable", "settings.appearance.color-theme.forest", fallback: "Forest")
+        /// Color scheme
+        internal static let header = L10n.tr("Localizable", "settings.appearance.color-theme.header", fallback: "Color scheme")
+        /// Ink
+        internal static let ink = L10n.tr("Localizable", "settings.appearance.color-theme.ink", fallback: "Ink")
+        /// Purple Rose
+        internal static let purpleRose = L10n.tr("Localizable", "settings.appearance.color-theme.purple-rose", fallback: "Purple Rose")
+        /// Rose Quartz
+        internal static let roseQuartz = L10n.tr("Localizable", "settings.appearance.color-theme.rose-quartz", fallback: "Rose Quartz")
+        /// Sea
+        internal static let sea = L10n.tr("Localizable", "settings.appearance.color-theme.sea", fallback: "Sea")
+      }
+    }
     internal enum Breaks {
       /// If enabled, Azkar will insert line-breaks after each sentence in dhikr/dua.
       internal static let info = L10n.tr("Localizable", "settings.breaks.info", fallback: "If enabled, Azkar will insert line-breaks after each sentence in dhikr/dua.")
@@ -332,42 +374,26 @@ internal enum L10n {
       internal enum List {
         /// Dark night
         internal static let darkNight = L10n.tr("Localizable", "settings.icon.list.dark_night", fallback: "Dark night")
-        /// A moment
-        internal static let darsigova1 = L10n.tr("Localizable", "settings.icon.list.darsigova_1", fallback: "A moment")
-        /// In the arms of the evening
-        internal static let darsigova10 = L10n.tr("Localizable", "settings.icon.list.darsigova_10", fallback: "In the arms of the evening")
-        /// Binding threads
-        internal static let darsigova2 = L10n.tr("Localizable", "settings.icon.list.darsigova_2", fallback: "Binding threads")
-        /// On the edge of time
-        internal static let darsigova3 = L10n.tr("Localizable", "settings.icon.list.darsigova_3", fallback: "On the edge of time")
-        /// Freedom
-        internal static let darsigova4 = L10n.tr("Localizable", "settings.icon.list.darsigova_4", fallback: "Freedom")
-        /// Light in a town
-        internal static let darsigova5 = L10n.tr("Localizable", "settings.icon.list.darsigova_5", fallback: "Light in a town")
-        /// Aerial moment
-        internal static let darsigova6 = L10n.tr("Localizable", "settings.icon.list.darsigova_6", fallback: "Aerial moment")
-        /// Shining stars in the sky
-        internal static let darsigova7 = L10n.tr("Localizable", "settings.icon.list.darsigova_7", fallback: "Shining stars in the sky")
-        /// Color's fly
-        internal static let darsigova8 = L10n.tr("Localizable", "settings.icon.list.darsigova_8", fallback: "Color's fly")
-        /// Tender
-        internal static let darsigova9 = L10n.tr("Localizable", "settings.icon.list.darsigova_9", fallback: "Tender")
         /// Gold
         internal static let gold = L10n.tr("Localizable", "settings.icon.list.gold", fallback: "Gold")
         /// Ink
         internal static let ink = L10n.tr("Localizable", "settings.icon.list.ink", fallback: "Ink")
-        /// Sunny day
-        internal static let maccinzDay = L10n.tr("Localizable", "settings.icon.list.maccinz_day", fallback: "Sunny day")
-        /// Eid vibes
-        internal static let maccinzHouse = L10n.tr("Localizable", "settings.icon.list.maccinz_house", fallback: "Eid vibes")
-        /// In mountains
-        internal static let maccinzMountains = L10n.tr("Localizable", "settings.icon.list.maccinz_mountains", fallback: "In mountains")
-        /// Ramadan night
-        internal static let maccinzRamadanNight = L10n.tr("Localizable", "settings.icon.list.maccinz_ramadan_night", fallback: "Ramadan night")
-        /// 
-        internal static let midjourney001 = L10n.tr("Localizable", "settings.icon.list.midjourney001", fallback: "")
+        /// MidJourney v0.0.1
+        internal static let midjourney001 = L10n.tr("Localizable", "settings.icon.list.midjourney001", fallback: "MidJourney v0.0.1")
         /// Ramadan
         internal static let ramadan = L10n.tr("Localizable", "settings.icon.list.ramadan", fallback: "Ramadan")
+      }
+      internal enum Pro {
+        /// Crescent
+        internal static let crescent = L10n.tr("Localizable", "settings.icon.pro.crescent", fallback: "Crescent")
+        /// Light
+        internal static let light = L10n.tr("Localizable", "settings.icon.pro.light", fallback: "Light")
+        /// Moon Serpentine
+        internal static let serpentine = L10n.tr("Localizable", "settings.icon.pro.serpentine", fallback: "Moon Serpentine")
+        /// Spring
+        internal static let spring = L10n.tr("Localizable", "settings.icon.pro.spring", fallback: "Spring")
+        /// Vibrant Crescent
+        internal static let vibrantMoon = L10n.tr("Localizable", "settings.icon.pro.vibrantMoon", fallback: "Vibrant Crescent")
       }
     }
     internal enum Reminders {
@@ -427,6 +453,8 @@ internal enum L10n {
       internal static let arabicLineSpacing = L10n.tr("Localizable", "settings.text.arabic-line-spacing", fallback: "Line spacing (arabic)")
       /// Arabic font
       internal static let arabicTextFont = L10n.tr("Localizable", "settings.text.arabic-text-font", fallback: "Arabic font")
+      /// Extra settings
+      internal static let extra = L10n.tr("Localizable", "settings.text.extra", fallback: "Extra settings")
       /// Text size
       internal static let fontSize = L10n.tr("Localizable", "settings.text.font-size", fallback: "Text size")
       /// Language
@@ -463,40 +491,10 @@ internal enum L10n {
         internal static let title = L10n.tr("Localizable", "settings.text.reading_mode.title", fallback: "Reading mode")
       }
     }
-    internal enum Theme {
-      /// System
-      internal static let auto = L10n.tr("Localizable", "settings.theme.auto", fallback: "System")
-      /// Color scheme
-      internal static let colorScheme = L10n.tr("Localizable", "settings.theme.color-scheme", fallback: "Color scheme")
-      /// Dark
-      internal static let dark = L10n.tr("Localizable", "settings.theme.dark", fallback: "Dark")
-      /// Light
-      internal static let light = L10n.tr("Localizable", "settings.theme.light", fallback: "Light")
-      /// Themes and app icons
-      internal static let subtitle = L10n.tr("Localizable", "settings.theme.subtitle", fallback: "Themes and app icons")
-      /// Themes
-      internal static let themesTitle = L10n.tr("Localizable", "settings.theme.themes-title", fallback: "Themes")
-      /// Appearance
-      internal static let title = L10n.tr("Localizable", "settings.theme.title", fallback: "Appearance")
-      internal enum ColorTheme {
-        /// Color theme
-        internal static let header = L10n.tr("Localizable", "settings.theme.color-theme.header", fallback: "Color theme")
-        /// Ink
-        internal static let ink = L10n.tr("Localizable", "settings.theme.color-theme.ink", fallback: "Ink")
-        /// Purple Rose
-        internal static let purpleRose = L10n.tr("Localizable", "settings.theme.color-theme.purple-rose", fallback: "Purple Rose")
-        /// E-reader
-        internal static let reader = L10n.tr("Localizable", "settings.theme.color-theme.reader", fallback: "E-reader")
-        /// Rose Quartz
-        internal static let roseQuartz = L10n.tr("Localizable", "settings.theme.color-theme.rose-quartz", fallback: "Rose Quartz")
-        /// Sea
-        internal static let sea = L10n.tr("Localizable", "settings.theme.color-theme.sea", fallback: "Sea")
-      }
-    }
   }
   internal enum Share {
-    /// Extra options
-    internal static let extraOptions = L10n.tr("Localizable", "share.extra-options", fallback: "Extra options")
+    /// Background
+    internal static let backgroundHeader = L10n.tr("Localizable", "share.background-header", fallback: "Background")
     /// Image
     internal static let image = L10n.tr("Localizable", "share.image", fallback: "Image")
     /// Include Azkar logo
@@ -505,14 +503,16 @@ internal enum L10n {
     internal static let includeBenefit = L10n.tr("Localizable", "share.include-benefit", fallback: "Include text of benefit")
     /// Include title
     internal static let includeTitle = L10n.tr("Localizable", "share.include-title", fallback: "Include title")
-    /// Include translation
-    internal static let includeTranslation = L10n.tr("Localizable", "share.include-translation", fallback: "Include translation")
-    /// Include transliteration
-    internal static let includeTransliteration = L10n.tr("Localizable", "share.include-transliteration", fallback: "Include transliteration")
+    /// Translation Text
+    internal static let includeTranslation = L10n.tr("Localizable", "share.include-translation", fallback: "Translation Text")
+    /// Transliteration Text
+    internal static let includeTransliteration = L10n.tr("Localizable", "share.include-transliteration", fallback: "Transliteration Text")
     /// Share as
     internal static let shareAs = L10n.tr("Localizable", "share.share-as", fallback: "Share as")
     /// Shared from Azkar App
     internal static let sharedWithAzkar = L10n.tr("Localizable", "share.shared-with-azkar", fallback: "Shared from Azkar App")
+    /// Show Extra Options
+    internal static let showExtraOptions = L10n.tr("Localizable", "share.show-extra-options", fallback: "Show Extra Options")
     /// Text
     internal static let text = L10n.tr("Localizable", "share.text", fallback: "Text")
     /// Text alignment

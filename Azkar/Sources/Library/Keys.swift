@@ -10,6 +10,7 @@ enum Keys {
     static let arabicFont = "kArabicFont"
     static let showTashkeel = "kShowTashkeel"
     static let theme = "kTheme"
+    static let appTheme = "kAppTheme"
     static let colorTheme = "kColorTheme"
     static let appIcon = "kAppIcon"
     static let purchasedIconPacks = "kPurchasedIconPacks"

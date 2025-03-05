@@ -3,6 +3,7 @@ import Entities
 import NukeUI
 import Fakery
 import RoughSwift
+import Library
 
 struct PatternView: View {
     var body: some View {
@@ -30,6 +31,7 @@ public struct ArticleCellView: View {
     let title: String
     let imageType: Article.ImageType?
     let maxHeight: CGFloat
+    @Environment(\.appTheme) var appTheme
     
     public init(
         title: String,

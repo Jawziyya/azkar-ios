@@ -1,0 +1,32 @@
+{
+  "configurations" : [
+    {
+      "id" : "60EE4097-C5A3-407C-B728-8962F93866F5",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "commandLineArgumentEntries" : [
+      {
+        "argument" : "DISABLE_LAUNCH_PAYWALL"
+      },
+      {
+        "argument" : "ENABLE_PRO"
+      }
+    ]
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:Azkar.xcodeproj",
+        "identifier" : "53CF0D9974023A965EBC91C3",
+        "name" : "AzkarUITests"
+      }
+    }
+  ],
+  "version" : 1
+}

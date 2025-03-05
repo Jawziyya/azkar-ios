@@ -5,6 +5,7 @@ import Entities
 import Fakery
 import ArticleReader
 import Library
+import AzkarServices
 
 typealias SearchToken = ZikrCategory
 
@@ -64,16 +65,6 @@ final class MainMenuViewModel: ObservableObject {
         UIDevice.current.isIpad
     }
 
-    private lazy var iconsPackMessage: AzkarMenuOtherItem = {
-        let title = L10n.Alerts.checkoutIconPacks
-        var item = AzkarMenuOtherItem(imageName: AppIconPack.maccinz.icons.randomElement()!.imageName, title: title, color: Color.red, iconType: .bundled, imageCornerRadius: 4)
-        item.action = { [unowned self] in
-            self.didDisplayIconPacksMessage = true
-            self.navigateToIconPacksList()
-        }
-        return item
-    }()
-
     init(
         databaseService: AzkarDatabase,
         preferencesDatabase: PreferencesDatabase,
@@ -90,7 +81,7 @@ final class MainMenuViewModel: ObservableObject {
         self.player = player
         self.articlesService = articlesService
         self.adsService = adsService
-        
+                
         if Date().isRamadan {
             var adhkar: [ZikrMenuItem] = []
             if let fastindDua = databaseService.getZikrBeforeBreakingFast() {

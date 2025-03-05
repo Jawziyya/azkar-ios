@@ -4,7 +4,8 @@
 import WidgetKit
 import SwiftUI
 import Entities
-import Library
+import AzkarServices
+import DatabaseInteractors
 
 struct VirtuesWidgets: Widget {
     let kind: String = "AzkarVirtuesWidgets"

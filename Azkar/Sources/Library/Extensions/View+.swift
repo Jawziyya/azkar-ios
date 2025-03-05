@@ -6,4 +6,8 @@ extension View {
         String(describing: type(of: self))
     }
     
+    static var viewName: String {
+        String(describing: self)
+    }
+    
 }

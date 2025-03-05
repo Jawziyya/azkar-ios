@@ -4,7 +4,12 @@ import SwiftUI
 import Entities
 import Library
 
-struct AppFontViewModel: Identifiable, Equatable {
+struct AppFontViewModel: Identifiable, Equatable, Hashable {
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+        hasher.combine(name)
+    }
     
     static func == (lhs: AppFontViewModel, rhs: AppFontViewModel) -> Bool {
         lhs.id == rhs.id

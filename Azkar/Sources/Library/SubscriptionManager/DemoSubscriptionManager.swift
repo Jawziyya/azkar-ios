@@ -12,38 +12,15 @@ final class DemoSubscriptionManager: SubscriptionManagerType {
     private var _isProUser: Bool
     private var _isPurchaseSuccessful = true
     
-    private let _products = CurrentValueSubject<[Product], Error>([
-        Product.placeholder,
-        Product.placeholder
-    ])
-    
-    var products: AnyPublisher<[Product], Error> {
-        _products.eraseToAnyPublisher()
+    func getUserRegion() -> UserRegion {
+        return .other
     }
     
-    func loadProducts() {
-        _products.send([
-            Product.placeholder,
-            Product.placeholder
-        ])
+    func presentPaywall(sourceScreenName: String, completion: (() -> Void)?) {
     }
     
     func isProUser() -> Bool {
         _isProUser
-    }
-    
-    func purchasePackage(with id: String) -> AnyPublisher<PurchaseResult, Error> {
-        Just(_isPurchaseSuccessful ? PurchaseResult.purchased : .cancelled)
-            .setFailureType(to: Error.self)
-            .delay(for: 2, scheduler: RunLoop.main)
-            .eraseToAnyPublisher()
-    }
-    
-    func restorePurchases() -> AnyPublisher<PurchaseResult, Error> {
-        Just(_isPurchaseSuccessful ? PurchaseResult.purchased : .cancelled)
-            .setFailureType(to: Error.self)
-            .delay(for: 2, scheduler: RunLoop.main)
-            .eraseToAnyPublisher()
     }
     
     func setProFeaturesActivated(_ flag: Bool) {

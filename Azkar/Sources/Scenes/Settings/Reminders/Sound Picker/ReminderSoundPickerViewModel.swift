@@ -20,6 +20,10 @@ enum ReminderSound: String, Identifiable, Hashable, Codable {
     
     var id: String { rawValue }
     
+    var isProSound: Bool {
+        !ReminderSound.standardSounds.contains(self)
+    }
+    
     var title: String {
         switch self {
         case .standard:
@@ -97,11 +101,18 @@ extension ReminderSound {
 
 final class ReminderSoundPickerViewModel: ObservableObject {
     
+    enum ReminderType {
+        case adhkar, jumua
+    }
+    
     enum Section: String, Equatable, Identifiable, CaseIterable {
         case standard, custom
         
         var title: String {
-            return NSLocalizedString("settings.reminders.sounds." + rawValue, comment: "")
+            switch self {
+            case .standard: return L10n.Settings.Reminders.Sounds.standard
+            case .custom: return "PRO"
+            }
         }
         
         var id: String { rawValue }
@@ -116,14 +127,20 @@ final class ReminderSoundPickerViewModel: ObservableObject {
     
     let sections = [Section.standard, Section.custom]
 
+    private let type: ReminderType
+    private let preferences: Preferences
     private let subscribeScreenTrigger: Action
     private let subscriptionManager: SubscriptionManagerType
     
     init(
+        type: ReminderType,
+        preferences: Preferences = Preferences.shared,
         preferredSound: ReminderSound,
         subscriptionManager: SubscriptionManagerType = SubscriptionManager.shared,
         subscribeScreenTrigger: @escaping Action
     ) {
+        self.type = type
+        self.preferences = preferences
         self.preferredSound = preferredSound
         self.subscriptionManager = subscriptionManager
         self.subscribeScreenTrigger = subscribeScreenTrigger
@@ -135,6 +152,7 @@ final class ReminderSoundPickerViewModel: ObservableObject {
     
     static var placeholder: ReminderSoundPickerViewModel {
         return ReminderSoundPickerViewModel(
+            type: .adhkar,
             preferredSound: ReminderSound.standard,
             subscriptionManager: DemoSubscriptionManager(),
             subscribeScreenTrigger: {}
@@ -151,9 +169,19 @@ final class ReminderSoundPickerViewModel: ObservableObject {
         player.play(item: audioItem)
     }
     
+    func hasAccessToSound(_ sound: ReminderSound) -> Bool {
+        return !sound.isProSound || subscriptionManager.isProUser()
+    }
+    
     func setPreferredSound(_ sound: ReminderSound) {
-        if subscriptionManager.isProUser() || ReminderSound.standardSounds.contains(sound) {
-            self.preferredSound = sound
+        if !sound.isProSound || subscriptionManager.isProUser() {
+            switch type {
+            case .adhkar:
+                preferences.adhkarReminderSound = sound
+            case .jumua:
+                preferences.jumuahDuaReminderSound = sound
+            }
+            preferredSound = sound
         } else {
             subscribeScreenTrigger()
         }

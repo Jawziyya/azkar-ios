@@ -1,135 +1,223 @@
+// Copyright © 2022 Al Jawziyya. All rights reserved. 
+
 import SwiftUI
+import NukeUI
+import Nuke
 import Library
 
 struct ZikrShareView: View {
 
     let viewModel: ZikrViewModel
-    var includeTitle = true
-    var includeTranslation = true
-    var includeTransliteration =  false
-    var includeBenefits = true
-    var includeLogo = true
-    var includeSource = false
+    let includeTitle: Bool
+    let includeTranslation: Bool
+    let includeTransliteration: Bool
+    let includeBenefits: Bool
+    let includeLogo: Bool
+    let includeSource: Bool
     var backgroundColor = Color.background
     var arabicTextAlignment = TextAlignment.trailing
     var otherTextAlignment = TextAlignment.leading
+    var nestIntoScrollView: Bool
     var useFullScreen: Bool
+    var selectedBackground: ZikrShareBackgroundItem
 
-    @Environment(\.colorScheme)
-    var colorScheme
+    @Environment(\.colorScheme) var colorScheme
+    @Environment(\.appTheme) var appTheme
+    @Environment(\.colorTheme) var colorTheme
+    @State private var dynamicColorScheme: ColorScheme?
 
+    // New computed property to check if background is an image
+    private var isBackgroundImage: Bool {
+        switch selectedBackground.backgroundType {
+        case .solidColor:
+            return false
+        case .localImage, .remoteImage:
+            return true
+        }
+    }
+    
     var body: some View {
-        ScrollView {
+        container
+            .edgesIgnoringSafeArea(.all)
+            .environment(\.dynamicTypeSize, .large)
+            .environment(\.colorScheme, customColorScheme)
+            .onAppear {
+                AnalyticsReporter.reportScreen("Zikr Share", className: viewName)
+            }
+            .onChange(of: selectedBackground) { _ in
+                dynamicColorScheme = nil
+            }
+    }
+    
+    @ViewBuilder
+    var container: some View {
+        if nestIntoScrollView {
+            ScrollView {
+                content
+            }
+        } else {
             content
-                .frame(minHeight: useFullScreen ? UIScreen.main.bounds.height : 100)
-                .background(useFullScreen ? backgroundColor : Color.clear)
         }
-        .edgesIgnoringSafeArea(.all)
-        .environment(\.dynamicTypeSize, .large)
-        .onAppear {
-            AnalyticsReporter.reportScreen("Zikr Share", className: viewName)
+    }
+    
+    var customColorScheme: ColorScheme {
+        dynamicColorScheme ?? colorScheme
+    }
+    
+    var backgroundForContent: some View {
+        Group {
+            switch selectedBackground.backgroundType {
+            case .solidColor(let color):
+                color
+            case .localImage(let image):
+                renderImage(image)
+            case .remoteImage(let item):
+                if useFullScreen, let cachedImage = getCachedImage(for: item.originalURL) {
+                    renderImage(cachedImage)
+                } else {
+                    LazyImage(url: item.originalURL) { state in
+                        if let image = state.image {
+                            image
+                                .resizable()
+                                .scaledToFill()
+                                .onAppear {
+                                    if let color = state.imageContainer?.image.dominantColor() {
+                                        dynamicColorScheme = isDarkColor(color) ? .dark : .light
+                                    }
+                                }
+                        } else {
+                            ZStack {
+                                if state.isLoading {
+                                    ProgressView()
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
+        .id(selectedBackground)
+    }
+    
+    // New method to render image with common logic
+    private func renderImage(_ image: UIImage) -> some View {
+        Image(uiImage: image)
+            .resizable()
+            .scaledToFill()
+            .onAppear {
+                if let color = image.dominantColor() {
+                    dynamicColorScheme = isDarkColor(color) ? .dark : .light
+                }
+            }
+    }
+    
+    // New method to check for cached images
+    private func getCachedImage(for url: URL) -> UIImage? {
+        let request = ImageRequest(url: url)
+        let cachedContainer = ImagePipeline.shared.cache.cachedImage(for: request)
+        return cachedContainer?.image
+    }
+
+    // Helper function to determine if a color is dark
+    private func isDarkColor(_ color: UIColor) -> Bool {
+        var red: CGFloat = 0
+        var green: CGFloat = 0
+        var blue: CGFloat = 0
+        var alpha: CGFloat = 0
+        
+        color.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
+        
+        // Calculate luminance (perceived brightness)
+        // Using the formula: 0.299*R + 0.587*G + 0.114*B
+        let luminance = 0.299 * red + 0.587 * green + 0.114 * blue
+        
+        // If luminance is less than 0.5, it's considered a dark color
+        return luminance < 0.5
     }
 
     var content: some View {
         VStack(spacing: 16) {
-            if includeTitle, viewModel.zikr.title != nil {
-                titleView
+            if includeTitle, let title = viewModel.title {
+                Text(title)
             }
 
             VStack(spacing: 0) {
-                textView
+                Text(.init(viewModel.text.joined(separator: "\n")))
+                    .customFont(.title1, isArabic: true)
+                    .frame(alignment: .trailing)
+                    .multilineTextAlignment(arabicTextAlignment)
+                    .padding()
 
-                if includeTranslation, viewModel.translation.isEmpty == false {
+                if includeTranslation {
                     Divider()
 
-                    translationView
+                    Text(viewModel.translation.joined(separator: "\n"))
+                        .customFont(.body)
+                        .multilineTextAlignment(otherTextAlignment)
+                        .padding()
+                        .frame(maxWidth: .infinity, alignment: .leading)
                 }
 
-                if includeTransliteration, viewModel.transliteration.isEmpty == false {
+                if includeTransliteration, !viewModel.transliteration.isEmpty {
                     Divider()
 
-                    transliterationView
+                    Text(viewModel.transliteration.joined(separator: "\n"))
+                        .customFont(.body)
+                        .multilineTextAlignment(.leading)
+                        .padding()
+                        .frame(maxWidth: .infinity, alignment: .leading)
                 }
 
-                if includeBenefits, let text = viewModel.zikr.benefits {
+                if includeBenefits, let text = viewModel.zikr.benefits?.textOrNil {
                     Divider()
-
-                    benefitsView(text)
+                    
+                    ZikrBenefitsView(text: text)
+                        .customFont(.footnote)
+                        .frame(maxWidth: .infinity, alignment: .leading)
                 }
 
-                if includeSource {
-                    sourceView
+                if includeSource, let source = viewModel.source.textOrNil {
+                    Text(source)
+                        .customFont(.caption1)
+                        .foregroundStyle(Color.secondaryText)
+                        .padding(.horizontal)
+                        .padding(.vertical, 8)
                 }
             }
-            .background(Color.contentBackground)
-            .cornerRadius(Constants.cornerRadius)
+            .background {
+                if isBackgroundImage {
+                    Rectangle()
+                        .fill(.ultraThinMaterial)
+                } else {
+                    Color.contentBackground
+                }
+            }
+            .cornerRadius(appTheme.cornerRadius)
             .shadow(color: colorScheme == .dark ? Color.clear : Color.black.opacity(0.1), radius: 5, x: 0, y: 1)
 
             if includeLogo {
-                logoView
+                VStack {
+                    if let image = UIImage(named: "ink-icon") {
+                        Image(uiImage: image)
+                            .renderingMode(.template)
+                            .resizable()
+                            .frame(width: 30, height: 30)
+                            .cornerRadius(6)
+                    }
+                    Text(L10n.Share.sharedWithAzkar)
+                        .font(Font.system(size: 12, weight: .regular, design: .rounded).smallCaps())
+                }
+                .foregroundStyle(Color.text)
+                .opacity(0.5)
             }
         }
-        .padding(.horizontal)
+        .padding(.horizontal, 25)
         .padding(.vertical, 30)
-    }
-    
-    private var titleView: some View {
-        Text(viewModel.title)
-    }
-    
-    private var textView: some View {
-        Text(.init(viewModel.text.joined(separator: "\n")))
-            .font(Font.customFont(viewModel.preferences.preferredArabicFont, style: .title1, sizeCategory: .large))
-            .frame(maxWidth: .infinity, alignment: .trailing)
-            .multilineTextAlignment(arabicTextAlignment)
-            .padding()
-    }
-    
-    private var translationView: some View {
-        Text(viewModel.translation.joined(separator: "\n"))
-            .font(Font.customFont(viewModel.preferences.preferredTranslationFont, style: .body, sizeCategory: .large))
-            .multilineTextAlignment(otherTextAlignment)
-            .padding()
-            .frame(maxWidth: .infinity, alignment: .leading)
-    }
-    
-    private var transliterationView: some View {
-        Text(viewModel.transliteration.joined(separator: "\n"))
-            .font(Font.customFont(viewModel.preferences.preferredTranslationFont, style: .body, sizeCategory: .large))
-            .multilineTextAlignment(.leading)
-            .padding()
-            .frame(maxWidth: .infinity, alignment: .leading)
-    }
-    
-    private func benefitsView(_ text: String) -> some View {
-        ZikrBenefitsView(text: text)
-            .frame(maxWidth: .infinity, alignment: .leading)
-    }
-    
-    private var sourceView: some View {
-        Text(viewModel.source)
-            .font(Font.customFont(viewModel.preferences.preferredTranslationFont, style: .caption1, sizeCategory: .large))
-            .foregroundColor(Color.secondaryText)
-            .padding(.horizontal)
-            .padding(.vertical, 8)
-            .frame(maxWidth: .infinity, alignment: .leading)
-    }
-    
-    private var logoView: some View {
-        VStack {
-            if let image = UIImage(named: "ink") {
-                Image(uiImage: image)
-                    .resizable()
-                    .frame(width: 30, height: 30)
-                    .cornerRadius(6)
-            }
-            Text(L10n.Share.sharedWithAzkar)
-                .foregroundColor(Color.secondary)
-                .font(Font.system(size: 12, weight: .regular, design: .rounded).smallCaps())
-        }
-        .opacity(0.5)
-        .background(backgroundColor)
+        .frame(
+            maxWidth: .infinity,
+            minHeight: useFullScreen ? UIScreen.main.bounds.height : 100
+        )
+        .background(backgroundForContent)
     }
 
 }
@@ -144,7 +232,15 @@ struct ZikrShareView_Previews: PreviewProvider {
                 preferences: Preferences.shared,
                 player: Player.test
             ),
-            useFullScreen: true
+            includeTitle: true,
+            includeTranslation: true,
+            includeTransliteration: true,
+            includeBenefits: true,
+            includeLogo: true,
+            includeSource: true,
+            nestIntoScrollView: false,
+            useFullScreen: true,
+            selectedBackground: .defaultBackground
         )
         .previewLayout(.fixed(width: 380, height: 1200))
         .environment(\.locale, Locale(identifier: "ru_RU"))

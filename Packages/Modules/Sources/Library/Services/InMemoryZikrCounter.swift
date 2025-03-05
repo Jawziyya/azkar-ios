@@ -3,6 +3,7 @@
 
 import Foundation
 import Entities
+import AzkarServices
 
 public actor InMemoryZikrCounter: ZikrCounterType {
     

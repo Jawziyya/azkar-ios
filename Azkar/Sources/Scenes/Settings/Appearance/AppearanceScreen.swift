@@ -7,13 +7,15 @@ struct AppearanceScreen: View {
     @ObservedObject var viewModel: AppearanceViewModel
     
     var body: some View {
-        List {
-            content
-                .listRowBackground(Color.contentBackground)
+        ScrollView {
+            VStack {
+                content
+            }
+            .applyContainerStyle()
         }
         .customScrollContentBackground()
         .background(Color.background, ignoresSafeAreaEdges: .all)
-        .navigationTitle(L10n.Settings.Theme.title)
+        .navigationTitle(L10n.Settings.Appearance.title)
         .onAppear {
             AnalyticsReporter.reportScreen("Settings", className: viewName)
         }
@@ -22,10 +24,12 @@ struct AppearanceScreen: View {
     var content: some View {
         Group {
             PickerView(
-                label: L10n.Settings.Theme.themesTitle,
+                label: L10n.Settings.Appearance.AppTheme.title,
                 subtitle: viewModel.themeTitle,
                 destination: themePicker
             )
+            
+            Divider()
 
             if viewModel.canChangeIcon {
                 PickerView(
@@ -33,12 +37,15 @@ struct AppearanceScreen: View {
                     subtitle: viewModel.preferences.appIcon.title,
                     destination: iconPicker
                 )
+                
+                Divider()
             }
 
             Toggle(isOn: $viewModel.preferences.enableFunFeatures) {
                 HStack {
                     Text(L10n.Settings.useFunFeatures)
-                        .font(Font.system(.body, design: .rounded))
+                        .systemFont(.body)
+                        .foregroundStyle(Color.text)
                     Spacer()
                     
                     Templates.Menu {
@@ -47,11 +54,12 @@ struct AppearanceScreen: View {
                             .cornerRadius(10)
                     } label: { _ in
                         Image(systemName: "info.circle")
-                            .foregroundColor(Color.accent.opacity(0.75))
+                            .foregroundStyle(Color.accent.opacity(0.75))
                     }
                 }
                 .padding(.vertical, 8)
             }
+            .applyThemedToggleStyle()
         }
     }
     
