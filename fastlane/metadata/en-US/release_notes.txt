@@ -1,4 +1,1 @@
-- New Themes: Enjoy a refreshed visual experience with our latest theme collection
-- Expanded Font Library: Access more typographic options with additional custom fonts
-- Enhanced Sharing: Personalize your shares with background images and more customization options
-- Performance Boost: Improved stability and overall app performance
+
