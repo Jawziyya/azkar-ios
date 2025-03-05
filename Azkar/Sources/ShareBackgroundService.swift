@@ -27,18 +27,39 @@ struct ShareBackgroundsResponse: Codable {
 }
 
 final class ShareBackgroundService: ObservableObject {
+    private let cache: URLCache
+    private let session: Session
+    
+    init() {
+        // Configure a cache with 20MB memory capacity and 100MB disk capacity
+        self.cache = URLCache(
+            memoryCapacity: 20 * 1024 * 1024,     // 20MB
+            diskCapacity: 100 * 1024 * 1024,      // 100MB
+            diskPath: "share_backgrounds_cache"
+        )
+        
+        // Create a session configuration with the cache
+        let configuration = URLSessionConfiguration.default
+        configuration.urlCache = cache
+        configuration.requestCachePolicy = .returnCacheDataElseLoad
+        
+        // Create Alamofire session with this configuration
+        self.session = Session(configuration: configuration)
+    }
     
     func loadBackgrounds() async throws -> [ZikrShareBackgroundItem] {
         let jsonURL = BACKGROUNDS_BASE_URL.appendingPathComponent("backgrounds.json")
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
-        let backgroundImages = try await AF.request(
-            jsonURL,
-            method: HTTPMethod.get,
-            headers: ["Cache-Control": "max-age=3600"]
-        )
-        .asyncDecodable(of: ShareBackgroundsResponse.self, decoder: decoder)
-        .backgrounds
+        
+        var request = try URLRequest(url: jsonURL, method: .get, headers: ["Cache-Control": "max-age=3600"])
+        // Set the cachePolicy to return cached data if available and not expired
+        request.cachePolicy = .returnCacheDataElseLoad
+        
+        let backgroundImages = try await session.request(request)
+            .validate()
+            .asyncDecodable(of: ShareBackgroundsResponse.self, decoder: decoder)
+            .backgrounds
         
         return backgroundImages.map {
             ZikrShareBackgroundItem(
@@ -48,5 +69,4 @@ final class ShareBackgroundService: ObservableObject {
             )
         }
     }
-    
 }

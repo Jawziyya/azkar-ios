@@ -10,23 +10,64 @@ struct ZikrShareBackgroundPickerView: View {
     @Binding var selectedBackground: ZikrShareBackgroundItem
     @Environment(\.appTheme) var appTheme
     
+    // Add a scrollToSelection trigger that parent views can set to true
+    @Binding var scrollToSelection: Bool
+    
+    // Initialize with a default binding if not provided
+    init(backgrounds: [ZikrShareBackgroundItem], selectedBackground: Binding<ZikrShareBackgroundItem>, scrollToSelection: Binding<Bool> = .constant(false)) {
+        self.backgrounds = backgrounds
+        self._selectedBackground = selectedBackground
+        self._scrollToSelection = scrollToSelection
+    }
+    
     var body: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            LazyHStack(spacing: 0) {
-                ForEach(backgrounds) { item in
-                    ZikrShareBackgroundCardView(
-                        item: item, 
-                        isSelected: selectedBackground == item
-                    )
-                    .onTapGesture {
-                        selectedBackground = item
+        ScrollViewReader { scrollProxy in
+            ScrollView(.horizontal, showsIndicators: false) {
+                LazyHStack(spacing: 0) {
+                    ForEach(backgrounds) { item in
+                        ZikrShareBackgroundCardView(
+                            item: item, 
+                            isSelected: selectedBackground == item
+                        )
+                        .onTapGesture {
+                            selectedBackground = item
+                            withAnimation {
+                                scrollProxy.scrollTo(item.id, anchor: .center)
+                            }
+                        }
+                        .padding(5)
+                        .id(item.id)
                     }
-                    .padding(5)
+                }
+                .padding(.horizontal)
+            }
+            .onAppear {
+                // Scroll on appear if the background is already in the array
+                if backgrounds.contains(selectedBackground) {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                        scrollProxy.scrollTo(selectedBackground.id, anchor: .center)
+                    }
                 }
             }
-            .padding(.horizontal)
+            .onChange(of: scrollToSelection) { shouldScroll in
+                if shouldScroll && backgrounds.contains(selectedBackground) {
+                    withAnimation {
+                        scrollProxy.scrollTo(selectedBackground.id, anchor: .center)
+                    }
+                    // Reset the trigger
+                    DispatchQueue.main.async {
+                        scrollToSelection = false
+                    }
+                }
+            }
+            .onChange(of: selectedBackground) { newBackground in
+                if backgrounds.contains(newBackground) {
+                    withAnimation {
+                        scrollProxy.scrollTo(newBackground.id, anchor: .center)
+                    }
+                }
+            }
         }
-        .frame(height: 80)
     }
 }
 
@@ -38,7 +79,7 @@ struct ZikrShareBackgroundCardView: View {
 
     var body: some View {
         backgroundContent
-            .frame(width: 55, height: 75)
+            .frame(width: 55, height: 70)
             .clipShape(RoundedRectangle(cornerRadius: appTheme.cornerRadius/2))
             .overlay(
                 RoundedRectangle(cornerRadius: appTheme.cornerRadius/2)
@@ -53,8 +94,8 @@ struct ZikrShareBackgroundCardView: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
                 : nil
             )
-            .shadow(color: isSelected ? Color.accentColor.opacity(0.5) : Color.clear, 
-                    radius: 3, x: 0, y: 0)
+            .shadow(color: isSelected ? Color.accentColor.opacity(0.25) : Color.clear, 
+                    radius: 1, x: 0, y: 0)
     }
     
     private var displayProBadge: Bool {

@@ -65,6 +65,9 @@ struct ZikrShareOptionsView: View {
     
     @State private var shareViewSize: CGSize = .zero
     
+    // Add state for scrolling trigger
+    @State private var scrollToSelectedBackground = false
+    
     private let alignments: [ZikrShareTextAlignment] = [.center, .start]
             
     var body: some View {
@@ -86,6 +89,11 @@ struct ZikrShareOptionsView: View {
                 if let selectedBackgroundId = selectedBackgroundId,
                    let foundBackground = backgrounds.first(where: { $0.id == selectedBackgroundId }) {
                     selectedBackground = foundBackground
+                }
+                
+                // Trigger scroll to selected background after backgrounds are loaded
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                    scrollToSelectedBackground = true
                 }
             } catch {
                 print(error)
@@ -236,8 +244,10 @@ struct ZikrShareOptionsView: View {
                                 self.selectedBackgroundId = newValue.id
                             }
                         }
-                    )
+                    ),
+                    scrollToSelection: $scrollToSelectedBackground
                 )
+                .frame(height: 80)
             }
         }
     }
