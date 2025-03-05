@@ -1,1 +1,4 @@
-
+- Added new themes and fonts for more comfortable reading
+- Enhanced "Share" function: now with the ability to add background images and additional settings
+- Fixed counter: tap counting feature now works correctly
+- Improved app stability and performance

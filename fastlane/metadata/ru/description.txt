@@ -3,8 +3,3 @@ Azkar — приложение для чтения и заучивания ра�
 - Напоминания о времени утренних и вечерних азкаров
 - Различные шрифты для арабского текста
 - Аудиозаписи для правильного чтения азкаров
-- Источники всех азкаров
-
-Terms of Use: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
-Privacy Policy: https://raw.githubusercontent.com/Jawziyya/legal-info/master/privacy-policies/azkar-app.txt
-App Icon image source: https://flaticon.com/free-icon/moon_414942?term=moon&page=1&position=17

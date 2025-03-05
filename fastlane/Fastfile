@@ -102,34 +102,72 @@ platform :mac do
 
   desc 'Synchronizes certificates / profiles and optionally creates new ones.'
   lane :sync_signing do
-    match_configuration
+        match_configuration
   end
 
-  desc 'Build app'
-  lane :release do
+  desc 'Build and release Mac Catalyst app'
+  lane :closed_beta do
+    setup_ci
     sync_signing
 
-    changelog = File.read("./changelog")
-    build_mac_app(
-      workspace: workspace_name,
-      destination: "generic/platform=macOS,variant=Mac Catalyst",
-      installer_cert_name:
-        '3rd Party Mac Developer Installer: Al Jawziyya (486STKKP6Y)'
-    )
-
-    current_build_number = get_build_number_from_plist(
-      xcodeproj: project_name,
-      target: app_name
-    )
-    new_build_number = current_build_number.to_i + 1
+    # Read changelog
+    changelog = File.read("./Changelog.txt")
+    
+    # Increment build number
     increment_build_number_in_plist(
       xcodeproj: project_name,
-      build_number: new_build_number.to_s, 
+      build_number: ENV['GITHUB_RUN_ID'] || (get_build_number_from_plist(xcodeproj: project_name, target: app_name).to_i + 1).to_s,
       target: app_name
     )
 
-    build_app(workspace: workspace_name, scheme: 'Azkar')
-    testflight(api_key: get_api_key, changelog: changelog)
+    # Build Mac Catalyst app
+    build_app(
+      workspace: workspace_name,
+      scheme: 'Azkar',
+      destination: "generic/platform=macOS,variant=Mac Catalyst",
+      skip_codesigning: false
+    )
+
+    # Upload to TestFlight
+    testflight(
+      api_key: get_api_key,
+      changelog: changelog,
+      platform: "osx"
+    )
   end
 
+  desc "Build and release directly to Mac App Store"
+  lane :app_store_release do
+    setup_ci
+    sync_signing
+    
+    # Increment build number
+    increment_build_number_in_plist(
+      xcodeproj: project_name,
+      build_number: ENV['GITHUB_RUN_ID'] || (get_build_number_from_plist(xcodeproj: project_name, target: app_name).to_i + 1).to_s,
+      target: app_name
+    )
+
+    # Build Mac Catalyst app
+    build_app(
+      workspace: workspace_name,
+      scheme: 'Azkar',
+      destination: "generic/platform=macOS,variant=Mac Catalyst",
+      skip_codesigning: false
+    )
+    
+    # Upload to App Store
+    upload_to_app_store(
+      api_key: get_api_key,
+      platform: "osx",
+      force: true,
+      submit_for_review: true,
+      skip_screenshots: true,
+      run_precheck_before_submit: false,
+      submission_information: {
+        add_id_info_uses_idfa: false,
+        export_compliance_uses_encryption: false
+      }
+    )
+  end
 end

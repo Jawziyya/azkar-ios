@@ -98,8 +98,7 @@ final class ZikrShareCoordinator: NavigationCoordinatable {
         )
         .environment(\.arabicFont, preferences.preferredArabicFont)
         .environment(\.translationFont, preferences.preferredTranslationFont)
-        .frame(width: UIScreen.main.bounds.width)
-        .frame(maxHeight: .infinity)
+        .frame(width: min(440, UIScreen.main.bounds.width))
         
         let image = view.snapshot()
         
