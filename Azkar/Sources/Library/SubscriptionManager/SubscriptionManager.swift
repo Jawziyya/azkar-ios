@@ -57,30 +57,30 @@ final class SubscriptionManager: SubscriptionManagerType {
             let event = "paywall_presentation_skip"
             switch reason {
             case .holdout(let experiment):
-                AnalyticsReporter.reportEvent(event, metadata: ["source": sourceScreenName, "reason": "holdout", "experiment_id": experiment.id])
+                AnalyticsReporter.reportEvent(event, metadata: ["source": sourceScreenName, "reason": "holdout", "experiment_id": experiment.id, "entitlement": entitlement.rawValue])
             case .noAudienceMatch:
-                AnalyticsReporter.reportEvent(event, metadata: ["source": sourceScreenName, "reason": "no_audience_match"])
+                AnalyticsReporter.reportEvent(event, metadata: ["source": sourceScreenName, "reason": "no_audience_match", "entitlement": entitlement.rawValue])
             case .placementNotFound:
-                AnalyticsReporter.reportEvent(event, metadata: ["source": sourceScreenName, "reason": "placement_not_found"])
+                AnalyticsReporter.reportEvent(event, metadata: ["source": sourceScreenName, "reason": "placement_not_found", "entitlement": entitlement.rawValue])
             }
             completion?()
         }
         presentationHandler.onError { error in
-            AnalyticsReporter.reportEvent("paywall_presentation_error", metadata: ["source": sourceScreenName, "error": error.localizedDescription])
+            AnalyticsReporter.reportEvent("paywall_presentation_error", metadata: ["source": sourceScreenName, "error": error.localizedDescription, "entitlement": entitlement.rawValue])
             completion?()
         }
         presentationHandler.onPresent { info in
-            AnalyticsReporter.reportEvent("paywall_presentation", metadata: ["source": sourceScreenName])
+            AnalyticsReporter.reportEvent("paywall_presentation", metadata: ["source": sourceScreenName, "entitlement": entitlement.rawValue])
         }
         presentationHandler.onDismiss { info, result in
             let event = "paywall_dismiss"
             switch result {
             case .declined:
-                AnalyticsReporter.reportEvent(event, metadata: ["reason": "declined", "source": sourceScreenName])
+                AnalyticsReporter.reportEvent(event, metadata: ["reason": "declined", "source": sourceScreenName, "entitlement": entitlement.rawValue])
             case .purchased(let product):
-                AnalyticsReporter.reportEvent(event, metadata: ["reason": "purchased", "source": sourceScreenName, "product": product.productIdentifier])
+                AnalyticsReporter.reportEvent(event, metadata: ["reason": "purchased", "source": sourceScreenName, "product": product.productIdentifier, "entitlement": entitlement.rawValue])
             case .restored:
-                AnalyticsReporter.reportEvent(event, metadata: ["reason": "restored", "source": sourceScreenName])
+                AnalyticsReporter.reportEvent(event, metadata: ["reason": "restored", "source": sourceScreenName, "entitlement": entitlement.rawValue])
             }
             completion?()
         }
