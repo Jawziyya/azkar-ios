@@ -9,32 +9,24 @@
 import SwiftUI
 
 enum AppIconPack: String, CaseIterable, Identifiable, Codable {
-    case standard, maccinz, darsigova
-
-    var productIdentifier: String {
-        return Bundle.main.bundleIdentifier!.replacingOccurrences(of: "-", with: "_") + ".\(rawValue)_icon_pack"
-    }
+    case standard
+    case pro
 
     var id: String {
         rawValue
     }
 
     var title: String {
-        return NSLocalizedString("icon_pack.\(rawValue).title", comment: "Icon pack name.")
-    }
-
-    var description: String {
-        return NSLocalizedString("icon_pack.\(rawValue).description", comment: "Icon pack description.")
+        switch self {
+        case .standard: return L10n.IconPack.Standard.title
+        case .pro: return "PRO"
+        }
     }
 
     var link: URL? {
         switch self {
-        case .standard:
+        case .standard, .pro:
             return nil
-        case .maccinz:
-            return URL(string: "https://dribbble.com/maccinz")!
-        case .darsigova:
-            return URL(string: "https://instagram.com/art.darsigova")!
         }
     }
 
@@ -42,34 +34,26 @@ enum AppIconPack: String, CaseIterable, Identifiable, Codable {
         switch self {
         case .standard:
             return AppIcon.standardIcons
-        case .maccinz:
-            return AppIcon.maccinzIcons
-        case .darsigova:
-            return AppIcon.darsigovaIcons
+        case .pro:
+            return AppIcon.proIcons
         }
     }
 
 }
 
-enum AppIcon: String, Codable, CaseIterable, Identifiable {
+enum AppIcon: String, Codable, CaseIterable, Identifiable, Hashable {
 
-    case gold, ink, darkNight = "dark_night"
+    case gold, ink
     case midjourney001
+    
+    case light, crescent, spring, vibrantMoon = "vibrantMoon", serpentine, adhkar
 
     static var standardIcons: [AppIcon] {
-        [gold, ink, darkNight, midjourney001]
+        [gold, ink, midjourney001]
     }
-
-    case maccinz_house, maccinz_mountains, maccinz_ramadan_night, maccinz_day
-
-    case darsigova_1, darsigova_2, darsigova_3, darsigova_4, darsigova_5, darsigova_6, darsigova_7, darsigova_8, darsigova_9, darsigova_10
-
-    static var maccinzIcons: [AppIcon] {
-        [maccinz_house, maccinz_mountains, maccinz_ramadan_night, maccinz_day]
-    }
-
-    static var darsigovaIcons: [AppIcon] {
-        [darsigova_1, darsigova_2, darsigova_3, darsigova_4, darsigova_5, darsigova_6, darsigova_7, darsigova_8, darsigova_9, darsigova_10]
+    
+    static var proIcons: [AppIcon] {
+        [light, crescent, spring, vibrantMoon, serpentine, adhkar]
     }
 
     var id: String { rawValue }
@@ -78,6 +62,10 @@ enum AppIcon: String, Codable, CaseIterable, Identifiable {
         switch self {
         case .midjourney001:
             return "MidJourney x Azkar 0.0.1"
+        case .crescent, .spring, .vibrantMoon, .light, .serpentine:
+            return NSLocalizedString("settings.icon.pro.\(rawValue)", comment: "")
+        case .adhkar:
+            return "أذكار"
         default:
             return NSLocalizedString("settings.icon.list.\(rawValue)", comment: "")
         }
@@ -87,11 +75,8 @@ enum AppIcon: String, Codable, CaseIterable, Identifiable {
         rawValue
     }
 
-    var imageName: String {
-        switch self {
-        case .gold: return "AppIcon"
-        default: return rawValue
-        }
+    var iconImageName: String {
+        return "IconPreviews/\(rawValue)"
     }
 
 }

@@ -8,6 +8,7 @@ public struct ArticlePDFCoverView: View {
     let maxHeight: CGFloat
     let logoImage: UIImage?
     let logoSubtitle: String
+    @Environment(\.appTheme) var appTheme
     
     public init(
         article: Article,
@@ -35,7 +36,7 @@ public struct ArticlePDFCoverView: View {
                         .cornerRadius(6)
                 }
                 Text(logoSubtitle)
-                    .font(Font.system(size: 12, weight: .regular, design: .rounded).smallCaps())
+                    .systemFont(12, modification: .smallCaps)
             }
             .opacity(0.5)
             

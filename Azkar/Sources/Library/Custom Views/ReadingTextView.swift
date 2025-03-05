@@ -9,17 +9,16 @@ struct ReadingTextView: View {
     let isArabicText: Bool
     let font: AppFont
     var lineSpacing: CGFloat
-    var sizeCategory: ContentSizeCategory? = Preferences.shared.sizeCategory
 
     var body: some View {
         Group {
             if isArabicText {
                 Text(attributedString(text, highlighting: highlightPattern))
-                    .font(Font.customFont(font, style: .title1, sizeCategory: sizeCategory))
+                    .customFont(.title1, isArabic: true)
                     .lineSpacing(lineSpacing)
             } else {
                 Text(attributedString(text, highlighting: highlightPattern))
-                    .font(Font.customFont(font, style: .body).leading(.tight))
+                    .customFont(.body)
                     .lineSpacing(lineSpacing)
             }
         }
@@ -38,7 +37,6 @@ struct ReadingTextView: View {
         highlightPattern: words.components(separatedBy: " ").randomElement(),
         isArabicText: false,
         font: TranslationFont.baskerville,
-        lineSpacing: 1,
-        sizeCategory: .extraExtraExtraLarge
+        lineSpacing: 1
     )
 }

@@ -18,11 +18,22 @@ enum Theme: Int, Codable, CaseIterable, Identifiable, PickableItem, Hashable {
     var title: String {
         switch self {
         case .automatic:
-            return L10n.Settings.Theme.auto
+            return L10n.Settings.Appearance.ColorScheme.Auto.title
         case .light:
-            return L10n.Settings.Theme.light
+            return L10n.Settings.Appearance.ColorScheme.Light.title
         case .dark:
-            return L10n.Settings.Theme.dark
+            return L10n.Settings.Appearance.ColorScheme.Dark.title
+        }
+    }
+    
+    var description: String {
+        switch self {
+        case .automatic:
+            return L10n.Settings.Appearance.ColorScheme.Auto.description
+        case .light:
+            return L10n.Settings.Appearance.ColorScheme.Light.description
+        case .dark:
+            return L10n.Settings.Appearance.ColorScheme.Dark.description
         }
     }
 

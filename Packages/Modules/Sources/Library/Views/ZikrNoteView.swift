@@ -3,16 +3,13 @@ import SwiftUI
 public struct ZikrNoteView: View {
     
     let text: String
-    let font: Font
     @Environment(\.highlightPattern)
     var pattern: String?
     
     public init(
-        text: String,
-        font: Font
+        text: String
     ) {
         self.text = text
-        self.font = font
     }
     
     public var body: some View {
@@ -21,9 +18,8 @@ public struct ZikrNoteView: View {
                 .resizable()
                 .scaledToFit()
                 .frame(width: 15, height: 15)
-                .foregroundColor(Color.accent)
+                .foregroundStyle(Color.accent)
             Text(attributedString(text, highlighting: pattern))
-                .font(font)
         }
         .padding()
     }
@@ -31,6 +27,6 @@ public struct ZikrNoteView: View {
 }
 
 #Preview {
-    ZikrNoteView(text: "Test", font: .callout)
+    ZikrNoteView(text: "Test")
         .environment(\.highlightPattern, "est")
 }

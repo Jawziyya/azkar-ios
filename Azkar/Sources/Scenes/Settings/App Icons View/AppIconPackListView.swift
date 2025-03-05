@@ -1,11 +1,3 @@
-//
-//
-//  Azkar
-//  
-//  Created on 13.02.2021
-//  Copyright © 2021 Al Jawziyya. All rights reserved.
-//  
-
 import SwiftUI
 import Combine
 import Library
@@ -13,40 +5,44 @@ import Library
 final class AppIconPackListViewModel: ObservableObject {
 
     var preferences: Preferences
-
+    let subscriptionManager: SubscriptionManagerType
+    let subscribeScreenTrigger: Action
     @Published var icon: AppIcon
     
     let iconPacks: [AppIconPack] = AppIconPack.allCases
 
     private var cancellabels = Set<AnyCancellable>()
 
-    init(preferences: Preferences) {
+    init(
+        preferences: Preferences,
+        subscriptionManager: SubscriptionManagerType = SubscriptionManager.shared,
+        subscribeScreenTrigger: @escaping Action
+    ) {
         self.preferences = preferences
+        self.subscriptionManager = subscriptionManager
+        self.subscribeScreenTrigger = subscribeScreenTrigger
         icon = preferences.appIcon
-
-        $icon
-            .dropFirst(1)
-            .receive(on: RunLoop.main)
-            .sink(receiveValue: { icon in
-                preferences.appIcon = icon
-                switch icon {
-                case .gold:
-                    // Reset to standard icon.
-                    UIApplication.shared.setAlternateIconName(nil)
-                default:
-                    // Apply custom icon.
-                    UIApplication.shared.setAlternateIconName(icon.referenceName)
-                }
-            })
-            .store(in: &cancellabels)
     }
-
-    func isPackPurchased(_ pack: AppIconPack) -> Bool {
-        if UIApplication.shared.isRanInSimulator {
-            return true
-        } else {
-            return preferences.purchasedIconPacks.contains(pack)
+    
+    func setAppIcon(_ icon: AppIcon) {
+        guard isIconAvailable(icon) else {
+            subscribeScreenTrigger()
+            return
         }
+        switch icon {
+        case .gold:
+            // Reset to standard icon.
+            UIApplication.shared.setAlternateIconName(nil)
+        default:
+            // Apply custom icon.
+            UIApplication.shared.setAlternateIconName(icon.referenceName)
+        }
+        self.icon = icon
+        preferences.appIcon = icon
+    }
+    
+    func isIconAvailable(_ icon: AppIcon) -> Bool {
+        return subscriptionManager.isProUser() || AppIconPack.standard.icons.contains(icon)
     }
 
 }
@@ -59,153 +55,109 @@ struct AppIconPackListView: View {
         self.viewModel = viewModel
     }
 
-    @State private var selectedIconPack: AppIconPackInfoViewModel?
-    @State private var modalOffset: CGFloat = 0
-    @State private var moveEdge = Edge.bottom
     @Environment(\.safariPresenter) var safariPresenter
 
     private var animation = Animation.spring().speed(1.25)
 
     var body: some View {
-        ZStack {
-            list
-
-            if let pack = selectedIconPack {
-                Group {
-                    Color.black.opacity(0.75)
-                        .onTapGesture {
-                            self.closeIconPackInfoWithAnimation()
-                        }
-                        .edgesIgnoringSafeArea(.all)
-
-                    AppIconPackInfoView(viewModel: pack)
-                        .padding()
-                        .offset(y: modalOffset)
-                        .transition(AnyTransition.move(edge: moveEdge).combined(with: .opacity))
-                        .zIndex(1)
-                        .frame(maxWidth: 400)
-                }
-                .gesture(
-                    DragGesture().onChanged { action in
-                        self.modalOffset = action.translation.height
-                        self.moveEdge = (action.translation.height < 0) ? Edge.top : Edge.bottom
-                        if abs(action.translation.height) > 200 || abs(action.predictedEndTranslation.height) > 500 {
-                            self.closeIconPackInfoWithAnimation()
-                        }
-                    }
-                    .onEnded { action in
-                        withAnimation(self.animation) {
-                            if abs(action.translation.height) <= 200 {
-                                self.modalOffset = 0
-                                self.selectedIconPack = nil
-                            }
-                        }
-                    }
-                )
+        list
+            .onAppear {
+                AnalyticsReporter.reportScreen("App Icon Pack List", className: viewName)
             }
-        }
-        .onAppear {
-            AnalyticsReporter.reportScreen("App Icon Pack List", className: viewName)
-        }
-    }
-
-    private func closeIconPackInfoWithAnimation() {
-        withAnimation(animation) {
-            self.selectedIconPack = nil
-            self.modalOffset = 0
-        }
     }
 
     var list: some View {
-        List {
-            ForEach(viewModel.iconPacks) { pack in
-                iconPicker(pack)
+        ScrollView {
+            LazyVStack(spacing: 0) {
+                ForEach(viewModel.iconPacks) { pack in
+                    iconPicker(pack)
+                }
+                
+                Color.clear.frame(height: 20)
             }
-            .listRowBackground(Color.contentBackground)
         }
-        .listStyle(.insetGrouped)
         .customScrollContentBackground()
         .background(Color.background.edgesIgnoringSafeArea(.all))
     }
 
     func iconPicker(_ iconPack: AppIconPack) -> some View {
-        Section(
-            header:
-                VStack(spacing: 0) {
-                    HStack {
-                        Text(iconPack.title)
-
-                        Spacer()
-
-                        iconPack.link.flatMap { link in
-                            Button(action: {
-                                safariPresenter.set(link)
-                            }, label: {
-                                Image(systemName: "link")
-                            })
-                        }
-                    }
-                }, 
-            content: {
-                self.content(for: iconPack)
-            }
-        )
-    }
-
-    func content(for pack: AppIconPack) -> some View {
-        ForEach(pack.icons) { icon in
-            HStack(spacing: 16) {
-                if let image = UIImage(named: icon.imageName) {
-                    Image(uiImage: image)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 45, height: 45)
-                        .clipShape(RoundedRectangle(cornerRadius: 10))
-                        .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 1)                    
-                }
-
-                Text(icon.title)
-                    .font(Font.system(.body, design: .rounded))
+        Section {
+            self.content(for: iconPack)
+        } header: {
+            HStack {
+                Text(iconPack.title)
+                    .systemFont(.title3, modification: .smallCaps)
+                    .foregroundStyle(Color.secondaryText)
+                    .multilineTextAlignment(.leading)
+                    .frame(maxWidth: .infinity, alignment: .leading)
                 
                 Spacer()
                 
-                CheckboxView(isCheked:  .constant(self.viewModel.icon.referenceName == icon.referenceName))
-                    .frame(width: 20, height: 20)
-            }
-            .contentShape(Rectangle())
-            .padding(.vertical, 8)
-            .onTapGesture {
-                DispatchQueue.main.async {
-                    guard self.viewModel.isPackPurchased(pack) else {
-                        UIImpactFeedbackGenerator(style: .soft).impactOccurred()
-                        withAnimation(.spring()) {
-                            self.selectedIconPack = AppIconPackInfoViewModel(preferences: self.viewModel.preferences, pack: pack, icon: icon, closeAction: {
-                                self.closeIconPackInfoWithAnimation()
-                            }, successAction: {
-                                self.viewModel.preferences.purchasedIconPacks.append(pack)
-                                UINotificationFeedbackGenerator().notificationOccurred(.success)
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                                    self.closeIconPackInfoWithAnimation()
-                                    self.viewModel.icon = icon
-                                }
-                            })
-                        }
-                        return
-                    }
-
-                    if icon != self.viewModel.icon {
-                        self.viewModel.icon = icon
-                        UISelectionFeedbackGenerator().selectionChanged()
-                    }
+                iconPack.link.flatMap { link in
+                    Button(action: {
+                        safariPresenter.set(link)
+                    }, label: {
+                        Image(systemName: "link")
+                    })
                 }
             }
+            .padding(.horizontal, 30)
+            .padding(.vertical, 16)
         }
+    }
+
+    func content(for pack: AppIconPack) -> some View {
+        ForEachIndexed(pack.icons) { _, position, icon in
+            Button(action: {
+                viewModel.setAppIcon(icon)
+            }, label: {
+                iconView(for: icon, position: position)
+            })
+            .buttonStyle(.plain)
+        }
+    }
+    
+    func iconView(for icon: AppIcon, position: IndexPosition) -> some View {
+        HStack(spacing: 16) {
+            if let image = UIImage(named: icon.iconImageName) {
+                Image(uiImage: image)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 45, height: 45)
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                    .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 1)
+            }
+            
+            Text(icon.title)
+                .systemFont(.body)
+                .multilineTextAlignment(.leading)
+            
+            Spacer()
+            
+            if viewModel.icon == icon || viewModel.isIconAvailable(icon) {
+                CheckboxView(isCheked:  .constant(self.viewModel.icon.referenceName == icon.referenceName))
+                    .frame(width: 20, height: 20)
+            } else {
+                ProBadgeView()
+            }
+        }
+        .contentShape(Rectangle())
+        .padding(.vertical, 12)
+        .padding(.horizontal)
+        .background(Color.contentBackground)
+        .applyTheme(indexPosition: position)
+        .padding(.horizontal)
     }
 
 }
 
 struct AppIconPackListView_Previews: PreviewProvider {
     static var previews: some View {
-        AppIconPackListView(viewModel: AppIconPackListViewModel(preferences: Preferences.shared))
+        AppIconPackListView(
+            viewModel: AppIconPackListViewModel(
+                preferences: Preferences.shared,
+                subscribeScreenTrigger: {}
+            )
+        )
     }
 }

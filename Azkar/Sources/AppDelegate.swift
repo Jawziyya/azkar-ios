@@ -15,6 +15,8 @@ import Entities
 import Library
 import FirebaseCore
 import FirebaseMessaging
+import SuperwallKit
+import Mixpanel
 
 @MainActor
 final class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -28,7 +30,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     ) -> Bool {
         application.beginReceivingRemoteControlEvents()
         application.registerForRemoteNotifications()
-        initialize()
+        initialize(launchOptions: launchOptions)
         return true
     }
     
@@ -39,7 +41,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         notificationsHandler.handlePushNotificationToken(deviceToken)
     }
 
-    private func initialize() {
+    private func initialize(launchOptions: [UIApplication.LaunchOptionsKey: Any]?) {
         FontsHelper.registerFonts()
 
         notificationsHandler.removeDeliveredNotifications()
@@ -54,10 +56,11 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
                 }
             })
 
-        InAppPurchaseService.shared.completeTransactions()
         registerUserDefaults()
         setupRevenueCat()
         setupFirebase()
+        setupSuperwall()
+        setupMixpanel(launchOptions: launchOptions)
     }
         
     override func remoteControlReceived(with event: UIEvent?) {
@@ -103,14 +106,34 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     
     private func setupRevenueCat() {
         Purchases.logLevel = .debug
-        Purchases.configure(withAPIKey: Bundle.main.object(forInfoDictionaryKey: "REVENUCE_CAT_API_KEY") as! String)
-        SubscriptionManager.shared.loadProducts()
+        Purchases.configure(withAPIKey: readSecret(AzkarSecretKey.REVENUE_CAT_API_KEY)!)
     }
     
     private func setupFirebase() {
         FirebaseApp.configure()
         Messaging.messaging().delegate = notificationsHandler
         AnalyticsReporter.addTarget(FirebaseAnalyticsTarget.shared)
+        AnalyticsReporter.addTarget(MixpanelAnalyticsTarget.shared)
+    }
+    
+    private func setupSuperwall() {
+        let options = SuperwallOptions()
+        options.paywalls.shouldPreload = true
+        let purchaseController = SubscriptionManager.shared
+        Superwall.configure(
+            apiKey: readSecret(AzkarSecretKey.SUPERWALL_API_KEY)!,
+            purchaseController: purchaseController,
+            options: options
+        )
+        purchaseController.syncSubscriptionStatus()
+    }
+
+    private func setupMixpanel(launchOptions: [UIApplication.LaunchOptionsKey: Any]?) {
+        Mixpanel.initialize(
+            token: readSecret(AzkarSecretKey.MIXPANEL_TOKEN)!,
+            launchOptions: launchOptions
+        )
+        Mixpanel.mainInstance().loggingEnabled = true
     }
     
 }

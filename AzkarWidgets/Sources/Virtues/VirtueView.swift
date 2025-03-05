@@ -40,12 +40,12 @@ struct VirtueView: View {
                 Text(fadl.text)
                     .font(Font.title3)
                     .tracking(1.2)
-                    .foregroundColor(Color.primary.opacity(0.7))
+                    .foregroundStyle(Color.primary.opacity(0.7))
                     .minimumScaleFactor(0.5)
                 
                 Text(fadl.source)
                     .font(Font.caption)
-                    .foregroundColor(Color.secondary.opacity(0.5))
+                    .foregroundStyle(Color.secondary.opacity(0.5))
             }
             .multilineTextAlignment(.center)
             .padding()

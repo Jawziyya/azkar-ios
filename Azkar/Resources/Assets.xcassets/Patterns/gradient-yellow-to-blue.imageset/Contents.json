@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "gradient-yellow-to-blue.jpg",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

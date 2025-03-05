@@ -103,10 +103,6 @@
                     "link": "https://github.com/groue/GRDB.swift"
                 },
                 {
-                    "title": "IGStoryKit",
-                    "link": "https://github.com/SwapnanilDhol/IGStoryKit"
-                },
-                {
                     "title": "Lottie",
                     "link": "https://github.com/airbnb/lottie-ios"
                 },
@@ -137,10 +133,6 @@
                 {
                     "title": "Supabase Swift",
                     "link": "https://github.com/supabase-community/supabase-swift"
-                },
-                {
-                    "title": "Swift Perception",
-                    "link": "https://github.com/pointfreeco/swift-perception"
                 },
                 {
                     "title": "SwiftUI Backports",

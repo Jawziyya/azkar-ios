@@ -1,18 +1,31 @@
-import Foundation
+import SwiftUI
 
-public enum ColorTheme: String, CaseIterable, Equatable, Codable {
+public enum ColorTheme: String, CaseIterable, Hashable, Codable, Identifiable {
+    
+    public var id: Self {
+        self
+    }
     
     public static var current = ColorTheme.default
     
-    case `default`, sea, purpleRose, ink, roseQuartz
+    case `default`, sea, forest, purpleRose, ink, roseQuartz
     
-    public var colorsNamespacePrefix: String {
+    public var assetsNamespace: String {
         switch self {
-        case .default: return ""
-        case .sea: return "Sea/"
-        case .purpleRose: return "PurpleRose/"
-        case .ink: return "Ink/"
-        case .roseQuartz: return "RoseQuartz/"
+        case .sea: return "ColorThemes/Sea/"
+        case .purpleRose: return "ColorThemes/PurpleRose/"
+        case .ink: return "ColorThemes/Ink/"
+        case .roseQuartz: return "ColorThemes/RoseQuartz/"
+        case .forest: return "ColorThemes/Forest/"
+        default: return ""
         }
     }
+    
+    public var isBlackWhite: Bool {
+        switch self {
+        case .ink: return true
+        default: return false
+        }
+    }
+        
 }

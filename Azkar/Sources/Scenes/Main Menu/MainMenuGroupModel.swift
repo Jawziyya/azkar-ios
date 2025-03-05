@@ -3,7 +3,7 @@
 import Foundation
 import SwiftUI
 
-enum IconType {
+enum IconType: Hashable {
     case system
     case bundled
     case emoji
@@ -97,7 +97,7 @@ struct AzkarMenuOtherItem: Identifiable, AzkarMenuType {
     
 }
 
-struct ZikrMenuItem: Identifiable, AzkarMenuType {    
+struct ZikrMenuItem: Identifiable, AzkarMenuType, Hashable {
     var id: Int {
         zikr.id
     }
@@ -111,4 +111,9 @@ struct ZikrMenuItem: Identifiable, AzkarMenuType {
     let iconType: IconType
     var imageName: String
     let zikr: Zikr
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+        hasher.combine(imageName)
+    }
 }

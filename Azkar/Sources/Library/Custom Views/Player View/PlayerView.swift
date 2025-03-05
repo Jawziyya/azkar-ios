@@ -16,7 +16,7 @@ struct PlayerView: View, Equatable {
     var body: some View {
         VStack(spacing: 8) {
             buttonsView
-                .foregroundColor(tintColor)
+                .foregroundStyle(tintColor)
             progressBar
         }
     }
@@ -24,7 +24,7 @@ struct PlayerView: View, Equatable {
     private var buttonsView: some View {
         HStack(alignment: .center) {
             Text(viewModel.timeElapsed)
-                .foregroundColor(.tertiaryText)
+                .foregroundStyle(Color.tertiaryText)
                 .font(Font.system(.caption, design: .monospaced))
             Spacer()
             Button(action: {
@@ -52,20 +52,20 @@ struct PlayerView: View, Equatable {
                 Text(viewModel.speed.label)
                     .minimumScaleFactor(0.2)
                     .frame(width: 30, height: 30)
-                    .foregroundColor(tintColor)
+                    .foregroundStyle(tintColor)
                     .font(Font.system(.body, design: .monospaced))
                     .minimumScaleFactor(0.5)
             })
             Spacer()
             Text(viewModel.timeRemaining)
-                .foregroundColor(.tertiaryText)
+                .foregroundStyle(Color.tertiaryText)
                 .font(Font.system(.caption, design: .monospaced))
         }
         .padding(.horizontal)
     }
 
     private var progressBar: some View {
-        ProgressBar(value: viewModel.progress, maxValue: 1, backgroundColor: progressBarColor, foregroundColor: tintColor)
+        ProgressBar(value: viewModel.progress, maxValue: 1, backgroundColor: progressBarColor, foregroundStyle: tintColor)
         .frame(height: progressBarHeight)
     }
 

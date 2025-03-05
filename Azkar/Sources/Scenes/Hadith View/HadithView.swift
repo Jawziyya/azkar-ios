@@ -14,6 +14,7 @@ struct HadithView: View {
 
     @State private var textHeight: CGFloat = 0
     @State private var translationHeight: CGFloat = 0
+    @Environment(\.appTheme) var appTheme
     var sizeCategory: ContentSizeCategory {
         return viewModel.preferences.sizeCategory
     }
@@ -24,7 +25,7 @@ struct HadithView: View {
     var body: some View {
         ScrollView {
             getContent()
-                .padding(.vertical)
+                .padding()
         }
         .onAppear {
             AnalyticsReporter.reportScreen("Hadith View", className: viewName)
@@ -42,11 +43,11 @@ struct HadithView: View {
 
             VStack(alignment: .leading, spacing: 0) {
                 Text("read.narrated-by", comment: "Hadith narrater name label.")
-                    .font(Font.system(.caption2, design: .rounded).smallCaps())
-                    .foregroundColor(Color.tertiaryText)
+                    .systemFont(.caption2, modification: .smallCaps)
+                    .foregroundStyle(Color.tertiaryText)
                 Text(viewModel.source)
-                    .font(Font.system(.caption, design: .rounded).weight(.medium).smallCaps())
-                    .foregroundColor(.text)
+                    .systemFont(.caption, weight: .medium, modification: .smallCaps)
+                    .foregroundStyle(Color.text)
             }
         }
     }

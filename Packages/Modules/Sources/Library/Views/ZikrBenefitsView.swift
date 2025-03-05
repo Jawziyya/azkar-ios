@@ -3,7 +3,6 @@ import SwiftUI
 public struct ZikrBenefitsView: View {
     
     public let text: String
-    // TODO: Support for Translation font.
     
     public init(text: String) {
         self.text = text
@@ -11,13 +10,11 @@ public struct ZikrBenefitsView: View {
     
     public var body: some View {
         HStack(alignment: .top, spacing: 8) {
-            Text("💎")
-                .minimumScaleFactor(0.1)
-                .font(Font.largeTitle)
-                .frame(maxWidth: 20, maxHeight: 15)
-                .foregroundColor(Color.accent)
+            Image("gem-stone")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(maxWidth: 15, maxHeight: 15)
             Text(text)
-                .font(.footnote)
         }
         .padding()
     }
@@ -29,5 +26,6 @@ public struct ZikrBenefitsView: View {
     #Preview {
         ZikrBenefitsView(text: "")
     }
-    """)
+    """
+    )
 }

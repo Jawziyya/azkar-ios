@@ -8,20 +8,21 @@
 
 import XCTest
 
+@MainActor
 class AzkarUITests: XCTestCase {
-
+    
     override func setUpWithError() throws {
         continueAfterFailure = false
     }
-
-    override func setUp() {
-        super.setUp()
+    
+    override func setUp() async throws {
+        try await super.setUp()
         let app = XCUIApplication()
         setupSnapshot(app, waitForAnimations: false)
         app.launch()
     }
     
-    func testTakeScreenshot() {
+    func testTakeScreenshot() async throws {
         let app = XCUIApplication()
         snapshot("01_HOME")
         let elementsQuery = app.scrollViews.otherElements
@@ -62,23 +63,25 @@ class AzkarUITests: XCTestCase {
         // Back
         tapNavbarBackButton(app: app)
         
-        // About
-        let aboutButton = elementsQuery.buttons[localized("about.title")]
-        XCTAssertTrue(aboutButton.exists)
-        aboutButton.tap()
-        snapshot("06_ABOUT")
-        
-        // Back
-        tapNavbarBackButton(app: app)
-        
         // Settings
-        let settingsButton = elementsQuery.buttons[localized("settings.title")]
-        XCTAssertTrue(settingsButton.exists)
-        settingsButton.tap()
-        snapshot("07_SETTINGS")
+        XCUIApplication().navigationBars.firstMatch/*@START_MENU_TOKEN@*/.buttons["gear"]/*[[".otherElements[\"Settings\"]",".buttons[\"Settings\"]",".buttons[\"gear\"]",".otherElements[\"gear\"]"],[[[-1,2],[-1,1],[-1,3,1],[-1,0,1]],[[-1,2],[-1,1]]],[0]]@END_MENU_TOKEN@*/.tap()
+        snapshot("06_SETTINGS")
         
-        // Back
         tapNavbarBackButton(app: app)
+        
+        elementsQuery.buttons[localized("category.morning")].tap()
+        let scrollViewsQuery = app.scrollViews.otherElements.scrollViews
+        scrollViewsQuery.element.swipeLeft()
+        
+        app.navigationBars.firstMatch.buttons[
+            "square.and.arrow.up"].tap()
+        
+        // Wait for 3 seconds to load backrounds.
+        sleep(3)
+        
+        elementsQuery.scrollViews.firstMatch.swipeUp()
+        
+        snapshot("07_SHARE")
     }
     
     
@@ -87,7 +90,7 @@ class AzkarUITests: XCTestCase {
     }
     
     func localized(_ key: String) -> String {
-        let resource = Locale(identifier: deviceLanguage).languageCode
+        let resource = Locale(identifier: Snapshot.deviceLanguage).languageCode
         let path = Bundle(for: AzkarUITests.self).path(forResource: resource, ofType: "lproj")!
         let localizationBundle = Bundle(path: path)!
         let result = NSLocalizedString(key, bundle: localizationBundle, comment: "")

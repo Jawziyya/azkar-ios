@@ -10,6 +10,7 @@ public struct AppInfoView: View {
 
     @ObservedObject var viewModel: AppInfoViewModel
     @Environment(\.safariPresenter) var safariPresenter
+    @Environment(\.appTheme) var appTheme
     
     public init(viewModel: AppInfoViewModel) {
         self.viewModel = viewModel
@@ -26,7 +27,7 @@ public struct AppInfoView: View {
             ToolbarItem(placement: ToolbarItemPlacement.navigationBarTrailing) {
                 Backport.ShareLink(item: URL(string: "https://apps.apple.com/app/id1511423586")!) {
                     Image(systemName: "square.and.arrow.up")
-                        .foregroundColor(Color.accent)
+                        .foregroundStyle(Color.accent)
                 }
             }
         }
@@ -42,6 +43,15 @@ public struct AppInfoView: View {
             )
             .padding()
             
+            links
+                .applyContainerStyle()
+            
+            copyrightView.opacity(0)
+        }
+    }
+    
+    private var links: some View {
+        VStack {
             outboundLinkButton(
                 "credits.studio.telegram-channel",
                 url: URL(string: "https://jawziyya.t.me")!,
@@ -74,8 +84,6 @@ public struct AppInfoView: View {
                 )
             }
             .buttonStyle(.plain)
-            
-            copyrightView.opacity(0)
         }
     }
 
@@ -101,20 +109,25 @@ public struct AppInfoView: View {
                 
                 VStack(spacing: 0) {
                     HStack(spacing: 0) {
-                        Text("app-name")
-                            .font(Font.system(.title2, design: .rounded).smallCaps().weight(.heavy))
-                            .frame(alignment: .center)
-                            .foregroundColor(Color.accent)
+                        HStack(spacing: 0) {
+                            if appTheme == .code {
+                                Text("~")
+                            }
+                            Text("app-name")
+                        }
+                        .systemFont(.title2, weight: .heavy, modification: .smallCaps)
+                        .frame(alignment: .center)
+                        .foregroundStyle(Color.accent)
                         if !UIDevice.current.isMac, viewModel.isProUser {
                             Text(" PRO")
-                                .font(Font.system(.title3, design: .rounded).smallCaps().weight(.heavy))
-                                .foregroundColor(Color.blue)
+                                .systemFont(.title2, weight: .heavy, modification: .smallCaps)
+                                .foregroundStyle(Color.blue)
                         }
                     }
                     
                     Text(viewModel.appVersion)
                         .font(.subheadline)
-                        .foregroundColor(Color.secondary)
+                        .foregroundStyle(Color.secondary)
                 }
                 
                 Spacer()
@@ -134,7 +147,6 @@ public struct AppInfoView: View {
             buttonLabel(title, image: image, color: color)
         }
         .buttonStyle(.plain)
-        .removeSaturationIfNeeded()
     }
     
     private func buttonLabel(
@@ -176,6 +188,8 @@ public struct AppInfoView: View {
         }
         .padding(20)
         .opacity(0.5)
+        .frame(maxWidth: .infinity)
+        .background(Color.background)
     }
     
 }

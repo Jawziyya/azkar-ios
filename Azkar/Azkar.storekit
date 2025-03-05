@@ -1,0 +1,256 @@
+{
+  "appPolicies" : {
+    "eula" : "",
+    "policies" : [
+      {
+        "locale" : "en_US",
+        "policyText" : "",
+        "policyURL" : ""
+      }
+    ]
+  },
+  "identifier" : "8A6BA472",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+    {
+      "displayPrice" : "7.99",
+      "familyShareable" : true,
+      "internalID" : "1598648820",
+      "localizations" : [
+        {
+          "description" : "Бессрочная подписка Azkar Ultra",
+          "displayName" : "Бессрочная подписка Ultra",
+          "locale" : "ru"
+        }
+      ],
+      "productID" : "io.jawziyya.azkar_app.premium_one_time",
+      "referenceName" : "Azkar Pro One-Time",
+      "type" : "NonConsumable"
+    },
+    {
+      "displayPrice" : "0.99",
+      "familyShareable" : false,
+      "internalID" : "1565861046",
+      "localizations" : [
+        {
+          "description" : "Набор значков «Хранители веры»",
+          "displayName" : "Набор значков «Хранители веры»",
+          "locale" : "ru"
+        }
+      ],
+      "productID" : "io.jawziyya.azkar_app.darsigova_icon_pack",
+      "referenceName" : "darsigova pack",
+      "type" : "NonConsumable"
+    },
+    {
+      "displayPrice" : "0.99",
+      "familyShareable" : false,
+      "internalID" : "1553666914",
+      "localizations" : [
+        {
+          "description" : "Набор значков в стиле иллюстраций",
+          "displayName" : "Набор значков «Иллюстрации»",
+          "locale" : "ru"
+        }
+      ],
+      "productID" : "io.jawziyya.azkar_app.maccinz_icon_pack",
+      "referenceName" : "maccinz pack",
+      "type" : "NonConsumable"
+    }
+  ],
+  "settings" : {
+    "_compatibilityTimeRate" : {
+      "3" : 5
+    },
+    "_failTransactionsEnabled" : false,
+    "_locale" : "ru",
+    "_storefront" : "USA",
+    "_storeKitErrors" : [
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Load Products"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Purchase"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Verification"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "App Store Sync"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Subscription Status"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "App Transaction"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Manage Subscriptions Sheet"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Refund Request Sheet"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Offer Code Redeem Sheet"
+      }
+    ],
+    "_timeRate" : 1000
+  },
+  "subscriptionGroups" : [
+    {
+      "id" : "20907365",
+      "localizations" : [
+
+      ],
+      "name" : "Premium",
+      "subscriptions" : [
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "34.99",
+          "familyShareable" : false,
+          "groupNumber" : 3,
+          "internalID" : "6742162945",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "6 Months Access to Azkar Pro features",
+              "displayName" : "Azkar Pro 6 months",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "io.jawziyya.azkar_app.half_a_year_premium",
+          "recurringSubscriptionPeriod" : "P6M",
+          "referenceName" : "Premium Half a Year",
+          "subscriptionGroupID" : "20907365",
+          "type" : "RecurringSubscription",
+          "winbackOffers" : [
+
+          ]
+        },
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "19.99",
+          "familyShareable" : true,
+          "groupNumber" : 2,
+          "internalID" : "1598647669",
+          "introductoryOffer" : {
+            "internalID" : "270BD04A",
+            "numberOfPeriods" : 1,
+            "paymentMode" : "free",
+            "subscriptionPeriod" : "P1W"
+          },
+          "localizations" : [
+            {
+              "description" : "Ежемесячная подписка на Azkar Ultra",
+              "displayName" : "Месячная подписка Azkar Ultra",
+              "locale" : "ru"
+            },
+            {
+              "description" : "One Month Access to Azkar Pro features ",
+              "displayName" : "Azkar Pro One Month",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "io.jawziyya.azkar_app.one_month_premium",
+          "recurringSubscriptionPeriod" : "P1M",
+          "referenceName" : "Premium Monthly",
+          "subscriptionGroupID" : "20907365",
+          "type" : "RecurringSubscription",
+          "winbackOffers" : [
+
+          ]
+        },
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "4.99",
+          "familyShareable" : false,
+          "groupNumber" : 1,
+          "internalID" : "6742186811",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "Weekly Subscription to Azkar Pro features",
+              "displayName" : "Azkar Pro Weekly",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "io.jawziyya.azkar_app.weekly_premium",
+          "recurringSubscriptionPeriod" : "P1W",
+          "referenceName" : "Premium Weekly",
+          "subscriptionGroupID" : "20907365",
+          "type" : "RecurringSubscription",
+          "winbackOffers" : [
+
+          ]
+        },
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "49.99",
+          "familyShareable" : false,
+          "groupNumber" : 4,
+          "internalID" : "6742162975",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "One year subscription to Azkar Pro features",
+              "displayName" : "Azkar Pro Yearly",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "io.jawziyya.azkar_app.one_year_premium",
+          "recurringSubscriptionPeriod" : "P1Y",
+          "referenceName" : "Premium Yearly",
+          "subscriptionGroupID" : "20907365",
+          "type" : "RecurringSubscription",
+          "winbackOffers" : [
+
+          ]
+        }
+      ]
+    }
+  ],
+  "version" : {
+    "major" : 4,
+    "minor" : 0
+  }
+}

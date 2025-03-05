@@ -4,7 +4,7 @@
 import WidgetKit
 import SwiftUI
 import Entities
-import Library
+import AzkarServices
 
 let APP_GROUP_USER_DEFAULTS = UserDefaults(suiteName: "group.io.jawziyya.azkar-app") ?? .standard
 

@@ -2,6 +2,7 @@ import SwiftUI
 import Combine
 import Entities
 import Library
+import DatabaseInteractors
 
 final class SearchSuggestionsViewModel: ObservableObject {
     

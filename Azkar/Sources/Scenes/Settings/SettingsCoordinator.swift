@@ -4,10 +4,15 @@ import Stinsen
 import AboutApp
 import Library
 
+struct SoundPickerInfo: Hashable {
+    let sound: ReminderSound
+    let type: ReminderSoundPickerViewModel.ReminderType
+}
+
 enum SettingsRoute: Hashable, RouteKind {
-    case subscribe, notificationsList
+    case subscribe(sourceScreen: String), notificationsList
     case appearance, text, counter
-    case reminders, adhkarReminders, jumuaReminders, soundPicker(ReminderSound)
+    case reminders, soundPicker(SoundPickerInfo)
     case aboutApp
 }
 
@@ -20,10 +25,7 @@ final class SettingsCoordinator: RouteTrigger, Identifiable, NavigationCoordinat
     @Route(.push) var text = makeTextView
     @Route(.push) var counter = makeCounterView
     @Route(.push) var reminders = makeRemindersView
-    @Route(.push) var adhkarReminders = makeAdhkarRemindersView
-    @Route(.push) var jumuaReminders = makeJumuaRemindersView
     @Route(.push) var soundPicker = makeSoundPickerView
-    @Route(.modal) var subscribe = makeSubscribeView
     @Route(.push) var aboutApp = makeAboutAppView
         
     private let databaseService: AzkarDatabase
@@ -54,8 +56,8 @@ final class SettingsCoordinator: RouteTrigger, Identifiable, NavigationCoordinat
         case .notificationsList:
             self.route(to: \.notificationsList)
             
-        case .subscribe:
-            self.route(to: \.subscribe)
+        case .subscribe(let sourceScreen):
+            subscriptionManager.presentPaywall(sourceScreenName: sourceScreen, completion: nil)
             
         case .appearance:
             self.route(to: \.appearance)
@@ -69,14 +71,8 @@ final class SettingsCoordinator: RouteTrigger, Identifiable, NavigationCoordinat
         case .reminders:
             self.route(to: \.reminders)
             
-        case .adhkarReminders:
-            self.route(to: \.adhkarReminders)
-            
-        case .jumuaReminders:
-            self.route(to: \.jumuaReminders)
-            
-        case .soundPicker(let currentSound):
-            self.route(to: \.soundPicker, currentSound)
+        case .soundPicker(let info):
+            self.route(to: \.soundPicker, info)
             
         case .aboutApp:
             self.route(to: \.aboutApp)
@@ -122,31 +118,16 @@ extension SettingsCoordinator {
         RemindersScreen(viewModel: RemindersViewModel(router: createRouter()))
     }
     
-    func makeAdhkarRemindersView() -> some View {
-        AdhkarRemindersView(viewModel: AdhkarRemindersViewModel(
-            router: self.createRouter()
-        ))
-    }
-    
-    func makeJumuaRemindersView() -> some View {
-        JumuaRemindersView(viewModel: JumuaRemindersViewModel(
-            router: self.createRouter()
-        ))
-    }
-    
-    func makeSoundPickerView(_ sound: ReminderSound) -> some View {
+    func makeSoundPickerView(_ info: SoundPickerInfo) -> some View {
         ReminderSoundPickerView(viewModel: ReminderSoundPickerViewModel(
-            preferredSound: sound,
+            type: info.type,
+            preferredSound: info.sound,
             subscribeScreenTrigger: {
-                self.route(to: \.subscribe)
+                self.trigger(.subscribe(sourceScreen: ReminderSoundPickerView.viewName))
             }
         ))
     }
 
-    func makeSubscribeView() -> some View {
-        SubscribeView(viewModel: SubscribeViewModel())
-    }
-    
     func makeAboutAppView() -> some View {
         AppInfoView(viewModel: AppInfoViewModel(
             appVersion: {

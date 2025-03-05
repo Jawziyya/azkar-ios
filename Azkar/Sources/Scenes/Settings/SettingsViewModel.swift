@@ -80,7 +80,6 @@ final class SettingsViewModel: ObservableObject {
     /// Observes some preferences to reschedule notifications if needed.
     private func setupNotificationsRescheduler() {
         Publishers.MergeMany(
-                preferences.$enableNotifications.toVoid().dropFirst(),
                 preferences.$enableAdhkarReminder.toVoid().dropFirst(),
                 preferences.$morningNotificationTime.toVoid().dropFirst(),
                 preferences.$eveningNotificationTime.toVoid().dropFirst(),
@@ -99,10 +98,6 @@ final class SettingsViewModel: ObservableObject {
     }
 
     private func scheduleNotifications() {
-        guard preferences.enableNotifications else {
-            return
-        }
-
         if preferences.enableAdhkarReminder {
             notificationsHandler.scheduleNotification(
                 id: Keys.morningReminderId,

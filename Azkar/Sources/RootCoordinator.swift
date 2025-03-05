@@ -1,16 +1,16 @@
 import UIKit
 import SwiftUI
-import Coordinator
 import Combine
 import Stinsen
 import WhatsNewKit
 import MessageUI
-import IGStoryKit
 import Library
 import ArticleReader
 import Entities
 import PDFKit
 import ZikrCollectionsOnboarding
+import AzkarServices
+import DatabaseInteractors
 
 enum RootSection: Equatable, RouteKind {
     case category(ZikrCategory)
@@ -330,7 +330,7 @@ extension RootCoordinator {
                     textFont: UIFont(name: self.preferences.preferredTranslationFont.postscriptName, size: 18)!,
                     pageMargins: UIEdgeInsets(horizontal: 50, vertical: 50),
                     footer: ArticlePDFComposer.Footer(
-                        image: UIImage(named: "ink"),
+                        image: UIImage(named: "ink-icon"),
                         text: L10n.Share.sharedWithAzkar.uppercased(),
                         link: URL(string: "https://apps.apple.com/app/id1511423586")
                     )
@@ -349,7 +349,7 @@ extension RootCoordinator {
                 let view = ArticlePDFCoverView(
                     article: article,
                     maxHeight: 842,
-                    logoImage: UIImage(named: "ink"),
+                    logoImage: UIImage(named: "ink-icon"),
                     logoSubtitle: L10n.Share.sharedWithAzkar
                 )
                 .frame(width: 595, height: 842)
@@ -459,19 +459,14 @@ extension RootCoordinator {
         getWhatsNewView(whatsNew)
     }
     
-    func makeShareOptionsView(zikr: Zikr) -> some View {
-        ZikrShareOptionsView(zikr: zikr) { [unowned self] options in
-            assert(Thread.isMainThread)
-            guard
-                let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-                let window = scene.windows.first,
-                let rootViewController = window.rootViewController?.topmostPresentedViewController
-            else {
-                return
-            }
-            self.share(zikr: zikr, options: options, from: rootViewController)
-        }
-        .tint(Color.accent)
+    func makeShareOptionsView(zikr: Zikr) -> NavigationViewCoordinator<ZikrShareCoordinator> {
+        NavigationViewCoordinator(
+            ZikrShareCoordinator(
+                zikr: zikr,
+                preferences: preferences,
+                player: player
+            )
+        )
     }
     
     func makeZikrCollectionsOnboardingCoordinator() -> NavigationViewCoordinator<ZikrCollectionsOnboardingCoordinator> {
@@ -488,80 +483,7 @@ extension RootCoordinator {
 }
 
 extension RootCoordinator: MFMailComposeViewControllerDelegate {
-    
-    private func share(
-        zikr: Zikr,
-        options: ZikrShareOptionsView.ShareOptions,
-        from viewController: UIViewController
-    ) {
-        let currentViewModel = ZikrViewModel(zikr: zikr, isNested: true, hadith: nil, preferences: preferences, player: player)
-        let activityItems: [Any]
-
-        switch options.shareType {
-
-        case .image, .instagramStories:
-
-            let view = ZikrShareView(
-                viewModel: currentViewModel,
-                includeTitle: options.includeTitle,
-                includeTranslation: options.includeTranslation,
-                includeTransliteration: options.includeTransliteration,
-                includeBenefits: options.includeBenefits,
-                includeLogo: options.includeLogo,
-                arabicTextAlignment: options.textAlignment.isCentered ? .center : .trailing,
-                otherTextAlignment: options.textAlignment.isCentered ? .center : .leading,
-                useFullScreen: options.shareType == .image
-            )
-            .environment(\.colorScheme, .light)
-            .preferredColorScheme(.light)
-            .frame(width: UIScreen.main.bounds.width)
-            .frame(maxHeight: .infinity)
-            let image = view.snapshot()
-
-            if options.shareType == .image {
-                let tempDir = FileManager.default.temporaryDirectory
-                let imgFileName = "\(currentViewModel.title).png"
-                let tempImagePath = tempDir.appendingPathComponent(imgFileName)
-                try? image.pngData()?.write(to: tempImagePath)
-                activityItems = [tempImagePath]
-            } else if options.shareType == .instagramStories {
-                let story = IGStory(contentSticker: image, background: .color(color: UIColor(Color.background)))
-                let dispatcher = IGDispatcher(story: story, facebookAppID: "n/a")
-                dispatcher.start()
-                return
-            } else {
-                return
-            }
-
-        case .text:
-            let text = currentViewModel.getShareText(
-                includeTitle: options.includeTitle,
-                includeTranslation: preferences.expandTranslation,
-                includeTransliteration: preferences.expandTransliteration,
-                includeBenefits: options.includeBenefits
-            )
-            activityItems = [text]
-
-        }
-
-        let activityController = UIActivityViewController(
-            activityItems: activityItems,
-            applicationActivities: [ZikrFeedbackActivity(prepareAction: { [unowned self] in
-                self.presentMailComposer(from: viewController)
-            })]
-        )
-        activityController.excludedActivityTypes = [
-            .init(rawValue: "com.apple.reminders.sharingextension")
-        ]
-        activityController.completionWithItemsHandler = { (activityType, completed, arguments, error) in
-            guard completed else {
-                return
-            }
-            viewController.dismiss()
-        }
-        viewController.present(activityController, animated: true)
-    }
-    
+      
     private func presentMailComposer(from viewController: UIViewController) {
         guard MFMailComposeViewController.canSendMail() else {
             UIApplication.shared.open(URL(string: "https://t.me/jawziyya_feedback")!)

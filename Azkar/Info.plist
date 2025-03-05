@@ -21,7 +21,7 @@
 	<key>CFBundlePackageType</key>
 	<string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
 	<key>CFBundleShortVersionString</key>
-	<string>2.8.1</string>
+	<string>2.9</string>
 	<key>CFBundleVersion</key>
 	<string>85</string>
 	<key>FirebaseAppDelegateProxyEnabled</key>
@@ -39,14 +39,11 @@
 	<true/>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string></string>
-	<key>REVENUCE_CAT_API_KEY</key>
-	<string>appl_jDuKSWeoFUChrvgZQdfjLFvFaYK</string>
 	<key>UIAppFonts</key>
 	<array>
+		<string>Marhey-Regular.ttf</string>
 		<string>AdobeArabic-Regular.otf</string>
-		<string>Damascus.ttc</string>
 		<string>KFGQPCUthmanicScriptHAFS.otf</string>
-		<string>Scheherazade.ttf</string>
 		<string>NotoNaskhArabicUI-Regular.ttf</string>
 	</array>
 	<key>UIApplicationSceneManifest</key>

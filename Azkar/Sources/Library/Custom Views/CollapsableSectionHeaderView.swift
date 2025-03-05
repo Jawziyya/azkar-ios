@@ -12,13 +12,13 @@ struct CollapsableSectionHeaderView: View {
         HStack {
             title.flatMap { title in
                 Text(title)
-                    .font(Font.system(.caption, design: .rounded).smallCaps())
-                    .foregroundColor(Color.tertiaryText)
+                    .systemFont(.caption, modification: .smallCaps)
+                    .foregroundStyle(Color.tertiaryText)
             }
             if isExpandable {
                 Spacer()
                 Image(systemName: "chevron.down")
-                    .foregroundColor(Color.accent)
+                    .foregroundStyle(Color.accent)
                     .rotationEffect(.init(degrees: isExpanded ? 180 : 0))
             }
         }

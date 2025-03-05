@@ -42,10 +42,10 @@ public struct CreditsScreen: View {
         }, label: {
             HStack {
                 Text(item.title)
-                    .foregroundColor(Color.text)
+                    .foregroundStyle(Color.text)
                 Spacer()
                 Image(systemName: "arrow.up.forward")
-                    .foregroundColor(Color.tertiaryText)
+                    .foregroundStyle(Color.tertiaryText)
             }
             .background(Color.contentBackground)
             .clipShape(Rectangle())

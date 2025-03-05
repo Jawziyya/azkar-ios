@@ -3,7 +3,7 @@
 import SwiftUI
 
 struct MainMenuSmallGroup: View {
-
+    
 	var item: AzkarMenuType
     var flip = false
 
@@ -26,7 +26,7 @@ struct MainMenuSmallGroup: View {
                     .cornerRadius(item.imageCornerRadius)
                     .padding(.vertical, 8)
                     .frame(width: 40, height: 40)
-                    .foregroundColor(item.color)
+                    .foregroundStyle(item.color)
             }
         case .emoji:
             Text(item.imageName)
@@ -39,9 +39,9 @@ struct MainMenuSmallGroup: View {
 
     var title: some View {
         Text(item.title)
-            .font(Font.system(.body, design: .rounded))
+            .systemFont(.body)
             .frame(maxWidth: .infinity, alignment: flip ? .trailing : .leading)
-            .foregroundColor(Color.text)
+            .foregroundStyle(Color.text)
             .multilineTextAlignment(flip ? .trailing : .leading)
             .environment(\.layoutDirection, flip ? .rightToLeft : .leftToRight)
     }

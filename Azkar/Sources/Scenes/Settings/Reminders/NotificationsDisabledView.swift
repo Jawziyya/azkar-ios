@@ -78,14 +78,15 @@ final class NotificationsDisabledViewModel: ObservableObject {
 struct NotificationsDisabledView: View {
     
     @StateObject var viewModel: NotificationsDisabledViewModel
+    @Environment(\.appTheme) var appTheme
     
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             HStack {
                 Image(systemName: viewModel.symbolName)
-                    .foregroundColor(Color.orange)
+                    .foregroundStyle(Color.orange)
                 Text(viewModel.notificationAccessTitle)
-                    .font(Font.system(.body, design: .rounded).bold())
+                    .systemFont(.body, weight: .bold)
             }
             
             Divider()
@@ -97,8 +98,8 @@ struct NotificationsDisabledView: View {
                 UIApplication.shared.open(url)
             } label: {
                 Text(L10n.Settings.Reminders.NoAccess.turnOnTitle)
-                    .font(Font.system(.body, design: .rounded))
-                    .foregroundColor(Color.accent)
+                    .systemFont(.body)
+                    .foregroundStyle(Color.accent)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .multilineTextAlignment(.leading)
                     .contentShape(Rectangle())

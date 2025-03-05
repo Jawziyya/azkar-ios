@@ -16,9 +16,6 @@ final class RootViewModel: ObservableObject {
         mainMenuViewModel: MainMenuViewModel
     ) {
         self.mainMenuViewModel = mainMenuViewModel
-        mainMenuViewModel.objectWillChange
-            .sink(receiveValue: objectWillChange.send)
-            .store(in: &cancellables)
         
         let appName = L10n.appName
         let title = "\(appName)"
@@ -26,7 +23,7 @@ final class RootViewModel: ObservableObject {
             .$enableFunFeatures
             .map { [unowned self] flag in
                 if flag {
-                    return title + " \(self.getRandomEmoji())"
+                    return title + self.getRandomEmoji()
                 } else {
                     return title
                 }
@@ -39,12 +36,13 @@ final class RootViewModel: ObservableObject {
 struct RootView: View {
     
     @ObservedObject var viewModel: RootViewModel
+    @Environment(\.appTheme) var appTheme
     
     var body: some View {
         MainMenuView(
             viewModel: viewModel.mainMenuViewModel
         )
-        .navigationBarTitle(viewModel.title)
+        .navigationBarTitle(appName)
         .navigationTitleMode(.large)
         .searchable(
             text: $viewModel.mainMenuViewModel.searchQuery,
@@ -53,6 +51,15 @@ struct RootView: View {
         .autocorrectionDisabled(true)
         .attachSafariPresenter()
     }
+    
+    var appName: String {
+        if appTheme == .code {
+            return "~" + viewModel.title
+        } else {
+            return viewModel.title
+        }
+    }
+    
 }
 
 #Preview("Root View") {
