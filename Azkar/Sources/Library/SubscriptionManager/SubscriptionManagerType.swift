@@ -7,6 +7,12 @@ import StoreKit
 enum UserRegion: String, Hashable {
     case russia = "RUS"
     case usa = "USA"
+    case egypt = "EGY"
+    case kazakhstan = "KAZ"
+    case kyrgyzstan = "KGZ"
+    case tajikistan = "TJK"
+    case turkey = "TUR"
+    case uzbekistan = "UZB"
     case other
 }
 

@@ -9,6 +9,7 @@ import SuperwallKit
 
 enum AzkarEntitlement: String {
     case pro = "azkar_pro"
+    case proPlus = "azkar_pro_plus"
     case ultra = "azkar_ultra"
 }
 
@@ -45,7 +46,12 @@ final class SubscriptionManager: SubscriptionManagerType {
     }
     
     func presentPaywall(sourceScreenName: String, completion: (() -> Void)? = nil) {
-        let entitlement = getUserRegion() == .russia ? AzkarEntitlement.ultra : AzkarEntitlement.pro
+        let entitlement: AzkarEntitlement
+        switch getUserRegion() {
+        case .usa: entitlement = .proPlus
+        case .russia, .turkey, .tajikistan, .uzbekistan, .egypt, .kazakhstan, .kyrgyzstan: entitlement = .ultra
+        case .other: entitlement = .pro
+        }
         let presentationHandler = PaywallPresentationHandler()
         presentationHandler.onSkip { reason in
             let event = "paywall_presentation_skip"
@@ -119,12 +125,6 @@ extension SubscriptionManager: PurchaseController {
                 }
                 
                 for entitlement in azkarEntitlements {
-                    switch entitlement {
-                    case .pro:
-                        print(entitlement)
-                    case .ultra:
-                        print(entitlement)
-                    }
                     self?.setProFeaturesActivated(true)
                 }            
             case .inactive:
