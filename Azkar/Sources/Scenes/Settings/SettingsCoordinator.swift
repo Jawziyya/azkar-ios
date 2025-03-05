@@ -4,10 +4,15 @@ import Stinsen
 import AboutApp
 import Library
 
+struct SoundPickerInfo: Hashable {
+    let sound: ReminderSound
+    let type: ReminderSoundPickerViewModel.ReminderType
+}
+
 enum SettingsRoute: Hashable, RouteKind {
     case subscribe(sourceScreen: String), notificationsList
     case appearance, text, counter
-    case reminders, soundPicker(ReminderSound)
+    case reminders, soundPicker(SoundPickerInfo)
     case aboutApp
 }
 
@@ -66,8 +71,8 @@ final class SettingsCoordinator: RouteTrigger, Identifiable, NavigationCoordinat
         case .reminders:
             self.route(to: \.reminders)
             
-        case .soundPicker(let currentSound):
-            self.route(to: \.soundPicker, currentSound)
+        case .soundPicker(let info):
+            self.route(to: \.soundPicker, info)
             
         case .aboutApp:
             self.route(to: \.aboutApp)
@@ -113,9 +118,10 @@ extension SettingsCoordinator {
         RemindersScreen(viewModel: RemindersViewModel(router: createRouter()))
     }
     
-    func makeSoundPickerView(_ sound: ReminderSound) -> some View {
+    func makeSoundPickerView(_ info: SoundPickerInfo) -> some View {
         ReminderSoundPickerView(viewModel: ReminderSoundPickerViewModel(
-            preferredSound: sound,
+            type: info.type,
+            preferredSound: info.sound,
             subscribeScreenTrigger: {
                 self.trigger(.subscribe(sourceScreen: ReminderSoundPickerView.viewName))
             }

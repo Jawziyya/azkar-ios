@@ -1,4 +1,4 @@
-import Foundation
+import SwiftUI
 import Combine
 import Library
 
@@ -11,14 +11,10 @@ final class RemindersViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     
     // MARK: - Adhkar Reminders properties
-    @Published var isAdhkarNotificationsEnabled: Bool
     @Published var morningTime: String = ""
     @Published var eveningTime: String = ""
+    @Published var jumuaReminderTime: String = ""
     private let formatter: DateFormatter
-    
-    // MARK: - Jumua Reminders properties
-    @Published var isJumuaNotificationsEnabled = true
-    let jumuaSoundPickerViewModel: ReminderSoundPickerViewModel
     
     // MARK: - Initialization
     
@@ -31,7 +27,6 @@ final class RemindersViewModel: ObservableObject {
         self.router = router
         
         // Adhkar reminders initialization
-        isAdhkarNotificationsEnabled = preferences.enableAdhkarReminder
         let formatter = DateFormatter()
         formatter.dateStyle = .none
         formatter.timeStyle = .short
@@ -39,25 +34,22 @@ final class RemindersViewModel: ObservableObject {
         
         morningTime = formatter.string(from: preferences.morningNotificationTime)
         eveningTime = formatter.string(from: preferences.eveningNotificationTime)
+        jumuaReminderTime = formatter.string(from: preferences.jumuaReminderTime)
         
-        // Jumua reminders initialization
-        isJumuaNotificationsEnabled = preferences.enableJumuaReminder
-        jumuaSoundPickerViewModel = ReminderSoundPickerViewModel(
-            preferredSound: preferences.jumuahDuaReminderSound,
-            subscriptionManager: subscriptionManager,
-            subscribeScreenTrigger: {
-                router.trigger(.subscribe(sourceScreen: "RemindersScreen"))
-            }
+        Publishers.Merge4(
+            preferences.$enableAdhkarReminder.toVoid(),
+            preferences.$enableJumuaReminder.toVoid(),
+            preferences.$adhkarReminderSound.toVoid(),
+            preferences.$jumuahDuaReminderSound.toVoid()
         )
-        
-        // Set up Publishers
-        $isAdhkarNotificationsEnabled
-            .assign(to: \.enableAdhkarReminder, on: preferences)
-            .store(in: &cancellables)
-            
-        $isJumuaNotificationsEnabled
-            .assign(to: \.enableJumuaReminder, on: preferences)
-            .store(in: &cancellables)
+        .eraseToAnyPublisher()
+        .receive(on: RunLoop.main)
+        .sink(receiveValue: { [unowned self] _ in
+            withAnimation(.smooth) {
+                objectWillChange.send()
+            }
+        })
+        .store(in: &cancellables)
     }
     
     // MARK: - Common methods
@@ -69,7 +61,7 @@ final class RemindersViewModel: ObservableObject {
     // MARK: - Adhkar Reminders methods
     
     func presentAdhkarSoundPicker() {
-        router.trigger(.soundPicker(preferences.adhkarReminderSound))
+        router.trigger(.soundPicker(.init(sound: preferences.adhkarReminderSound, type: .adhkar)))
     }
     
     var morningNotificationDateRange: ClosedRange<Date> {
@@ -113,8 +105,17 @@ final class RemindersViewModel: ObservableObject {
     
     // MARK: - Jumua Reminders methods
     
+    var jumuaDateItems: [String] {
+        return getDatesRange(fromHour: 12, hours: 18).compactMap(formatter.string)
+    }
+    
+    func setJumuaReminderTime(_ time: String) {
+        preferences.jumuaReminderTime = formatter.date(from: jumuaReminderTime) ?? defaultJumuaReminderTime
+        jumuaReminderTime = formatter.string(from: preferences.jumuaReminderTime)
+    }
+    
     func presentJumuaSoundPicker() {
-        router.trigger(.soundPicker(preferences.jumuahDuaReminderSound))
+        router.trigger(.soundPicker(.init(sound: preferences.jumuahDuaReminderSound, type: .jumua)))
     }
     
     var jumuaNotificationDateRange: ClosedRange<Date> {

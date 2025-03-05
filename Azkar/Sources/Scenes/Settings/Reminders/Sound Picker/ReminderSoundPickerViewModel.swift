@@ -101,6 +101,10 @@ extension ReminderSound {
 
 final class ReminderSoundPickerViewModel: ObservableObject {
     
+    enum ReminderType {
+        case adhkar, jumua
+    }
+    
     enum Section: String, Equatable, Identifiable, CaseIterable {
         case standard, custom
         
@@ -123,14 +127,20 @@ final class ReminderSoundPickerViewModel: ObservableObject {
     
     let sections = [Section.standard, Section.custom]
 
+    private let type: ReminderType
+    private let preferences: Preferences
     private let subscribeScreenTrigger: Action
     private let subscriptionManager: SubscriptionManagerType
     
     init(
+        type: ReminderType,
+        preferences: Preferences = Preferences.shared,
         preferredSound: ReminderSound,
         subscriptionManager: SubscriptionManagerType = SubscriptionManager.shared,
         subscribeScreenTrigger: @escaping Action
     ) {
+        self.type = type
+        self.preferences = preferences
         self.preferredSound = preferredSound
         self.subscriptionManager = subscriptionManager
         self.subscribeScreenTrigger = subscribeScreenTrigger
@@ -142,6 +152,7 @@ final class ReminderSoundPickerViewModel: ObservableObject {
     
     static var placeholder: ReminderSoundPickerViewModel {
         return ReminderSoundPickerViewModel(
+            type: .adhkar,
             preferredSound: ReminderSound.standard,
             subscriptionManager: DemoSubscriptionManager(),
             subscribeScreenTrigger: {}
@@ -164,7 +175,13 @@ final class ReminderSoundPickerViewModel: ObservableObject {
     
     func setPreferredSound(_ sound: ReminderSound) {
         if !sound.isProSound || subscriptionManager.isProUser() {
-            self.preferredSound = sound
+            switch type {
+            case .adhkar:
+                preferences.adhkarReminderSound = sound
+            case .jumua:
+                preferences.jumuahDuaReminderSound = sound
+            }
+            preferredSound = sound
         } else {
             subscribeScreenTrigger()
         }

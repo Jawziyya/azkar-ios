@@ -5,6 +5,8 @@ struct RemindersScreen: View {
     
     @ObservedObject var viewModel: RemindersViewModel
     
+    var showDebugNotificataions = false
+    
     var body: some View {
         ScrollView {
             VStack {
@@ -12,6 +14,7 @@ struct RemindersScreen: View {
             }
         }
         .foregroundStyle(Color.text)
+        .applyThemedToggleStyle()
         .customScrollContentBackground()
         .background(Color.background, ignoresSafeAreaEdges: .all)
         .navigationTitle(L10n.Settings.Reminders.title)
@@ -30,7 +33,7 @@ struct RemindersScreen: View {
                 notificationsDisabledView
             }
             
-            if UIApplication.shared.inDebugMode {
+            if showDebugNotificataions && UIApplication.shared.inDebugMode {
                 Divider()
                 Button(action: viewModel.navigateToNotificationsList) {
                     Text("[DEBUG] Scheduled notifications")
@@ -49,10 +52,10 @@ struct RemindersScreen: View {
             VStack {
                 Toggle(
                     L10n.Settings.Reminders.MorningEvening.switchLabel,
-                    isOn: $viewModel.isAdhkarNotificationsEnabled.animation(.smooth)
+                    isOn: $viewModel.preferences.enableAdhkarReminder
                 )
                 
-                if viewModel.isAdhkarNotificationsEnabled {
+                if viewModel.preferences.enableAdhkarReminder {
                     Divider()
                     
                     adhkarTimePicker
@@ -128,7 +131,7 @@ struct RemindersScreen: View {
             PickerView(label: L10n.Settings.Reminders.MorningEvening.eveningLabel, titleDisplayMode: .inline, subtitle: viewModel.eveningTime, destination: adhkarMacEveningTimePicker)
         }
     }
-    
+        
     var adhkarMacMorningTimePicker: some View {
         ItemPickerView(
             selection: .init(get: {
@@ -157,10 +160,10 @@ struct RemindersScreen: View {
             VStack {
                 Toggle(
                     L10n.Settings.Reminders.Jumua.switchLabel,
-                    isOn: $viewModel.isJumuaNotificationsEnabled.animation(.smooth)
+                    isOn: $viewModel.preferences.enableJumuaReminder
                 )
                 
-                if viewModel.isJumuaNotificationsEnabled {
+                if viewModel.preferences.enableJumuaReminder {
                     Divider()
                     
                     jumuaTimePicker
@@ -170,7 +173,7 @@ struct RemindersScreen: View {
                     if viewModel.notificationsDisabledViewModel.isAccessGranted {
                         NavigationButton(
                             title: L10n.Settings.Reminders.Sounds.sound,
-                            label: viewModel.jumuaSoundPickerViewModel.preferredSound.title,
+                            label: viewModel.preferences.jumuahDuaReminderSound.title,
                             action: viewModel.presentJumuaSoundPicker
                         )
                     }
@@ -183,10 +186,29 @@ struct RemindersScreen: View {
     @ViewBuilder
     var jumuaTimePicker: some View {
         if UIDevice.current.isMac {
-            Color.clear
+            jumuaMacTimePicker
         } else {
             jumuaIosTimePicker
         }
+    }
+    
+    var jumuaMacTimePicker: some View {
+        PickerView(
+            label: L10n.Settings.Reminders.Jumua.label,
+            titleDisplayMode: .inline,
+            subtitle: viewModel.jumuaReminderTime,
+            destination: jumuaMacEveningTimePicker
+        )
+    }
+    
+    var jumuaMacEveningTimePicker: some View {
+        ItemPickerView(
+            selection: .init(get: {
+                return viewModel.jumuaReminderTime
+            }, set: viewModel.setJumuaReminderTime(_:)),
+            items: viewModel.jumuaDateItems,
+            dismissOnSelect: true
+        )
     }
     
     var jumuaIosTimePicker: some View {
