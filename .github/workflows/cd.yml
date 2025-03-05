@@ -48,17 +48,6 @@ jobs:
 
       - name: Checkout repository
         uses: actions/checkout@v3
-        with:
-          fetch-tags: true
-
-      - name: Check for Mac tag
-        id: check-tag
-        run: |
-          if git tag --points-at HEAD | grep -q "mac"; then
-            echo "is_mac=true" >> $GITHUB_OUTPUT
-          else
-            echo "is_mac=false" >> $GITHUB_OUTPUT
-          fi
 
       - name: Set Xcode IDE Preferences
         run: |
@@ -85,26 +74,28 @@ jobs:
           mise x -- tuist install
           mise x -- tuist generate --no-open
 
-      - name: Deploy Mac build to App Store
-        if: github.ref == 'refs/heads/main' && steps.check-tag.outputs.is_mac == 'true'
-        uses: maierj/fastlane-action@v3.1.0
-        with:
-          lane: mac app_store_release
-
-      - name: Deploy Mac Beta to TestFlight
-        if: github.ref != 'refs/heads/main' && steps.check-tag.outputs.is_mac == 'true'
-        uses: maierj/fastlane-action@v3.1.0
-        with:
-          lane: mac closed_beta
-
+      # iOS Deployments
       - name: Deploy iOS build to App Store
-        if: github.ref == 'refs/heads/main' && steps.check-tag.outputs.is_mac == 'false'
+        if: github.ref == 'refs/heads/main'
         uses: maierj/fastlane-action@v3.1.0
         with:
           lane: release
 
       - name: Deploy iOS Beta to TestFlight
-        if: github.ref != 'refs/heads/main' && steps.check-tag.outputs.is_mac == 'false'
+        if: github.ref != 'refs/heads/main'
         uses: maierj/fastlane-action@v3.1.0
         with:
           lane: closed_beta
+
+      # Mac Deployments
+      - name: Deploy Mac build to App Store
+        if: github.ref == 'refs/heads/main'
+        uses: maierj/fastlane-action@v3.1.0
+        with:
+          lane: mac app_store_release
+
+      - name: Deploy Mac Beta to TestFlight
+        if: github.ref != 'refs/heads/main'
+        uses: maierj/fastlane-action@v3.1.0
+        with:
+          lane: mac closed_beta
