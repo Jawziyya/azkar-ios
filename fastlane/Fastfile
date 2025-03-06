@@ -49,6 +49,45 @@ private_lane :match_configuration do |options|
   )
 end
 
+lane :check_build_status do |options|
+  platform = options[:platform] || "IOS" # Default to iOS if not provided
+
+  token = Spaceship::ConnectAPI::Token.create(
+    key_id: AUTH_KEY_ID,
+    issuer_id: AUTH_KEY_ISSUER_ID,
+    key: AUTH_KEY_CONTENT
+  )
+  Spaceship::ConnectAPI.token = token
+
+  app = Spaceship::ConnectAPI::App.find(ENV['APP_ID'])
+
+  # Fetch the marketing version using Fastlane's get_version_number
+  current_marketing_version = get_version_number(xcodeproj: "Azkar.xcodeproj", target: "Azkar")
+
+  if current_marketing_version.nil? || current_marketing_version.empty?
+    UI.user_error!("❌ Failed to read marketing version from Info.plist!")
+  end
+
+  UI.message("📦 Detected marketing version from Info.plist: #{current_marketing_version}")
+
+  # Fetch existing versions from App Store Connect
+  versions = app.get_app_store_versions(filter: { "versionString" => current_marketing_version, "platform" => platform.upcase })
+
+  if versions.empty?
+    UI.message("✅ No existing App Store version found for #{current_marketing_version} on platform #{platform}. Safe to proceed.")
+    next
+  end
+
+  versions.each do |version|
+    app_store_state = version.app_store_state
+    UI.message("📦 Marketing version #{current_marketing_version} on #{platform} is in state: #{app_store_state}")
+
+    if %w[WAITING_FOR_REVIEW IN_REVIEW PENDING_APPLE_RELEASE PENDING_DEVELOPER_RELEASE READY_FOR_SALE].include?(app_store_state)
+      UI.user_error!("🚫 Marketing version #{current_marketing_version} on #{platform} is already in a pending or released state: #{app_store_state}. Consider updating the version.")
+    end
+  end
+end
+
 platform :ios do
 
   desc 'Synchronizes certificates / profiles and optionally creates new ones.'
@@ -68,9 +107,15 @@ platform :ios do
     )
     build_app(workspace: workspace_name, scheme: 'Azkar')
   end
-
+  
   desc "Push a new release build to the App Store"
   lane :release do
+    begin
+      check_build_status(platform: "IOS")
+    rescue => e
+      UI.important("🚫 Release process stopped: #{e.message}")
+      next # Exit the lane gracefully without failing Fastlane
+    end
     build_for_app_store
     upload_to_app_store(
       api_key: get_api_key,
@@ -102,7 +147,7 @@ platform :mac do
 
   desc 'Synchronizes certificates / profiles and optionally creates new ones.'
   lane :sync_signing do
-        match_configuration
+    match_configuration
   end
 
   desc 'Build and release Mac Catalyst app'
@@ -138,6 +183,13 @@ platform :mac do
 
   desc "Build and release directly to Mac App Store"
   lane :app_store_release do
+    begin
+      check_build_status(platform: "MAC_OS")
+    rescue => e
+      UI.important("🚫 Release process stopped: #{e.message}")
+      next # Exit the lane gracefully without failing Fastlane
+    end
+
     setup_ci
     sync_signing
     
