@@ -204,7 +204,7 @@ platform :mac do
     build_app(
       workspace: workspace_name,
       scheme: 'Azkar',
-      destination: "platform=macOS,arch=arm64,variant=Mac Catalyst"
+      destination: "platform=macOS,arch=arm64,variant=Mac Catalyst",
       skip_codesigning: false
     )
     
