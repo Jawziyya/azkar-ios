@@ -5,6 +5,19 @@ import NukeUI
 import Nuke
 import Library
 
+extension TextAlignment {
+    var frameAlignment: Alignment {
+        switch self {
+        case .leading:
+            return .leading
+        case .trailing:
+            return .trailing
+        case .center:
+            return .center
+        }
+    }
+}
+
 struct ZikrShareView: View {
 
     let viewModel: ZikrViewModel
@@ -143,7 +156,7 @@ struct ZikrShareView: View {
             VStack(spacing: 0) {
                 Text(.init(viewModel.text.joined(separator: "\n")))
                     .customFont(.title1, isArabic: true)
-                    .frame(alignment: .trailing)
+                    .frame(maxWidth: .infinity, alignment: arabicTextAlignment.frameAlignment)
                     .multilineTextAlignment(arabicTextAlignment)
                     .padding()
 
@@ -154,7 +167,7 @@ struct ZikrShareView: View {
                         .customFont(.body)
                         .multilineTextAlignment(otherTextAlignment)
                         .padding()
-                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .frame(maxWidth: .infinity, alignment: otherTextAlignment.frameAlignment)
                 }
 
                 if includeTransliteration, !viewModel.transliteration.isEmpty {
@@ -164,7 +177,7 @@ struct ZikrShareView: View {
                         .customFont(.body)
                         .multilineTextAlignment(.leading)
                         .padding()
-                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .frame(maxWidth: .infinity, alignment: otherTextAlignment.frameAlignment)
                 }
 
                 if includeBenefits, let text = viewModel.zikr.benefits?.textOrNil {
@@ -172,12 +185,13 @@ struct ZikrShareView: View {
                     
                     ZikrBenefitsView(text: text)
                         .customFont(.footnote)
-                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .frame(maxWidth: .infinity, alignment: otherTextAlignment.frameAlignment)
                 }
 
                 if includeSource, let source = viewModel.source.textOrNil {
                     Text(source)
                         .customFont(.caption1)
+                        .frame(maxWidth: .infinity, alignment: otherTextAlignment.frameAlignment)
                         .foregroundStyle(.secondaryText)
                         .padding(.horizontal)
                         .padding(.vertical, 8)

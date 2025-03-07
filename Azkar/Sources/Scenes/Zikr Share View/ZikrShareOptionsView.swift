@@ -3,12 +3,18 @@
 import SwiftUI
 import AudioPlayer
 import Library
+import Popovers
 
 struct ZikrShareOptionsView: View {
     
     let zikr: Zikr
 
     struct ShareOptions {
+        enum ShareActionType {
+            case sheet, saveImage, copyText
+        }
+        
+        let actionType: ShareActionType
         let includeTitle: Bool
         let includeBenefits: Bool
         let includeLogo: Bool
@@ -68,6 +74,12 @@ struct ZikrShareOptionsView: View {
     // Add state for scrolling trigger
     @State private var scrollToSelectedBackground = false
     
+    // Add states for action tracking
+    @State private var isPerformingAction = false
+    @State private var showCopyFeedback = false
+    @State private var copyFeedbackMessage = ""
+    @State private var copyFeedbackIcon = ""
+    
     private let alignments: [ZikrShareTextAlignment] = [.center, .start]
             
     var body: some View {
@@ -101,31 +113,45 @@ struct ZikrShareOptionsView: View {
         }
     }
     
-    private var isProItemSelected: Bool {
-        selectedBackground.isProItem || includeLogo == false
+    private var isProShareOptionsSelected: Bool {
+        guard selectedShareType == .image else { return false }
+        return selectedBackground.isProItem || !includeLogo
     }
     
     var toolbar: some View {
-        HStack {
+        HStack(spacing: 16) {
             Button(L10n.Common.done) {
                 presentation.dismiss()
             }
             Spacer()
+            
             Button(action: {
                 Task {
-                    share()
+                    await performAction(actionType: selectedShareType == .image ? .saveImage : .copyText)
                 }
             }, label: {
-                if subscriptionManager.isProUser() == false && isProItemSelected {
+                Image(systemName: selectedShareType == .image ? "square.and.arrow.down" : "doc.on.doc")
+            })
+            .disabled(isPerformingAction)
+            .opacity(isPerformingAction ? 0.6 : 1)
+            
+            Button(action: {
+                Task {
+                    share(actionType: .sheet)
+                }
+            }, label: {
+                if subscriptionManager.isProUser() == false && isProShareOptionsSelected {
                     Label(L10n.Common.share, systemImage: "lock.fill")
                 } else {
                     Text(L10n.Common.share)
                 }
             })
             .buttonStyle(.borderedProminent)
-            .animation(.smooth, value: includeLogo.hashValue ^ selectedBackground.hashValue)
         }
-        .background(Color.background)
+        .systemFont(.title3)
+        .background(.background)
+        .animation(.smooth, value: includeLogo.hashValue ^ selectedBackground.hashValue)
+        .animation(.smooth, value: isPerformingAction)
     }
 
     var content: some View {
@@ -146,26 +172,24 @@ struct ZikrShareOptionsView: View {
                         .transition(.opacity.combined(with: .move(edge: .top)))
                 }
                 
-                Divider()
-                
                 if selectedShareType != .text {
+                    Divider()
+                    
                     Toggle(L10n.Share.includeAzkarLogo, isOn: $includeLogo.animation(.smooth))
                         .applyThemedToggleStyle(showProBadge: !subscriptionManager.isProUser())
                         .padding(.horizontal, 16)
                     
                     Divider()
-                }
-                
-                if selectedShareType != .text {
+                    
                     backgroundPickerSection
                         .padding(.vertical)
                     
                     ZStack {
                         shareViewPreview
                             .frame(width: shareViewSize.width, height: shareViewSize.height)
-                            .screenshotProtected(isProtected: isProItemSelected && !subscriptionManager.isProUser())
+                            .screenshotProtected(isProtected: selectedBackground.isProItem && !subscriptionManager.isProUser())
                             .background {
-                                if isProItemSelected && !subscriptionManager.isProUser() {
+                                if selectedBackground.isProItem && !subscriptionManager.isProUser() {
                                     VStack(alignment: .center) {
                                         Spacer()
                                         Image(systemName: "lock.fill")
@@ -194,6 +218,12 @@ struct ZikrShareOptionsView: View {
             .animation(.smooth, value: showExtraOptions)
             .padding()
         }
+        .showToast(
+            message: copyFeedbackMessage, 
+            icon: copyFeedbackIcon, 
+            tint: copyFeedbackIcon.contains("checkmark") ? .green : .accentColor,
+            isPresented: showCopyFeedback
+        )
     }
     
     var shareViewPreview: some View {
@@ -302,8 +332,9 @@ struct ZikrShareOptionsView: View {
     }
 
     @MainActor
-    private func share() {
+    private func share(actionType: ShareOptions.ShareActionType = .sheet) {
         callback(ShareOptions(
+            actionType: actionType,
             includeTitle: includeTitle,
             includeBenefits: includeBenefits,
             includeLogo: includeLogo,
@@ -313,6 +344,37 @@ struct ZikrShareOptionsView: View {
             shareType: selectedShareType,
             selectedBackground: selectedBackground)
         )
+    }
+    
+    @MainActor
+    private func performAction(actionType: ShareOptions.ShareActionType) async {
+        // Set state to indicate action is in progress
+        isPerformingAction = true
+        
+        // Perform the share action
+        share(actionType: actionType)
+        
+        // Configure feedback based on action type
+        if actionType == .copyText {
+            copyFeedbackMessage = L10n.Share.textCopied
+            copyFeedbackIcon = "doc.on.doc.fill"
+        } else if actionType == .saveImage {
+            copyFeedbackMessage = L10n.Share.imageSaved
+            copyFeedbackIcon = "checkmark.circle.fill"
+        }
+        
+        // Show feedback
+        withAnimation {
+            showCopyFeedback = true
+        }
+        
+        // Wait 3 seconds before enabling the button again
+        try? await Task.sleep(nanoseconds: 3_000_000_000)
+        
+        withAnimation {
+            isPerformingAction = false
+            showCopyFeedback = false
+        }
     }
 
 }

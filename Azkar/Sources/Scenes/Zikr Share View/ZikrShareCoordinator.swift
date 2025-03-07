@@ -58,18 +58,22 @@ final class ZikrShareCoordinator: NavigationCoordinatable {
             includeBenefits: options.includeBenefits
         )
         
-        let activityController = UIActivityViewController(
-            activityItems: [text],
-            applicationActivities: [ZikrFeedbackActivity(prepareAction: { 
-                self.presentMailComposer(from: rootViewController)
-            })]
-        )
-        
-        activityController.excludedActivityTypes = [
-            .init(rawValue: "com.apple.reminders.sharingextension")
-        ]
-        
-        rootViewController.present(activityController, animated: true)
+        if options.actionType == .copyText {
+            UIPasteboard.general.string = text
+        } else if options.actionType == .sheet {
+            let activityController = UIActivityViewController(
+                activityItems: [text],
+                applicationActivities: [ZikrFeedbackActivity(prepareAction: {
+                    self.presentMailComposer(from: rootViewController)
+                })]
+            )
+            
+            activityController.excludedActivityTypes = [
+                .init(rawValue: "com.apple.reminders.sharingextension")
+            ]
+            
+            rootViewController.present(activityController, animated: true)
+        }
     }
     
     private func shareImage(options: ZikrShareOptionsView.ShareOptions) {
@@ -101,24 +105,28 @@ final class ZikrShareCoordinator: NavigationCoordinatable {
         
         let image = view.snapshot()
         
-        let tempDir = FileManager.default.temporaryDirectory
-        let title = viewModel.title ?? viewModel.zikr.id.description
-        let imgFileName = "\(title).png".normalizeForPath()
-        let tempImagePath = tempDir.appendingPathComponent(imgFileName)
-        try? image.pngData()?.write(to: tempImagePath)
-        
-        let activityController = UIActivityViewController(
-            activityItems: [tempImagePath],
-            applicationActivities: [ZikrFeedbackActivity(prepareAction: {
-                self.presentMailComposer(from: rootViewController)
-            })]
-        )
-        
-        activityController.excludedActivityTypes = [
-            .init(rawValue: "com.apple.reminders.sharingextension")
-        ]
-        
-        rootViewController.present(activityController, animated: true)
+        if options.actionType == .saveImage {
+            UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
+        } else if options.actionType == .sheet {
+            let tempDir = FileManager.default.temporaryDirectory
+            let title = viewModel.title ?? viewModel.zikr.id.description
+            let imgFileName = "\(title).png".normalizeForPath()
+            let tempImagePath = tempDir.appendingPathComponent(imgFileName)
+            try? image.pngData()?.write(to: tempImagePath)
+            
+            let activityController = UIActivityViewController(
+                activityItems: [tempImagePath],
+                applicationActivities: [ZikrFeedbackActivity(prepareAction: {
+                    self.presentMailComposer(from: rootViewController)
+                })]
+            )
+            
+            activityController.excludedActivityTypes = [
+                .init(rawValue: "com.apple.reminders.sharingextension")
+            ]
+            
+            rootViewController.present(activityController, animated: true)
+        }
     }
     
     private func presentMailComposer(from viewController: UIViewController) {
