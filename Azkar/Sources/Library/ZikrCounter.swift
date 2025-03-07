@@ -2,10 +2,16 @@
 // All Rights Reserved.
 
 import Foundation
+import Combine
 import Library
 import Entities
 import AzkarServices
 import DatabaseInteractors
+
+private func getKey(for date: Date) -> Int {
+    let startOfDay = Calendar.current.startOfDay(for: date)
+    return Int(startOfDay.timeIntervalSince1970)
+}
 
 final class ZikrCounter: ZikrCounterType {
     
@@ -22,14 +28,17 @@ final class ZikrCounter: ZikrCounterType {
                 .appendingPathComponent("counter.db")
                 .absoluteString,
             getKey: {
-                let startOfDay = Calendar.current.startOfDay(for: Date())
-                return Int(startOfDay.timeIntervalSince1970)
+                getKey(for: Date())
             }
         )
     }
     
     func getRemainingRepeats(for zikr: Zikr) async -> Int {
         await inMemoryZikrCounter.getRemainingRepeats(for: zikr)
+    }
+    
+    func observeRemainingRepeats(for zikr: Zikr) -> AnyPublisher<Int, Never> {
+        databaseZikrCounter.observeRemainingRepeats(for: zikr)
     }
     
     func incrementCounter(for zikr: Zikr) async throws {

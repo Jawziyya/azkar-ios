@@ -2,6 +2,7 @@
 // All Rights Reserved.
 
 import Foundation
+import Combine
 import Entities
 import AzkarServices
 
@@ -33,6 +34,10 @@ public actor InMemoryZikrCounter: ZikrCounterType {
         data[zikr] = repeats - 1
     }
     
+    nonisolated public func observeRemainingRepeats(for zikr: Entities.Zikr) -> AnyPublisher<Int, Never> {
+        Empty().eraseToAnyPublisher()
+    }
+
     private func resetDataIfNeeded() {
         guard Calendar.current.isDateInToday(date) == false else {
             return

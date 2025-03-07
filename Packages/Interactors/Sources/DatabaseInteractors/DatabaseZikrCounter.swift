@@ -1,6 +1,7 @@
 // Copyright © 2022 Al Jawziyya. All rights reserved.
 
 import Foundation
+import Combine
 import Entities
 import GRDB
 import AzkarServices
@@ -9,6 +10,8 @@ public final class DatabaseZikrCounter: ZikrCounterType {
     
     private let databasePath: String
     private let getKey: () -> Int
+    
+    let remainingZikrRepeatsPublisher = PassthroughSubject<Int, Never>()
     
     public init(
         databasePath: String,
@@ -76,12 +79,26 @@ public final class DatabaseZikrCounter: ZikrCounterType {
             return 0
         }
     }
-
+    
+    public func observeRemainingRepeats(for zikr: Zikr) -> AnyPublisher<Int, Never> {
+        defer {
+            Task {
+                let remainingRepeats = await getRemainingRepeats(for: zikr)
+                remainingZikrRepeatsPublisher.send(remainingRepeats)
+            }
+        }
+        return remainingZikrRepeatsPublisher.eraseToAnyPublisher()
+    }
+    
     public func incrementCounter(for zikr: Zikr) async throws {
-        let newRecord = ZikrCounter(key: getKey(), zikrId: zikr.id, category: zikr.category)
+        let key = getKey()
+        let newRecord = ZikrCounter(key: key, zikrId: zikr.id, category: zikr.category)
         try await getDatabaseQueue().write { db in
             try newRecord.insert(db)
         }
+        
+        let remainingRepeats = await getRemainingRepeats(for: zikr)
+        remainingZikrRepeatsPublisher.send(remainingRepeats)
     }
     
 }

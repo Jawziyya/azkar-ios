@@ -1,8 +1,21 @@
-import UIKit
+import SwiftUI
 import Combine
 import Library
+import AzkarServices
 
 final class ZikrPagesViewModel: ObservableObject, Equatable {
+    
+    enum PageType: Hashable, Identifiable {
+        var id: String {
+            switch self {
+            case .zikr(let vm): return vm.id.description
+            case .readingCompletion: return "readingCompletion"
+            }
+        }
+        
+        case zikr(ZikrViewModel)
+        case readingCompletion
+    }
 
     static func == (lhs: ZikrPagesViewModel, rhs: ZikrPagesViewModel) -> Bool {
         lhs.category == rhs.category && lhs.title == rhs.title
@@ -12,13 +25,16 @@ final class ZikrPagesViewModel: ObservableObject, Equatable {
     let category: ZikrCategory
     let title: String
     let azkar: [ZikrViewModel]
+    let pages: [PageType]
     let preferences: Preferences
     let selectedPage: AnyPublisher<Int, Never>
     let canUseCounter: Bool
     let initialPage: Int
+    let zikrCounter: ZikrCounterType = ZikrCounter.shared
     
     @Published var page = 0
     @Published var currentZikrRemainingRepeatNumber = 0
+    @Published var hasRemainingRepeats = true
 
     private var incrementerPublishers: [ZikrViewModel: PassthroughSubject<Void, Never>] = [:]
 
@@ -47,9 +63,11 @@ final class ZikrPagesViewModel: ObservableObject, Equatable {
         self.selectedPage = selectedPagePublisher
         self.initialPage = initialPage
         self.page = initialPage
-        canUseCounter = category == .morning || category == .evening
+        canUseCounter = category != .other
 
         alignZikrCounterByLeadingSide = preferences.alignCounterButtonByLeadingSide
+        
+        pages = azkar.map { PageType.zikr($0) } + [.readingCompletion]
 
         azkar.forEach { vm in
             incrementerPublishers[vm] = PassthroughSubject<Void, Never>()
@@ -64,12 +82,22 @@ final class ZikrPagesViewModel: ObservableObject, Equatable {
                 return zikr.remainingRepeatsNumber
             }
             .assign(to: &$currentZikrRemainingRepeatNumber)
-
-//        preferences
-//            .$counterType
-//            .toVoid()
-//            .sink(receiveValue: objectWillChange.send)
-//            .store(in: &cancellables)
+   
+        preferences
+            .$counterType
+            .toVoid()
+            .sink(receiveValue: objectWillChange.send)
+            .store(in: &cancellables)
+        
+        Publishers.MergeMany(azkar.map { vm in
+            zikrCounter.observeRemainingRepeats(for: vm.zikr)
+        })
+        .map { remainingRepeats in
+            return remainingRepeats > 0
+        }
+        .removeDuplicates()
+        .receive(on: DispatchQueue.main)
+        .assign(to: &$hasRemainingRepeats)
         
         selectedPagePublisher.dropFirst().assign(to: &$page)
     }
@@ -96,7 +124,7 @@ final class ZikrPagesViewModel: ObservableObject, Equatable {
 
     func goToNextZikrIfNeeded() {
         let newIndex = page + 1
-        guard preferences.enableGoToNextZikrOnCounterFinished, newIndex < azkar.count else {
+        guard preferences.enableGoToNextZikrOnCounterFinished, newIndex < pages.count else {
             return
         }
         router.trigger(.goToPage(newIndex))

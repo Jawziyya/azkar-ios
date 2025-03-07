@@ -29,14 +29,16 @@ struct ZikrPagesView: View, Equatable {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigation) {
-                    HStack {
-                        Button(systemImage: .squareAndArrowUp, action: viewModel.shareCurrentZikr)
-                        
-                        Button(systemImage: .textformat, action: viewModel.navigateToTextSettings)
+                    if viewModel.page < viewModel.pages.count - 1 {
+                        HStack {
+                            Button(systemImage: .squareAndArrowUp, action: viewModel.shareCurrentZikr)
+                            
+                            Button(systemImage: .textformat, action: viewModel.navigateToTextSettings)
+                        }
                     }
                 }
             }
-            .background(Color.background.edgesIgnoringSafeArea(.all))
+            .background(.background, ignoreSafeArea: .all)
             .overlay(
                 Group {
                     if viewModel.canUseCounter, viewModel.preferences.counterType == .floatingButton {
@@ -79,7 +81,7 @@ struct ZikrPagesView: View, Equatable {
                             height: viewModel.preferences.counterSize.value
                         )
                         .foregroundStyle(Color.white)
-                        .background(Color.accent)
+                        .background(.accent)
                         .clipShape(Circle())
                         .padding(.horizontal)
                         .onTapGesture {
@@ -98,16 +100,22 @@ struct ZikrPagesView: View, Equatable {
             transitionStyle: .scroll,
             showsIndicators: false
         ) {
-            ForEach(viewModel.azkar) { zikr in
-                ZikrView(
-                    viewModel: zikr,
-                    incrementAction: viewModel.getIncrementPublisher(for: zikr),
-                    counterFinishedCallback: viewModel.goToNextZikrIfNeeded
-                )
+            ForEach(viewModel.pages) { pageType in
+                switch pageType {
+                case .zikr(let zikr):
+                    ZikrView(
+                        viewModel: zikr,
+                        incrementAction: viewModel.getIncrementPublisher(for: zikr),
+                        counterFinishedCallback: viewModel.goToNextZikrIfNeeded
+                    )
+                case .readingCompletion:
+                    ReadingCompletionView(isCompleted: !viewModel.hasRemainingRepeats)
+                        .id(viewModel.hasRemainingRepeats)
+                }
             }
         }
         .initialPageIndex(viewModel.initialPage)
-        .currentPageIndex($viewModel.page)
+        .currentPageIndex($viewModel.page.animation(.smooth))
         .edgesIgnoringSafeArea(.bottom)
         .environment(\.zikrReadingMode, readingMode ?? viewModel.preferences.zikrReadingMode)
         .onReceive(viewModel.preferences.$zikrReadingMode) { newMode in
