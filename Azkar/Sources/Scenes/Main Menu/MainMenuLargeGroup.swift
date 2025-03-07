@@ -24,7 +24,7 @@ struct MainMenuLargeGroup: View {
             Text(category.title)
                 .systemFont(.body)
                 .multilineTextAlignment(.center)
-				.foregroundStyle(Color.text)
+				.foregroundStyle(.text)
                 .layoutPriority(1)
 		}
         .padding(15)
@@ -32,7 +32,7 @@ struct MainMenuLargeGroup: View {
     
     var imageView: some View {
         Image(imageName)
-            .foregroundStyle(Color.text)
+            .foregroundStyle(.text)
     }
     
     var imageName: String {

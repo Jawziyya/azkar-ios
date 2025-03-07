@@ -27,5 +27,9 @@ public enum ColorTheme: String, CaseIterable, Hashable, Codable, Identifiable {
         default: return false
         }
     }
+    
+    public func getColor(_ type: ColorType, opacity: Double = 1) -> Color {
+        Color.getColor(type, theme: self).opacity(opacity)
+    }
         
 }

@@ -30,7 +30,7 @@ public struct StandardToggleStyle: ToggleStyle {
                             if showProBadge {
                                 Image(systemName: "lock.fill")
                                     .font(.system(size: 10))
-                                    .foregroundColor(Color.accent)
+                                    .foregroundStyle(.accent)
                                     .padding(2)
                             }
                         }

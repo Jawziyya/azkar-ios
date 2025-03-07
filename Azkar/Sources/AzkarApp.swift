@@ -50,6 +50,10 @@ struct AzkarApp: App {
         }
     }
     
+    private func getColor(_ type: ColorType, theme: ColorTheme) -> Color {
+        return Color.getColor(type.rawValue, theme: theme)
+    }
+    
     private func setNavigationBarFont(theme: AppTheme, colorTheme: ColorTheme) {
         let standardAppearance = UINavigationBarAppearance()
         standardAppearance.configureWithOpaqueBackground()
@@ -67,24 +71,24 @@ struct AzkarApp: App {
         
         let largeTitleTextAttributes = [
             NSAttributedString.Key.font: getFont(customName: theme.font, style: .largeTitle, design: fontDesign),
-            .foregroundColor: UIColor(Color.text)
+            .foregroundColor: UIColor(getColor(.text, theme: colorTheme))
         ]
         let titleTextAttributes = [
             NSAttributedString.Key.font: getFont(customName: theme.font, style: .title3, design: fontDesign),
-            .foregroundColor: UIColor(Color.text)
+            .foregroundColor: UIColor(getColor(.text, theme: colorTheme))
         ]
         
         standardAppearance.titleTextAttributes = titleTextAttributes
         standardAppearance.largeTitleTextAttributes = largeTitleTextAttributes
-        standardAppearance.backgroundColor = UIColor(Color.background)
+        standardAppearance.backgroundColor = UIColor(getColor(.background, theme: colorTheme))
         
         scrollEdgeAppearance.titleTextAttributes = titleTextAttributes
         scrollEdgeAppearance.largeTitleTextAttributes = largeTitleTextAttributes
-        scrollEdgeAppearance.backgroundColor = UIColor(Color.background)
+        scrollEdgeAppearance.backgroundColor = UIColor(getColor(.background, theme: colorTheme))
         
         UINavigationBar.appearance().standardAppearance = standardAppearance
         UINavigationBar.appearance().scrollEdgeAppearance = scrollEdgeAppearance
-        UINavigationBar.appearance().tintColor = UIColor(Color.text)
+        UINavigationBar.appearance().tintColor = UIColor(getColor(.text, theme: colorTheme))
 
         // Apply appearance to all existing navigation controllers
         if let scenes = UIApplication.shared.connectedScenes as? Set<UIWindowScene> {
@@ -99,7 +103,7 @@ struct AzkarApp: App {
                     for navigationController in navigationControllers {
                         navigationController.navigationBar.standardAppearance = standardAppearance
                         navigationController.navigationBar.scrollEdgeAppearance = scrollEdgeAppearance
-                        navigationController.navigationBar.tintColor = UIColor(Color.text)
+                        navigationController.navigationBar.tintColor = UIColor(getColor(.text, theme: colorTheme))
                     }
                 }
             }

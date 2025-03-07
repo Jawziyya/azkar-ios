@@ -105,15 +105,6 @@ final class RootCoordinator: NSObject, RouteTrigger, NavigationCoordinatable {
         
         super.init()
         
-        preferences.$colorTheme
-            .receive(on: RunLoop.main)
-            .prepend(preferences.colorTheme)
-            .sink(receiveValue: { _ in
-                let color = UIColor(Color.accent)
-                UINavigationBar.appearance().tintColor = color
-            })
-            .store(in: &cancellables)
-
         deeplinker
             .$route
             .sink(receiveValue: { [unowned self] route in

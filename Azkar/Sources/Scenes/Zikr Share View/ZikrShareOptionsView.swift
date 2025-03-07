@@ -79,7 +79,7 @@ struct ZikrShareOptionsView: View {
                 .customScrollContentBackground()
         }
         .applyThemedToggleStyle()
-        .background(Color.background, ignoresSafeAreaEdges: .all)
+        .background(.background, ignoreSafeArea: .all)
         .task {
             do {
                 let remoteImageBackgrounds = try await backgroundsService.loadBackgrounds()
@@ -172,7 +172,7 @@ struct ZikrShareOptionsView: View {
                                             .resizable()
                                             .aspectRatio(contentMode: .fit)
                                             .frame(width: 100, height: 100)
-                                            .foregroundStyle(Color.accentColor)
+                                            .foregroundStyle(.accent)
                                         Spacer()
                                     }
                                 }
@@ -189,7 +189,7 @@ struct ZikrShareOptionsView: View {
                 }
             }
             .systemFont(.body)
-            .background(Color.contentBackground)
+            .background(.contentBackground)
             .applyTheme()
             .animation(.smooth, value: showExtraOptions)
             .padding()
@@ -230,7 +230,7 @@ struct ZikrShareOptionsView: View {
         Section {
             VStack(alignment: .leading, spacing: 8) {
                 Text(L10n.Share.backgroundHeader)
-                    .foregroundStyle(Color.secondaryText)
+                    .foregroundStyle(.secondaryText)
                     .systemFont(.subheadline, modification: .smallCaps)
                     .padding(.horizontal, 16)
                 

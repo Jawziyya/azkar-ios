@@ -41,7 +41,7 @@ struct MainMenuSmallGroup: View {
         Text(item.title)
             .systemFont(.body)
             .frame(maxWidth: .infinity, alignment: flip ? .trailing : .leading)
-            .foregroundStyle(Color.text)
+            .foregroundStyle(.text)
             .multilineTextAlignment(flip ? .trailing : .leading)
             .environment(\.layoutDirection, flip ? .rightToLeft : .leftToRight)
     }

@@ -19,7 +19,7 @@ struct ZikrCollectionsOnboardingScreen: View {
                     Image(systemName: "xmark.circle.fill")
                         .resizable()
                         .frame(width: 30, height: 30)
-                        .foregroundStyle(Color.tertiaryText)
+                        .foregroundStyle(.tertiaryText)
                 }
                 .opacity(0.5)
                 .buttonStyle(.plain)

@@ -10,7 +10,7 @@ struct SearchResultsView: View {
     var body: some View {
         content
             .customScrollContentBackground()
-            .background(Color.background, ignoresSafeAreaEdges: .all)
+            .background(.background, ignoreSafeArea: .all)
             .onAppear {
                 AnalyticsReporter.reportScreen("AzkarSearch", className: viewName)
             }
@@ -27,7 +27,7 @@ struct SearchResultsView: View {
                 .systemFont(.title3)
                 .multilineTextAlignment(.center)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .foregroundStyle(Color.secondaryText)
+                .foregroundStyle(.secondaryText)
                 .padding()
         } else {
             searchResultsList
@@ -50,8 +50,8 @@ struct SearchResultsView: View {
         Section {
             ForEach(section.results, content: searchResultView)
                 .padding()
-                .foregroundStyle(Color.text)
-                .background(Color.contentBackground)
+                .foregroundStyle(.text)
+                .background(.contentBackground)
                 .applyTheme()
                 .padding(.horizontal)
         } header: {
@@ -66,8 +66,8 @@ struct SearchResultsView: View {
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding()
-            .foregroundStyle(Color.secondaryText)
-            .background(Color.background)
+            .foregroundStyle(.secondaryText)
+            .background(.background)
             .padding(.top, 6)
         }
     }

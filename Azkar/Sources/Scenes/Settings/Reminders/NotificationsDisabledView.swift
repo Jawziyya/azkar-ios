@@ -99,7 +99,7 @@ struct NotificationsDisabledView: View {
             } label: {
                 Text(L10n.Settings.Reminders.NoAccess.turnOnTitle)
                     .systemFont(.body)
-                    .foregroundStyle(Color.accent)
+                    .foregroundStyle(.accent)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .multilineTextAlignment(.leading)
                     .contentShape(Rectangle())

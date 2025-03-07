@@ -14,7 +14,6 @@ struct ZikrShareView: View {
     let includeBenefits: Bool
     let includeLogo: Bool
     let includeSource: Bool
-    var backgroundColor = Color.background
     var arabicTextAlignment = TextAlignment.trailing
     var otherTextAlignment = TextAlignment.leading
     var nestIntoScrollView: Bool
@@ -67,8 +66,8 @@ struct ZikrShareView: View {
     var backgroundForContent: some View {
         Group {
             switch selectedBackground.backgroundType {
-            case .solidColor(let color):
-                color
+            case .solidColor(let colorType):
+                colorTheme.getColor(colorType)
             case .localImage(let image):
                 renderImage(image)
             case .remoteImage(let item):
@@ -179,7 +178,7 @@ struct ZikrShareView: View {
                 if includeSource, let source = viewModel.source.textOrNil {
                     Text(source)
                         .customFont(.caption1)
-                        .foregroundStyle(Color.secondaryText)
+                        .foregroundStyle(.secondaryText)
                         .padding(.horizontal)
                         .padding(.vertical, 8)
                 }
@@ -189,7 +188,7 @@ struct ZikrShareView: View {
                     Rectangle()
                         .fill(.ultraThinMaterial)
                 } else {
-                    Color.contentBackground
+                    colorTheme.getColor(.contentBackground)
                 }
             }
             .cornerRadius(appTheme.cornerRadius)
@@ -207,7 +206,7 @@ struct ZikrShareView: View {
                     Text(L10n.Share.sharedWithAzkar)
                         .font(Font.system(size: 12, weight: .regular, design: .rounded).smallCaps())
                 }
-                .foregroundStyle(Color.text)
+                .foregroundStyle(.text)
                 .opacity(0.5)
             }
         }

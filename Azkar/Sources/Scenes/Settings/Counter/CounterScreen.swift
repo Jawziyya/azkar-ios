@@ -15,7 +15,7 @@ struct CounterView: View {
         }
         .applyThemedToggleStyle()
         .customScrollContentBackground()
-        .background(Color.background, ignoresSafeAreaEdges: .all)
+        .background(.background, ignoreSafeArea: .all)
         .navigationTitle(L10n.Settings.Counter.title)
     }
     
@@ -63,17 +63,17 @@ struct CounterView: View {
                         Text(L10n.Settings.Counter.goToNextDhikrTip)
                             .padding()
                             .cornerRadius(10)
-                            .foregroundStyle(Color.text)
+                            .foregroundStyle(.text)
                     } label: { _ in
                         Image(systemName: "info.circle")
-                            .foregroundStyle(Color.accent.opacity(0.75))
+                            .foregroundStyle(.accent, opacity: 0.75)
                     }
                 }
                 .padding(.vertical, 3)
             }
         }
         .systemFont(.body)
-        .foregroundStyle(Color.text)
+        .foregroundStyle(.text)
         .onAppear {
             AnalyticsReporter.reportScreen("Settings", className: viewName)
         }
@@ -90,7 +90,7 @@ struct CounterView: View {
                     .cornerRadius(10)
             } label: { _ in
                 Image(systemName: "info.circle")
-                    .foregroundStyle(Color.accent.opacity(0.75))
+                    .foregroundStyle(.accent, opacity: 0.75)
             }
 
             Picker(

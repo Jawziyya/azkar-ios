@@ -7,7 +7,7 @@ import Library
 import AzkarServices
 import DatabaseInteractors
 
-final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
+final class ZikrViewModel: ObservableObject, Identifiable, Hashable {
 
     func hash(into hasher: inout Hasher) {
         hasher.combine(zikr)

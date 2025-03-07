@@ -26,7 +26,6 @@ final class ZikrShareCoordinator: NavigationCoordinatable {
             guard let self = self else { return }
             self.share(using: options)
         }
-        .tint(Color.accent)
     }
     
     private func share(using options: ZikrShareOptionsView.ShareOptions) {

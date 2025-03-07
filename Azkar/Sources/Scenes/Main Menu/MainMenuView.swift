@@ -16,6 +16,7 @@ struct MainMenuView: View {
     @ObservedObject var viewModel: MainMenuViewModel
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.appTheme) var appTheme
+    @Environment(\.colorTheme) var colorTheme
     @Environment(\.isSearching) var isSearching
     @Environment(\.dismissSearch) var dismissSearch
     @State private var showAd = true
@@ -67,8 +68,8 @@ struct MainMenuView: View {
             }
         }
         .background(
-            Color.background
-                .edgesIgnoringSafeArea(.all)
+            colorTheme.getColor(.background)
+                .ignoresSafeArea()
                 .overlay(
                     ZStack {
                         if viewModel.enableEidBackground {
@@ -136,7 +137,7 @@ struct MainMenuView: View {
             MainMenuLargeGroup(category: category)
                 .frame(maxWidth: .infinity)
                 .removeSaturationIfNeeded()
-                .background(Color.contentBackground)
+                .background(.contentBackground)
                 .applyTheme()
         } action: {
             self.viewModel.navigateToCategory(category)
@@ -162,7 +163,7 @@ struct MainMenuView: View {
         }
         .padding()
         .removeSaturationIfNeeded()
-        .background(Color.contentBackground)
+        .background(.contentBackground)
         .applyTheme()
         .applyMenuPadding()
     }
@@ -186,7 +187,7 @@ struct MainMenuView: View {
             }
             .padding()
             .removeSaturationIfNeeded()
-            .background(Color.contentBackground)
+            .background(.contentBackground)
             .applyTheme()
             .applyMenuPadding()
         }
@@ -201,7 +202,7 @@ struct MainMenuView: View {
             HStack {
                 MainMenuSmallGroup(item: item, flip: flipContents)
                 Image(systemName: "chevron.right")
-                    .foregroundStyle(Color.tertiaryText)
+                    .foregroundStyle(.tertiaryText)
             }
         }, action: action)
     }

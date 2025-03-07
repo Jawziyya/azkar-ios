@@ -13,10 +13,10 @@ struct RemindersScreen: View {
                 content
             }
         }
-        .foregroundStyle(Color.text)
+        .foregroundStyle(.text)
         .applyThemedToggleStyle()
         .customScrollContentBackground()
-        .background(Color.background, ignoresSafeAreaEdges: .all)
+        .background(.background, ignoreSafeArea: .all)
         .navigationTitle(L10n.Settings.Reminders.title)
         .onAppear {
             AnalyticsReporter.reportScreen("Settings", className: viewName)
@@ -90,7 +90,7 @@ struct RemindersScreen: View {
                 Text(L10n.Settings.Reminders.MorningEvening.morningLabel)
                     .fixedSize(horizontal: false, vertical: true)
                     .systemFont(.body)
-                    .foregroundStyle(Color.text)
+                    .foregroundStyle(.text)
                 
                 Spacer()
                 
@@ -109,7 +109,7 @@ struct RemindersScreen: View {
                 Text(L10n.Settings.Reminders.MorningEvening.eveningLabel)
                     .fixedSize(horizontal: false, vertical: true)
                     .systemFont(.body)
-                    .foregroundStyle(Color.text)
+                    .foregroundStyle(.text)
                 
                 Spacer()
                 
@@ -216,7 +216,7 @@ struct RemindersScreen: View {
             Text(L10n.Settings.Reminders.time)
                 .fixedSize(horizontal: false, vertical: true)
                 .systemFont(.body)
-                .foregroundStyle(Color.text)
+                .foregroundStyle(.text)
             
             Spacer()
             

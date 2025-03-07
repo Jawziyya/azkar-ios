@@ -22,6 +22,7 @@ struct ZikrView: View {
     @ObservedObject var viewModel: ZikrViewModel
     @Environment(\.zikrReadingMode) var zikrReadingMode
     @Environment(\.appTheme) var appTheme
+    @Environment(\.colorTheme) var colorTheme
 
     let incrementAction: AnyPublisher<Void, Never>
 
@@ -37,7 +38,9 @@ struct ZikrView: View {
         viewModel.preferences.sizeCategory
     }
 
-    private let dividerColor = Color.accent.opacity(0.1)
+    private var dividerColor: Color {
+        colorTheme.getColor(.accent, opacity: 0.1)
+    }
     private let dividerHeight: CGFloat = 1
 
     func incrementZikrCounter() {
@@ -74,7 +77,7 @@ struct ZikrView: View {
         }
         .onDisappear(perform: viewModel.pausePlayer)
         .removeSaturationIfNeeded()
-        .background(Color.background.edgesIgnoringSafeArea(.all))
+        .background(.background, ignoreSafeArea: .all)
         .onReceive(incrementAction, perform: incrementZikrCounter)
         .simultaneousGesture(
             TapGesture(count: 2)
@@ -93,7 +96,7 @@ struct ZikrView: View {
     private var counterButton: some View {
         Group {
             Text("1")
-                .foregroundStyle(Color.accent)
+                .foregroundStyle(.accent)
                 .font(Font.system(
                     size: viewModel.preferences.counterSize.value / 3,
                     weight: .regular,
@@ -105,7 +108,7 @@ struct ZikrView: View {
                     height: viewModel.preferences.counterSize.value
                 )
                 .foregroundStyle(Color.white)
-                .background(Color.accent)
+                .background(.accent)
                 .clipShape(Capsule())
         }
         .opacity((viewModel.preferences.counterType == .tap) || (!isIncrementActionPerformed || viewModel.remainingRepeatsNumber == 0) ? 0 : 1)
@@ -260,7 +263,7 @@ struct ZikrView: View {
         Text(title)
             .equatable()
             .systemFont(.headline)
-            .foregroundStyle(Color.secondaryText)
+            .foregroundStyle(.secondaryText)
             .multilineTextAlignment(.center)
             .frame(maxWidth: .infinity, alignment: .center)
             .padding()
@@ -430,7 +433,7 @@ struct ZikrView: View {
                 .if(underline) { text in
                     text.underline()
                 }
-                .foregroundStyle(Color.text)
+                .foregroundStyle(.text)
                 .systemFont(.caption, weight: .medium, modification: .smallCaps)
         }
     }
@@ -442,7 +445,7 @@ struct ZikrView: View {
     private func getCaption(_ text: String) -> some View {
         Text(getAttributedString(text))
             .systemFont(.caption2, modification: .smallCaps)
-            .foregroundStyle(Color.tertiaryText)
+            .foregroundStyle(.tertiaryText)
     }
 
     private func getAttributedString(_ text: String) -> AttributedString {
@@ -452,8 +455,6 @@ struct ZikrView: View {
     private func playerView(viewModel: PlayerViewModel) -> some View {
         PlayerView(
             viewModel: viewModel,
-            tintColor: Color.accent,
-            progressBarColor: dividerColor,
             progressBarHeight: dividerHeight
         )
         .equatable()

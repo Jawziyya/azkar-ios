@@ -8,9 +8,14 @@ struct PlayerView: View, Equatable {
     }
 
     @ObservedObject var viewModel: PlayerViewModel
+    @Environment(\.colorTheme) var colorTheme
     
-    var tintColor: Color = .accent
-    var progressBarColor: Color = Color.accent.opacity(0.3)
+    var tintColor: Color {
+        colorTheme.getColor(.accent)
+    }
+    var progressBarColor: Color {
+        colorTheme.getColor(.accent, opacity: 0.3)
+    }
     var progressBarHeight: CGFloat = 1
 
     var body: some View {
@@ -24,7 +29,7 @@ struct PlayerView: View, Equatable {
     private var buttonsView: some View {
         HStack(alignment: .center) {
             Text(viewModel.timeElapsed)
-                .foregroundStyle(Color.tertiaryText)
+                .foregroundStyle(.tertiaryText)
                 .font(Font.system(.caption, design: .monospaced))
             Spacer()
             Button(action: {
@@ -58,7 +63,7 @@ struct PlayerView: View, Equatable {
             })
             Spacer()
             Text(viewModel.timeRemaining)
-                .foregroundStyle(Color.tertiaryText)
+                .foregroundStyle(.tertiaryText)
                 .font(Font.system(.caption, design: .monospaced))
         }
         .padding(.horizontal)
@@ -82,7 +87,7 @@ struct PlayerView_Previews: PreviewProvider {
         ))
         .previewDevice(.init(stringLiteral: "iPhone 11 Pro"))
         .environment(\.sizeCategory, .accessibilityLarge)
-        .background(Color.background)
+        .background(.background)
         .environment(\.colorScheme, .dark)
     }
 }

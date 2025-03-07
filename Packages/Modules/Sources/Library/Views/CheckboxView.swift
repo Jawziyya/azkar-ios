@@ -4,6 +4,7 @@ public struct CheckboxView: View {
 
     @Binding var isCheked: Bool
     @Environment(\.appTheme) var appTheme
+    @Environment(\.colorTheme) var colorTheme
     
     public init(isCheked: Binding<Bool>) {
         _isCheked = isCheked
@@ -28,15 +29,15 @@ public struct CheckboxView: View {
         Group {
             if appTheme.cornerRadius > 0 {
                 Circle()
-                    .strokeBorder(isCheked ? Color.accent : Color.gray, lineWidth: 1.5)
-                    .background(isCheked ? Circle().fill(Color.accent) : nil)
+                    .strokeBorder(isCheked ? colorTheme.getColor(.accent) : Color.gray, lineWidth: 1.5)
+                    .background(isCheked ? Circle().fill(colorTheme.getColor(.accent)) : nil)
             } else {
                 Rectangle()
-                    .strokeBorder(isCheked ? Color.accent : Color.gray, lineWidth: 1.5)
-                    .background(isCheked ? Rectangle().fill(Color.accent) : nil)
+                    .strokeBorder(isCheked ? colorTheme.getColor(.accent) : Color.gray, lineWidth: 1.5)
+                    .background(isCheked ? Rectangle().fill(colorTheme.getColor(.accent)) : nil)
             }
         }
-        .foregroundStyle(isCheked ? Color.accent : Color.gray)
+        .foregroundStyle(isCheked ? .accent : .text)
     }
 }
 

@@ -9,6 +9,7 @@ import Library
 struct ExtraTextSettingsScreen: View {
     
     @ObservedObject var viewModel: TextSettingsViewModel
+    @Environment(\.colorTheme) var colorTheme
     
     var body: some View {
         ScrollView {
@@ -19,7 +20,7 @@ struct ExtraTextSettingsScreen: View {
         }
         .applyThemedToggleStyle()
         .customScrollContentBackground()
-        .background(Color.background, ignoresSafeAreaEdges: .all)
+        .background(.background, ignoreSafeArea: .all)
     }
     
     var content: some View {
@@ -48,7 +49,7 @@ struct ExtraTextSettingsScreen: View {
                             .cornerRadius(10)
                     } label: { _ in
                         Image(systemName: "info.circle")
-                            .foregroundStyle(Color.accent.opacity(0.75))
+                            .foregroundStyle(.accent, opacity: 0.75)
                     }
                 }
                 .padding(.vertical, 8)
@@ -67,7 +68,7 @@ struct ExtraTextSettingsScreen: View {
                             .cornerRadius(10)
                     } label: { _ in
                         Image(systemName: "info.circle")
-                            .foregroundStyle(Color.accent.opacity(0.75))
+                            .foregroundStyle(.accent, opacity: 0.75)
                     }
                 }
                 .padding(.vertical, 8)
@@ -117,11 +118,11 @@ struct ExtraTextSettingsScreen: View {
                         translationLineSpacingPicker
                     }
                 }
-                .listRowBackground(Color.contentBackground)
+                .listRowBackground(colorTheme.getColor(.contentBackground))
             }
             .customScrollContentBackground()
             .navigationBarTitle(L10n.Settings.Text.lineSpacing)
-            .background(Color.background, ignoresSafeAreaEdges: .all)
+            .background(.background, ignoreSafeArea: .all)
         } label: {
             NavigationLabel(title: L10n.Settings.Text.lineSpacing)
         }

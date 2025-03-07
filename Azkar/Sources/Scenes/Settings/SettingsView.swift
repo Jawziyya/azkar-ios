@@ -27,7 +27,7 @@ struct SettingsView: View {
             }
         }
         .customScrollContentBackground()
-        .background(Color.background, ignoresSafeAreaEdges: .all)
+        .background(.background, ignoreSafeArea: .all)
         .navigationTitle(L10n.Settings.title)
         .onAppear {
             AnalyticsReporter.reportScreen("Settings", className: viewName)
@@ -68,11 +68,11 @@ struct SettingsView: View {
                 
                 VStack(alignment: .leading) {
                     Text(title)
-                        .foregroundStyle(Color.text)
+                        .foregroundStyle(.text)
                         .systemFont(.body)
                     if let subtitle {
                         Text(subtitle)
-                            .foregroundStyle(Color.secondaryText)
+                            .foregroundStyle(.secondaryText)
                             .systemFont(.callout)
                     }
                 }

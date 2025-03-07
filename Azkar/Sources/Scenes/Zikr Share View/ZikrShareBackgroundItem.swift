@@ -2,13 +2,14 @@
 
 import Foundation
 import SwiftUI
+import Library
 
 struct ZikrShareBackgroundItem: Identifiable, Hashable {
     let id: String
     let backgroundType: BackgroundType
     var isProItem = true
     
-    static let defaultBackground = ZikrShareBackgroundItem(id: "main_bg_color", backgroundType: .solidColor(Color.background), isProItem: false)
+    static let defaultBackground = ZikrShareBackgroundItem(id: "main_bg_color", backgroundType: .solidColor(.background), isProItem: false)
     
     private static let patternImageNames: [String] = [
         "blue-gradient",
@@ -31,7 +32,7 @@ struct ZikrShareBackgroundItem: Identifiable, Hashable {
     }
     
     enum BackgroundType: Hashable {
-        case solidColor(Color)
+        case solidColor(ColorType)
         case localImage(UIImage)
         case remoteImage(ShareBackground)
     }

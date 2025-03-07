@@ -6,7 +6,7 @@ struct HeaderView: View {
     var body: some View {
         Text(title)
             .systemFont(.title3, modification: .smallCaps)
-            .foregroundStyle(Color.secondaryText)
+            .foregroundStyle(.secondaryText)
             .multilineTextAlignment(.leading)
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.horizontal, 30)
@@ -44,7 +44,7 @@ struct ReminderSoundPickerView: View {
         }
         .environment(\.horizontalSizeClass, .regular)
         .customScrollContentBackground()
-        .background(Color.background.edgesIgnoringSafeArea(.all))
+        .background(.background, ignoreSafeArea: .all)
         .navigationTitle(L10n.Settings.Reminders.Sounds.sound)
         .onAppear {
             AnalyticsReporter.reportScreen("Settings", className: viewName)

@@ -15,11 +15,14 @@ struct HadithView: View {
     @State private var textHeight: CGFloat = 0
     @State private var translationHeight: CGFloat = 0
     @Environment(\.appTheme) var appTheme
+    @Environment(\.colorTheme) var colorTheme
     var sizeCategory: ContentSizeCategory {
         return viewModel.preferences.sizeCategory
     }
 
-    private let dividerColor = Color.contentBackground
+    private var dividerColor: Color {
+        colorTheme.getColor(.background)
+    }
     private let dividerHeight: CGFloat = 1
 
     var body: some View {
@@ -30,7 +33,7 @@ struct HadithView: View {
         .onAppear {
             AnalyticsReporter.reportScreen("Hadith View", className: viewName)
         }
-        .background(Color.background.edgesIgnoringSafeArea(.all))
+        .background(colorTheme.getColor(.background).edgesIgnoringSafeArea(.all))
     }
 
     private func getContent() -> some View {
@@ -44,10 +47,10 @@ struct HadithView: View {
             VStack(alignment: .leading, spacing: 0) {
                 Text("read.narrated-by", comment: "Hadith narrater name label.")
                     .systemFont(.caption2, modification: .smallCaps)
-                    .foregroundStyle(Color.tertiaryText)
+                    .foregroundStyle(.tertiaryText)
                 Text(viewModel.source)
                     .systemFont(.caption, weight: .medium, modification: .smallCaps)
-                    .foregroundStyle(Color.text)
+                    .foregroundStyle(.text)
             }
         }
     }

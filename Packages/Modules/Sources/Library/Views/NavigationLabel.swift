@@ -19,17 +19,17 @@ public struct NavigationLabel: View {
     public var body: some View {
         HStack {
             Text(title)
-                .foregroundStyle(Color.text)
+                .foregroundStyle(.text)
                 .multilineTextAlignment(.leading)
             Spacer()
             if let label {
                 Text(label)
-                    .foregroundStyle(Color.secondaryText)
+                    .foregroundStyle(.secondaryText)
                     .multilineTextAlignment(.trailing)
                     .systemFont(.callout)
             }
             Image(systemName: "chevron.right")
-                .foregroundStyle(Color.secondaryText)
+                .foregroundStyle(.secondaryText)
         }
         .systemFont(.body)
         .padding(.vertical, applyVerticalPadding ? 8 : 0)

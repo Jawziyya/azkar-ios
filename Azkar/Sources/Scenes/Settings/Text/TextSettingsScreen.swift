@@ -22,7 +22,7 @@ struct TextSettingsScreen: View {
         }
         .applyThemedToggleStyle()
         .customScrollContentBackground()
-        .background(Color.background, ignoresSafeAreaEdges: .all)
+        .background(.background, ignoreSafeArea: .all)
         .navigationTitle(L10n.Settings.Text.title)
         .onAppear {
             AnalyticsReporter.reportScreen("Settings", className: viewName)

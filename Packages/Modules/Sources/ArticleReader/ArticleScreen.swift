@@ -76,7 +76,7 @@ public struct ArticleScreen: View {
                 }
             }
         }
-        .background(Color.contentBackground.ignoresSafeArea())
+        .background(.contentBackground, ignoreSafeArea: .all)
     }
     
     var sharedWithAzkarView: some View {

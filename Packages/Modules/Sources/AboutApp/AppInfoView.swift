@@ -11,6 +11,7 @@ public struct AppInfoView: View {
     @ObservedObject var viewModel: AppInfoViewModel
     @Environment(\.safariPresenter) var safariPresenter
     @Environment(\.appTheme) var appTheme
+    @Environment(\.colorTheme) var colorTheme
     
     public init(viewModel: AppInfoViewModel) {
         self.viewModel = viewModel
@@ -27,19 +28,19 @@ public struct AppInfoView: View {
             ToolbarItem(placement: ToolbarItemPlacement.navigationBarTrailing) {
                 Backport.ShareLink(item: URL(string: "https://apps.apple.com/app/id1511423586")!) {
                     Image(systemName: "square.and.arrow.up")
-                        .foregroundStyle(Color.accent)
+                        .foregroundStyle(.accent)
                 }
             }
         }
         .navigationTitle(Text("about.title", comment: "About app screen title."))
         .customScrollContentBackground()
-        .background(Color.background.edgesIgnoringSafeArea(.all))
+        .background(.background, ignoreSafeArea: .all)
     }
     
     private var verticalStack: some View {
         LazyVStack(alignment: .center, spacing: 0) {
             self.iconAndVersion.background(
-                Color.background.padding(-20)
+                colorTheme.getColor(.background).padding(-20)
             )
             .padding()
             
@@ -117,7 +118,7 @@ public struct AppInfoView: View {
                         }
                         .systemFont(.title2, weight: .heavy, modification: .smallCaps)
                         .frame(alignment: .center)
-                        .foregroundStyle(Color.accent)
+                        .foregroundStyle(.accent)
                         if !UIDevice.current.isMac, viewModel.isProUser {
                             Text(" PRO")
                                 .systemFont(.title2, weight: .heavy, modification: .smallCaps)
@@ -172,7 +173,7 @@ public struct AppInfoView: View {
                 .opacity(0.5)
         }
         .padding()
-        .background(Color.contentBackground)
+        .background(.contentBackground)
     }
     
     private var copyrightView: some View {
@@ -189,7 +190,7 @@ public struct AppInfoView: View {
         .padding(20)
         .opacity(0.5)
         .frame(maxWidth: .infinity)
-        .background(Color.background)
+        .background(.background)
     }
     
 }
