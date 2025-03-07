@@ -86,16 +86,3 @@ jobs:
         uses: maierj/fastlane-action@v3.1.0
         with:
           lane: closed_beta
-
-      # Mac Deployments
-      - name: Deploy Mac build to App Store
-        if: github.ref == 'refs/heads/main'
-        uses: maierj/fastlane-action@v3.1.0
-        with:
-          lane: mac app_store_release
-
-      - name: Deploy Mac Beta to TestFlight
-        if: github.ref != 'refs/heads/main'
-        uses: maierj/fastlane-action@v3.1.0
-        with:
-          lane: mac closed_beta
