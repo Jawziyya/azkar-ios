@@ -1,4 +1,5 @@
 import SwiftUI
+import Library
 
 /// A view modifier that injects the appTheme from Preferences into the environment
 private struct CustomFontsModifier: ViewModifier {

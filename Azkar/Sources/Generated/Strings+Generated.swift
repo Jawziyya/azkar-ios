@@ -247,6 +247,16 @@ internal enum L10n {
     /// translation
     internal static let translation = L10n.tr("Localizable", "read.translation", fallback: "translation")
   }
+  internal enum ReadingCompletion {
+    /// Mark as completed
+    internal static let markAsCompleted = L10n.tr("Localizable", "reading_completion.mark_as_completed", fallback: "Mark as completed")
+    /// You completed reading adhkar in this category
+    internal static let subtitle = L10n.tr("Localizable", "reading_completion.subtitle", fallback: "You completed reading adhkar in this category")
+    /// Completed!
+    internal static let title = L10n.tr("Localizable", "reading_completion.title", fallback: "Completed!")
+    /// You can mark your progress
+    internal static let trackYourProgress = L10n.tr("Localizable", "reading_completion.track_your_progress", fallback: "You can mark your progress")
+  }
   internal enum RemainingRepeats {
     /// %d times more
     internal static func few(_ p1: Int) -> String {
@@ -497,6 +507,8 @@ internal enum L10n {
     internal static let backgroundHeader = L10n.tr("Localizable", "share.background-header", fallback: "Background")
     /// Image
     internal static let image = L10n.tr("Localizable", "share.image", fallback: "Image")
+    /// Image saved
+    internal static let imageSaved = L10n.tr("Localizable", "share.image_saved", fallback: "Image saved")
     /// Include Azkar logo
     internal static let includeAzkarLogo = L10n.tr("Localizable", "share.include-azkar-logo", fallback: "Include Azkar logo")
     /// Include text of benefit
@@ -517,6 +529,8 @@ internal enum L10n {
     internal static let text = L10n.tr("Localizable", "share.text", fallback: "Text")
     /// Text alignment
     internal static let textAlignment = L10n.tr("Localizable", "share.text-alignment", fallback: "Text alignment")
+    /// Text copied
+    internal static let textCopied = L10n.tr("Localizable", "share.text_copied", fallback: "Text copied")
   }
   internal enum Subscribe {
     /// Cancel subscription

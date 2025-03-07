@@ -4,12 +4,12 @@ import SwiftUI
 import Library
 
 // Custom environment key for font size category
-struct FontSizeCategoryKey: EnvironmentKey {
-    static let defaultValue: ContentSizeCategory? = nil
+public struct FontSizeCategoryKey: EnvironmentKey {
+    public static let defaultValue: ContentSizeCategory? = nil
 }
 
 // Environment value extension
-extension EnvironmentValues {
+public extension EnvironmentValues {
     var fontSizeCategory: ContentSizeCategory? {
         get { self[FontSizeCategoryKey.self] }
         set { self[FontSizeCategoryKey.self] = newValue }
@@ -44,7 +44,7 @@ struct CustomNamedFontModifier: ViewModifier {
     }
 }
 
-extension View {
+public extension View {
     func customFont(_ font: AppFont, style: UIFont.TextStyle = .body) -> some View {
         self.modifier(CustomFontModifier(font: font, style: style))
     }
@@ -59,7 +59,7 @@ extension View {
     }
 }
 
-func textSize(forTextStyle textStyle: UIFont.TextStyle, contentSizeCategory: UIContentSizeCategory? = nil) -> CGFloat {
+public func textSize(forTextStyle textStyle: UIFont.TextStyle, contentSizeCategory: UIContentSizeCategory? = nil) -> CGFloat {
     if let sizeCategory = contentSizeCategory {
         return UIFontDescriptor.preferredFontDescriptor(withTextStyle: textStyle, compatibleWith: .init(preferredContentSizeCategory: sizeCategory)).pointSize
     }

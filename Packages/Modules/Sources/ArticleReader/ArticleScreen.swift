@@ -1,6 +1,7 @@
 import SwiftUI
 import NukeUI
 import Entities
+import Library
 
 public struct ArticleScreen: View {
     
@@ -66,7 +67,7 @@ public struct ArticleScreen: View {
                     scrollableContent
                 } else {
                     Text(viewModel.title)
-                        .font(Font.system(size: 30, weight: .black, design: .serif))
+                        .customFont(.title1)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .multilineTextAlignment(.leading)
                         .dynamicTypeSize(.accessibility5)
@@ -128,7 +129,7 @@ public struct ArticleScreen: View {
         VStack(alignment: .leading, spacing: 16) {
             if #available(iOS 16.0, *) {
                 Text(LocalizedStringKey(viewModel.text))
-                    .font(Font.system(.body, design: .serif, weight: .regular))
+                    .customFont(.body)
             } else {
                 Text(LocalizedStringKey(viewModel.text))
             }

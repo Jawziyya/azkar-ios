@@ -116,6 +116,10 @@ internal enum Asset {
     internal static let paperAndMagnifier = ImageAsset(name: "ZikrCollectionsOnboarding/paper-and-magnifier")
   }
   internal static let azkarGoldLogo = ImageAsset(name: "azkar-gold-logo")
+  internal static let completionEveningBackground = ImageAsset(name: "completion-evening-background")
+  internal static let completionEveningBg = ColorAsset(name: "completion-evening-bg")
+  internal static let completionEvening = ImageAsset(name: "completion-evening")
+  internal static let completionSun = ImageAsset(name: "completion-sun")
   internal static let gemStone = ImageAsset(name: "gem-stone")
   internal static let eidBackground = ImageAsset(name: "eid_background")
   internal static let mosque = ImageAsset(name: "mosque")
