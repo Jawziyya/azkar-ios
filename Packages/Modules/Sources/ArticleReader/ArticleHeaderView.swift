@@ -94,7 +94,7 @@ struct ArticleHeaderView: View {
     ) -> some View {
         VStack(alignment: .leading, spacing: 6) {
             Text(title)
-                .customFont(size: fontSize)
+                .font(Font.system(size: fontSize, weight: .black, design: .serif))
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .multilineTextAlignment(.leading)
                 .dynamicTypeSize(.accessibility5)

@@ -38,23 +38,21 @@ public struct ArticleScreen: View {
     }
     
     public var body: some View {
-        Group {
-            if let shareOptions {
-                VStack(spacing: 20) {
-                    content
-                    sharedWithAzkarView
-                }
-                .frame(width: shareOptions.maxWidth)
-                .frame(maxHeight: .infinity)
-            } else {
+        if let shareOptions {
+            VStack(spacing: 20) {
                 content
-                    .navigationBarTitleDisplayMode(.inline)
-                    .toolbar {
-                        ToolbarItem {
-                            shareButton
-                        }
-                    }
+                sharedWithAzkarView
             }
+            .frame(width: shareOptions.maxWidth)
+            .frame(maxHeight: .infinity)
+        } else {
+            content
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem {
+                        shareButton
+                    }
+                }
         }
     }
     
@@ -77,6 +75,7 @@ public struct ArticleScreen: View {
                 }
             }
         }
+        .customScrollContentBackground()
         .background(.contentBackground, ignoreSafeArea: .all)
     }
     

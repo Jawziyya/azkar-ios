@@ -67,7 +67,7 @@ public struct ArticleCellView: View {
                     Spacer()
                     
                     Text(title)
-                        .customFont(size: 30)
+                        .font(Font.system(size: 30, weight: .black, design: .serif))
                         .minimumScaleFactor(0.5)
                         .lineLimit(3)
                         .foregroundStyle(Color.white)
