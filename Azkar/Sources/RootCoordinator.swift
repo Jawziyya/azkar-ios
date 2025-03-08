@@ -323,7 +323,7 @@ extension RootCoordinator {
                     footer: ArticlePDFComposer.Footer(
                         image: UIImage(named: "ink-icon"),
                         text: L10n.Share.sharedWithAzkar.uppercased(),
-                        link: URL(string: "https://apps.apple.com/app/id1511423586")
+                        link: URL(string: "https://apple.co/41O1pzQ")
                     )
                 )
                 
