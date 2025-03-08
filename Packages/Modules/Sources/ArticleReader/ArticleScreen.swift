@@ -126,12 +126,8 @@ public struct ArticleScreen: View {
     
     var textContent: some View {
         VStack(alignment: .leading, spacing: 16) {
-            if #available(iOS 16.0, *) {
-                Text(LocalizedStringKey(viewModel.text))
-                    .customFont(.body)
-            } else {
-                Text(LocalizedStringKey(viewModel.text))
-            }
+            Text(LocalizedStringKey(viewModel.text))
+                .customFont(.title3)
         }
         .frame(maxWidth: .infinity)
     }

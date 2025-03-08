@@ -317,9 +317,9 @@ extension RootCoordinator {
                 
                 let composer = ArticlePDFComposer(
                     article: article,
-                    titleFont: UIFont(name: self.preferences.preferredTranslationFont.postscriptName, size: 30)!,
-                    textFont: UIFont(name: self.preferences.preferredTranslationFont.postscriptName, size: 18)!,
-                    pageMargins: UIEdgeInsets(horizontal: 50, vertical: 50),
+                    titleFont: UIFont(name: self.preferences.preferredTranslationFont.postscriptName, size: 45)!,
+                    textFont: UIFont(name: self.preferences.preferredTranslationFont.postscriptName, size: 25)!,
+                    pageMargins: UIEdgeInsets(horizontal: 75, vertical: 65),
                     footer: ArticlePDFComposer.Footer(
                         image: UIImage(named: "ink-icon"),
                         text: L10n.Share.sharedWithAzkar.uppercased(),
