@@ -109,8 +109,10 @@ struct ZikrPagesView: View, Equatable {
                         counterFinishedCallback: viewModel.goToNextZikrIfNeeded
                     )
                 case .readingCompletion:
-                    ReadingCompletionView(isCompleted: !viewModel.hasRemainingRepeats)
-                        .id(viewModel.hasRemainingRepeats)
+                    ReadingCompletionView(
+                        isCompleted: !viewModel.hasRemainingRepeats,
+                        markAsCompleted: viewModel.markCurrentCategoryAsCompleted
+                    )
                 }
             }
         }

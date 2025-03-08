@@ -1,30 +1,39 @@
 import SwiftUI
+import Components
 
 struct ReadingCompletionView: View {
-    @State private var isCompleted: Bool
+    let isCompleted: Bool
     @Environment(\.colorTheme) var colorTheme
+    let markAsCompleted: () async -> Void
     
-    init(isCompleted: Bool) {
-        _isCompleted = State(wrappedValue: isCompleted)
+    @State var isAnimating = false
+    
+    init(
+        isCompleted: Bool,
+        markAsCompleted: @escaping () async -> Void
+    ) {
+        self.isCompleted = isCompleted
+        self.markAsCompleted = markAsCompleted
     }
     
     var body: some View {
         VStack(spacing: 16) {
-            ZStack {
-                Circle()
-                    .fill(colorTheme.getColor(.contentBackground))
-                    .frame(width: 120, height: 120)
-                    .shadow(color: .black.opacity(0.1), radius: 10, x: 0, y: 2)
-                
-                Image(systemName: "checkmark.circle.fill")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .foregroundColor(.green)
-                    .frame(width: 80, height: 80)
-            }
-            .opacity(isCompleted ? 1 : 0)
-            
             if isCompleted {
+                VStack {
+                    if isAnimating {
+                        LottieView(
+                            name: "checkmark",
+                            loopMode: .playOnce,
+                            contentMode: .scaleAspectFit,
+                            speed: 1,
+                            progress: 0
+                        )
+                    } else {
+                        Color.clear
+                    }
+                }
+                .frame(width: 120, height: 120)
+                
                 Text(L10n.ReadingCompletion.title)
                     .systemFont(.title, weight: .bold)
                 
@@ -38,7 +47,9 @@ struct ReadingCompletionView: View {
                     .padding(.horizontal)
                 
                 Button(action: {
-                    isCompleted = true
+                    Task {
+                        await markAsCompleted()
+                    }
                 }) {
                     Text(L10n.ReadingCompletion.markAsCompleted)
                         .systemFont(.body, weight: .semibold)
@@ -56,6 +67,10 @@ struct ReadingCompletionView: View {
         .multilineTextAlignment(.center)
         .frame(maxWidth: .infinity)
         .padding(.vertical, 30)
+        .task {
+            try? await Task.sleep(nanoseconds: 500_000_000)
+            isAnimating = true
+        }
     }
     
 }
@@ -63,9 +78,9 @@ struct ReadingCompletionView: View {
 struct ReadingCompletionView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            ReadingCompletionView(isCompleted: false)
+            ReadingCompletionView(isCompleted: false, markAsCompleted: {})
                 .previewDisplayName("Not Completed")
-            ReadingCompletionView(isCompleted: true)
+            ReadingCompletionView(isCompleted: true, markAsCompleted: {})
                 .previewDisplayName("Completed")
         }
         .previewLayout(.sizeThatFits)

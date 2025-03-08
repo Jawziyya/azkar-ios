@@ -12,6 +12,7 @@ public final class DatabaseZikrCounter: ZikrCounterType {
     private let getKey: () -> Int
     
     let remainingZikrRepeatsPublisher = PassthroughSubject<Int, Never>()
+    private var completedRepeatsPublishers: [ZikrCategory: CurrentValueSubject<Int, Never>] = [:]
     
     public init(
         databasePath: String,
@@ -25,7 +26,6 @@ public final class DatabaseZikrCounter: ZikrCounterType {
             
             var migrator = DatabaseMigrator()
             let queue = try DatabaseQueue(path: databasePath)
-            try migrator.migrate(queue)
             
             if DatabaseHelper.tableExists(tableName, databaseQueue: queue) == false {
                 try queue.write { db in
@@ -38,19 +38,15 @@ public final class DatabaseZikrCounter: ZikrCounterType {
                 }
             }
             
-            migrator.registerMigration("Add category column") { db in
-                do {
-                    try db.alter(table: tableName) { t in
-                        t.add(column: "category")
-                    }
-                    try db.execute(
-                        sql: "UPDATE counters SET category = ?",
-                        arguments: ["morning"]
-                    )
-                } catch {
-                    print(error.localizedDescription)
+            migrator.registerMigration("create_completion_marks") { db in
+                try db.create(table: "completion_marks") { t in
+                    t.autoIncrementedPrimaryKey("id").notNull()
+                    t.column("key", .integer).notNull()
+                    t.column("category", .text).notNull()
                 }
             }
+            
+            try migrator.migrate(queue)
         } catch {
             // TODO: Handle errors.
             print(error)
@@ -90,6 +86,33 @@ public final class DatabaseZikrCounter: ZikrCounterType {
         return remainingZikrRepeatsPublisher.eraseToAnyPublisher()
     }
     
+    public func markCategoryAsCompleted(_ category: ZikrCategory) async throws {
+        let key = getKey()
+        try await getDatabaseQueue().write { db in
+            try db.execute(
+                sql: "INSERT INTO completion_marks (key, category) VALUES (?, ?)",
+                arguments: [key, category.rawValue]
+            )
+        }
+    }
+    
+    public func isCategoryMarkedAsCompleted(_ category: ZikrCategory) async -> Bool {
+        let key = getKey()
+        do {
+            return try await getDatabaseQueue().read { db in
+                let count = try Int.fetchOne(
+                    db,
+                    sql: "SELECT COUNT(*) FROM completion_marks WHERE key = ? AND category = ?",
+                    arguments: [key, category.rawValue]
+                ) ?? 0
+                return count > 0
+            }
+        } catch {
+            print("Error checking category completion: \(error)")
+            return false
+        }
+    }
+    
     public func incrementCounter(for zikr: Zikr) async throws {
         let key = getKey()
         let newRecord = ZikrCounter(key: key, zikrId: zikr.id, category: zikr.category)
@@ -99,6 +122,89 @@ public final class DatabaseZikrCounter: ZikrCounterType {
         
         let remainingRepeats = await getRemainingRepeats(for: zikr)
         remainingZikrRepeatsPublisher.send(remainingRepeats)
+        
+        // Also update the completed repeats publisher if this zikr has a category
+        if let category = zikr.category, let publisher = completedRepeatsPublishers[category] {
+            do {
+                let count = try await getDatabaseQueue().read { db in
+                    try Int.fetchOne(
+                        db,
+                        sql: "SELECT COUNT(*) FROM counters WHERE key = ? AND category = ?",
+                        arguments: [key, category.rawValue]
+                    ) ?? 0
+                }
+                publisher.send(count)
+            } catch {
+                print("Error updating completed repeats count: \(error)")
+            }
+        }
+    }
+    
+    public func observeCompletedRepeats(in category: ZikrCategory) -> AnyPublisher<Int, Never> {
+        let key = getKey()
+        
+        // Create or get an existing publisher for this category
+        let publisher = completedRepeatsPublishers[category] ?? CurrentValueSubject<Int, Never>(0)
+        completedRepeatsPublishers[category] = publisher
+        
+        // Immediately start fetching the current count
+        Task {
+            do {
+                let count = try await getDatabaseQueue().read { db in
+                    try Int.fetchOne(
+                        db,
+                        sql: "SELECT COUNT(*) FROM counters WHERE key = ? AND category = ?",
+                        arguments: [key, category.rawValue]
+                    ) ?? 0
+                }
+                publisher.send(count)
+            } catch {
+                print("Error fetching completed repeats count: \(error)")
+            }
+        }
+        
+        // Set up observation using GRDB's ValueObservation
+        do {
+            let queue = try getDatabaseQueue()
+            
+            // Use ValueObservation to track changes to the counters table for this category
+            let observation = ValueObservation.tracking { db in
+                try Int.fetchOne(
+                    db,
+                    sql: "SELECT COUNT(*) FROM counters WHERE key = ? AND category = ?",
+                    arguments: [key, category.rawValue]
+                ) ?? 0
+            }
+            
+            // Start the observation on a background queue
+            observation.start(
+                in: queue,
+                onError: { error in
+                    print("Error observing completed repeats: \(error)")
+                },
+                onChange: { [weak publisher] count in
+                    publisher?.send(count)
+                }
+            )
+        } catch {
+            print("Failed to start observation: \(error)")
+        }
+        
+        return publisher.eraseToAnyPublisher()
+    }
+    
+    public func resetCategoryCompletionMark(_ category: ZikrCategory) async {
+        let key = getKey()
+        do {
+            try await getDatabaseQueue().write { db in
+                try db.execute(
+                    sql: "DELETE FROM completion_marks WHERE key = ? AND category = ?",
+                    arguments: [key, category.rawValue]
+                )
+            }
+        } catch {
+            print("Error resetting category completion mark: \(error)")
+        }
     }
     
 }
