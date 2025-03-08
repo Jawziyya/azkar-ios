@@ -14,7 +14,7 @@ struct PlayerView: View, Equatable {
         colorTheme.getColor(.accent)
     }
     var progressBarColor: Color {
-        colorTheme.getColor(.accent, opacity: 0.3)
+        colorTheme.getColor(.accent, opacity: 0.1)
     }
     var progressBarHeight: CGFloat = 1
 

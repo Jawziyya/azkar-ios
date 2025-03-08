@@ -53,8 +53,8 @@ final class ZikrShareCoordinator: NavigationCoordinatable {
         
         let text = viewModel.getShareText(
             includeTitle: options.includeTitle,
-            includeTranslation: preferences.expandTranslation,
-            includeTransliteration: preferences.expandTransliteration,
+            includeTranslation: options.includeTranslation,
+            includeTransliteration: options.includeTransliteration,
             includeBenefits: options.includeBenefits
         )
         

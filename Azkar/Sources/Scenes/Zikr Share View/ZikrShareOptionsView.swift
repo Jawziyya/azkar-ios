@@ -12,6 +12,28 @@ struct ZikrShareOptionsView: View {
     struct ShareOptions {
         enum ShareActionType {
             case sheet, saveImage, copyText
+            
+            var message: String? {
+                switch self {
+                case .saveImage:
+                    return L10n.Share.imageSaved
+                case .copyText:
+                    return L10n.Share.textCopied
+                case .sheet:
+                    return nil
+                }
+            }
+            
+            var imageName: String? {
+                switch self {
+                case .saveImage:
+                    return "square.and.arrow.down"
+                case .copyText:
+                    return "doc.on.doc"
+                case .sheet:
+                    return nil
+                }
+            }
         }
         
         let actionType: ShareActionType
@@ -25,7 +47,11 @@ struct ZikrShareOptionsView: View {
         var selectedBackground: ZikrShareBackgroundItem
         
         var containsProItem: Bool {
-            includeLogo == false || selectedBackground.isProItem == true
+            if shareType == .image {
+                includeLogo == false || selectedBackground.isProItem == true
+            } else {
+                false
+            }
         }
     }
 
@@ -34,6 +60,7 @@ struct ZikrShareOptionsView: View {
     @EnvironmentObject var backgroundsService: ShareBackgroundService
     @Environment(\.presentationMode) var presentation
     @Environment(\.appTheme) var appTheme
+    @Environment(\.colorTheme) var colorTheme
     let subscriptionManager = SubscriptionManager.shared
     
     let preferences = Preferences.shared
@@ -75,10 +102,7 @@ struct ZikrShareOptionsView: View {
     @State private var scrollToSelectedBackground = false
     
     // Add states for action tracking
-    @State private var isPerformingAction = false
-    @State private var showCopyFeedback = false
-    @State private var copyFeedbackMessage = ""
-    @State private var copyFeedbackIcon = ""
+    @State private var processingQuickShareAction: ShareOptions.ShareActionType?
     
     private let alignments: [ZikrShareTextAlignment] = [.center, .start]
             
@@ -132,8 +156,8 @@ struct ZikrShareOptionsView: View {
             }, label: {
                 Image(systemName: selectedShareType == .image ? "square.and.arrow.down" : "doc.on.doc")
             })
-            .disabled(isPerformingAction)
-            .opacity(isPerformingAction ? 0.6 : 1)
+            .disabled(processingQuickShareAction != nil)
+            .opacity(processingQuickShareAction != nil ? 0.5 : 1)
             
             Button(action: {
                 Task {
@@ -151,7 +175,7 @@ struct ZikrShareOptionsView: View {
         .systemFont(.title3)
         .background(.background)
         .animation(.smooth, value: includeLogo.hashValue ^ selectedBackground.hashValue)
-        .animation(.smooth, value: isPerformingAction)
+        .animation(.smooth, value: processingQuickShareAction)
     }
 
     var content: some View {
@@ -219,10 +243,10 @@ struct ZikrShareOptionsView: View {
             .padding()
         }
         .showToast(
-            message: copyFeedbackMessage, 
-            icon: copyFeedbackIcon, 
-            tint: copyFeedbackIcon.contains("checkmark") ? .green : .accentColor,
-            isPresented: showCopyFeedback
+            message: processingQuickShareAction?.message ?? "",
+            icon: processingQuickShareAction?.imageName,
+            tint: processingQuickShareAction == .saveImage ? .green : colorTheme.getColor(.accent),
+            isPresented: processingQuickShareAction != nil
         )
     }
     
@@ -348,32 +372,23 @@ struct ZikrShareOptionsView: View {
     
     @MainActor
     private func performAction(actionType: ShareOptions.ShareActionType) async {
-        // Set state to indicate action is in progress
-        isPerformingAction = true
-        
         // Perform the share action
         share(actionType: actionType)
         
-        // Configure feedback based on action type
-        if actionType == .copyText {
-            copyFeedbackMessage = L10n.Share.textCopied
-            copyFeedbackIcon = "doc.on.doc.fill"
-        } else if actionType == .saveImage {
-            copyFeedbackMessage = L10n.Share.imageSaved
-            copyFeedbackIcon = "checkmark.circle.fill"
+        guard subscriptionManager.isProUser() || !isProShareOptionsSelected else {
+            return
         }
         
         // Show feedback
         withAnimation {
-            showCopyFeedback = true
+            processingQuickShareAction = actionType
         }
         
         // Wait 3 seconds before enabling the button again
         try? await Task.sleep(nanoseconds: 3_000_000_000)
         
         withAnimation {
-            isPerformingAction = false
-            showCopyFeedback = false
+            processingQuickShareAction = nil
         }
     }
 
