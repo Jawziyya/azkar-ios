@@ -1,17 +1,7 @@
 import SwiftUI
 import Library
 
-struct HeaderView: View {
-    let title: String
-    var body: some View {
-        Text(title)
-            .systemFont(.title3, modification: .smallCaps)
-            .foregroundStyle(.secondaryText)
-            .multilineTextAlignment(.leading)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(.horizontal, 30)
-    }
-}
+
 
 struct ReminderSoundPickerView: View {
     
@@ -22,7 +12,7 @@ struct ReminderSoundPickerView: View {
         ScrollView {
             ForEach(viewModel.sections) { section in
                 VStack(spacing: 0) {
-                    HeaderView(title: section.title)
+                    HeaderView(text: section.title)
                     
                     VStack {
                         ForEachIndexed(section.sounds) { _, position, sound in

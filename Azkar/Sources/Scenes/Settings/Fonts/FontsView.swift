@@ -49,7 +49,7 @@ struct FontsView: View {
                                 }
                         }
                     } header: {
-                        HeaderView(title: section.type.title)
+                        HeaderView(text: section.type.title)
                             .padding(.vertical, 15)
                     }
                 }

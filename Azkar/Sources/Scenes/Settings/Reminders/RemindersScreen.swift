@@ -47,7 +47,7 @@ struct RemindersScreen: View {
     
     var adhkarReminderSection: some View {
         VStack(spacing: 0) {
-            HeaderView(title: L10n.Settings.Reminders.MorningEvening.label)
+            HeaderView(text: L10n.Settings.Reminders.MorningEvening.label)
             
             VStack {
                 Toggle(
@@ -155,7 +155,7 @@ struct RemindersScreen: View {
     // MARK: - Jumua Reminders Section
     var jumuaReminderSection: some View {
         VStack(spacing: 0) {
-            HeaderView(title: L10n.Settings.Reminders.Jumua.label)
+            HeaderView(text: L10n.Settings.Reminders.Jumua.label)
             
             VStack {
                 Toggle(

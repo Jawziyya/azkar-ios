@@ -104,7 +104,7 @@ struct ColorSchemesView: View {
                         dismissOnSelect: false
                     )
                 } footer: {
-                    footerView(viewModel.preferences.theme.description)
+                    FooterView(text: viewModel.preferences.theme.description)
                 }
                 
                 Section {
@@ -122,7 +122,7 @@ struct ColorSchemesView: View {
                         isItemProtected: { _ in false }
                     )
                 } header: {
-                    headerView(L10n.Settings.Appearance.ColorTheme.header)
+                    HeaderView(text: L10n.Settings.Appearance.ColorTheme.header)
                 }
                  
                 Section {
@@ -177,22 +177,7 @@ struct ColorSchemesView: View {
     private var themeChanged: Bool {
         selectedAppTheme != viewModel.preferences.appTheme || selectedColorTheme != viewModel.preferences.colorTheme
     }
-    
-    func headerView(_ label: String) -> some View {
-        HeaderView(title: label)
-    }
-    
-    func footerView(_ label: String) -> some View {
-        Text(label)
-            .systemFont(.caption)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .foregroundStyle(.secondaryText)
-            .padding(.horizontal)
-            .background(.background)
-            .padding(.horizontal)
-            .padding(.bottom)
-    }
-    
+        
 }
 
 #Preview("Color Schemes") {
