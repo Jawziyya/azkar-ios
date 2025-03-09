@@ -73,7 +73,7 @@ struct SettingsView: View {
                     if let subtitle {
                         Text(subtitle)
                             .foregroundStyle(.secondaryText)
-                            .systemFont(.callout)
+                            .systemFont(.caption)
                     }
                 }
                 
