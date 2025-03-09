@@ -104,6 +104,10 @@ internal enum L10n {
     internal static let `continue` = L10n.tr("Localizable", "common.continue", fallback: "Continue")
     /// Default
     internal static let `default` = L10n.tr("Localizable", "common.default", fallback: "Default")
+    /// Dhikr #%@
+    internal static func dhikr(_ p1: Any) -> String {
+      return L10n.tr("Localizable", "common.dhikr", String(describing: p1), fallback: "Dhikr #%@")
+    }
     /// Done
     internal static let done = L10n.tr("Localizable", "common.done", fallback: "Done")
     /// Enable
@@ -122,8 +126,6 @@ internal enum L10n {
     internal static let shareApp = L10n.tr("Localizable", "common.share-app", fallback: "Share Azkar App")
     /// Version
     internal static let version = L10n.tr("Localizable", "common.version", fallback: "Version")
-    /// Dhikr
-    internal static let zikr = L10n.tr("Localizable", "common.zikr", fallback: "Dhikr")
   }
   internal enum Credits {
     /// Animation %@
@@ -355,20 +357,8 @@ internal enum L10n {
     internal enum Counter {
       /// Enable counter haptic feedback
       internal static let counterHaptics = L10n.tr("Localizable", "settings.counter.counter-haptics", fallback: "Enable counter haptic feedback")
-      /// Size of counter
-      internal static let counterSizeTitle = L10n.tr("Localizable", "settings.counter.counter-size-title", fallback: "Size of counter")
       /// Enable counter ticker sound
       internal static let counterTicker = L10n.tr("Localizable", "settings.counter.counter-ticker", fallback: "Enable counter ticker sound")
-      /// Counter type
-      internal static let counterType = L10n.tr("Localizable", "settings.counter.counter-type", fallback: "Counter type")
-      /// Button
-      internal static let counterTypeButton = L10n.tr("Localizable", "settings.counter.counter-type-button", fallback: "Button")
-      /// This option allows you to switch type of the counter used.
-      /// 
-      /// If you choose 'button' Azkar will display a button at the bottom of reading screen. If you choose 'tap' there will be no visible indication, but you will be able to tap twice at any area to decrement the counter.
-      internal static let counterTypeInfo = L10n.tr("Localizable", "settings.counter.counter-type-info", fallback: "This option allows you to switch type of the counter used.\n\nIf you choose 'button' Azkar will display a button at the bottom of reading screen. If you choose 'tap' there will be no visible indication, but you will be able to tap twice at any area to decrement the counter.")
-      /// Tap
-      internal static let counterTypeTap = L10n.tr("Localizable", "settings.counter.counter-type-tap", fallback: "Tap")
       /// Go to next dhikr when repeats completed
       internal static let goToNextDhikr = L10n.tr("Localizable", "settings.counter.go-to-next-dhikr", fallback: "Go to next dhikr when repeats completed")
       /// If this option is enabled whenever you finish repeating a dhikr Azkar will show the next one
@@ -377,6 +367,32 @@ internal enum L10n {
       internal static let subtitle = L10n.tr("Localizable", "settings.counter.subtitle", fallback: "Fine-tuning adhkar counter")
       /// Counter
       internal static let title = L10n.tr("Localizable", "settings.counter.title", fallback: "Counter")
+      internal enum CounterPosition {
+        /// Center
+        internal static let center = L10n.tr("Localizable", "settings.counter.counter-position.center", fallback: "Center")
+        /// Left
+        internal static let `left` = L10n.tr("Localizable", "settings.counter.counter-position.left", fallback: "Left")
+        /// Right
+        internal static let `right` = L10n.tr("Localizable", "settings.counter.counter-position.right", fallback: "Right")
+        /// Counter position
+        internal static let title = L10n.tr("Localizable", "settings.counter.counter-position.title", fallback: "Counter position")
+      }
+      internal enum CounterSize {
+        /// Size of counter
+        internal static let title = L10n.tr("Localizable", "settings.counter.counter-size.title", fallback: "Size of counter")
+      }
+      internal enum CounterType {
+        /// Button
+        internal static let button = L10n.tr("Localizable", "settings.counter.counter-type.button", fallback: "Button")
+        /// This option allows you to switch type of the counter used.
+        /// 
+        /// If you choose 'button' Azkar will display a button at the bottom of reading screen. If you choose 'tap' there will be no visible indication, but you will be able to tap twice at any area to decrement the counter.
+        internal static let info = L10n.tr("Localizable", "settings.counter.counter-type.info", fallback: "This option allows you to switch type of the counter used.\n\nIf you choose 'button' Azkar will display a button at the bottom of reading screen. If you choose 'tap' there will be no visible indication, but you will be able to tap twice at any area to decrement the counter.")
+        /// Tap
+        internal static let tap = L10n.tr("Localizable", "settings.counter.counter-type.tap", fallback: "Tap")
+        /// Counter type
+        internal static let title = L10n.tr("Localizable", "settings.counter.counter-type.title", fallback: "Counter type")
+      }
     }
     internal enum Icon {
       /// Icon
@@ -483,14 +499,26 @@ internal enum L10n {
       internal static let translationLineSpacing = L10n.tr("Localizable", "settings.text.translation-line-spacing", fallback: "Line spacing (translation)")
       /// Translation font
       internal static let translationTextFont = L10n.tr("Localizable", "settings.text.translation_text_font", fallback: "Translation font")
+      /// Romanization Type
+      internal static let transliteration = L10n.tr("Localizable", "settings.text.transliteration", fallback: "Romanization Type")
       /// System text size
       internal static let useSystemFontSize = L10n.tr("Localizable", "settings.text.use-system-font-size", fallback: "System text size")
       /// If this option is turned on Azkar app will use text size from iOS Settings (Settings — Display & Brightness — Text Size).
       /// If it's turned off you can choose desired text size below.
       internal static let useSystemFontSizeTip = L10n.tr("Localizable", "settings.text.use_system_font_size_tip", fallback: "If this option is turned on Azkar app will use text size from iOS Settings (Settings — Display & Brightness — Text Size).\nIf it's turned off you can choose desired text size below.")
       internal enum AdhkarCollectionsSource {
-        /// Adhkar collection
-        internal static let title = L10n.tr("Localizable", "settings.text.adhkar_collections_source.title", fallback: "Adhkar collection")
+        /// Morning & Evening Adhkar Collection
+        internal static let header = L10n.tr("Localizable", "settings.text.adhkar_collections_source.header", fallback: "Morning & Evening Adhkar Collection")
+        /// Collection
+        internal static let title = L10n.tr("Localizable", "settings.text.adhkar_collections_source.title", fallback: "Collection")
+      }
+      internal enum Content {
+        /// Translation & Romanization
+        internal static let header = L10n.tr("Localizable", "settings.text.content.header", fallback: "Translation & Romanization")
+      }
+      internal enum Fonts {
+        /// Fonts
+        internal static let header = L10n.tr("Localizable", "settings.text.fonts.header", fallback: "Fonts")
       }
       internal enum ReadingMode {
         /// Line by line
@@ -626,6 +654,18 @@ internal enum L10n {
       internal static let tabarani = L10n.tr("Localizable", "text.source.tabarani", fallback: "at-Tabarani")
       /// at-Tirmidhi
       internal static let tirmidhi = L10n.tr("Localizable", "text.source.tirmidhi", fallback: "at-Tirmidhi")
+    }
+  }
+  internal enum Transliteration {
+    internal enum Method {
+      internal enum RuPractical {
+        /// 
+        internal static let title = L10n.tr("Localizable", "transliteration.method.ru_practical.title", fallback: "")
+      }
+      internal enum RuScientific {
+        /// 
+        internal static let title = L10n.tr("Localizable", "transliteration.method.ru_scientific.title", fallback: "")
+      }
     }
   }
   internal enum Updates {

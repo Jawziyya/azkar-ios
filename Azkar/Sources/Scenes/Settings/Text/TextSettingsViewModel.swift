@@ -15,14 +15,17 @@ final class TextSettingsViewModel: SettingsSectionViewModel {
         AzkarDatabase(language: preferences.contentLanguage)
     }
     
-    var canChangeLanguage: Bool {
-        return true
+    var availableTransliterationTypes: [ZikrTransliterationType] {
+        switch preferences.contentLanguage {
+        case .arabic, .english, .georgian, .turkish: return [.community, .DIN31635]
+        case .russian, .chechen, .ingush, .kazakh, .kyrgyz, .uzbek: return [.community, .ruScientific, .DIN31635]
+        }
     }
     
     var selectedArabicFontSupportsVowels: Bool {
         return preferences.preferredArabicFont.hasTashkeelSupport
     }
-        
+    
     func getAvailableLanguages() -> [Language] {
         return Language.allCases.filter(databaseService.translationExists(for:))
     }
@@ -47,6 +50,13 @@ final class TextSettingsViewModel: SettingsSectionViewModel {
                 self.router.trigger(.subscribe(sourceScreen: FontsView.viewName))
             }
         )
+    }
+    
+    func setContentLanguage(_ language: Language) {
+        preferences.contentLanguage = language
+        if availableTransliterationTypes.contains(preferences.transliterationType) == false {
+            preferences.transliterationType = .community
+        }
     }
     
 }

@@ -111,7 +111,6 @@ enum AzkarTarget: String, CaseIterable {
                     .external(name: "RevenueCat"),
                     .external(name: "SwiftUIX"),
                     .external(name: "SwiftUIBackports"),
-                    .external(name: "SwiftUIDrag"),
                     .external(name: "Popovers"),
                     .external(name: "WhatsNewKit"),
                     .external(name: "Stinsen"),

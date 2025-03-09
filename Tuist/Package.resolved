@@ -316,15 +316,6 @@
       }
     },
     {
-      "identity" : "swiftuidrag",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/demharusnam/SwiftUIDrag",
-      "state" : {
-        "branch" : "0686318a",
-        "revision" : "0686318aca6b2b4415ab7bae3f18357e93a28f80"
-      }
-    },
-    {
       "identity" : "swiftuix",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/SwiftUIX/SwiftUIX",

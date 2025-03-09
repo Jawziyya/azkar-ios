@@ -36,11 +36,10 @@ final class ZikrPagesViewModel: ObservableObject, Equatable {
     @Published var page = 0
     @Published var currentZikrRemainingRepeatNumber = 0
     @Published var hasRemainingRepeats = true
+    @Published var counterPosition: CounterPosition
 
     @Published var isCategoryCompleted = false
     private var incrementerPublishers: [ZikrViewModel: PassthroughSubject<Void, Never>] = [:]
-
-    let alignZikrCounterByLeadingSide: Bool
 
     var showCounterButton: Bool {
         preferences.counterType == .floatingButton
@@ -66,10 +65,13 @@ final class ZikrPagesViewModel: ObservableObject, Equatable {
         self.initialPage = initialPage
         self.page = initialPage
         canUseCounter = category != .other
+        counterPosition = preferences.counterPosition
         
-        alignZikrCounterByLeadingSide = preferences.alignCounterButtonByLeadingSide
-        
-        pages = azkar.map { PageType.zikr($0) } + [.readingCompletion]
+        var pages = azkar.map { PageType.zikr($0) }
+        if category != .other {
+            pages.append(.readingCompletion)
+        }
+        self.pages = pages
 
         azkar.forEach { vm in
             incrementerPublishers[vm] = PassthroughSubject<Void, Never>()
@@ -173,10 +175,6 @@ final class ZikrPagesViewModel: ObservableObject, Equatable {
             selectedPagePublisher: PassthroughSubject<Int, Never>().eraseToAnyPublisher(),
             initialPage: 0
         )
-    }
-
-    func setZikrCounterAlignment(byLeftSide flag: Bool) {
-        preferences.alignCounterButtonByLeadingSide = flag
     }
 
     func incrementCurrentPageZikrCounter() {

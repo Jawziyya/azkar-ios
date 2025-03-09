@@ -163,7 +163,7 @@ final class ArabicTextChar {
     }
     
     func isEndOfLine() -> Bool {
-        node.next?.element == "\n" || isEnd()
+        node.element == "\n" || isEnd()
     }
     
     func isEnd() -> Bool {

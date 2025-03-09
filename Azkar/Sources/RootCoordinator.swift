@@ -136,7 +136,7 @@ final class RootCoordinator: NSObject, RouteTrigger, NavigationCoordinatable {
                 try ZikrViewModel(
                     zikr: zikr,
                     isNested: true,
-                    row: idx + 1,
+                    row: category != .other ? idx + 1 : nil,
                     hadith: zikr.hadith.flatMap { id in
                         try databaseService.getHadith(id)
                     },

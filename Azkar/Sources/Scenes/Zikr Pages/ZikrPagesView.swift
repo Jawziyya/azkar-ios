@@ -10,7 +10,6 @@ import SwiftUI
 import AudioPlayer
 import Combine
 import SwiftUIX
-import SwiftUIDrag
 import Extensions
 import Library
 
@@ -39,59 +38,51 @@ struct ZikrPagesView: View, Equatable {
                 }
             }
             .background(.background, ignoreSafeArea: .all)
-            .overlay(
+            .overlay(alignment: viewModel.preferences.counterPosition.alignment) {
                 Group {
-                    if viewModel.canUseCounter, viewModel.preferences.counterType == .floatingButton {
+                    if viewModel.canUseCounter, viewModel.preferences.counterType == .floatingButton, viewModel.showCounterButton, viewModel.currentZikrRemainingRepeatNumber > 0 {
                         counterButton
                     }
                 }
-            )
+            }
             .onAppear {
                 AnalyticsReporter.reportScreen("Azkar Pages", className: viewName)
             }
     }
-
+    
     var counterButton: some View {
-        SDView(
-            alignment: viewModel.alignZikrCounterByLeadingSide ? .bottomLeading : .bottomTrailing,
-            floating: [.bottom],
-            collapse: [],
-            visibleSize: CGSize(
-                width: viewModel.preferences.counterSize.value,
-                height: viewModel.preferences.counterSize.value
-            ),
-            content: { _, state in
-                ExecuteCallView {
-                    if state != .expanded {
-                        viewModel.setZikrCounterAlignment(byLeftSide: state.isLeading)
+        Button(action: {
+            withAnimation(.smooth) {
+                viewModel.incrementCurrentPageZikrCounter()
+            }
+        }, label: {
+            Text(viewModel.currentZikrRemainingRepeatNumber.description)
+                .font(Font.system(
+                    size: viewModel.preferences.counterSize.value / 3,
+                    weight: .regular,
+                    design: .monospaced).monospacedDigit()
+                )
+                .minimumScaleFactor(0.25)
+                .padding()
+                .frame(
+                    width: viewModel.preferences.counterSize.value,
+                    height: viewModel.preferences.counterSize.value
+                )
+                .foregroundStyle(Color.white)
+                .background(.accent)
+                .clipShape(Circle())
+                .padding(.horizontal)
+                .onTapGesture {
+                    withAnimation(.easeInOut) {
+                        viewModel.incrementCurrentPageZikrCounter()
                     }
                 }
-                let number = viewModel.currentZikrRemainingRepeatNumber
-                if viewModel.showCounterButton, number > 0 {
-                    Text(number.description)
-                        .font(Font.system(
-                            size: viewModel.preferences.counterSize.value / 3,
-                            weight: .regular,
-                            design: .monospaced).monospacedDigit()
-                        )
-                        .minimumScaleFactor(0.25)
-                        .padding()
-                        .frame(
-                            width: viewModel.preferences.counterSize.value,
-                            height: viewModel.preferences.counterSize.value
-                        )
-                        .foregroundStyle(Color.white)
-                        .background(.accent)
-                        .clipShape(Circle())
-                        .padding(.horizontal)
-                        .onTapGesture {
-                            withAnimation(.easeInOut) {
-                                viewModel.incrementCurrentPageZikrCounter()
-                            }
-                        }
-                }
-            }
+        })
+        .frame(
+            width: viewModel.preferences.counterSize.value,
+            height: viewModel.preferences.counterSize.value
         )
+        .padding(.horizontal)
     }
 
     var pagerView: some View {

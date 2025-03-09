@@ -41,10 +41,12 @@ public struct PickerMenu<T: Identifiable & Hashable>: View {
                     .systemFont(.body)
                     .foregroundStyle(.text)
                     .multilineTextAlignment(.leading)
+                    .layoutPriority(1)
                 Spacer()
                 Text(itemTitle(selection))
                     .systemFont(.callout)
                     .foregroundStyle(.secondaryText)
+                    .multilineTextAlignment(.trailing)
                 Image(systemName: "chevron.down")
                     .foregroundStyle(.secondaryText)
             }
