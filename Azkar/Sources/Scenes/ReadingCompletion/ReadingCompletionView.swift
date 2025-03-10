@@ -25,6 +25,7 @@ struct ReadingCompletionView: View {
                             name: "checkmark",
                             loopMode: .playOnce,
                             contentMode: .scaleAspectFit,
+                            fillColor: colorTheme.getColor(.accent),
                             speed: 1,
                             progress: 0
                         )

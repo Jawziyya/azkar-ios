@@ -10,15 +10,17 @@ public struct LottieView: UIViewRepresentable {
     let name: String
     var loopMode: LottieLoopMode = .playOnce
     var contentMode: UIView.ContentMode = .scaleAspectFit
+    var fillColor: Color?
     var speed: CGFloat = 1
     var progress: CGFloat?
     var completionBlock: Action?
     
     public init(
         name: String,
-        loopMode: LottieLoopMode,
-        contentMode: UIView.ContentMode,
-        speed: CGFloat,
+        loopMode: LottieLoopMode = .playOnce,
+        contentMode: UIView.ContentMode = .scaleAspectFit,
+        fillColor: Color? = nil,
+        speed: CGFloat = 1,
         progress: CGFloat? = nil,
         completionBlock: Action? = nil
     ) {
@@ -27,6 +29,7 @@ public struct LottieView: UIViewRepresentable {
         self.contentMode = contentMode
         self.speed = speed
         self.progress = progress
+        self.fillColor = fillColor
         self.completionBlock = completionBlock
     }
     
@@ -42,20 +45,29 @@ public struct LottieView: UIViewRepresentable {
     public func makeUIView(context: UIViewRepresentableContext<LottieView>) -> UIView {
         context.coordinator.colorScheme = context.environment.colorScheme
         context.coordinator.completionBlock = completionBlock
+        
         animationView.animation = LottieAnimation.named(name)
         animationView.contentMode = contentMode
         animationView.loopMode = loopMode
         animationView.backgroundBehavior = .pauseAndRestore
         animationView.animationSpeed = speed
+        
+        // Apply the fill color
+        if let fillColor {
+            applyFillColor(to: animationView, color: fillColor)
+        }
+        
         if let progress = progress {
             animationView.currentProgress = progress
         }
+        
         if progress != 1 {
             animationView.play { finished in
                 guard finished else { return }
                 context.coordinator.completionBlock?()
             }
         }
+        
         animationView.isUserInteractionEnabled = false
         
         let view = UIView()
@@ -73,9 +85,23 @@ public struct LottieView: UIViewRepresentable {
             if let view = uiView.subviews.first(where: { $0 is LottieAnimationView }) as? LottieAnimationView {
                 view.stop()
                 view.animation = LottieAnimation.named(name)
+                if let fillColor {
+                    applyFillColor(to: view, color: fillColor)
+                }
                 view.play()
             }
         }
     }
-
+    
+    private func applyFillColor(to animationView: LottieAnimationView, color: Color) {
+        let uiColor = UIColor(color)
+        let components = uiColor.cgColor.components ?? [1, 1, 1, 1]
+        let lottieColor = LottieColor(r: components[0], g: components[1], b: components[2], a: components.count > 3 ? components[3] : 1.0)
+        
+        let colorValueProvider = ColorValueProvider(lottieColor)
+        
+        // Apply the fill color to all elements
+        animationView.setValueProvider(colorValueProvider, keypath: AnimationKeypath(keypath: "**.Fill 1.Color"))
+    }
+    
 }

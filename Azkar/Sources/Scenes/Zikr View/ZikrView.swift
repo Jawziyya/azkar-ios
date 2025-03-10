@@ -154,7 +154,14 @@ struct ZikrView: View {
 
             ZStack(alignment: .center) {
                 if viewModel.remainingRepeatsNumber == 0 {
-                    LottieView(name: "checkmark", loopMode: .playOnce, contentMode: .scaleAspectFit, speed: 1.5, progress: !lastIncrementActionPerformed ? 1 : 0) {
+                    LottieView(
+                        name: "checkmark",
+                        loopMode: .playOnce,
+                        contentMode: .scaleAspectFit,
+                        fillColor: colorTheme.getColor(.accent),
+                        speed: 1.5,
+                        progress: !lastIncrementActionPerformed ? 1 : 0
+                    ) {
                     }
                     .onAppear {
                         if lastIncrementActionPerformed, !counterFeedbackCompleted {
