@@ -9,7 +9,7 @@ struct AzkarWidgetsBundle: WidgetBundle {
     var body: some Widget {
         VirtuesWidgets()
         if #available(iOSApplicationExtension 16.1, *) {
-            LauncherWidgets()
+            CompletionWidgets()
         }
     }
 }

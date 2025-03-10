@@ -33,7 +33,7 @@ struct ReadingCompletionView: View {
                         Color.clear
                     }
                 }
-                .frame(width: 120, height: 120)
+                .frame(width: 200, height: 200)
                 
                 Text(L10n.ReadingCompletion.title)
                     .systemFont(.title, weight: .bold)

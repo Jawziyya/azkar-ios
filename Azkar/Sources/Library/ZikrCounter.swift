@@ -13,7 +13,7 @@ private func getKey(for date: Date) -> Int {
     return Int(startOfDay.timeIntervalSince1970)
 }
 
-final class ZikrCounter: ZikrCounterType {
+final class ZikrCounter: ObservableObject, ZikrCounterType {
     
     private let inMemoryZikrCounter: ZikrCounterType
     private let databaseZikrCounter: ZikrCounterType

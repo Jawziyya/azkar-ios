@@ -1,17 +1,10 @@
-//
-//  ZikrPagesView.swift
-//  Azkar
-//
-//  Created by Abdurahim Jauzee on 09.04.2020.
-//  Copyright © 2020 Al Jawziyya. All rights reserved.
-//
-
 import SwiftUI
 import AudioPlayer
 import Combine
 import SwiftUIX
 import Extensions
 import Library
+import WidgetKit
 
 struct ZikrPagesView: View, Equatable {
 
@@ -102,7 +95,10 @@ struct ZikrPagesView: View, Equatable {
                 case .readingCompletion:
                     ReadingCompletionView(
                         isCompleted: !viewModel.hasRemainingRepeats,
-                        markAsCompleted: viewModel.markCurrentCategoryAsCompleted
+                        markAsCompleted: {
+                            await viewModel.markCurrentCategoryAsCompleted()
+                            WidgetCenter.shared.reloadTimelines(ofKind: "AzkarCompletionWidgets")
+                        }
                     )
                 }
             }

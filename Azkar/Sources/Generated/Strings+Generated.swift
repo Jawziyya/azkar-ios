@@ -673,6 +673,12 @@ internal enum L10n {
     internal static let title = L10n.tr("Localizable", "updates.title", fallback: "What's new?")
   }
   internal enum Widgets {
+    internal enum Completion {
+      /// Keep track of your recitation progress directly on your lock screen. The widget updates automatically as your daily progress changes.
+      internal static let description = L10n.tr("Localizable", "widgets.completion.description", fallback: "Keep track of your recitation progress directly on your lock screen. The widget updates automatically as your daily progress changes.")
+      /// Recitation Progress
+      internal static let title = L10n.tr("Localizable", "widgets.completion.title", fallback: "Recitation Progress")
+    }
     internal enum Launcher {
       /// Quick launch
       internal static let title = L10n.tr("Localizable", "widgets.launcher.title", fallback: "Quick launch")

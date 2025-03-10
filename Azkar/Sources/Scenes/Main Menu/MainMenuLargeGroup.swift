@@ -8,6 +8,8 @@ struct MainMenuLargeGroup: View {
     let category: ZikrCategory
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.appTheme) var appTheme
+    @EnvironmentObject var counter: ZikrCounter
+    @State private var isCompleted = false
 
 	var body: some View {
         VStack(alignment: .center, spacing: 8) {
@@ -21,13 +23,24 @@ struct MainMenuLargeGroup: View {
             }
             .frame(width: 60, height: 60)
 
-            Text(category.title)
-                .systemFont(.body)
-                .multilineTextAlignment(.center)
-				.foregroundStyle(.text)
-                .layoutPriority(1)
+            HStack {
+                Text(category.title)
+                    .systemFont(.body)
+                    .multilineTextAlignment(.center)
+                    .foregroundStyle(.text)
+                    .layoutPriority(1)
+                
+                if isCompleted {
+                    Image(systemName: "checkmark")
+                        .foregroundStyle(.secondaryText)
+                        .font(.caption)
+                }
+            }
 		}
         .padding(15)
+        .task {
+            isCompleted = await counter.isCategoryMarkedAsCompleted(category)
+        }
 	}
     
     var imageView: some View {

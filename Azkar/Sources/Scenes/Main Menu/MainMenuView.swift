@@ -139,6 +139,7 @@ struct MainMenuView: View {
                 .removeSaturationIfNeeded()
                 .background(.contentBackground)
                 .applyTheme()
+                .environmentObject(ZikrCounter.shared)
         } action: {
             self.viewModel.navigateToCategory(category)
         }
@@ -155,6 +156,7 @@ struct MainMenuView: View {
                         viewModel.navigateToCategory(item.category)
                     }
                 )
+                .environmentObject(ZikrCounter.shared)
                 
                 if position != .last {
                     Divider()

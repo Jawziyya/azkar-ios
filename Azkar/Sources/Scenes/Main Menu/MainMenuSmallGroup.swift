@@ -6,6 +6,9 @@ struct MainMenuSmallGroup: View {
     
 	var item: AzkarMenuType
     var flip = false
+    
+    @State private var isCompleted = false
+    @EnvironmentObject var counter: ZikrCounter
 
 	var body: some View {
 		HStack {
@@ -13,6 +16,10 @@ struct MainMenuSmallGroup: View {
             title
         }
         .environment(\.layoutDirection, flip ? .rightToLeft : .leftToRight)
+        .task {
+            guard let category = (item as? AzkarMenuItem)?.category else { return }
+            isCompleted = await counter.isCategoryMarkedAsCompleted(category)
+        }
 	}
     
     @ViewBuilder
@@ -38,12 +45,20 @@ struct MainMenuSmallGroup: View {
     }
 
     var title: some View {
-        Text(item.title)
-            .systemFont(.body)
-            .frame(maxWidth: .infinity, alignment: flip ? .trailing : .leading)
-            .foregroundStyle(.text)
-            .multilineTextAlignment(flip ? .trailing : .leading)
-            .environment(\.layoutDirection, flip ? .rightToLeft : .leftToRight)
+        HStack {
+            Text(item.title)
+                .systemFont(.body)
+                .foregroundStyle(.text)
+                .multilineTextAlignment(flip ? .trailing : .leading)
+            
+            if isCompleted {
+                Image(systemName: "checkmark")
+                    .foregroundStyle(.secondaryText)
+                    .font(.caption2)
+            }
+        }
+        .environment(\.layoutDirection, flip ? .rightToLeft : .leftToRight)
+        .frame(maxWidth: .infinity, alignment: flip ? .trailing : .leading)
     }
 
 }

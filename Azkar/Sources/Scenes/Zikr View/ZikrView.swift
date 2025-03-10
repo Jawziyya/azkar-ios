@@ -5,6 +5,7 @@ import Combine
 import Extensions
 import Library
 import Components
+import WidgetKit
 
 /**
  This view shows contents of Zikr object:
@@ -47,6 +48,7 @@ struct ZikrView: View {
         }
         Task {
             await viewModel.incrementZikrCount()
+            WidgetCenter.shared.reloadTimelines(ofKind: "AzkarCompletionWidgets")
         }
         if viewModel.remainingRepeatsNumber > 0, viewModel.preferences.enableCounterHapticFeedback {
             HapticGenerator.performFeedback(.impact(flexibility: .soft))

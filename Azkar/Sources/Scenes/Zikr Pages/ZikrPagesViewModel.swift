@@ -85,7 +85,7 @@ final class ZikrPagesViewModel: ObservableObject, Equatable {
         }
 
         $page
-            .delay(for: 0.25, scheduler: DispatchQueue.main)
+            .delay(for: 0.1, scheduler: DispatchQueue.main)
             .map { [unowned self] page in
                 guard page < self.azkar.count else {
                     return 0
