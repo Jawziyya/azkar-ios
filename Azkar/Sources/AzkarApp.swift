@@ -149,21 +149,15 @@ struct AzkarApp: App {
     }
     
     private func presentPaywall() async {
-        let userRegion = SubscriptionManager.shared.getUserRegion()
-        switch userRegion {
-        case .usa:
-            guard SubscriptionManager.shared.isProUser() == false && CommandLine.arguments.contains("DISABLE_LAUNCH_PAYWALL") == false else {
-                return
-            }
-            SubscriptionManager.shared.presentPaywall(
-                sourceScreenName: "app_launch",
-                completion: {
-                    requestAppReview()
-                }
-            )
-        default:
-            requestAppReview()
+        guard SubscriptionManager.shared.isProUser() == false && CommandLine.arguments.contains("DISABLE_LAUNCH_PAYWALL") == false else {
+            return
         }
+        SubscriptionManager.shared.presentPaywall(
+            sourceScreenName: "app_launch",
+            completion: {
+                requestAppReview()
+            }
+        )
     }
     
 }
