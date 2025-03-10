@@ -1,4 +1,3 @@
-- Added new themes and fonts for more comfortable reading
-- Enhanced "Share" function: now with the ability to add background images and additional settings
-- Fixed counter: tap counting feature now works correctly
-- Improved app stability and performance
+- Track your daily reading progress directly from your iOS lock screen with our custom widget
+- Enhanced sharing capabilities
+- Customizable transliteration settings (DIN 31635 romanization support)
