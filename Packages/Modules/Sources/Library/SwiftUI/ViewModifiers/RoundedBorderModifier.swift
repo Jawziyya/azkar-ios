@@ -4,12 +4,22 @@ import Extensions
 public struct RoundedBorderModifier: ViewModifier {
     
     @Environment(\.appTheme) private var appTheme
+    @Environment(\.colorTheme) private var colorTheme
      
     let roundingCorners: UIRectCorner
     let borderColor: Color?
     
+    private var borderStyle: (color: Color, width: CGFloat)? {
+        switch appTheme {
+        case .reader: return (colorTheme.getColor(.text), 1)
+        case .flat: return (colorTheme.getColor(.accent), 1)
+        case .code: return (colorTheme.getColor(.accent), 0.5)
+        default: return nil
+        }
+    }
+    
     public func body(content: Content) -> some View {
-        if let borderStyle = appTheme.borderStyle {
+        if let borderStyle = borderStyle {
             content
                 .clipShape(roundingShape)
                 .overlay(

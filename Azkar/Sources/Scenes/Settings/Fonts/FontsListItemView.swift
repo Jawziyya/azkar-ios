@@ -15,6 +15,7 @@ struct FontsListItemView: View {
     let hasAccessToFont: Bool
     let selectionCallback: () -> Void
     var isRedacted = false
+    @Environment(\.colorTheme) var colorTheme
     
     var body: some View {
         HStack(alignment: .center, spacing: 8) {
@@ -30,15 +31,16 @@ struct FontsListItemView: View {
             .multilineTextAlignment(.leading)
             
             if isLoadingFont {
-                ActivityIndicator(style: .medium, color: Color.text)
+                ActivityIndicator(style: .medium, color: colorTheme.getColor(.text))
             }
             
             Spacer()
             
             if let imageURL = vm.imageURL {
                 FontsListItemView.fontImageView(imageURL, isRedacted: isRedacted)
+                    .accentColor(colorTheme.getColor(.accent))
                     .frame(width: 100, height: 40)
-                    .foregroundStyle(Color.accent)
+                    .foregroundStyle(.accent)
                     .onTapGesture(perform: selectionCallback)
             }
             
@@ -60,7 +62,6 @@ struct FontsListItemView: View {
                 image
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .accentColor(Color.text)
             } else if state.error != nil {
                 Color.clear
             } else {

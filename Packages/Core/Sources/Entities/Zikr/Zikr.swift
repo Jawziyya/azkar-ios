@@ -4,12 +4,17 @@
 import Foundation
 
 public struct ZikrOrigin: Identifiable, Hashable, Codable {
+    public enum OriginType: String, Hashable, Codable {
+        case quran, hadith
+    }
+    
     public let id: Int
     public let text: String
     public let hadith: Int?
     public let repeats: Int
     public let audioId: Int?
     public let source: String
+    public let type: OriginType
 }
 
 public struct ZikrTranslation: Identifiable, Hashable, Codable {
@@ -46,6 +51,7 @@ public struct Zikr: Identifiable, Hashable {
     public let audio: Audio?
     public let audioTimings: [AudioTiming]
     public let language: Language
+    public let originType: ZikrOrigin.OriginType
     
     public static func placeholder(
         id: Int = 1
@@ -64,7 +70,8 @@ public struct Zikr: Identifiable, Hashable {
             benefits: "Benefit",
             audio: Audio(id: 1, link: ""),
             audioTimings: [],
-            language: .arabic
+            language: .arabic,
+            originType: .hadith
         )
     }
     
@@ -92,11 +99,12 @@ extension Zikr {
             }
             .joined(separator: ", ")
         title = translation?.title?.textOrNil
-        self.transliteration = translation?.transliteration?.textOrNil ?? transliteration
+        self.transliteration = transliteration
         notes = translation?.notes?.textOrNil
         benefits = translation?.benefits?.textOrNil
         self.audio = audio
         self.translation = translation?.text.textOrNil
         self.audioTimings = audioTimings
+        originType = origin.type
     }
 }

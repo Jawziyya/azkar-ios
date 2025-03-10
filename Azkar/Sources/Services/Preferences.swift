@@ -4,45 +4,6 @@ import SwiftUI
 import Entities
 import Library
 
-enum CounterType: Int, Codable, CaseIterable, Identifiable {
-    case floatingButton, tap
-
-    var id: Int {
-        rawValue
-    }
-
-    var title: String {
-        switch self {
-        case .floatingButton: return L10n.Settings.Counter.counterTypeButton
-        case .tap: return L10n.Settings.Counter.counterTypeTap
-        }
-    }
-}
-
-enum CounterSize: String, Codable, CaseIterable, Identifiable {
-    case small, medium, large
-    
-    var id: String {
-        rawValue
-    }
-    
-    var value: CGFloat {
-        switch self {
-        case .small: return 45
-        case .medium: return 55
-        case .large: return 65
-        }
-    }
-    
-    var title: String {
-        switch self {
-        case .small: return "S"
-        case .medium: return "M"
-        case .large: return "L"
-        }
-    }
-}
-
 let defaultMorningNotificationTime: Date = {
     let components = DateComponents(calendar: Calendar.current, hour: 8)
     return components.date ?? Date()
@@ -173,20 +134,23 @@ final class Preferences: ObservableObject, TextProcessingPreferences {
     @Preference(Keys.enableCounterHapticFeedback, defaultValue: true)
     var enableCounterHapticFeedback: Bool
     
+    @Preference(Keys.counterType, defaultValue: CounterType.floatingButton)
+    var counterType: CounterType
+    
     @Preference(Keys.counterSize, defaultValue: CounterSize.medium)
     var counterSize: CounterSize
+
+    @Preference(Keys.counterPosition, defaultValue: CounterPosition.left)
+    var counterPosition: CounterPosition
 
     @Preference(Keys.enableGoToNextZikrOnCounterFinished, defaultValue: true)
     var enableGoToNextZikrOnCounterFinished: Bool
 
-    @Preference(Keys.azkarCounteType, defaultValue: CounterType.floatingButton)
-    var counterType: CounterType
-
-    @Preference(Keys.alignCounterByLeadingSide, defaultValue: true)
-    var alignCounterButtonByLeadingSide
-
     @Preference(Keys.enableLineBreaks, defaultValue: true)
     var enableLineBreaks
+    
+    @Preference(Keys.transliterationType, defaultValue: ZikrTransliterationType.community)
+    var transliterationType: ZikrTransliterationType
     
     @Preference(
         Keys.contentLanguage,

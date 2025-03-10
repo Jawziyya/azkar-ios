@@ -1,18 +1,10 @@
-//
-//  ZikrPagesView.swift
-//  Azkar
-//
-//  Created by Abdurahim Jauzee on 09.04.2020.
-//  Copyright © 2020 Al Jawziyya. All rights reserved.
-//
-
 import SwiftUI
 import AudioPlayer
 import Combine
 import SwiftUIX
-import SwiftUIDrag
 import Extensions
 import Library
+import WidgetKit
 
 struct ZikrPagesView: View, Equatable {
 
@@ -29,67 +21,61 @@ struct ZikrPagesView: View, Equatable {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigation) {
-                    HStack {
-                        Button(systemImage: .squareAndArrowUp, action: viewModel.shareCurrentZikr)
-                        
-                        Button(systemImage: .textformat, action: viewModel.navigateToTextSettings)
+                    if viewModel.page < viewModel.pages.count - 1 {
+                        HStack {
+                            Button(systemImage: .squareAndArrowUp, action: viewModel.shareCurrentZikr)
+                            
+                            Button(systemImage: .textformat, action: viewModel.navigateToTextSettings)
+                        }
                     }
                 }
             }
-            .background(Color.background.edgesIgnoringSafeArea(.all))
-            .overlay(
+            .background(.background, ignoreSafeArea: .all)
+            .overlay(alignment: viewModel.preferences.counterPosition.alignment) {
                 Group {
-                    if viewModel.canUseCounter, viewModel.preferences.counterType == .floatingButton {
+                    if viewModel.canUseCounter, viewModel.preferences.counterType == .floatingButton, viewModel.showCounterButton, viewModel.currentZikrRemainingRepeatNumber > 0 {
                         counterButton
                     }
                 }
-            )
+            }
             .onAppear {
                 AnalyticsReporter.reportScreen("Azkar Pages", className: viewName)
             }
     }
-
+    
     var counterButton: some View {
-        SDView(
-            alignment: viewModel.alignZikrCounterByLeadingSide ? .bottomLeading : .bottomTrailing,
-            floating: [.bottom],
-            collapse: [],
-            visibleSize: CGSize(
-                width: viewModel.preferences.counterSize.value,
-                height: viewModel.preferences.counterSize.value
-            ),
-            content: { _, state in
-                ExecuteCallView {
-                    if state != .expanded {
-                        viewModel.setZikrCounterAlignment(byLeftSide: state.isLeading)
+        Button(action: {
+            withAnimation(.smooth) {
+                viewModel.incrementCurrentPageZikrCounter()
+            }
+        }, label: {
+            Text(viewModel.currentZikrRemainingRepeatNumber.description)
+                .font(Font.system(
+                    size: viewModel.preferences.counterSize.value / 3,
+                    weight: .regular,
+                    design: .monospaced).monospacedDigit()
+                )
+                .minimumScaleFactor(0.25)
+                .padding()
+                .frame(
+                    width: viewModel.preferences.counterSize.value,
+                    height: viewModel.preferences.counterSize.value
+                )
+                .foregroundStyle(Color.white)
+                .background(.accent)
+                .clipShape(Circle())
+                .padding(.horizontal)
+                .onTapGesture {
+                    withAnimation(.easeInOut) {
+                        viewModel.incrementCurrentPageZikrCounter()
                     }
                 }
-                let number = viewModel.currentZikrRemainingRepeatNumber
-                if viewModel.showCounterButton, number > 0 {
-                    Text(number.description)
-                        .font(Font.system(
-                            size: viewModel.preferences.counterSize.value / 3,
-                            weight: .regular,
-                            design: .monospaced).monospacedDigit()
-                        )
-                        .minimumScaleFactor(0.25)
-                        .padding()
-                        .frame(
-                            width: viewModel.preferences.counterSize.value,
-                            height: viewModel.preferences.counterSize.value
-                        )
-                        .foregroundStyle(Color.white)
-                        .background(Color.accent)
-                        .clipShape(Circle())
-                        .padding(.horizontal)
-                        .onTapGesture {
-                            withAnimation(.easeInOut) {
-                                viewModel.incrementCurrentPageZikrCounter()
-                            }
-                        }
-                }
-            }
+        })
+        .frame(
+            width: viewModel.preferences.counterSize.value,
+            height: viewModel.preferences.counterSize.value
         )
+        .padding(.horizontal)
     }
 
     var pagerView: some View {
@@ -98,16 +84,27 @@ struct ZikrPagesView: View, Equatable {
             transitionStyle: .scroll,
             showsIndicators: false
         ) {
-            ForEach(viewModel.azkar) { zikr in
-                ZikrView(
-                    viewModel: zikr,
-                    incrementAction: viewModel.getIncrementPublisher(for: zikr),
-                    counterFinishedCallback: viewModel.goToNextZikrIfNeeded
-                )
+            ForEach(viewModel.pages) { pageType in
+                switch pageType {
+                case .zikr(let zikr):
+                    ZikrView(
+                        viewModel: zikr,
+                        incrementAction: viewModel.getIncrementPublisher(for: zikr),
+                        counterFinishedCallback: viewModel.goToNextZikrIfNeeded
+                    )
+                case .readingCompletion:
+                    ReadingCompletionView(
+                        isCompleted: !viewModel.hasRemainingRepeats,
+                        markAsCompleted: {
+                            await viewModel.markCurrentCategoryAsCompleted()
+                            WidgetCenter.shared.reloadTimelines(ofKind: "AzkarCompletionWidgets")
+                        }
+                    )
+                }
             }
         }
         .initialPageIndex(viewModel.initialPage)
-        .currentPageIndex($viewModel.page)
+        .currentPageIndex($viewModel.page.animation(.smooth))
         .edgesIgnoringSafeArea(.bottom)
         .environment(\.zikrReadingMode, readingMode ?? viewModel.preferences.zikrReadingMode)
         .onReceive(viewModel.preferences.$zikrReadingMode) { newMode in

@@ -8,6 +8,7 @@
 
 import SwiftUI
 import AudioPlayer
+import Library
 
 typealias AzkarListViewModel = ZikrPagesViewModel
 
@@ -25,7 +26,7 @@ struct AzkarListView: View {
             AnalyticsReporter.reportScreen("Azkar List", className: viewName)
         }
         .navigationTitle(viewModel.title)
-        .background(Color.background.edgesIgnoringSafeArea(.all))
+        .background(.background, ignoreSafeArea: .all)
         .onReceive(viewModel.selectedPage) { page in
             self.page = page
         }

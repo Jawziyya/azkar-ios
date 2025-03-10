@@ -30,6 +30,7 @@ enum Keys {
     
     static let enableProFeatures = "kIsProFeaturesEnabled"
     
+    static let transliterationType = "kTransliterationType"
     static let contentLanguage = "kContentLanguage"
     
     // MARK: Reminders
@@ -48,11 +49,10 @@ enum Keys {
     static let enableCounter = "kEnableCounter"
     static let enableCounterTicker = "kEnableCounterTicker"
     static let enableCounterHapticFeedback = "kEnableCounterHapticFeedback"
+    static let counterType = "kCounterType"
     static let counterSize = "kCounterSize"
+    static let counterPosition = "kCounterPosition"
     static let enableGoToNextZikrOnCounterFinished = "kEnableGoToZikrOnCounterFinished"
     static let azkarCounterLastChangeDate = "kAzkarCounterLastChangeDate"
-    static let azkarCounter = "kAzkarCounter"
-    static let azkarCounteType = "kCounterType"
-    static let alignCounterByLeadingSide = "kZikrCounterButtonByLeadingSide"
     
 }

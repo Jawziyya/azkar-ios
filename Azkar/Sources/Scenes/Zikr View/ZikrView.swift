@@ -2,10 +2,10 @@
 
 import SwiftUI
 import Combine
-import SwiftUIDrag
 import Extensions
 import Library
 import Components
+import WidgetKit
 
 /**
  This view shows contents of Zikr object:
@@ -22,28 +22,33 @@ struct ZikrView: View {
     @ObservedObject var viewModel: ZikrViewModel
     @Environment(\.zikrReadingMode) var zikrReadingMode
     @Environment(\.appTheme) var appTheme
+    @Environment(\.colorTheme) var colorTheme
 
     let incrementAction: AnyPublisher<Void, Never>
 
     var counterFinishedCallback: Action?
 
-    @State var isIncrementActionPerformed = false
+    @State var lastIncrementActionPerformed = false
     @State var counterFeedbackCompleted = false
     @Namespace var counterButtonAnimationNamespace
-    @State var animateCounterButton = false
     private let counterButtonAnimationId = "counter-button"
 
     var sizeCategory: ContentSizeCategory {
         viewModel.preferences.sizeCategory
     }
 
-    private let dividerColor = Color.accent.opacity(0.1)
+    private var dividerColor: Color {
+        colorTheme.getColor(.accent, opacity: 0.1)
+    }
     private let dividerHeight: CGFloat = 1
 
     func incrementZikrCounter() {
-        isIncrementActionPerformed = true
+        if viewModel.remainingRepeatsNumber == 1 {
+            lastIncrementActionPerformed = true
+        }
         Task {
             await viewModel.incrementZikrCount()
+            WidgetCenter.shared.reloadTimelines(ofKind: "AzkarCompletionWidgets")
         }
         if viewModel.remainingRepeatsNumber > 0, viewModel.preferences.enableCounterHapticFeedback {
             HapticGenerator.performFeedback(.impact(flexibility: .soft))
@@ -74,7 +79,7 @@ struct ZikrView: View {
         }
         .onDisappear(perform: viewModel.pausePlayer)
         .removeSaturationIfNeeded()
-        .background(Color.background.edgesIgnoringSafeArea(.all))
+        .background(.background, ignoreSafeArea: .all)
         .onReceive(incrementAction, perform: incrementZikrCounter)
         .simultaneousGesture(
             TapGesture(count: 2)
@@ -84,16 +89,15 @@ struct ZikrView: View {
                     }
                 }
         )
-        .overlay(
-            counterButton,
-            alignment: viewModel.preferences.alignCounterButtonByLeadingSide ? .bottomLeading : .bottomTrailing
-        )
+        .overlay(alignment: viewModel.preferences.counterPosition.alignment, {
+            counterButton
+        })
     }
 
     private var counterButton: some View {
         Group {
             Text("1")
-                .foregroundStyle(Color.accent)
+                .foregroundStyle(.accent)
                 .font(Font.system(
                     size: viewModel.preferences.counterSize.value / 3,
                     weight: .regular,
@@ -105,10 +109,10 @@ struct ZikrView: View {
                     height: viewModel.preferences.counterSize.value
                 )
                 .foregroundStyle(Color.white)
-                .background(Color.accent)
-                .clipShape(Capsule())
+                .background(.accent)
+                .clipShape(Circle())
         }
-        .opacity((viewModel.preferences.counterType == .tap) || (!isIncrementActionPerformed || viewModel.remainingRepeatsNumber == 0) ? 0 : 1)
+        .opacity((viewModel.preferences.counterType == .tap) || (!lastIncrementActionPerformed || viewModel.remainingRepeatsNumber == 0) ? 0 : 1)
         .matchedGeometryEffect(id: counterButtonAnimationId, in: counterButtonAnimationNamespace)
         .padding(.horizontal)
         .padding(.bottom, Constants.windowSafeAreaInsets.bottom)
@@ -117,6 +121,15 @@ struct ZikrView: View {
     private func getContent() -> some View {
         VStack(alignment: .leading, spacing: 0) {
             Color.clear.frame(height: 10)
+            
+            if let rowNumber = viewModel.rowNumber {
+                Text("\(rowNumber)")
+                    .font(.system(.body, design: .monospaced))
+                    .padding()
+                    .foregroundStyle(.secondaryText)
+                    .multilineTextAlignment(.center)
+                    .frame(maxWidth: .infinity, alignment: .center)
+            }
             
             textContent
 
@@ -143,10 +156,17 @@ struct ZikrView: View {
 
             ZStack(alignment: .center) {
                 if viewModel.remainingRepeatsNumber == 0 {
-                    LottieView(name: "checkmark", loopMode: .playOnce, contentMode: .scaleAspectFit, speed: 1.5, progress: !isIncrementActionPerformed ? 1 : 0) {
+                    LottieView(
+                        name: "checkmark",
+                        loopMode: .playOnce,
+                        contentMode: .scaleAspectFit,
+                        fillColor: colorTheme.getColor(.accent),
+                        speed: 1.5,
+                        progress: !lastIncrementActionPerformed ? 1 : 0
+                    ) {
                     }
                     .onAppear {
-                        if isIncrementActionPerformed, !counterFeedbackCompleted {
+                        if lastIncrementActionPerformed, !counterFeedbackCompleted {
                             if viewModel.preferences.enableCounterHapticFeedback {
                                 HapticGenerator.performFeedback(.success)
                             }
@@ -171,7 +191,7 @@ struct ZikrView: View {
             )
             .frame(height: 80, alignment: .center)
             .frame(maxWidth: .infinity)
-            .opacity(viewModel.remainingRepeatsNumber == 0 || animateCounterButton ? 1 : 0)
+            .opacity(viewModel.remainingRepeatsNumber == 0 ? 1 : 0)
 
             Spacer(minLength: 20)
         }
@@ -260,7 +280,7 @@ struct ZikrView: View {
         Text(title)
             .equatable()
             .systemFont(.headline)
-            .foregroundStyle(Color.secondaryText)
+            .foregroundStyle(.secondaryText)
             .multilineTextAlignment(.center)
             .frame(maxWidth: .infinity, alignment: .center)
             .padding()
@@ -430,7 +450,7 @@ struct ZikrView: View {
                 .if(underline) { text in
                     text.underline()
                 }
-                .foregroundStyle(Color.text)
+                .foregroundStyle(.text)
                 .systemFont(.caption, weight: .medium, modification: .smallCaps)
         }
     }
@@ -442,7 +462,7 @@ struct ZikrView: View {
     private func getCaption(_ text: String) -> some View {
         Text(getAttributedString(text))
             .systemFont(.caption2, modification: .smallCaps)
-            .foregroundStyle(Color.tertiaryText)
+            .foregroundStyle(.tertiaryText)
     }
 
     private func getAttributedString(_ text: String) -> AttributedString {
@@ -452,8 +472,6 @@ struct ZikrView: View {
     private func playerView(viewModel: PlayerViewModel) -> some View {
         PlayerView(
             viewModel: viewModel,
-            tintColor: Color.accent,
-            progressBarColor: dividerColor,
             progressBarHeight: dividerHeight
         )
         .equatable()

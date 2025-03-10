@@ -7,7 +7,7 @@ import Library
 import AzkarServices
 import DatabaseInteractors
 
-final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
+final class ZikrViewModel: ObservableObject, Identifiable, Hashable {
 
     func hash(into hasher: inout Hasher) {
         hasher.combine(zikr)
@@ -37,6 +37,7 @@ final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
     let preferences: Preferences
     let counter: ZikrCounterType
     let textProcessor: TextProcessor
+    let transcriptor: Transcriptor?
 
     let source: String
 
@@ -92,6 +93,8 @@ final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
         let asset = AVURLAsset(url: url)
         return Double(CMTimeGetSeconds(asset.duration))
     }
+    
+    var rowNumber: String?
 
     init(
         zikr: Zikr,
@@ -111,16 +114,25 @@ final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
         self.preferences = preferences
         self.textProcessor = textProcessor
         self.player = player
+        transcriptor = TranscriptorProvider.createTranscriptor(for: preferences.transliterationType)
         title = zikr.title
+        
+        if let row {
+            rowNumber = L10n.Common.dhikr(row)
+        }
         
         text = textProcessor.processArabicText(zikr.text)
         
         expandTranslation = preferences.expandTranslation
         expandTransliteration = preferences.expandTransliteration
-        hasTransliteration = zikr.transliteration?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty == false
+        var transliterationText = zikr.transliteration
+        if let transcriptor, zikr.originType != .quran {
+            transliterationText = transcriptor.transcribe(zikr.text)
+        }
+        hasTransliteration = transliterationText?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty == false
         
         translation = zikr.translation?.textOrNil.flatMap(textProcessor.processTranslationText) ?? []
-        transliteration = zikr.transliteration?.textOrNil.flatMap(textProcessor.processTransliterationText) ?? []
+        transliteration = transliterationText?.textOrNil.flatMap(textProcessor.processTransliterationText) ?? []
         source = zikr.source.firstWord()
         
         Task {
@@ -185,11 +197,12 @@ final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
             .store(in: &cancellables)
 
         preferences.$enableLineBreaks
+            .dropFirst()
             .throttle(for: 1, scheduler: DispatchQueue.main, latest: true)
             .sink(receiveValue: { [unowned self] _ in
                 text = textProcessor.processArabicText(zikr.text)
                 translation = zikr.translation?.textOrNil.flatMap(textProcessor.processTranslationText) ?? []
-                transliteration = zikr.transliteration?.textOrNil.flatMap(textProcessor.processTransliterationText) ?? []
+                transliteration = transliterationText?.textOrNil.flatMap(textProcessor.processTransliterationText) ?? []
             })
             .store(in: &cancellables)
 
@@ -235,7 +248,7 @@ final class ZikrViewModel: ObservableObject, Identifiable, Equatable, Hashable {
         }
         let remainingRepeatsNumber = await counter.getRemainingRepeats(for: zikr)
         
-        withAnimation(.spring()) {
+        withAnimation(.smooth) {
             self.remainingRepeatsNumber = remainingRepeatsNumber
         }
 

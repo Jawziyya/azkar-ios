@@ -1,6 +1,7 @@
 import SwiftUI
 import NukeUI
 import Entities
+import Library
 
 public struct ArticleScreen: View {
     
@@ -37,23 +38,21 @@ public struct ArticleScreen: View {
     }
     
     public var body: some View {
-        Group {
-            if let shareOptions {
-                VStack(spacing: 20) {
-                    content
-                    sharedWithAzkarView
-                }
-                .frame(width: shareOptions.maxWidth)
-                .frame(maxHeight: .infinity)
-            } else {
+        if let shareOptions {
+            VStack(spacing: 20) {
                 content
-                    .navigationBarTitleDisplayMode(.inline)
-                    .toolbar {
-                        ToolbarItem {
-                            shareButton
-                        }
-                    }
+                sharedWithAzkarView
             }
+            .frame(width: shareOptions.maxWidth)
+            .frame(maxHeight: .infinity)
+        } else {
+            content
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem {
+                        shareButton
+                    }
+                }
         }
     }
     
@@ -66,7 +65,7 @@ public struct ArticleScreen: View {
                     scrollableContent
                 } else {
                     Text(viewModel.title)
-                        .font(Font.system(size: 30, weight: .black, design: .serif))
+                        .customFont(.title1)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .multilineTextAlignment(.leading)
                         .dynamicTypeSize(.accessibility5)
@@ -76,7 +75,8 @@ public struct ArticleScreen: View {
                 }
             }
         }
-        .background(Color.contentBackground.ignoresSafeArea())
+        .customScrollContentBackground()
+        .background(.contentBackground, ignoreSafeArea: .all)
     }
     
     var sharedWithAzkarView: some View {
@@ -126,12 +126,8 @@ public struct ArticleScreen: View {
     
     var textContent: some View {
         VStack(alignment: .leading, spacing: 16) {
-            if #available(iOS 16.0, *) {
-                Text(LocalizedStringKey(viewModel.text))
-                    .font(Font.system(.body, design: .serif, weight: .regular))
-            } else {
-                Text(LocalizedStringKey(viewModel.text))
-            }
+            Text(LocalizedStringKey(viewModel.text))
+                .customFont(.title3)
         }
         .frame(maxWidth: .infinity)
     }

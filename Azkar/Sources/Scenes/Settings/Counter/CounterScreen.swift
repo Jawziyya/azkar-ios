@@ -15,24 +15,41 @@ struct CounterView: View {
         }
         .applyThemedToggleStyle()
         .customScrollContentBackground()
-        .background(Color.background, ignoresSafeAreaEdges: .all)
+        .background(.background, ignoreSafeArea: .all)
         .navigationTitle(L10n.Settings.Counter.title)
+        .animation(.smooth, value: viewModel.preferences.counterType)
     }
     
     var content: some View {
         Group {
-             typePicker
+            typePicker
             
             Divider()
             
             if viewModel.preferences.counterType == .floatingButton {
                 HStack {
-                    Text(L10n.Settings.Counter.counterSizeTitle)
+                    Text(L10n.Settings.Counter.CounterSize.title)
                     Spacer()
                     Picker(
                         CounterSize.allCases,
                         id: \.self,
                         selection: $viewModel.preferences.counterSize,
+                        content: { size in
+                            Text(size.title)
+                        }
+                    )
+                    .pickerStyle(.segmented)
+                }
+                
+                Divider()
+                
+                HStack {
+                    Text(L10n.Settings.Counter.CounterPosition.title)
+                    Spacer()
+                    Picker(
+                        CounterPosition.allCases,
+                        id: \.self,
+                        selection: $viewModel.preferences.counterPosition,
                         content: { size in
                             Text(size.title)
                         }
@@ -63,17 +80,17 @@ struct CounterView: View {
                         Text(L10n.Settings.Counter.goToNextDhikrTip)
                             .padding()
                             .cornerRadius(10)
-                            .foregroundStyle(Color.text)
+                            .foregroundStyle(.text)
                     } label: { _ in
                         Image(systemName: "info.circle")
-                            .foregroundStyle(Color.accent.opacity(0.75))
+                            .foregroundStyle(.accent, opacity: 0.75)
                     }
                 }
                 .padding(.vertical, 3)
             }
         }
         .systemFont(.body)
-        .foregroundStyle(Color.text)
+        .foregroundStyle(.text)
         .onAppear {
             AnalyticsReporter.reportScreen("Settings", className: viewName)
         }
@@ -81,16 +98,16 @@ struct CounterView: View {
     
     private var typePicker: some View {
         HStack {
-            Text(L10n.Settings.Counter.counterType)
+            Text(L10n.Settings.Counter.CounterType.title)
             Spacer()
 
             Templates.Menu {
-                Text(L10n.Settings.Counter.counterTypeInfo)
+                Text(L10n.Settings.Counter.CounterType.info)
                     .padding()
                     .cornerRadius(10)
             } label: { _ in
                 Image(systemName: "info.circle")
-                    .foregroundStyle(Color.accent.opacity(0.75))
+                    .foregroundStyle(.accent, opacity: 0.75)
             }
 
             Picker(

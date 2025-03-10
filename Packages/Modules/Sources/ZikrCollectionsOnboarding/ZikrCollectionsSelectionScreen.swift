@@ -6,6 +6,7 @@ struct ZikrCollectionsSelectionScreen: View {
     
     @State var selectedCollection: ZikrCollectionSource
     @Environment(\.appTheme) var appTheme
+    @Environment(\.colorTheme) var colorTheme
     let onContinue: (ZikrCollectionSource) -> Void
     
     init(
@@ -30,7 +31,7 @@ struct ZikrCollectionsSelectionScreen: View {
             .padding(.horizontal, 20)
         }
         .customScrollContentBackground()
-        .background(Color.background)
+        .background(colorTheme.getColor(.background))
         .navigationTitle("adhkar-collections.selection-screen-title")
     }
     
@@ -75,7 +76,7 @@ struct ZikrCollectionsSelectionScreen: View {
                 Spacer()
                 
                 Image(systemName: "checkmark")
-                    .foregroundStyle(Color.accentColor)
+                    .foregroundStyle(.accent)
                     .opacity(collection == selectedCollection ? 1 : 0)
             }
             Text(collection.description)
@@ -85,7 +86,7 @@ struct ZikrCollectionsSelectionScreen: View {
         .padding(.vertical, 20)
         .padding(.horizontal, 30)
         .frame(maxWidth: .infinity)
-        .background(Color.contentBackground)
+        .background(.contentBackground)
         .clipShape(RoundedRectangle(cornerRadius: appTheme.cornerRadius))
     }
     
@@ -94,7 +95,7 @@ struct ZikrCollectionsSelectionScreen: View {
             Image(systemName: "info.circle.fill")
             Text("adhkar-collections.order-explanation-text")
         }
-        .foregroundStyle(Color.secondaryText.opacity(0.5))
+        .foregroundStyle(.secondaryText, opacity: 0.5)
         .font(Font.caption2)
         .frame(maxWidth: .infinity)
     }

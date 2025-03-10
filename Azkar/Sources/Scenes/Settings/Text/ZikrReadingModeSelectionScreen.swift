@@ -37,7 +37,7 @@ struct ZikrReadingModeSelectionScreen: View {
         .onChange(of: mode) { _ in
             zikrViewModel.pausePlayer()
         }
-        .background(Color.background.ignoresSafeArea())
+        .background(.background, ignoreSafeArea: .all)
     }
     
     var pickerView: some View {

@@ -8,6 +8,7 @@ struct FontsView: View {
     
     @StateObject var viewModel: FontsViewModel
     @Environment(\.colorScheme) var colorScheme
+    @Environment(\.colorTheme) var colorTheme
     @Environment(\.appTheme) var appTheme
     @State private var previewFont: AppFontViewModel?
     
@@ -21,12 +22,12 @@ struct FontsView: View {
                 .frame(maxWidth: .infinity)
                 .background(
                     RoundedRectangle(cornerRadius: appTheme.cornerRadius)
-                        .fill(Color.contentBackground)
+                        .fill(colorTheme.getColor(.contentBackground))
                         .shadow(color: Color.accentColor.opacity(0.25), radius: 10, x: 0, y: 0)
                 )
                 .padding()
         }
-        .background(Color.background)
+        .background(.background)
     }
     
     var body: some View {
@@ -37,7 +38,7 @@ struct FontsView: View {
                         ForEachIndexed(section.fonts) { _, position, font in
                             fontView(font)
                                 .padding(.horizontal)
-                                .background(Color.contentBackground)
+                                .background(.contentBackground)
                                 .applyTheme(indexPosition: position)
                                 .padding(.horizontal)
                                 .onTapGesture {
@@ -48,7 +49,7 @@ struct FontsView: View {
                                 }
                         }
                     } header: {
-                        HeaderView(title: section.type.title)
+                        HeaderView(text: section.type.title)
                             .padding(.vertical, 15)
                     }
                 }
@@ -63,7 +64,7 @@ struct FontsView: View {
             sampleTextView
         }
         .customScrollContentBackground()
-        .background(Color.background, ignoresSafeAreaEdges: .all)
+        .background(.background, ignoreSafeArea: .all)
         .onAppear(perform: viewModel.loadData)
         .navigationTitle(L10n.Fonts.title)
         .toolbar {
@@ -76,7 +77,7 @@ struct FontsView: View {
                             .cornerRadius(10)
                     } label: { _ in
                         Image(systemName: "info")
-                            .foregroundStyle(Color.accent)
+                            .foregroundStyle(.accent)
                     }
                 }
             }
@@ -89,14 +90,14 @@ struct FontsView: View {
                 
                 if let imageURL = font.imageURL {
                     FontsListItemView.fontImageView(imageURL, isRedacted: false)
-                        .foregroundStyle(Color.text)
+                        .foregroundStyle(.text)
                     
                     Spacer()
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .padding()
-            .background(Color.background)
+            .background(.background)
         }
         .onAppear {
             AnalyticsReporter.reportScreen("Settings", className: viewName)

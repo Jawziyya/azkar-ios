@@ -17,13 +17,11 @@ extension Language {
 public final class AdhkarSQLiteDatabaseService: AdhkarDatabaseService {
     
     public let language: Language
-    private let transcriptor: Transcriptor?
 
     public init(
         language: Language
     ) {
         self.language = language
-        transcriptor = TranscriptorProvider.createTranscriptor(for: language)
     }
 
     private func getDatabasePath() throws -> String {
@@ -144,6 +142,7 @@ public extension AdhkarSQLiteDatabaseService {
                 language: lang,
                 category: nil,
                 translation: lang == .arabic ? nil : translation,
+                transliteration: translation.transliteration,
                 audio: audio,
                 audioTimings: audioTimings ?? []
             )
@@ -173,6 +172,7 @@ public extension AdhkarSQLiteDatabaseService {
                     language: language,
                     category: nil,
                     translation: language == .arabic ? nil : translation,
+                    transliteration: translation.transliteration,
                     audio: nil,
                     audioTimings: []
                 )
@@ -230,7 +230,7 @@ public extension AdhkarSQLiteDatabaseService {
             return orderedRecords.compactMap { zikr in
                 let translation = translationDict[zikr.id]
                 let audio = audios.first(where: { $0.id == zikr.audioId })
-                let transliteration = zikr.source == "Quran" ? nil : translation?.transliteration ?? transcriptor?.transcribe(zikr.text)
+                let transliteration = zikr.source == "Quran" ? nil : translation?.transliteration
                 
                 return Zikr(
                     origin: zikr,
@@ -327,6 +327,7 @@ public extension AdhkarSQLiteDatabaseService {
                     language: language,
                     category: category,
                     translation: currentLanguage == .arabic ? nil : translation,
+                    transliteration: translation.transliteration,
                     audio: audio,
                     audioTimings: audioTimings ?? []
                 )

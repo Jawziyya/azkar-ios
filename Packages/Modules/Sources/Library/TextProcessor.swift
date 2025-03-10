@@ -10,6 +10,16 @@ public struct TextProcessor {
     public init(preferences: TextProcessingPreferences) {
         self.preferences = preferences
     }
+    
+    private func processText(_ text: String) -> [String] {
+        let t = text
+        if preferences.enableLineBreaks {
+            return t.components(separatedBy: "\n")
+        } else {
+            return [t.replacingOccurrences(of: "\n", with: " ", options: .regularExpression)]
+        }
+    }
+
 
     public func processArabicText(_ text: String) -> [String] {
         var t = text
@@ -18,31 +28,15 @@ public struct TextProcessor {
             t = t.trimmingArabicVowels
         }
 
-        if preferences.enableLineBreaks {
-            return t.components(separatedBy: "\n")
-        } else {
-            return [t.replacingOccurrences(of: "\n", with: " ", options: .regularExpression)]
-        }
+        return processText(t)
     }
 
     public func processTranslationText(_ text: String) -> [String] {
-        let t = text
-
-        if preferences.enableLineBreaks {
-            return t.components(separatedBy: "\n")
-        } else {
-            return [t.replacingOccurrences(of: "\n", with: " ", options: .regularExpression)]
-        }
+        return processText(text)
     }
 
     public func processTransliterationText(_ text: String) -> [String] {
-        let t = text
-
-        if preferences.enableLineBreaks {
-            return t.components(separatedBy: "\n")
-        } else {
-            return [t.replacingOccurrences(of: "\n", with: " ", options: .regularExpression)]
-        }
+        return processText(text)
     }
 
 }

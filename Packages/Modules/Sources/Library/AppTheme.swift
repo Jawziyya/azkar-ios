@@ -18,11 +18,6 @@ public enum AppTheme: String, CaseIterable, Hashable, Codable, Identifiable {
         public let radius: CGFloat
     }
     
-    public struct BorderStyle {
-        public let color: Color
-        public let width: CGFloat
-    }
-    
     public static var current = AppTheme.default
     
     public var assetsNamespace: String {
@@ -61,15 +56,6 @@ public enum AppTheme: String, CaseIterable, Hashable, Codable, Identifiable {
             )
         default:
             return nil
-        }
-    }
-    
-    public var borderStyle: BorderStyle? {
-        switch self {
-        case .reader: return BorderStyle(color: Color.text, width: 1)
-        case .flat: return BorderStyle(color: Color.accent, width: 1)
-        case .code: return BorderStyle(color: Color.accent, width: 0.5)
-        default: return nil
         }
     }
     

@@ -9,7 +9,7 @@ final class ColorSchemesViewModel: ObservableObject {
     var preferences: Preferences
     
     private var cancellables = Set<AnyCancellable>()
-    private let subscriptionManager: SubscriptionManagerType
+    let subscriptionManager: SubscriptionManagerType
     private let subscribeScreenTrigger: Action
     
     init(
@@ -43,6 +43,15 @@ final class ColorSchemesViewModel: ObservableObject {
         }
     }
     
+    func setThemes(appTheme: AppTheme, colorTheme: ColorTheme) {
+        guard subscriptionManager.isProUser() || (isThemeProtected(appTheme) == false && isColorThemeProtected(colorTheme) == false) else {
+            subscribeScreenTrigger()
+            return
+        }
+        preferences.appTheme = appTheme
+        preferences.colorTheme = colorTheme
+    }
+    
     static var placeholder: ColorSchemesViewModel {
         ColorSchemesViewModel(
             preferences: Preferences.shared,
@@ -73,7 +82,17 @@ final class ColorSchemesViewModel: ObservableObject {
 struct ColorSchemesView: View {
     
     @ObservedObject var viewModel: ColorSchemesViewModel
-    @Environment(\.appTheme) var appTheme
+    
+    @State var selectedAppTheme: AppTheme
+    @State var selectedColorTheme: ColorTheme
+    
+    init(
+        viewModel: ColorSchemesViewModel
+    ) {
+        self.viewModel = viewModel
+        selectedAppTheme = viewModel.preferences.appTheme
+        selectedColorTheme = viewModel.preferences.colorTheme
+    }
     
     var body: some View {
         ScrollView {
@@ -85,60 +104,80 @@ struct ColorSchemesView: View {
                         dismissOnSelect: false
                     )
                 } footer: {
-                    footerView(viewModel.preferences.theme.description)
+                    FooterView(text: viewModel.preferences.theme.description)
                 }
                 
                 Section {
                     ItemPickerView(
                         selection: .init(get: {
-                            viewModel.preferences.appTheme
+                            selectedAppTheme
                         }, set: { newValue in
-                            viewModel.setAppTheme(newValue)
+                            if viewModel.isThemeProtected(newValue) == false {
+                                viewModel.setAppTheme(newValue)
+                            }
+                            selectedAppTheme = newValue
                         }),
                         items: AppTheme.enabledThemes,
                         dismissOnSelect: false,
-                        isItemProtected: viewModel.isThemeProtected(_:)
+                        isItemProtected: { _ in false }
                     )
                 } header: {
-                    headerView(L10n.Settings.Appearance.ColorTheme.header)
+                    HeaderView(text: L10n.Settings.Appearance.ColorTheme.header)
                 }
                  
                 Section {
                     ItemPickerView(
                         selection: .init(get: {
-                            viewModel.preferences.colorTheme
+                            selectedColorTheme
                         }, set: { newValue in
-                            viewModel.setColorTheme(newValue)
+                            if viewModel.isColorThemeProtected(newValue) == false {
+                                viewModel.setColorTheme(newValue)
+                            }
+                            selectedColorTheme = newValue
                         }),
                         items: ColorTheme.allCases,
                         dismissOnSelect: false,
-                        isItemProtected: viewModel.isColorThemeProtected(_:)
+                        isItemProtected: { _ in false }
                     )
                 }
             }
         }
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                if themeChanged && viewModel.subscriptionManager.isProUser() == false {
+                    Button(action: {
+                        viewModel.setThemes(appTheme: selectedAppTheme, colorTheme: selectedColorTheme)
+                    }, label: {
+                        HStack {
+                            if viewModel.subscriptionManager.isProUser() == false && isProItemSelected {
+                                Image(systemName: "lock.fill")
+                            }
+                            Text(L10n.Common.done)
+                        }
+                    })
+                    .transition(.opacity)
+                    .buttonStyle(.borderedProminent)
+                    .animation(.smooth, value: selectedAppTheme.hashValue ^ selectedColorTheme.hashValue)
+                }
+            }
+        }
         .customScrollContentBackground()
-        .background(Color.background, ignoresSafeAreaEdges: .all)
+        .background(.background, ignoreSafeArea: .all)
         .onAppear {
             AnalyticsReporter.reportScreen("Settings", className: viewName)
         }
+        .environment(\.appTheme, selectedAppTheme)
+        .environment(\.colorTheme, selectedColorTheme)
     }
     
-    func headerView(_ label: String) -> some View {
-        HeaderView(title: label)
+    private var isProItemSelected: Bool {
+        selectedAppTheme != .default || selectedColorTheme != .default
     }
     
-    func footerView(_ label: String) -> some View {
-        Text(label)
-            .systemFont(.caption)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .foregroundStyle(Color.secondaryText)
-            .padding(.horizontal)
-            .background(Color.background)
-            .padding(.horizontal)
-            .padding(.bottom)
+    private var themeChanged: Bool {
+        selectedAppTheme != viewModel.preferences.appTheme || selectedColorTheme != viewModel.preferences.colorTheme
     }
-    
+        
 }
 
 #Preview("Color Schemes") {

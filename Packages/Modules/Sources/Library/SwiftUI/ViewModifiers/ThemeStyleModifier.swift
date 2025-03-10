@@ -23,10 +23,10 @@ public struct ThemeStyleModifier: ViewModifier {
         content
             .overlay(
                 Rectangle()
-                    .stroke(Color.accent, lineWidth: 1.5)
+                    .stroke(colorTheme.getColor(.accent), lineWidth: 1.5)
             )
             .background(
-                Color.text.opacity(0.75)
+                Color.getColor(.text, theme: colorTheme)
                     .offset(x: 5, y: 5)
             )
     }
@@ -101,7 +101,7 @@ public extension View {
     ) -> some View {
         self
             .padding()
-            .background(Color.contentBackground)
+            .background(.contentBackground)
             .applyTheme(roundingCorners: roundingCorners)
             .padding()
             .reloadWhenThemeChanges()

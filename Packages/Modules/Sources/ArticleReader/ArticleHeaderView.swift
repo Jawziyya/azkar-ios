@@ -189,7 +189,7 @@ struct ArticleHeaderView: View {
             HStack {
                 ForEach(tags, id: \.self) { tag in
                     Text(tag)
-                        .font(Font.callout)
+                        .systemFont(.callout)
                         .clipShape(RoundedRectangle(cornerRadius: 10))
                 }
             }
@@ -220,7 +220,7 @@ struct ArticleHeaderView: View {
                 }
             ) {
                 Text(coverAltText)
-                    .font(Font.caption)
+                    .systemFont(.caption)
                     .padding()
                     .cornerRadius(10)
             } label: { das in
@@ -228,7 +228,7 @@ struct ArticleHeaderView: View {
                     .padding(6)
                     .foregroundStyle(Color.white)
                     .background(Color.black)
-                    .font(Font.caption.weight(.bold))
+                    .systemFont(.caption, weight: .bold)
                     .cornerRadius(6)
                     .padding(8)
             }

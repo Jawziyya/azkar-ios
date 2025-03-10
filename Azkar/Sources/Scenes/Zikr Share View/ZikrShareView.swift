@@ -5,6 +5,19 @@ import NukeUI
 import Nuke
 import Library
 
+extension TextAlignment {
+    var frameAlignment: Alignment {
+        switch self {
+        case .leading:
+            return .leading
+        case .trailing:
+            return .trailing
+        case .center:
+            return .center
+        }
+    }
+}
+
 struct ZikrShareView: View {
 
     let viewModel: ZikrViewModel
@@ -14,7 +27,6 @@ struct ZikrShareView: View {
     let includeBenefits: Bool
     let includeLogo: Bool
     let includeSource: Bool
-    var backgroundColor = Color.background
     var arabicTextAlignment = TextAlignment.trailing
     var otherTextAlignment = TextAlignment.leading
     var nestIntoScrollView: Bool
@@ -67,8 +79,8 @@ struct ZikrShareView: View {
     var backgroundForContent: some View {
         Group {
             switch selectedBackground.backgroundType {
-            case .solidColor(let color):
-                color
+            case .solidColor(let colorType):
+                colorTheme.getColor(colorType)
             case .localImage(let image):
                 renderImage(image)
             case .remoteImage(let item):
@@ -144,7 +156,7 @@ struct ZikrShareView: View {
             VStack(spacing: 0) {
                 Text(.init(viewModel.text.joined(separator: "\n")))
                     .customFont(.title1, isArabic: true)
-                    .frame(alignment: .trailing)
+                    .frame(maxWidth: .infinity, alignment: arabicTextAlignment.frameAlignment)
                     .multilineTextAlignment(arabicTextAlignment)
                     .padding()
 
@@ -155,7 +167,7 @@ struct ZikrShareView: View {
                         .customFont(.body)
                         .multilineTextAlignment(otherTextAlignment)
                         .padding()
-                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .frame(maxWidth: .infinity, alignment: otherTextAlignment.frameAlignment)
                 }
 
                 if includeTransliteration, !viewModel.transliteration.isEmpty {
@@ -165,7 +177,7 @@ struct ZikrShareView: View {
                         .customFont(.body)
                         .multilineTextAlignment(.leading)
                         .padding()
-                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .frame(maxWidth: .infinity, alignment: otherTextAlignment.frameAlignment)
                 }
 
                 if includeBenefits, let text = viewModel.zikr.benefits?.textOrNil {
@@ -173,13 +185,14 @@ struct ZikrShareView: View {
                     
                     ZikrBenefitsView(text: text)
                         .customFont(.footnote)
-                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .frame(maxWidth: .infinity, alignment: otherTextAlignment.frameAlignment)
                 }
 
                 if includeSource, let source = viewModel.source.textOrNil {
                     Text(source)
                         .customFont(.caption1)
-                        .foregroundStyle(Color.secondaryText)
+                        .frame(maxWidth: .infinity, alignment: otherTextAlignment.frameAlignment)
+                        .foregroundStyle(.secondaryText)
                         .padding(.horizontal)
                         .padding(.vertical, 8)
                 }
@@ -189,7 +202,7 @@ struct ZikrShareView: View {
                     Rectangle()
                         .fill(.ultraThinMaterial)
                 } else {
-                    Color.contentBackground
+                    colorTheme.getColor(.contentBackground)
                 }
             }
             .cornerRadius(appTheme.cornerRadius)
@@ -207,7 +220,7 @@ struct ZikrShareView: View {
                     Text(L10n.Share.sharedWithAzkar)
                         .font(Font.system(size: 12, weight: .regular, design: .rounded).smallCaps())
                 }
-                .foregroundStyle(Color.text)
+                .foregroundStyle(.text)
                 .opacity(0.5)
             }
         }

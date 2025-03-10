@@ -84,7 +84,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
             Keys.showTashkeel: true,
             
             Keys.enableGoToNextZikrOnCounterFinished: true,
-            Keys.alignCounterByLeadingSide: true,
+            Keys.counterPosition: CounterPosition.left.rawValue,
             
             Keys.enableReminders: true,
             Keys.morningNotificationsTime: defaultMorningNotificationTime,

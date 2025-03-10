@@ -1,6 +1,6 @@
 import Entities
 
-private let englishMapping = LanguageMapping(name: "English", mapping: { data in
+public let englishTranscriptionMapping = LanguageMapping(name: "English", mapping: { data in
     // Arabic letters
     switch data.characterType {
     case .harf(.ba): return "b"
@@ -54,7 +54,7 @@ private let englishMapping = LanguageMapping(name: "English", mapping: { data in
     }
 })
 
-private let russianMapping = LanguageMapping( name: "Russian", mapping: { data in
+public let russianTranscriptionMapping = LanguageMapping( name: "Russian", mapping: { data in
     switch data.characterType {
     case .harf(.ba): return "б"
     case .harf(.ta): return "т"
@@ -109,12 +109,9 @@ private let russianMapping = LanguageMapping( name: "Russian", mapping: { data i
 })
 
 public enum TranscriptorProvider {
-    public static func createTranscriptor(for language: Language) -> Transcriptor? {
-        let mapping: LanguageMapping
-        switch language {
-        case .russian, .chechen, .ingush, .kazakh, .kyrgyz, .uzbek: mapping = russianMapping
-        case .english: mapping = englishMapping
-        case .arabic, .turkish, .georgian: return nil
+    public static func createTranscriptor(for transliterationType: ZikrTransliterationType) -> Transcriptor? {
+        guard let mapping = transliterationType.mapping else {
+            return nil
         }
         return Transcriptor(mapping: mapping)
     }

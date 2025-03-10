@@ -15,22 +15,28 @@ struct TextSettingsScreen: View {
 
     var body: some View {
         ScrollView {
-            VStack {
-                content
+            VStack(spacing: 16) {
+                Color.clear.frame(height: 20)
+                
+                collectionSection
+                textContentSettings
+                fonts
+                extraSettings
             }
-            .applyContainerStyle()
         }
         .applyThemedToggleStyle()
         .customScrollContentBackground()
-        .background(Color.background, ignoresSafeAreaEdges: .all)
+        .background(.background, ignoreSafeArea: .all)
         .navigationTitle(L10n.Settings.Text.title)
         .onAppear {
             AnalyticsReporter.reportScreen("Settings", className: viewName)
         }
     }
     
-    var content: some View {
-        Group {
+    var collectionSection: some View {
+        VStack(spacing: 0) {
+            HeaderView(text: L10n.Settings.Text.AdhkarCollectionsSource.header)
+            
             PickerMenu(
                 title: L10n.Settings.Text.AdhkarCollectionsSource.title,
                 selection: $viewModel.preferences.zikrCollectionSource,
@@ -40,49 +46,81 @@ struct TextSettingsScreen: View {
                 }
             )
             .pickerStyle(.menu)
+            .applyContainerStyle()
             
-            Divider()
+            FooterView(
+                text: viewModel.preferences.zikrCollectionSource == .azkarRU
+                       ? L10n.AdhkarCollections.AzkarRu.description
+                       : L10n.AdhkarCollections.Hisn.description
+            )
+        }
+    }
+    
+    var textContentSettings: some View {
+        VStack(spacing: 0) {
+            HeaderView(text: L10n.Settings.Text.Content.header)
             
-            if viewModel.canChangeLanguage {
+            VStack {
                 PickerMenu(
                     title: L10n.Settings.Text.language,
-                    selection: $viewModel.preferences.contentLanguage,
+                    selection: .init(get: {
+                        viewModel.preferences.contentLanguage
+                    }, set: viewModel.setContentLanguage),
                     items: viewModel.getAvailableLanguages(),
                     itemTitle: \.title
                 )
                 .pickerStyle(.menu)
                 
                 Divider()
-            }
-            
-            NavigationLink {
-                arabicFontsPicker
-            } label: {
-                NavigationLabel(
-                    title: L10n.Settings.Text.arabicTextFont,
-                    label: viewModel.preferences.preferredArabicFont.name
+                
+                PickerMenu(
+                    title: L10n.Settings.Text.transliteration,
+                    selection: $viewModel.preferences.transliterationType,
+                    items: viewModel.availableTransliterationTypes,
+                    itemTitle: { $0.title ?? L10n.Common.default }
                 )
+                .pickerStyle(.menu)
             }
-            
-            Divider()
-            
-            NavigationLink {
-                translationFontsPicker
-            } label: {
-                NavigationLabel(
-                    title: L10n.Settings.Text.translationTextFont,
-                    label: viewModel.preferences.preferredTranslationFont.name
-                )
-            }
-            
-            Divider()
-
-            NavigationLink {
-                ExtraTextSettingsScreen(viewModel: viewModel)
-            } label: {
-                NavigationLabel(title: L10n.Settings.Text.extra)
-            }
+            .applyContainerStyle()
         }
+    }
+    
+    var fonts: some View {
+        VStack(spacing: 0) {
+            HeaderView(text: L10n.Settings.Text.Fonts.header)
+            
+            VStack {
+                NavigationLink {
+                    arabicFontsPicker
+                } label: {
+                    NavigationLabel(
+                        title: L10n.Settings.Text.arabicTextFont,
+                        label: viewModel.preferences.preferredArabicFont.name
+                    )
+                }
+                
+                Divider()
+                
+                NavigationLink {
+                    translationFontsPicker
+                } label: {
+                    NavigationLabel(
+                        title: L10n.Settings.Text.translationTextFont,
+                        label: viewModel.preferences.preferredTranslationFont.name
+                    )
+                }
+            }
+            .applyContainerStyle()
+        }
+    }
+    
+    var extraSettings: some View {
+        NavigationLink {
+            ExtraTextSettingsScreen(viewModel: viewModel)
+        } label: {
+            NavigationLabel(title: L10n.Settings.Text.extra)
+        }
+        .applyContainerStyle()
     }
     
     var arabicFontsPicker: some View {

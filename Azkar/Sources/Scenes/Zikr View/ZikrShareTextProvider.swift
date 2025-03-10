@@ -14,23 +14,25 @@ public struct ShareTextProvider {
         var text = ""
         
         if includeTitle, let title = zikr.title {
-            text += title
+            text += title + "\n\n"
         }
         
-        text += "\n\n\(text)"
+        text += zikr.text
+            .components(separatedBy: "\n")
+            .joined(separator: " ")
         
         if includeTranslation, !translation.isEmpty {
-            text += "\n\n\(translation.joined(separator: "\n"))"
+            text += "\n\n\(translation.joined(separator: " "))"
         }
         
         if includeTransliteration, !transliteration.isEmpty {
-            text += "\n\n\(transliteration.joined(separator: "\n"))"
+            text += "\n\n\(transliteration.joined(separator: " "))"
         }
         
         text += "\n\n\(zikr.source)"
         
         if includeBenefits, let benefits = zikr.benefits {
-            text += "\n\n[\(benefits)]"
+            text += "\n\n💎 \(benefits)"
         }
         
         return text

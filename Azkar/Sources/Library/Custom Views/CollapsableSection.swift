@@ -15,6 +15,8 @@ struct CollapsableSection: View, Equatable {
         return lhs.isExpanded == rhs.isExpanded && lhs.text == rhs.text
     }
     
+    @Environment(\.colorTheme) var colorTheme
+    
     var title: String?
     let text: String
     let highlightPattern: String?
@@ -23,7 +25,9 @@ struct CollapsableSection: View, Equatable {
     let font: AppFont
     var lineSpacing: CGFloat
     var sizeCategory: ContentSizeCategory? = Preferences.shared.sizeCategory
-    var tintColor: Color = .accent
+    var tintColor: Color {
+        colorTheme.getColor(.accent)
+    }
     var expandingCallback: (() -> Void)?
 
     var body: some View {
@@ -75,7 +79,6 @@ struct CollapsableSection: View, Equatable {
         isExpanded: $isExpanded,
         font: TranslationFont.iowanOldStyle,
         lineSpacing: 10,
-        tintColor: Color.blue,
         expandingCallback: {
             isExpanded.toggle()
         }

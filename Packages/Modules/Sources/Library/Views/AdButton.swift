@@ -19,6 +19,8 @@ public struct AdButton: View {
     let action: () -> Void
     let cornerRadius: CGFloat
     
+    @Environment(\.colorTheme) var colorTheme
+    
     public init(
         item: AdButtonItem,
         cornerRadius: CGFloat = 25,
@@ -33,11 +35,11 @@ public struct AdButton: View {
 
     // The color used for the text will automatically switch to white if a background image is specified
     private var effectiveforegroundStyle: Color {
-        item.imageMode == .background ? .white : item.foregroundColor
+        item.imageMode == .background ? .white : (item.foregroundColor ?? colorTheme.getColor(.text))
     }
     
     private var size: AdSize { item.size }
-    private var backgroundColor: Color { item.backgroundColor }
+    private var backgroundColor: Color { item.backgroundColor ?? colorTheme.getColor(.background) }
     private var accentColor: Color { item.accentColor }
 
     public var body: some View {
@@ -146,7 +148,7 @@ public struct AdButton: View {
                     .resizable()
                     .aspectRatio(contentMode: .fill)
             } else if state.isLoading {
-                item.backgroundColor
+                backgroundColor
             }
         }
     }

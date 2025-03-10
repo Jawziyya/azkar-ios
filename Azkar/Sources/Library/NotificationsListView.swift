@@ -160,14 +160,14 @@ struct NotificationsListView: View {
                         } else {
                             ForEach(viewModel.notifications, id: \.row) { vm in
                                 NotificationsRowView(vm: vm)
-                                    .background(Color.contentBackground)
+                                    .background(.contentBackground)
                             }
                         }
                     }
                 }
             )
         }
-        .background(Color.background.edgesIgnoringSafeArea(.all))
+        .background(.background, ignoreSafeArea: .all)
         .background(
             Text("This view is only visible in test builds")
                 .edgesIgnoringSafeArea(.bottom)

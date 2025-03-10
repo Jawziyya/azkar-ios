@@ -14,7 +14,7 @@ struct AppearanceScreen: View {
             .applyContainerStyle()
         }
         .customScrollContentBackground()
-        .background(Color.background, ignoresSafeAreaEdges: .all)
+        .background(.background, ignoreSafeArea: .all)
         .navigationTitle(L10n.Settings.Appearance.title)
         .onAppear {
             AnalyticsReporter.reportScreen("Settings", className: viewName)
@@ -45,7 +45,7 @@ struct AppearanceScreen: View {
                 HStack {
                     Text(L10n.Settings.useFunFeatures)
                         .systemFont(.body)
-                        .foregroundStyle(Color.text)
+                        .foregroundStyle(.text)
                     Spacer()
                     
                     Templates.Menu {
@@ -54,7 +54,7 @@ struct AppearanceScreen: View {
                             .cornerRadius(10)
                     } label: { _ in
                         Image(systemName: "info.circle")
-                            .foregroundStyle(Color.accent.opacity(0.75))
+                            .foregroundStyle(.accent, opacity: 0.75)
                     }
                 }
                 .padding(.vertical, 8)

@@ -3,12 +3,40 @@
 import SwiftUI
 import AudioPlayer
 import Library
+import Popovers
 
 struct ZikrShareOptionsView: View {
     
     let zikr: Zikr
 
     struct ShareOptions {
+        enum ShareActionType {
+            case sheet, saveImage, copyText
+            
+            var message: String? {
+                switch self {
+                case .saveImage:
+                    return L10n.Share.imageSaved
+                case .copyText:
+                    return L10n.Share.textCopied
+                case .sheet:
+                    return nil
+                }
+            }
+            
+            var imageName: String? {
+                switch self {
+                case .saveImage:
+                    return "square.and.arrow.down"
+                case .copyText:
+                    return "doc.on.doc"
+                case .sheet:
+                    return nil
+                }
+            }
+        }
+        
+        let actionType: ShareActionType
         let includeTitle: Bool
         let includeBenefits: Bool
         let includeLogo: Bool
@@ -19,7 +47,11 @@ struct ZikrShareOptionsView: View {
         var selectedBackground: ZikrShareBackgroundItem
         
         var containsProItem: Bool {
-            includeLogo == false || selectedBackground.isProItem == true
+            if shareType == .image {
+                includeLogo == false || selectedBackground.isProItem == true
+            } else {
+                false
+            }
         }
     }
 
@@ -28,6 +60,7 @@ struct ZikrShareOptionsView: View {
     @EnvironmentObject var backgroundsService: ShareBackgroundService
     @Environment(\.presentationMode) var presentation
     @Environment(\.appTheme) var appTheme
+    @Environment(\.colorTheme) var colorTheme
     let subscriptionManager = SubscriptionManager.shared
     
     let preferences = Preferences.shared
@@ -68,6 +101,9 @@ struct ZikrShareOptionsView: View {
     // Add state for scrolling trigger
     @State private var scrollToSelectedBackground = false
     
+    // Add states for action tracking
+    @State private var processingQuickShareAction: ShareOptions.ShareActionType?
+    
     private let alignments: [ZikrShareTextAlignment] = [.center, .start]
             
     var body: some View {
@@ -79,7 +115,7 @@ struct ZikrShareOptionsView: View {
                 .customScrollContentBackground()
         }
         .applyThemedToggleStyle()
-        .background(Color.background, ignoresSafeAreaEdges: .all)
+        .background(.background, ignoreSafeArea: .all)
         .task {
             do {
                 let remoteImageBackgrounds = try await backgroundsService.loadBackgrounds()
@@ -101,31 +137,45 @@ struct ZikrShareOptionsView: View {
         }
     }
     
-    private var isProItemSelected: Bool {
-        selectedBackground.isProItem || includeLogo == false
+    private var isProShareOptionsSelected: Bool {
+        guard selectedShareType == .image else { return false }
+        return selectedBackground.isProItem || !includeLogo
     }
     
     var toolbar: some View {
-        HStack {
+        HStack(spacing: 16) {
             Button(L10n.Common.done) {
                 presentation.dismiss()
             }
             Spacer()
+            
             Button(action: {
                 Task {
-                    share()
+                    await performAction(actionType: selectedShareType == .image ? .saveImage : .copyText)
                 }
             }, label: {
-                if subscriptionManager.isProUser() == false && isProItemSelected {
+                Image(systemName: selectedShareType == .image ? "square.and.arrow.down" : "doc.on.doc")
+            })
+            .disabled(processingQuickShareAction != nil)
+            .opacity(processingQuickShareAction != nil ? 0.5 : 1)
+            
+            Button(action: {
+                Task {
+                    share(actionType: .sheet)
+                }
+            }, label: {
+                if subscriptionManager.isProUser() == false && isProShareOptionsSelected {
                     Label(L10n.Common.share, systemImage: "lock.fill")
                 } else {
                     Text(L10n.Common.share)
                 }
             })
             .buttonStyle(.borderedProminent)
-            .animation(.smooth, value: includeLogo.hashValue ^ selectedBackground.hashValue)
         }
-        .background(Color.background)
+        .systemFont(.title3)
+        .background(.background)
+        .animation(.smooth, value: includeLogo.hashValue ^ selectedBackground.hashValue)
+        .animation(.smooth, value: processingQuickShareAction)
     }
 
     var content: some View {
@@ -146,33 +196,31 @@ struct ZikrShareOptionsView: View {
                         .transition(.opacity.combined(with: .move(edge: .top)))
                 }
                 
-                Divider()
-                
                 if selectedShareType != .text {
+                    Divider()
+                    
                     Toggle(L10n.Share.includeAzkarLogo, isOn: $includeLogo.animation(.smooth))
                         .applyThemedToggleStyle(showProBadge: !subscriptionManager.isProUser())
                         .padding(.horizontal, 16)
                     
                     Divider()
-                }
-                
-                if selectedShareType != .text {
+                    
                     backgroundPickerSection
                         .padding(.vertical)
                     
                     ZStack {
                         shareViewPreview
                             .frame(width: shareViewSize.width, height: shareViewSize.height)
-                            .screenshotProtected(isProtected: isProItemSelected && !subscriptionManager.isProUser())
+                            .screenshotProtected(isProtected: selectedBackground.isProItem && !subscriptionManager.isProUser())
                             .background {
-                                if isProItemSelected && !subscriptionManager.isProUser() {
+                                if selectedBackground.isProItem && !subscriptionManager.isProUser() {
                                     VStack(alignment: .center) {
                                         Spacer()
                                         Image(systemName: "lock.fill")
                                             .resizable()
                                             .aspectRatio(contentMode: .fit)
                                             .frame(width: 100, height: 100)
-                                            .foregroundStyle(Color.accentColor)
+                                            .foregroundStyle(.accent)
                                         Spacer()
                                     }
                                 }
@@ -189,11 +237,17 @@ struct ZikrShareOptionsView: View {
                 }
             }
             .systemFont(.body)
-            .background(Color.contentBackground)
+            .background(.contentBackground)
             .applyTheme()
             .animation(.smooth, value: showExtraOptions)
             .padding()
         }
+        .showToast(
+            message: processingQuickShareAction?.message ?? "",
+            icon: processingQuickShareAction?.imageName,
+            tint: processingQuickShareAction == .saveImage ? .green : colorTheme.getColor(.accent),
+            isPresented: processingQuickShareAction != nil
+        )
     }
     
     var shareViewPreview: some View {
@@ -230,7 +284,7 @@ struct ZikrShareOptionsView: View {
         Section {
             VStack(alignment: .leading, spacing: 8) {
                 Text(L10n.Share.backgroundHeader)
-                    .foregroundStyle(Color.secondaryText)
+                    .foregroundStyle(.secondaryText)
                     .systemFont(.subheadline, modification: .smallCaps)
                     .padding(.horizontal, 16)
                 
@@ -302,8 +356,9 @@ struct ZikrShareOptionsView: View {
     }
 
     @MainActor
-    private func share() {
+    private func share(actionType: ShareOptions.ShareActionType = .sheet) {
         callback(ShareOptions(
+            actionType: actionType,
             includeTitle: includeTitle,
             includeBenefits: includeBenefits,
             includeLogo: includeLogo,
@@ -313,6 +368,28 @@ struct ZikrShareOptionsView: View {
             shareType: selectedShareType,
             selectedBackground: selectedBackground)
         )
+    }
+    
+    @MainActor
+    private func performAction(actionType: ShareOptions.ShareActionType) async {
+        // Perform the share action
+        share(actionType: actionType)
+        
+        guard subscriptionManager.isProUser() || !isProShareOptionsSelected else {
+            return
+        }
+        
+        // Show feedback
+        withAnimation {
+            processingQuickShareAction = actionType
+        }
+        
+        // Wait 3 seconds before enabling the button again
+        try? await Task.sleep(nanoseconds: 3_000_000_000)
+        
+        withAnimation {
+            processingQuickShareAction = nil
+        }
     }
 
 }

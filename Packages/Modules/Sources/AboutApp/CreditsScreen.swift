@@ -5,6 +5,7 @@ public struct CreditsScreen: View {
     
     let viewModel: CreditsViewModel
     @Environment(\.safariPresenter) var safariPresenter
+    @Environment(\.colorTheme) var colorTheme
     
     public init(viewModel: CreditsViewModel) {
         self.viewModel = viewModel
@@ -16,7 +17,7 @@ public struct CreditsScreen: View {
                 Section {
                     ForEach(section.items) { item in
                         viewForItem(item)
-                            .listRowBackground(Color.contentBackground)
+                            .listRowBackground(colorTheme.getColor(.contentBackground))
                     }
                 } header: {
                     sectionHeader(section)
@@ -24,7 +25,7 @@ public struct CreditsScreen: View {
             }
         }
         .customScrollContentBackground()
-        .background(Color.background, ignoresSafeAreaEdges: .all)
+        .background(.background, ignoreSafeArea: .all)
         .listStyle(.grouped)
         .navigationBarTitle("credits.title")
         .removeSaturationIfNeeded()
@@ -32,7 +33,7 @@ public struct CreditsScreen: View {
     
     private func sectionHeader(_ section: SourceInfo.Section) -> some View {
         Text(section.title)
-            .foregroundStyle(Color.text)
+            .foregroundStyle(.text)
             .frame(maxWidth: .infinity, alignment: .leading)
     }
     
@@ -42,12 +43,12 @@ public struct CreditsScreen: View {
         }, label: {
             HStack {
                 Text(item.title)
-                    .foregroundStyle(Color.text)
+                    .foregroundStyle(.text)
                 Spacer()
                 Image(systemName: "arrow.up.forward")
-                    .foregroundStyle(Color.tertiaryText)
+                    .foregroundStyle(.tertiaryText)
             }
-            .background(Color.contentBackground)
+            .background(.contentBackground)
             .clipShape(Rectangle())
         })
         .buttonStyle(PlainButtonStyle())

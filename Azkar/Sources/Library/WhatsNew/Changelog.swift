@@ -150,7 +150,7 @@ struct Changelog: Decodable {
             features: items.map(\.whatsNewItem),
             primaryAction: WhatsNew.PrimaryAction(
                 title: .init(continueTitle ?? L10n.Common.continue),
-                backgroundColor: Color.accent,
+                backgroundColor: Color(.systemBackground),
                 foregroundColor: Color.white,
                 hapticFeedback: WhatsNew.HapticFeedback.selection,
                 onDismiss: nil

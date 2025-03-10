@@ -31,6 +31,7 @@ struct ZikrShareBackgroundPickerView: View {
                         )
                         .onTapGesture {
                             selectedBackground = item
+                            HapticGenerator.performFeedback(.impact(flexibility: .soft))
                             withAnimation {
                                 scrollProxy.scrollTo(item.id, anchor: .center)
                             }
@@ -75,6 +76,7 @@ struct ZikrShareBackgroundCardView: View {
     let item: ZikrShareBackgroundItem
     let isSelected: Bool
     @Environment(\.appTheme) var appTheme
+    @Environment(\.colorTheme) var colorTheme
     @Environment(\.colorScheme) var colorScheme
 
     var body: some View {
@@ -105,8 +107,8 @@ struct ZikrShareBackgroundCardView: View {
     @ViewBuilder
     private var backgroundContent: some View {
         switch item.backgroundType {
-        case .solidColor(let color):
-            color
+        case .solidColor(let type):
+            colorTheme.getColor(type)
         case .localImage(let image):
             Image(uiImage: image)
                 .resizable()

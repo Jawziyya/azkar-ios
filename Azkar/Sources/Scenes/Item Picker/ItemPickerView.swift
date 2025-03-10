@@ -17,7 +17,7 @@ struct ItemPickerView<SelectionValue>: View where SelectionValue: Hashable & Ide
             if let header {
                 Text(header)
                     .systemFont(.callout, modification: .smallCaps)
-                    .foregroundStyle(Color.text)
+                    .foregroundStyle(.text)
             }
             
             LazyVStack(spacing: 0) {
@@ -28,7 +28,7 @@ struct ItemPickerView<SelectionValue>: View where SelectionValue: Hashable & Ide
             if let footer {
                 Text(footer)
                     .systemFont(.caption)
-                    .foregroundStyle(Color.secondaryText)
+                    .foregroundStyle(.secondaryText)
             }
         }
     }
@@ -75,9 +75,9 @@ struct ItemPickerView<SelectionValue>: View where SelectionValue: Hashable & Ide
                 .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
-            .foregroundStyle(Color.text)
+            .foregroundStyle(.text)
             .padding()
-            .background(Color.contentBackground)
+            .background(.contentBackground)
             .applyTheme(indexPosition: position)
         }
     }
@@ -111,7 +111,7 @@ struct ItemPickerView_Previews: PreviewProvider {
             items: items,
             footer: "Footer"
         )
-        .background(Color.background.edgesIgnoringSafeArea(.all))
+        .background(.background, ignoreSafeArea: .all)
         .environment(\.colorScheme, .dark)
     }
     

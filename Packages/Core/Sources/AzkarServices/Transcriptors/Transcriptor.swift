@@ -116,7 +116,7 @@ public final class Transcriptor {
                 
             case .harf(.alif):
                 // Check if 'Alif' is followed by 'Lam' and 'Lam' is followed by a sun letter
-                if (prevChar == nil || prevChar?.isStart() == true), nextSymbol == .harf(.lam) {
+                if (prevChar == nil || prevChar?.isStart() == true || prevChar?.isEndOfLine() == true) && nextSymbol == .harf(.lam) {
                     append(.vowel(.a))
                     continue
                 } else if prevChar != nil, nextSymbol == .harf(.lam) {
@@ -142,7 +142,7 @@ public final class Transcriptor {
                 }
                                 
             case .harf(.taMarbuta):
-                if (nextSymbol == nil || nextChar?.isEndOfLine() == true) && nextChar?.tashkeel != nil {
+                if (nextSymbol == nil || nextChar?.next()?.isEndOfLine() == true) && nextChar?.tashkeel != nil {
                     append(.harf(.ha))
                     _ = iterator.next()
                 } else {

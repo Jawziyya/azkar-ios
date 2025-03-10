@@ -1,49 +1,87 @@
 import SwiftUI
 
+struct ThemeAwareColorModifier: ViewModifier {
+    @Environment(\.colorTheme) var theme
+    private let colorType: ColorType
+    private let opacity: Double
+
+    init(colorType: ColorType, opacity: Double = 1.0) {
+        self.colorType = colorType
+        self.opacity = opacity
+    }
+
+    func body(content: Content) -> some View {
+        let color = Color.getColor(colorType.rawValue, theme: theme)
+        return content.foregroundColor(color.opacity(opacity))
+    }
+}
+
+struct ThemeAwareBackgroundModifier: ViewModifier, ShapeStyle {
+    @Environment(\.colorTheme) var theme
+    let colorType: ColorType
+    let opacity: Double
+    let ignoreSafeArea: IgnoreSafeAreaInfo?
+
+    func body(content: Content) -> some View {
+        let color = Color.getColor(colorType.rawValue, theme: theme)
+        if let ignoreSafeArea {
+            content.background(color.opacity(opacity).ignoresSafeArea(ignoreSafeArea.regions, edges: ignoreSafeArea.edges))
+        } else {
+            content.background(color.opacity(opacity))
+        }
+    }
+}
+
+public struct IgnoreSafeAreaInfo {
+    public let regions: SafeAreaRegions
+    public let edges: Edge.Set
+    
+    public init(regions: SafeAreaRegions = .all, edges: Edge.Set = .all) {
+        self.regions = regions
+        self.edges = edges
+    }
+    
+    public static let all = IgnoreSafeAreaInfo()
+}
+
+public extension View {
+    func foregroundStyle(_ colorType: ColorType, opacity: Double = 1.0) -> some View {
+        self.modifier(ThemeAwareColorModifier(colorType: colorType, opacity: opacity))
+    }
+    
+    @ViewBuilder
+    func background(
+        _ colorType: ColorType,
+        opacity: Double = 1.0,
+        ignoreSafeArea: IgnoreSafeAreaInfo? = nil
+    ) -> some View {
+        modifier(
+            ThemeAwareBackgroundModifier(
+                colorType: colorType,
+                opacity: opacity,
+                ignoreSafeArea: ignoreSafeArea
+            )
+        )
+    }
+}
+
+public enum ColorType: String {
+    case accent, liteAccent, text, secondaryText, tertiaryText, background, contentBackground, secondaryBackground, dimmedBackground
+}
+
 public extension Color {
     
-    private static func getColor(_ name: String = #function) -> Color {
-        if let color = UIColor(named: ColorTheme.current.assetsNamespace + name, in: Bundle.main, compatibleWith: nil) {
+    public static func getColor(_ type: ColorType, theme: ColorTheme? = nil) -> Color {
+        return getColor(type.rawValue, theme: theme)
+    }
+    
+    public static func getColor(_ name: String = #function, theme: ColorTheme? = nil) -> Color {
+        let colorTheme = theme ?? ColorTheme.current
+        if let color = UIColor(named: colorTheme.assetsNamespace + name, in: Bundle.main, compatibleWith: nil) {
             return Color(color)
         } else {
             return Color(name)
         }
-    }
-
-    static var accent: Color {
-        getColor()
-    }
-
-    static var liteAccent: Color {
-        getColor()
-    }
-    
-    static var text: Color {
-        getColor()
-    }
-    
-    static var secondaryText: Color {
-        getColor()
-    }
-
-    static var tertiaryText: Color {
-        getColor()
-    }
-
-    static var background: Color {
-        getColor()
-    }
-    
-    static var contentBackground: Color {
-        getColor()
-    }
-
-    static var secondaryBackground: Color {
-        getColor()
-    }
-
-    static var dimmedBackground: Color {
-        getColor()
     }
     
 }

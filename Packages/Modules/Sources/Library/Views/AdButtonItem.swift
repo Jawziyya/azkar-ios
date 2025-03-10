@@ -39,9 +39,9 @@ public struct AdButtonItem: Identifiable {
     let body: String?
     let actionTitle: String?
     let actionLink: URL
-    let foregroundColor: Color
+    let foregroundColor: Color?
     let accentColor: Color
-    let backgroundColor: Color
+    let backgroundColor: Color?
     let imageLink: URL?
     let imageMode: AdImageMode?
 }
@@ -55,8 +55,8 @@ extension AdButtonItem {
         actionTitle = ad.actionTitle
         actionLink = ad.actionLink
         accentColor = ad.accentColor.flatMap(Color.init(hex:)) ?? Color.accentColor
-        foregroundColor = ad.foregroundColor.flatMap(Color.init(hex:)) ?? Color.primary
-        backgroundColor = ad.backgroundColor.flatMap(Color.init(hex:)) ?? Color.background
+        foregroundColor = ad.foregroundColor.flatMap(Color.init(hex:))
+        backgroundColor = ad.backgroundColor.flatMap(Color.init(hex:))
         imageLink = ad.imageLink
         imageMode = ad.imageMode
     }

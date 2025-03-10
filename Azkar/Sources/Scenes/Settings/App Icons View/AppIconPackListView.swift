@@ -77,7 +77,7 @@ struct AppIconPackListView: View {
             }
         }
         .customScrollContentBackground()
-        .background(Color.background.edgesIgnoringSafeArea(.all))
+        .background(.background, ignoreSafeArea: .all)
     }
 
     func iconPicker(_ iconPack: AppIconPack) -> some View {
@@ -87,7 +87,7 @@ struct AppIconPackListView: View {
             HStack {
                 Text(iconPack.title)
                     .systemFont(.title3, modification: .smallCaps)
-                    .foregroundStyle(Color.secondaryText)
+                    .foregroundStyle(.secondaryText)
                     .multilineTextAlignment(.leading)
                     .frame(maxWidth: .infinity, alignment: .leading)
                 
@@ -144,7 +144,7 @@ struct AppIconPackListView: View {
         .contentShape(Rectangle())
         .padding(.vertical, 12)
         .padding(.horizontal)
-        .background(Color.contentBackground)
+        .background(.contentBackground)
         .applyTheme(indexPosition: position)
         .padding(.horizontal)
     }

@@ -3,6 +3,7 @@ import SwiftUI
 struct SearchResultsItemView: View {
     
     let result: SearchResultZikr
+    @Environment(\.colorTheme) var colorTheme
     
     var body: some View {
         HStack(alignment: .top) {
@@ -13,8 +14,8 @@ struct SearchResultsItemView: View {
                 .font(Font.system(size: 12, design: .monospaced))
                 .padding(.horizontal, 7)
                 .padding(.vertical, 3)
-                .background(Color.secondaryBackground)
-                .foregroundStyle(Color.secondaryText)
+                .background(.secondaryBackground)
+                .foregroundStyle(.secondaryText)
                 .cornerRadius(3)
         }
     }
@@ -51,7 +52,7 @@ struct SearchResultsItemView: View {
             }
         }
         .systemFont(.body)
-        .foregroundStyle(Color.text)
+        .foregroundStyle(.text)
         .frame(maxWidth: .infinity)
         .multilineTextAlignment(.leading)
     }
@@ -65,7 +66,7 @@ struct SearchResultsItemView: View {
         while let range = attributedString[currentSearchRange].range(of: result.highlightText, options: [.caseInsensitive, .diacriticInsensitive]) {
             let globalRange = range.lowerBound..<range.upperBound
             attributedString[globalRange].underlineStyle = .single
-            attributedString[globalRange].underlineColor = UIColor(Color.accent)
+            attributedString[globalRange].underlineColor = UIColor(colorTheme.getColor(.accent))
             
             if globalRange.upperBound < attributedString.endIndex {
                 currentSearchRange = globalRange.upperBound..<attributedString.endIndex

@@ -17,7 +17,7 @@ struct SearchSuggestionsView: View {
             }
         }
         .customScrollContentBackground()
-        .background(Color.background.ignoresSafeArea())
+        .background(.background, ignoreSafeArea: .all)
         .task {
             await viewModel.loadSuggestions()
         }
@@ -53,9 +53,9 @@ struct SearchSuggestionsView: View {
                 }
                 .buttonStyle(.plain)
                 .padding()
-                .foregroundStyle(Color.text)
+                .foregroundStyle(.text)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .background(Color.contentBackground)
+                .background(.contentBackground)
                 .applyTheme(indexPosition: position)
                 .padding(.horizontal)
             }
@@ -76,9 +76,9 @@ struct SearchSuggestionsView: View {
                     }
                 )
                 .padding()
-                .foregroundStyle(Color.text)
+                .foregroundStyle(.text)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .background(Color.contentBackground)
+                .background(.contentBackground)
                 .applyTheme(indexPosition: position)
                 .padding(.horizontal)
             }
@@ -89,11 +89,11 @@ struct SearchSuggestionsView: View {
     
     func headerView(_ label: LocalizedStringKey) -> some View {
         Text(label)
-            .foregroundStyle(Color.secondaryText)
+            .foregroundStyle(.secondaryText)
             .systemFont(.title3, modification: .smallCaps)
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding()
-            .background(Color.background)
+            .background(.background)
             .padding(.top, 6)
     }
     

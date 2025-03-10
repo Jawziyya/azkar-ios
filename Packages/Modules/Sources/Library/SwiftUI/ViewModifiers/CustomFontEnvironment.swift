@@ -1,19 +1,18 @@
 //  Copyright © 2023 Al Jawziyya. All rights reserved.
 
 import SwiftUI
-import Library
 
 // Custom environment key for font
-struct CustomTranslationFontKey: EnvironmentKey {
-    static let defaultValue = TranslationFont.systemFont
+public struct CustomTranslationFontKey: EnvironmentKey {
+    public static let defaultValue = TranslationFont.systemFont
 }
 
-struct CustomArabicFont: EnvironmentKey {
-    static let defaultValue = ArabicFont.systemArabic
+public struct CustomArabicFont: EnvironmentKey {
+    public static let defaultValue = ArabicFont.systemArabic
 }
 
 // Environment value extension
-extension EnvironmentValues {
+public extension EnvironmentValues {
     var translationFont: TranslationFont {
         get { self[CustomTranslationFontKey.self] }
         set { self[CustomTranslationFontKey.self] = newValue }
@@ -30,21 +29,37 @@ struct CustomFontStyleModifier: ViewModifier {
     @Environment(\.arabicFont) var arabicFont
     @Environment(\.sizeCategory) var sizeCategory
     @Environment(\.fontSizeCategory) var fontSizeCategory
-    let style: UIFont.TextStyle
+    
+    enum SizeSpecifier {
+        case style(UIFont.TextStyle)
+        case size(CGFloat)
+    }
+    
+    let size: SizeSpecifier
     let isArabic: Bool
     
     func body(content: Content) -> some View {
         let font: AppFont = isArabic ? arabicFont : translationFont
         let effectiveSizeCategory = fontSizeCategory?.uiContentSizeCategory ?? sizeCategory.uiContentSizeCategory
-        let size = textSize(forTextStyle: style, contentSizeCategory: effectiveSizeCategory)
+        let fontSize: CGFloat
+        switch size {
+        case let .style(style):
+            fontSize = textSize(forTextStyle: style, contentSizeCategory: effectiveSizeCategory)
+        case let .size(customSize):
+            fontSize = customSize
+        }
         let named = font.postscriptName
         let adjustment = CGFloat(font.sizeAdjustment ?? 0)
-        return content.font(.custom(named, fixedSize: size + adjustment))
+        return content.font(.custom(named, fixedSize: fontSize + adjustment))
     }
 }
 
-extension View {
+public extension View {
     func customFont(_ style: UIFont.TextStyle = .body, isArabic: Bool = false) -> some View {
-        modifier(CustomFontStyleModifier(style: style, isArabic: isArabic))
+        modifier(CustomFontStyleModifier(size: .style(style), isArabic: isArabic))
+    }
+    
+    func customFont(size: CGFloat, isArabic: Bool = false) -> some View {
+        modifier(CustomFontStyleModifier(size: .size(size), isArabic: isArabic))
     }
 }

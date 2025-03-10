@@ -105,15 +105,6 @@ final class RootCoordinator: NSObject, RouteTrigger, NavigationCoordinatable {
         
         super.init()
         
-        preferences.$colorTheme
-            .receive(on: RunLoop.main)
-            .prepend(preferences.colorTheme)
-            .sink(receiveValue: { _ in
-                let color = UIColor(Color.accent)
-                UINavigationBar.appearance().tintColor = color
-            })
-            .store(in: &cancellables)
-
         deeplinker
             .$route
             .sink(receiveValue: { [unowned self] route in
@@ -145,7 +136,7 @@ final class RootCoordinator: NSObject, RouteTrigger, NavigationCoordinatable {
                 try ZikrViewModel(
                     zikr: zikr,
                     isNested: true,
-                    row: idx + 1,
+                    row: category != .other ? idx + 1 : nil,
                     hadith: zikr.hadith.flatMap { id in
                         try databaseService.getHadith(id)
                     },
@@ -326,13 +317,13 @@ extension RootCoordinator {
                 
                 let composer = ArticlePDFComposer(
                     article: article,
-                    titleFont: UIFont(name: self.preferences.preferredTranslationFont.postscriptName, size: 30)!,
-                    textFont: UIFont(name: self.preferences.preferredTranslationFont.postscriptName, size: 18)!,
-                    pageMargins: UIEdgeInsets(horizontal: 50, vertical: 50),
+                    titleFont: UIFont(name: self.preferences.preferredTranslationFont.postscriptName, size: 45)!,
+                    textFont: UIFont(name: self.preferences.preferredTranslationFont.postscriptName, size: 25)!,
+                    pageMargins: UIEdgeInsets(horizontal: 75, vertical: 65),
                     footer: ArticlePDFComposer.Footer(
                         image: UIImage(named: "ink-icon"),
                         text: L10n.Share.sharedWithAzkar.uppercased(),
-                        link: URL(string: "https://apps.apple.com/app/id1511423586")
+                        link: URL(string: "https://apple.co/41O1pzQ")
                     )
                 )
                 

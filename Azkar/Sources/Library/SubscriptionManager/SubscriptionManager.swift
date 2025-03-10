@@ -11,6 +11,7 @@ enum AzkarEntitlement: String {
     case pro = "azkar_pro"
     case proPlus = "azkar_pro_plus"
     case ultra = "azkar_ultra"
+    case ultraUniversal = "azkar_ultra_universal"
 }
 
 enum PurchasingError: LocalizedError {
@@ -29,6 +30,9 @@ final class SubscriptionManager: SubscriptionManagerType {
     
     @Preference(Keys.enableProFeatures, defaultValue: false)
     var enableProFeatures: Bool
+    
+    @Preference("kLastPaywallDeclineDate", defaultValue: nil)
+    var lastPaywallDeclineDate: Date?
 
     static let shared = SubscriptionManager()
     
@@ -46,12 +50,15 @@ final class SubscriptionManager: SubscriptionManagerType {
     }
     
     func presentPaywall(sourceScreenName: String, completion: (() -> Void)? = nil) {
-        let entitlement: AzkarEntitlement
-        switch getUserRegion() {
-        case .usa: entitlement = .proPlus
-        case .russia, .turkey, .tajikistan, .uzbekistan, .egypt, .kazakhstan, .kyrgyzstan: entitlement = .ultra
-        case .other: entitlement = .pro
+        if let lastPaywallDeclineDate {
+            let days = Calendar.current.dateComponents([.day], from: lastPaywallDeclineDate, to: Date()).day ?? 0
+            guard days > 2 else {
+                completion?()
+                return
+            }
         }
+        
+        let entitlement: AzkarEntitlement = .ultraUniversal
         let presentationHandler = PaywallPresentationHandler()
         presentationHandler.onSkip { reason in
             let event = "paywall_presentation_skip"
@@ -72,10 +79,11 @@ final class SubscriptionManager: SubscriptionManagerType {
         presentationHandler.onPresent { info in
             AnalyticsReporter.reportEvent("paywall_presentation", metadata: ["source": sourceScreenName, "entitlement": entitlement.rawValue])
         }
-        presentationHandler.onDismiss { info, result in
+        presentationHandler.onDismiss { [weak self] info, result in
             let event = "paywall_dismiss"
             switch result {
             case .declined:
+                self?.lastPaywallDeclineDate = Date()
                 AnalyticsReporter.reportEvent(event, metadata: ["reason": "declined", "source": sourceScreenName, "entitlement": entitlement.rawValue])
             case .purchased(let product):
                 AnalyticsReporter.reportEvent(event, metadata: ["reason": "purchased", "source": sourceScreenName, "product": product.productIdentifier, "entitlement": entitlement.rawValue])

@@ -31,7 +31,7 @@ public struct PickerMenu<T: Identifiable & Hashable>: View {
                         .systemFont(.callout)
                     if selection == item {
                         Image(systemName: "checkmark")
-                            .foregroundStyle(Color.accent)
+                            .foregroundStyle(.accent)
                     }
                 }
             }
@@ -39,14 +39,16 @@ public struct PickerMenu<T: Identifiable & Hashable>: View {
             HStack {
                 Text(title)
                     .systemFont(.body)
-                    .foregroundStyle(Color.text)
+                    .foregroundStyle(.text)
                     .multilineTextAlignment(.leading)
+                    .layoutPriority(1)
                 Spacer()
                 Text(itemTitle(selection))
                     .systemFont(.callout)
-                    .foregroundStyle(Color.secondaryText)
+                    .foregroundStyle(.secondaryText)
+                    .multilineTextAlignment(.trailing)
                 Image(systemName: "chevron.down")
-                    .foregroundStyle(Color.secondaryText)
+                    .foregroundStyle(.secondaryText)
             }
             .padding(.vertical, 8)
         }
