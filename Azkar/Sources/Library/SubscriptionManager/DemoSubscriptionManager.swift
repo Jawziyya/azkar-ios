@@ -16,7 +16,7 @@ final class DemoSubscriptionManager: SubscriptionManagerType {
         return .other
     }
     
-    func presentPaywall(sourceScreenName: String, completion: (() -> Void)?) {
+    func presentPaywall(presentationType: PaywallPresentationType, completion: (() -> Void)?) {
     }
     
     func isProUser() -> Bool {

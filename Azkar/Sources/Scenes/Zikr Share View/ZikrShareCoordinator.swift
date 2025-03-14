@@ -30,7 +30,7 @@ final class ZikrShareCoordinator: NavigationCoordinatable {
     
     private func share(using options: ZikrShareOptionsView.ShareOptions) {
         if options.containsProItem, SubscriptionManager.shared.isProUser() == false {
-            SubscriptionManager.shared.presentPaywall(sourceScreenName: ZikrShareOptionsView.viewName, completion: nil)
+            SubscriptionManager.shared.presentPaywall(presentationType: .screen(ZikrShareOptionsView.viewName), completion: nil)
             return
         }
         

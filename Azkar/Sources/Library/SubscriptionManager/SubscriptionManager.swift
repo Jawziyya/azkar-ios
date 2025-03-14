@@ -49,15 +49,22 @@ final class SubscriptionManager: SubscriptionManagerType {
         }
     }
     
-    func presentPaywall(sourceScreenName: String, completion: (() -> Void)? = nil) {
-        if let lastPaywallDeclineDate {
-            let days = Calendar.current.dateComponents([.day], from: lastPaywallDeclineDate, to: Date()).day ?? 0
-            guard days > 2 else {
-                completion?()
-                return
+    func presentPaywall(presentationType: PaywallPresentationType, completion: (() -> Void)?) {
+        let sourceScreenName: String
+        switch presentationType {
+        case .appLaunch:
+            sourceScreenName = "app_launch"
+            if let lastPaywallDeclineDate {
+                let days = Calendar.current.dateComponents([.day], from: lastPaywallDeclineDate, to: Date()).day ?? 0
+                guard days > 2 else {
+                    completion?()
+                    return
+                }
             }
+        case .screen(let screenName):
+            sourceScreenName = screenName
         }
-        
+            
         let entitlement: AzkarEntitlement = .ultraUniversal
         let presentationHandler = PaywallPresentationHandler()
         presentationHandler.onSkip { reason in
