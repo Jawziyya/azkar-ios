@@ -16,6 +16,10 @@ enum UserRegion: String, Hashable {
     case other
 }
 
+enum PaywallPresentationType {
+    case appLaunch, screen(String)
+}
+
 protocol SubscriptionManagerType {
     
     /// Whether current user have premium subscription.
@@ -26,6 +30,6 @@ protocol SubscriptionManagerType {
     
     func getUserRegion() -> UserRegion
     
-    func presentPaywall(sourceScreenName: String, completion: (() -> Void)?)
+    func presentPaywall(presentationType: PaywallPresentationType, completion: (() -> Void)?)
     
 }

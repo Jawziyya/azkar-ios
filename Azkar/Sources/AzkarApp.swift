@@ -153,7 +153,7 @@ struct AzkarApp: App {
             return
         }
         SubscriptionManager.shared.presentPaywall(
-            sourceScreenName: "app_launch",
+            presentationType: .appLaunch,
             completion: {
                 requestAppReview()
             }
