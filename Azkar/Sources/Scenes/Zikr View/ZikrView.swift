@@ -24,11 +24,8 @@ struct ZikrView: View {
     @Environment(\.appTheme) var appTheme
     @Environment(\.colorTheme) var colorTheme
 
-    let incrementAction: AnyPublisher<Void, Never>
-
     var counterFinishedCallback: Action?
 
-    @State var lastIncrementActionPerformed = false
     @State var counterFeedbackCompleted = false
     @Namespace var counterButtonAnimationNamespace
     private let counterButtonAnimationId = "counter-button"
@@ -43,9 +40,6 @@ struct ZikrView: View {
     private let dividerHeight: CGFloat = 1
 
     func incrementZikrCounter() {
-        if viewModel.remainingRepeatsNumber == 1 {
-            lastIncrementActionPerformed = true
-        }
         Task {
             await viewModel.incrementZikrCount()
             WidgetCenter.shared.reloadTimelines(ofKind: "AzkarCompletionWidgets")
@@ -80,7 +74,6 @@ struct ZikrView: View {
         .onDisappear(perform: viewModel.pausePlayer)
         .removeSaturationIfNeeded()
         .background(.background, ignoreSafeArea: .all)
-        .onReceive(incrementAction, perform: incrementZikrCounter)
         .simultaneousGesture(
             TapGesture(count: 2)
                 .onEnded { _ in
@@ -89,20 +82,52 @@ struct ZikrView: View {
                     }
                 }
         )
-        .overlay(alignment: viewModel.preferences.counterPosition.alignment, {
-            counterButton
-        })
+        .overlay(alignment: viewModel.preferences.counterPosition.alignment) {
+            Group {
+                if
+                    viewModel.preferences.counterType == .floatingButton,
+                    viewModel.showCounterButton,
+                    let remainingRepeatNumber = viewModel.remainingRepeatsNumber,
+                    remainingRepeatNumber > 0
+                {
+                    counterButton(remainingRepeatNumber.description)
+                }
+            }
+        }
+        .onChange(of: viewModel.remainingRepeatsNumber) { number in
+            if number == 0, !counterFeedbackCompleted {
+                if viewModel.preferences.enableCounterHapticFeedback {
+                    HapticGenerator.performFeedback(.success)
+                }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    counterFinishedCallback?()
+                    counterFeedbackCompleted.toggle()
+                }
+            }
+        }
     }
-
-    private var counterButton: some View {
-        Group {
-            Text("1")
-                .foregroundStyle(.accent)
+    
+    @ViewBuilder func counterText(_ repeats: String) -> some View {
+        if #available(iOS 16, *) {
+            Text(repeats).contentTransition(.numericText())
+        } else {
+            Text(repeats)
+        }
+    }
+    
+    func counterButton(_ repeats: String) -> some View {
+        Button(action: {
+            Task {
+                await viewModel.incrementZikrCount()
+            }
+        }, label: {
+            counterText(repeats)
                 .font(Font.system(
                     size: viewModel.preferences.counterSize.value / 3,
                     weight: .regular,
                     design: .monospaced).monospacedDigit()
                 )
+                .minimumScaleFactor(0.25)
                 .padding()
                 .frame(
                     width: viewModel.preferences.counterSize.value,
@@ -111,8 +136,29 @@ struct ZikrView: View {
                 .foregroundStyle(Color.white)
                 .background(.accent)
                 .clipShape(Circle())
-        }
-        .opacity((viewModel.preferences.counterType == .tap) || (!lastIncrementActionPerformed || viewModel.remainingRepeatsNumber == 0) ? 0 : 1)
+                .contextMenu {
+                    Button(action: {
+                        Task {
+                            await viewModel.resetCounter()
+                        }
+                    }, label: {
+                        Label(L10n.Common.resetCounter, systemImage: "arrow.counterclockwise")
+                    })
+                    
+                    Button(action: {
+                        Task {
+                            await viewModel.completeCounter()
+                        }
+                    }, label: {
+                        Label(L10n.Common.complete, systemImage: "checkmark")
+                    })
+                }
+                .padding(.horizontal)
+        })
+        .frame(
+            width: viewModel.preferences.counterSize.value,
+            height: viewModel.preferences.counterSize.value
+        )
         .matchedGeometryEffect(id: counterButtonAnimationId, in: counterButtonAnimationNamespace)
         .padding(.horizontal)
         .padding(.bottom, Constants.windowSafeAreaInsets.bottom)
@@ -162,20 +208,8 @@ struct ZikrView: View {
                         contentMode: .scaleAspectFit,
                         fillColor: colorTheme.getColor(.accent),
                         speed: 1.5,
-                        progress: !lastIncrementActionPerformed ? 1 : 0
-                    ) {
-                    }
-                    .onAppear {
-                        if lastIncrementActionPerformed, !counterFeedbackCompleted {
-                            if viewModel.preferences.enableCounterHapticFeedback {
-                                HapticGenerator.performFeedback(.success)
-                            }
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                                counterFinishedCallback?()
-                                counterFeedbackCompleted.toggle()
-                            }
-                        }
-                    }
+                        progress: viewModel.remainingRepeatsNumber == 0 ? 1 : 0
+                    )
                 }
             }
             .background(
@@ -514,8 +548,7 @@ private struct ZikrViewPreview: View {
                 hadith: Hadith.placeholder,
                 preferences: prefs,
                 player: .test
-            ),
-            incrementAction: Empty().eraseToAnyPublisher()
+            )
         )
     }
 }

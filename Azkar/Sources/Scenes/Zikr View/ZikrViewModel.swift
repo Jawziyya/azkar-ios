@@ -80,7 +80,11 @@ final class ZikrViewModel: ObservableObject, Identifiable, Hashable {
             remainingRepeatsFormatted = L10n.remainingRepeats(remainingRepeatsNumber)
         }
     }
-
+    
+    var showCounterButton: Bool {
+        preferences.counterType == .floatingButton
+    }
+    
     private var cancellables: Set<AnyCancellable> = []
     private let player: Player
     
@@ -290,13 +294,28 @@ final class ZikrViewModel: ObservableObject, Identifiable, Hashable {
         player.pause()
     }
     
-    func resetCounter() async {
+    @MainActor func resetCounter() async {
         guard let category = zikr.category, category != .other else {
             return
         }
         await counter.resetCounterForCategory(category)
+        remainingRepeatsNumber = await counter.getRemainingRepeats(for: zikr)
+        updateRemainingRepeatsText()
     }
-
+    
+    @MainActor func completeCounter() async {
+        guard let category = zikr.category, category != .other else {
+            return
+        }
+        do {
+            try await counter.incrementCounter(for: zikr, by: remainingRepeatsNumber ?? 100)
+            remainingRepeatsNumber = 0
+            updateRemainingRepeatsText()
+        } catch {
+            print(error)
+        }
+    }
+    
 }
 
 extension ZikrViewModel {

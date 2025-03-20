@@ -39,6 +39,22 @@ public actor InMemoryZikrCounter: ZikrCounterType {
         }
     }
     
+    public func incrementCounter(for zikr: Zikr, by count: Int) async throws {
+        resetDataIfNeeded()
+        
+        let repeats: Int
+        if let currentRepeats = data[zikr] {
+            repeats = currentRepeats
+        } else {
+            repeats = zikr.repeats
+        }
+        data[zikr] = max(0, repeats - count)
+        
+        if let category = zikr.category {
+            await updateCompletedRepeats(for: category)
+        }
+    }
+    
     nonisolated public func observeRemainingRepeats(for zikr: Entities.Zikr) -> AnyPublisher<Int, Never> {
         Empty().eraseToAnyPublisher()
     }

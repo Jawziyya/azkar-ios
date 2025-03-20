@@ -103,10 +103,17 @@ public final class DatabaseZikrCounter: ZikrCounterType {
     }
     
     public func incrementCounter(for zikr: Zikr) async throws {
+        try await incrementCounter(for: zikr, by: 1)
+    }
+    
+    public func incrementCounter(for zikr: Zikr, by count: Int) async throws {
         let key = getKey()
-        let newRecord = ZikrCounter(key: key, zikrId: zikr.id, category: zikr.category)
-        try await getDatabaseQueue().write { db in
-            try newRecord.insert(db)
+        let newRecords = Array(repeating: ZikrCounter(key: key, zikrId: zikr.id, category: zikr.category), count: count)
+        try await getDatabaseQueue().inTransaction { db in
+            for record in newRecords {
+                try record.insert(db)
+            }
+            return .commit
         }
         
         let remainingRepeats = await getRemainingRepeats(for: zikr)

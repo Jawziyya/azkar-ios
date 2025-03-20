@@ -35,7 +35,7 @@ final class ZikrCounter: ObservableObject, ZikrCounterType {
     
     func getRemainingRepeats(for zikr: Zikr) async -> Int? {
         guard zikr.category != .other else {
-            return 0
+            return nil
         }
         return await databaseZikrCounter.getRemainingRepeats(for: zikr)
     }
@@ -54,6 +54,11 @@ final class ZikrCounter: ObservableObject, ZikrCounterType {
     func incrementCounter(for zikr: Zikr) async throws {
         try await inMemoryZikrCounter.incrementCounter(for: zikr)
         try await databaseZikrCounter.incrementCounter(for: zikr)
+    }
+    
+    func incrementCounter(for zikr: Zikr, by count: Int) async throws {
+        try await inMemoryZikrCounter.incrementCounter(for: zikr, by: count)
+        try await databaseZikrCounter.incrementCounter(for: zikr, by: count)
     }
     
     func observeCompletedRepeats(in category: ZikrCategory) -> AnyPublisher<Int, Never> {

@@ -29,21 +29,14 @@ final class ZikrPagesViewModel: ObservableObject, Equatable {
     let pages: [PageType]
     let preferences: Preferences
     let selectedPage: AnyPublisher<Int, Never>
-    let canUseCounter: Bool
     let initialPage: Int
     let zikrCounter: ZikrCounterType = ZikrCounter.shared
     
     @Published var page = 0
-    @Published var currentZikrRemainingRepeatNumber: Int?
     @Published var hasRemainingRepeats = true
     @Published var counterPosition: CounterPosition
 
     @Published var isCategoryCompleted = false
-    private var incrementerPublishers: [ZikrViewModel: PassthroughSubject<Void, Never>] = [:]
-
-    var showCounterButton: Bool {
-        preferences.counterType == .floatingButton
-    }
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -64,7 +57,6 @@ final class ZikrPagesViewModel: ObservableObject, Equatable {
         self.selectedPage = selectedPagePublisher
         self.initialPage = initialPage
         self.page = initialPage
-        canUseCounter = category != .other
         counterPosition = preferences.counterPosition
         
         var pages = azkar.map { PageType.zikr($0) }
@@ -72,10 +64,6 @@ final class ZikrPagesViewModel: ObservableObject, Equatable {
             pages.append(.readingCompletion)
         }
         self.pages = pages
-
-        azkar.forEach { vm in
-            incrementerPublishers[vm] = PassthroughSubject<Void, Never>()
-        }
         
         // Setup completion tracking if category is not 'other'
         if category != .other {
@@ -84,17 +72,6 @@ final class ZikrPagesViewModel: ObservableObject, Equatable {
             }
         }
 
-        $page
-            .delay(for: 0.1, scheduler: DispatchQueue.main)
-            .map { [unowned self] page in
-                guard page < self.azkar.count else {
-                    return 0
-                }
-                let zikr = self.azkar[page]
-                return zikr.remainingRepeatsNumber
-            }
-            .assign(to: &$currentZikrRemainingRepeatNumber)
-   
         preferences
             .$counterType
             .toVoid()
@@ -176,29 +153,7 @@ final class ZikrPagesViewModel: ObservableObject, Equatable {
             initialPage: 0
         )
     }
-    
-    @MainActor func resetCounter() async {
-        await zikrCounter.resetCounterForCategory(category)
-    }
-
-    func incrementCurrentPageZikrCounter() {
-        let zikr = azkar[page]
-        guard let remainingRepeatsNumber = zikr.remainingRepeatsNumber else {
-            return
-        }
-        incrementerPublishers[zikr]?.send()
-        let number = remainingRepeatsNumber - 1
-        currentZikrRemainingRepeatNumber = number
-    }
-
-    func getIncrementPublisher(for zikr: ZikrViewModel) -> AnyPublisher<Void, Never> {
-        if let publisher = incrementerPublishers[zikr] {
-            return publisher.eraseToAnyPublisher()
-        } else {
-            return Empty().eraseToAnyPublisher()
-        }
-    }
-    
+        
     func shareCurrentZikr() {
         guard azkar.count > page else {
             return
@@ -206,7 +161,7 @@ final class ZikrPagesViewModel: ObservableObject, Equatable {
         let zikr = azkar[page].zikr
         router.trigger(.shareOptions(zikr))
     }
-    
+        
     @MainActor func markCurrentCategoryAsCompleted() async {
         try? await zikrCounter.markCategoryAsCompleted(category)
         hasRemainingRepeats = false

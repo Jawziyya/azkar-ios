@@ -32,63 +32,11 @@ struct ZikrPagesView: View, Equatable {
                 }
             }
             .background(.background, ignoreSafeArea: .all)
-            .overlay(alignment: viewModel.preferences.counterPosition.alignment) {
-                Group {
-                    if
-                        viewModel.canUseCounter,
-                        viewModel.preferences.counterType == .floatingButton,
-                        viewModel.showCounterButton,
-                        let currentZikrRemainingRepeatNumber = viewModel.currentZikrRemainingRepeatNumber,
-                        currentZikrRemainingRepeatNumber > 0
-                    {
-                        counterButton(currentZikrRemainingRepeatNumber.description)
-                    }
-                }
-            }
             .onAppear {
                 AnalyticsReporter.reportScreen("Azkar Pages", className: viewName)
             }
     }
     
-    func counterButton(_ repeats: String) -> some View {
-        Button(action: {
-            withAnimation(.smooth) {
-                viewModel.incrementCurrentPageZikrCounter()
-            }
-        }, label: {
-            Text(repeats)
-                .font(Font.system(
-                    size: viewModel.preferences.counterSize.value / 3,
-                    weight: .regular,
-                    design: .monospaced).monospacedDigit()
-                )
-                .minimumScaleFactor(0.25)
-                .padding()
-                .frame(
-                    width: viewModel.preferences.counterSize.value,
-                    height: viewModel.preferences.counterSize.value
-                )
-                .foregroundStyle(Color.white)
-                .background(.accent)
-                .clipShape(Circle())
-                .contextMenu {
-                    Button(action: {
-                        Task {
-                            await viewModel.resetCounter()
-                        }
-                    }) {
-                        Label(L10n.Common.resetCounter, systemImage: "arrow.counterclockwise")
-                    }
-                }
-                .padding(.horizontal)
-        })
-        .frame(
-            width: viewModel.preferences.counterSize.value,
-            height: viewModel.preferences.counterSize.value
-        )
-        .padding(.horizontal)
-    }
-
     var pagerView: some View {
         PaginationView(
             axis: .horizontal,
@@ -100,7 +48,6 @@ struct ZikrPagesView: View, Equatable {
                 case .zikr(let zikr):
                     ZikrView(
                         viewModel: zikr,
-                        incrementAction: viewModel.getIncrementPublisher(for: zikr),
                         counterFinishedCallback: viewModel.goToNextZikrIfNeeded
                     )
                 case .readingCompletion:
