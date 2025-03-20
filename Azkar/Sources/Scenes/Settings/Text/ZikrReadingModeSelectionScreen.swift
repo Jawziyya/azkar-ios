@@ -72,8 +72,7 @@ struct ZikrReadingModeSelectionScreen: View {
         proxy: GeometryProxy
     ) -> some View {
         ZikrView(
-            viewModel: zikrViewModel,
-            incrementAction: PassthroughSubject().eraseToAnyPublisher()
+            viewModel: zikrViewModel
         )
         .environment(\.zikrReadingMode, mode)
         .onDisappear {

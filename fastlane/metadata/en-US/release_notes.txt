@@ -1,4 +1,5 @@
 - Track your daily reading progress directly from your iOS lock screen with our custom widget
 - Enhanced sharing capabilities
 - Customizable transliteration settings (DIN 31635 romanization support)
+- Counter behaviour improvements
 - Bugfixes

@@ -51,8 +51,8 @@ final class ZikrViewModel: ObservableObject, Identifiable, Hashable {
     
     @Published var textSettingsToken = UUID()
 
-    @Published var remainingRepeatsFormatted: String = ""
-    @Published var remainingRepeatsNumber: Int = 0 {
+    @Published var remainingRepeatsFormatted: String?
+    @Published var remainingRepeatsNumber: Int? {
         didSet {
             updateRemainingRepeatsText()
         }
@@ -69,13 +69,22 @@ final class ZikrViewModel: ObservableObject, Identifiable, Hashable {
     }
 
     func updateRemainingRepeatsText() {
+        guard let remainingRepeatsNumber = remainingRepeatsNumber else {
+            remainingRepeatsFormatted = nil
+            return
+        }
+        
         if !showRemainingCounter || remainingRepeatsNumber == zikr.repeats {
             remainingRepeatsFormatted = L10n.repeatsNumber(zikr.repeats)
         } else {
             remainingRepeatsFormatted = L10n.remainingRepeats(remainingRepeatsNumber)
         }
     }
-
+    
+    var showCounterButton: Bool {
+        preferences.counterType == .floatingButton
+    }
+    
     private var cancellables: Set<AnyCancellable> = []
     private let player: Player
     
@@ -237,7 +246,7 @@ final class ZikrViewModel: ObservableObject, Identifiable, Hashable {
 
     @MainActor
     func incrementZikrCount() async {
-        guard remainingRepeatsNumber > 0 else {
+        guard remainingRepeatsNumber != nil else {
             return
         }
         showRemainingCounter = true
@@ -246,7 +255,9 @@ final class ZikrViewModel: ObservableObject, Identifiable, Hashable {
         } catch {
             return
         }
-        let remainingRepeatsNumber = await counter.getRemainingRepeats(for: zikr)
+        guard let remainingRepeatsNumber = await counter.getRemainingRepeats(for: zikr) else {
+            return
+        }
         
         withAnimation(.smooth) {
             self.remainingRepeatsNumber = remainingRepeatsNumber
@@ -282,7 +293,29 @@ final class ZikrViewModel: ObservableObject, Identifiable, Hashable {
     func pausePlayer() {
         player.pause()
     }
-
+    
+    @MainActor func resetCounter() async {
+        guard let category = zikr.category, category != .other else {
+            return
+        }
+        await counter.resetCounterForCategory(category)
+        remainingRepeatsNumber = await counter.getRemainingRepeats(for: zikr)
+        updateRemainingRepeatsText()
+    }
+    
+    @MainActor func completeCounter() async {
+        guard let category = zikr.category, category != .other else {
+            return
+        }
+        do {
+            try await counter.incrementCounter(for: zikr, by: remainingRepeatsNumber ?? 100)
+            remainingRepeatsNumber = 0
+            updateRemainingRepeatsText()
+        } catch {
+            print(error)
+        }
+    }
+    
 }
 
 extension ZikrViewModel {

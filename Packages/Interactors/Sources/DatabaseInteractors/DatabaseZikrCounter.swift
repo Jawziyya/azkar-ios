@@ -11,7 +11,6 @@ public final class DatabaseZikrCounter: ZikrCounterType {
     private let databasePath: String
     private let getKey: () -> Int
     
-    let remainingZikrRepeatsPublisher = PassthroughSubject<Int, Never>()
     private var completedRepeatsPublishers: [ZikrCategory: CurrentValueSubject<Int, Never>] = [:]
     
     public init(
@@ -57,7 +56,7 @@ public final class DatabaseZikrCounter: ZikrCounterType {
         return try DatabaseQueue(path: databasePath)
     }
         
-    public func getRemainingRepeats(for zikr: Zikr) async -> Int {
+    public func getRemainingRepeats(for zikr: Zikr) async -> Int? {
         let key = getKey()
         do {
             return try await getDatabaseQueue().read { db in
@@ -69,21 +68,11 @@ public final class DatabaseZikrCounter: ZikrCounterType {
                     let count: Int = row["count"]
                     return max(0, zikr.repeats - count)
                 }
-                return 0
+                return nil
             }
         } catch {
-            return 0
+            return nil
         }
-    }
-    
-    public func observeRemainingRepeats(for zikr: Zikr) -> AnyPublisher<Int, Never> {
-        defer {
-            Task {
-                let remainingRepeats = await getRemainingRepeats(for: zikr)
-                remainingZikrRepeatsPublisher.send(remainingRepeats)
-            }
-        }
-        return remainingZikrRepeatsPublisher.eraseToAnyPublisher()
     }
     
     public func markCategoryAsCompleted(_ category: ZikrCategory) async throws {
@@ -114,14 +103,20 @@ public final class DatabaseZikrCounter: ZikrCounterType {
     }
     
     public func incrementCounter(for zikr: Zikr) async throws {
+        try await incrementCounter(for: zikr, by: 1)
+    }
+    
+    public func incrementCounter(for zikr: Zikr, by count: Int) async throws {
         let key = getKey()
-        let newRecord = ZikrCounter(key: key, zikrId: zikr.id, category: zikr.category)
-        try await getDatabaseQueue().write { db in
-            try newRecord.insert(db)
+        let newRecords = Array(repeating: ZikrCounter(key: key, zikrId: zikr.id, category: zikr.category), count: count)
+        try await getDatabaseQueue().inTransaction { db in
+            for record in newRecords {
+                try record.insert(db)
+            }
+            return .commit
         }
         
         let remainingRepeats = await getRemainingRepeats(for: zikr)
-        remainingZikrRepeatsPublisher.send(remainingRepeats)
         
         // Also update the completed repeats publisher if this zikr has a category
         if let category = zikr.category, let publisher = completedRepeatsPublishers[category] {
@@ -191,6 +186,20 @@ public final class DatabaseZikrCounter: ZikrCounterType {
         }
         
         return publisher.eraseToAnyPublisher()
+    }
+    
+    public func resetCounterForCategory(_ category: ZikrCategory) async {
+        let key = getKey()
+        do {
+            try await getDatabaseQueue().write { db in
+                try db.execute(
+                    sql: "DELETE FROM counters WHERE key = ? AND category = ?",
+                    arguments: [key, category.rawValue]
+                )
+            }
+        } catch {
+            print("Error resetting category counter: \(error)")
+        }
     }
     
     public func resetCategoryCompletionMark(_ category: ZikrCategory) async {

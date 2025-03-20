@@ -33,8 +33,11 @@ final class ZikrCounter: ObservableObject, ZikrCounterType {
         )
     }
     
-    func getRemainingRepeats(for zikr: Zikr) async -> Int {
-        await inMemoryZikrCounter.getRemainingRepeats(for: zikr)
+    func getRemainingRepeats(for zikr: Zikr) async -> Int? {
+        guard zikr.category != .other else {
+            return nil
+        }
+        return await databaseZikrCounter.getRemainingRepeats(for: zikr)
     }
         
     func markCategoryAsCompleted(_ category: ZikrCategory) async throws {
@@ -53,6 +56,11 @@ final class ZikrCounter: ObservableObject, ZikrCounterType {
         try await databaseZikrCounter.incrementCounter(for: zikr)
     }
     
+    func incrementCounter(for zikr: Zikr, by count: Int) async throws {
+        try await inMemoryZikrCounter.incrementCounter(for: zikr, by: count)
+        try await databaseZikrCounter.incrementCounter(for: zikr, by: count)
+    }
+    
     func observeCompletedRepeats(in category: ZikrCategory) -> AnyPublisher<Int, Never> {
         if category == .afterSalah {
             return inMemoryZikrCounter.observeCompletedRepeats(in: category)
@@ -67,6 +75,13 @@ final class ZikrCounter: ObservableObject, ZikrCounterType {
         } else {
             return await databaseZikrCounter.isCategoryMarkedAsCompleted(category)
         }
+    }
+    
+    func resetCounterForCategory(_ category: ZikrCategory) async {
+        await inMemoryZikrCounter.resetCounterForCategory(category)
+        await inMemoryZikrCounter.resetCategoryCompletionMark(category)
+        await databaseZikrCounter.resetCounterForCategory(category)
+        await databaseZikrCounter.resetCategoryCompletionMark(category)
     }
     
     func resetCategoryCompletionMark(_ category: ZikrCategory) async {

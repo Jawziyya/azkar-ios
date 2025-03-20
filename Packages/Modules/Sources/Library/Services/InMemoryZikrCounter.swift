@@ -14,13 +14,13 @@ public actor InMemoryZikrCounter: ZikrCounterType {
     
     public init() {}
     
-    public func getRemainingRepeats(for zikr: Zikr) async -> Int {
+    public func getRemainingRepeats(for zikr: Zikr) async -> Int? {
         resetDataIfNeeded()
         
         if let repeats = data[zikr] {
             return repeats
         }
-        return zikr.repeats
+        return zikr.category != .other ? zikr.repeats : nil
     }
     
     public func incrementCounter(for zikr: Zikr) async throws {
@@ -33,6 +33,22 @@ public actor InMemoryZikrCounter: ZikrCounterType {
             repeats = zikr.repeats
         }
         data[zikr] = repeats - 1
+        
+        if let category = zikr.category {
+            await updateCompletedRepeats(for: category)
+        }
+    }
+    
+    public func incrementCounter(for zikr: Zikr, by count: Int) async throws {
+        resetDataIfNeeded()
+        
+        let repeats: Int
+        if let currentRepeats = data[zikr] {
+            repeats = currentRepeats
+        } else {
+            repeats = zikr.repeats
+        }
+        data[zikr] = max(0, repeats - count)
         
         if let category = zikr.category {
             await updateCompletedRepeats(for: category)
@@ -86,6 +102,13 @@ public actor InMemoryZikrCounter: ZikrCounterType {
         let completedCount = await calculateTotalRepeats(in: category)
         var currentValues = completedRepeatsSubject.value
         currentValues[category] = completedCount
+        completedRepeatsSubject.send(currentValues)
+    }
+    
+    public func resetCounterForCategory(_ category: ZikrCategory) async {
+        data = data.filter { $0.key.category != category }
+        var currentValues = completedRepeatsSubject.value
+        currentValues[category] = 0
         completedRepeatsSubject.send(currentValues)
     }
     

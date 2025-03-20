@@ -27,11 +27,6 @@ private func getDefaultSettings(
     ]
 }
 
-let packages: [Package] = [
-    // MARK: Internal depedencies.
-    .local(path: "Packages/Modules"),
-]
-
 let baseSettingsDictionary = SettingsDictionary()
     .bitcodeEnabled(false)
     .merging([kDevelopmentTeam: SettingValue(stringLiteral: teamId)])
