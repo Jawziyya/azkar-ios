@@ -34,7 +34,7 @@ final class ZikrPagesViewModel: ObservableObject, Equatable {
     let zikrCounter: ZikrCounterType = ZikrCounter.shared
     
     @Published var page = 0
-    @Published var currentZikrRemainingRepeatNumber = 0
+    @Published var currentZikrRemainingRepeatNumber: Int?
     @Published var hasRemainingRepeats = true
     @Published var counterPosition: CounterPosition
 
@@ -176,11 +176,18 @@ final class ZikrPagesViewModel: ObservableObject, Equatable {
             initialPage: 0
         )
     }
+    
+    @MainActor func resetCounter() async {
+        await zikrCounter.resetCounterForCategory(category)
+    }
 
     func incrementCurrentPageZikrCounter() {
         let zikr = azkar[page]
+        guard let remainingRepeatsNumber = zikr.remainingRepeatsNumber else {
+            return
+        }
         incrementerPublishers[zikr]?.send()
-        let number = zikr.remainingRepeatsNumber - 1
+        let number = remainingRepeatsNumber - 1
         currentZikrRemainingRepeatNumber = number
     }
 

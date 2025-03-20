@@ -21,7 +21,8 @@ struct ZikrPagesView: View, Equatable {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigation) {
-                    if viewModel.page < viewModel.pages.count - 1 {
+                    let page = viewModel.pages[viewModel.page]
+                    if page != .readingCompletion {
                         HStack {
                             Button(systemImage: .squareAndArrowUp, action: viewModel.shareCurrentZikr)
                             
@@ -33,8 +34,14 @@ struct ZikrPagesView: View, Equatable {
             .background(.background, ignoreSafeArea: .all)
             .overlay(alignment: viewModel.preferences.counterPosition.alignment) {
                 Group {
-                    if viewModel.canUseCounter, viewModel.preferences.counterType == .floatingButton, viewModel.showCounterButton, viewModel.currentZikrRemainingRepeatNumber > 0 {
-                        counterButton
+                    if
+                        viewModel.canUseCounter,
+                        viewModel.preferences.counterType == .floatingButton,
+                        viewModel.showCounterButton,
+                        let currentZikrRemainingRepeatNumber = viewModel.currentZikrRemainingRepeatNumber,
+                        currentZikrRemainingRepeatNumber > 0
+                    {
+                        counterButton(currentZikrRemainingRepeatNumber.description)
                     }
                 }
             }
@@ -43,13 +50,13 @@ struct ZikrPagesView: View, Equatable {
             }
     }
     
-    var counterButton: some View {
+    func counterButton(_ repeats: String) -> some View {
         Button(action: {
             withAnimation(.smooth) {
                 viewModel.incrementCurrentPageZikrCounter()
             }
         }, label: {
-            Text(viewModel.currentZikrRemainingRepeatNumber.description)
+            Text(repeats)
                 .font(Font.system(
                     size: viewModel.preferences.counterSize.value / 3,
                     weight: .regular,
@@ -64,12 +71,16 @@ struct ZikrPagesView: View, Equatable {
                 .foregroundStyle(Color.white)
                 .background(.accent)
                 .clipShape(Circle())
-                .padding(.horizontal)
-                .onTapGesture {
-                    withAnimation(.easeInOut) {
-                        viewModel.incrementCurrentPageZikrCounter()
+                .contextMenu {
+                    Button(action: {
+                        Task {
+                            await viewModel.resetCounter()
+                        }
+                    }) {
+                        Label(L10n.Common.resetCounter, systemImage: "arrow.counterclockwise")
                     }
                 }
+                .padding(.horizontal)
         })
         .frame(
             width: viewModel.preferences.counterSize.value,

@@ -50,7 +50,7 @@ struct ZikrView: View {
             await viewModel.incrementZikrCount()
             WidgetCenter.shared.reloadTimelines(ofKind: "AzkarCompletionWidgets")
         }
-        if viewModel.remainingRepeatsNumber > 0, viewModel.preferences.enableCounterHapticFeedback {
+        if let remainingRepeatsNumber = viewModel.remainingRepeatsNumber,  remainingRepeatsNumber > 0, viewModel.preferences.enableCounterHapticFeedback {
             HapticGenerator.performFeedback(.impact(flexibility: .soft))
         }
     }
@@ -408,13 +408,33 @@ struct ZikrView: View {
         .id(viewModel.textSettingsToken)
         .padding()
     }
+    
+    @ViewBuilder private var repeatsNumber: some View {
+        if viewModel.zikr.repeats > 0, let remainingRepeatsFormatted = viewModel.remainingRepeatsFormatted {
+            getInfoStack(label: L10n.Read.repeats, text: remainingRepeatsFormatted)
+                .onTapGesture(perform: viewModel.toggleCounterFormat)
+                .padding(.horizontal)
+                .padding(.vertical, 10)
+                .contextMenu {
+                    Button(action: {
+                        Task {
+                            await viewModel.resetCounter()
+                        }
+                    }) {
+                        Label(L10n.Common.resetCounter, systemImage: "arrow.counterclockwise")
+                    }
+                }
+                .animation(.smooth, value: remainingRepeatsFormatted)
+        }
+    }
 
     // MARK: - Info
     private var infoView: some View {
-        HStack(alignment: .center, spacing: 20) {
-            if viewModel.zikr.repeats > 0 {
-                getInfoStack(label: L10n.Read.repeats, text: viewModel.remainingRepeatsFormatted)
-                    .onTapGesture(perform: viewModel.toggleCounterFormat)
+        HStack(alignment: .center) {
+            if #available(iOS 16, *) {
+                repeatsNumber.contentTransition(.numericText())
+            } else {
+                repeatsNumber
             }
 
             viewModel.source.textOrNil.flatMap { text in
@@ -427,10 +447,12 @@ struct ZikrView: View {
                     .hoverEffect(HoverEffect.highlight)
                 })
                 .disabled(viewModel.hadithViewModel == nil)
+                .padding(.horizontal)
+                .padding(.vertical, 10)
             }
         }
         .systemFont(.caption)
-        .padding()
+        .padding(.vertical, 10)
     }
 
     private var hadithView: some View {

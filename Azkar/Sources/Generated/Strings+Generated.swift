@@ -116,6 +116,8 @@ internal enum L10n {
     internal static let noSearchResults = L10n.tr("Localizable", "common.no-search-results", fallback: "No search results")
     /// Report a problem
     internal static let reportProblem = L10n.tr("Localizable", "common.report-problem", fallback: "Report a problem")
+    /// Reset counter
+    internal static let resetCounter = L10n.tr("Localizable", "common.reset-counter", fallback: "Reset counter")
     /// Restore
     internal static let restore = L10n.tr("Localizable", "common.restore", fallback: "Restore")
     /// Send
@@ -264,8 +266,10 @@ internal enum L10n {
     internal static func few(_ p1: Int) -> String {
       return L10n.tr("Localizable", "remaining-repeats.few", p1, fallback: "%d times more")
     }
-    /// done
-    internal static let other = L10n.tr("Localizable", "remaining-repeats.other", fallback: "done")
+    /// %d times more
+    internal static func other(_ p1: Int) -> String {
+      return L10n.tr("Localizable", "remaining-repeats.other", p1, fallback: "%d times more")
+    }
     /// 
     internal static let zero = L10n.tr("Localizable", "remaining-repeats.zero", fallback: "")
   }
@@ -654,18 +658,6 @@ internal enum L10n {
       internal static let tabarani = L10n.tr("Localizable", "text.source.tabarani", fallback: "at-Tabarani")
       /// at-Tirmidhi
       internal static let tirmidhi = L10n.tr("Localizable", "text.source.tirmidhi", fallback: "at-Tirmidhi")
-    }
-  }
-  internal enum Transliteration {
-    internal enum Method {
-      internal enum RuPractical {
-        /// 
-        internal static let title = L10n.tr("Localizable", "transliteration.method.ru_practical.title", fallback: "")
-      }
-      internal enum RuScientific {
-        /// 
-        internal static let title = L10n.tr("Localizable", "transliteration.method.ru_scientific.title", fallback: "")
-      }
     }
   }
   internal enum Updates {
