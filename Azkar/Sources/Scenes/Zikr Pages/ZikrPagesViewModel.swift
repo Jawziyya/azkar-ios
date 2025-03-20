@@ -108,7 +108,7 @@ final class ZikrPagesViewModel: ObservableObject, Equatable {
     /// Checks if category is already marked as completed and observes completion status changes
     private func setupCompletionTracking() async {
         if category == .afterSalah {
-            await zikrCounter.resetCategoryCompletionMark(.afterSalah)
+            await zikrCounter.resetCounterForCategory(category)
         }
         
         @Sendable func setHasRemainingRepeats(_ flag: Bool) {
