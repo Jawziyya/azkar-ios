@@ -9,6 +9,11 @@ final class ArticlesSupabaseRepository: ArticlesRepository {
     private let language: Language
     private let analyticsService: ArticlesAnalyticsService
     
+    // Cache for spotlight articles to ensure we only fetch once
+    private var cachedSpotlightArticles: [Article.ID]?
+    // Task for fetching spotlight articles to prevent concurrent fetches
+    private var spotlightFetchTask: Task<[Article.ID], Error>?
+    
     init(
         supabaseClient: SupabaseClient,
         language: Language,
@@ -19,21 +24,65 @@ final class ArticlesSupabaseRepository: ArticlesRepository {
         self.analyticsService = analyticsService
     }
     
-    func getArticles(limit: Int, newerThan: Date?) async throws -> [Article] {
-        struct SpotlightArticle: Decodable {
-            let article: ArticleDTO.ID
-            let createdAt: Date
+    func getSpotlightArticles(limit: Int) async throws -> [Article.ID] {
+        // Return cached results if available
+        if let cachedSpotlightArticles {
+            return cachedSpotlightArticles
         }
         
-        let spotlightArticlesQuery = supabaseClient
-            .from("articles_spotlight")
-            .select()
+        // If there's already a task fetching spotlight articles, await its result
+        if let existingTask = spotlightFetchTask {
+            return try await existingTask.value
+        }
         
-        let spotlightArticles: [SpotlightArticle] = try await spotlightArticlesQuery
-            .order("created_at", ascending: false)
-            .limit(limit)
-            .execute()
-            .value
+        // Create a new task to fetch spotlight articles
+        let task = Task<[Article.ID], Error> { [weak self] in
+            guard let self else {
+                throw NSError(domain: "ArticlesRepository", code: -1, userInfo: [NSLocalizedDescriptionKey: "Self is deallocated"])
+            }
+            
+            // Check again in case another task completed while we were setting up
+            if let cachedSpotlightArticles = self.cachedSpotlightArticles {
+                return cachedSpotlightArticles
+            }
+            
+            struct SpotlightArticle: Decodable {
+                let article: ArticleDTO.ID
+            }
+            
+            let spotlightArticles: [SpotlightArticle] = try await self.supabaseClient
+                .from("articles_spotlight")
+                .select()
+                .order("created_at", ascending: false)
+                .limit(limit)
+                .execute()
+                .value
+            
+            let articleIDs = spotlightArticles.map(\.article)
+            // Cache the result for future calls
+            self.cachedSpotlightArticles = articleIDs
+            return articleIDs
+        }
+        
+        // Store the task
+        spotlightFetchTask = task
+        
+        do {
+            // Await the result
+            let result = try await task.value
+            // Clear the task after completion
+            spotlightFetchTask = nil
+            return result
+        } catch {
+            // Clear the task on error
+            spotlightFetchTask = nil
+            throw error
+        }
+    }
+    
+    func getArticles(limit: Int, newerThan: Date?) async throws -> [Article] {
+        // Get spotlight article IDs using the existing method
+        let spotlightArticleIDs = try await getSpotlightArticles(limit: limit)
         
         var articlesQuery = supabaseClient
             .from("articles")
@@ -51,7 +100,7 @@ final class ArticlesSupabaseRepository: ArticlesRepository {
         }
         
         let articleObjects: [ArticleDTO] = try await articlesQuery
-            .in("id", values: spotlightArticles.map(\.article))
+            .in("id", values: spotlightArticleIDs)
             .execute()
             .value
         
@@ -102,5 +151,7 @@ final class ArticlesSupabaseRepository: ArticlesRepository {
             sharesCount: analytics?.sharesCount
         )
     }
+    
+    func removeArticles(ids: [Article.ID]) async throws {}
     
 }

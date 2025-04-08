@@ -46,9 +46,27 @@ public final class ArticlesService: ArticlesServiceType {
                 
                 let newestArticleDate = cachedArticles.first?.createdAt
                 do {
+                    // Get spotlight article IDs to determine which articles to keep
+                    let spotlightArticleIDs = try await remoteRepository.getSpotlightArticles(limit: limit)
+                    
+                    // Get new articles from remote
                     let articles = try await remoteRepository.getArticles(limit: limit, newerThan: newestArticleDate)
                     try await localRepository.saveArticles(articles)
-                    let allArticles = (articles + cachedArticles).unique(by: \.id)
+                    
+                    // Remove articles that are no longer in the spotlight
+                    if !spotlightArticleIDs.isEmpty {
+                        let cachedIDs = Set(cachedArticles.map { $0.id })
+                        let articlesToRemove = cachedIDs.filter { !spotlightArticleIDs.contains($0) }
+                        
+                        if !articlesToRemove.isEmpty {
+                            try await localRepository.removeArticles(ids: Array(articlesToRemove))
+                        }
+                    }
+                    
+                    // After removal, get the updated list of all articles
+                    let updatedCachedArticles = try await localRepository.getArticles(limit: limit, newerThan: nil)
+                    let allArticles = (articles + updatedCachedArticles).unique(by: \.id)
+                    
                     if allArticles != cachedArticles {
                         continuation.yield(allArticles)
                     }

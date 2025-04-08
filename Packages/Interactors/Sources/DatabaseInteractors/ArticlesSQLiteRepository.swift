@@ -91,4 +91,14 @@ public final class ArticlesSQLiteDatabaseService: ArticlesRepository {
             }
     }
     
+    public func getSpotlightArticles(limit: Int) async throws -> [Entities.Article.ID] {
+        return []
+    }
+    
+    public func removeArticles(ids: [Entities.Article.ID]) async throws {
+        try await databasePool.write { db in
+            try Article.deleteAll(db, ids: ids)
+        }
+    }
+    
 }
