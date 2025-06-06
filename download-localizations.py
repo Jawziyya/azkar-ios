@@ -14,7 +14,7 @@ LOCALIZATION_KEYS = ['strings']
 
 def get_url(key):
     """Generate the URL for the localization API."""
-    return f'http://localise.biz/api/export/archive/{key}/ru/en.zip'
+    return f'http://localise.biz/api/export/archive/{key}/ru/en/tr.zip'
 
 def get_container_folder_path(key):
     """Generate the container folder path for the given key."""
