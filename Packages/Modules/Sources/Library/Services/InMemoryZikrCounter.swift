@@ -10,6 +10,7 @@ public actor InMemoryZikrCounter: ZikrCounterType {
     
     private var date = Date()
     private var data: [Zikr: Int] = [:]
+    private var completedCategories: Set<ZikrCategory> = []
     private let completedRepeatsSubject = CurrentValueSubject<[ZikrCategory: Int], Never>([:])
     
     public init() {}
@@ -65,6 +66,7 @@ public actor InMemoryZikrCounter: ZikrCounterType {
         var currentValues = completedRepeatsSubject.value
         currentValues[category] = totalRepeats
         completedRepeatsSubject.send(currentValues)
+        completedCategories.insert(category)
     }
 
     nonisolated public func observeCompletedRepeats(in category: ZikrCategory) -> AnyPublisher<Int, Never> {
@@ -76,7 +78,8 @@ public actor InMemoryZikrCounter: ZikrCounterType {
     }
     
     public func isCategoryMarkedAsCompleted(_ category: ZikrCategory) async -> Bool {
-        return false
+        resetDataIfNeeded()
+        return completedCategories.contains(category)
     }
     
     private func resetDataIfNeeded() {
@@ -86,6 +89,7 @@ public actor InMemoryZikrCounter: ZikrCounterType {
         date = Date()
         data = [:]
         completedRepeatsSubject.send([:])
+        completedCategories = []
     }
     
     private func calculateTotalRepeats(in category: ZikrCategory) -> Int {
@@ -110,6 +114,7 @@ public actor InMemoryZikrCounter: ZikrCounterType {
         var currentValues = completedRepeatsSubject.value
         currentValues[category] = 0
         completedRepeatsSubject.send(currentValues)
+        completedCategories.remove(category)
     }
     
     public func resetCategoryCompletionMark(_ category: ZikrCategory) async {
@@ -117,6 +122,7 @@ public actor InMemoryZikrCounter: ZikrCounterType {
         currentValues[category] = 0
         completedRepeatsSubject.send(currentValues)
         data = data.filter { $0.key.category != category }
+        completedCategories.remove(category)
     }
     
 }
