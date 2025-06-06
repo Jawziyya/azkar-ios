@@ -10,8 +10,9 @@ public final class DatabaseZikrCounter: ZikrCounterType {
     
     private let databasePath: String
     private let getKey: () -> Int
-    
+
     private var completedRepeatsPublishers: [ZikrCategory: CurrentValueSubject<Int, Never>] = [:]
+    private var observationTokens: [ZikrCategory: AnyDatabaseCancellable] = [:]
     
     public init(
         databasePath: String,
@@ -161,7 +162,7 @@ public final class DatabaseZikrCounter: ZikrCounterType {
         // Set up observation using GRDB's ValueObservation
         do {
             let queue = try getDatabaseQueue()
-            
+
             // Use ValueObservation to track changes to the counters table for this category
             let observation = ValueObservation.tracking { db in
                 try Int.fetchOne(
@@ -170,9 +171,9 @@ public final class DatabaseZikrCounter: ZikrCounterType {
                     arguments: [key, category.rawValue]
                 ) ?? 0
             }
-            
-            // Start the observation on a background queue
-            observation.start(
+
+            // Start the observation on a background queue and keep the token
+            let token = observation.start(
                 in: queue,
                 onError: { error in
                     print("Error observing completed repeats: \(error)")
@@ -181,6 +182,7 @@ public final class DatabaseZikrCounter: ZikrCounterType {
                     publisher?.send(count)
                 }
             )
+            observationTokens[category] = token
         } catch {
             print("Failed to start observation: \(error)")
         }
@@ -197,6 +199,8 @@ public final class DatabaseZikrCounter: ZikrCounterType {
                     arguments: [key, category.rawValue]
                 )
             }
+            observationTokens[category]?.cancel()
+            observationTokens[category] = nil
         } catch {
             print("Error resetting category counter: \(error)")
         }
@@ -211,6 +215,8 @@ public final class DatabaseZikrCounter: ZikrCounterType {
                     arguments: [key, category.rawValue]
                 )
             }
+            observationTokens[category]?.cancel()
+            observationTokens[category] = nil
         } catch {
             print("Error resetting category completion mark: \(error)")
         }
