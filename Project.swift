@@ -166,6 +166,8 @@ enum AzkarTarget: String, CaseIterable {
                     "Azkar/Resources/ru.lproj/Localizable.stringsdict",
                     "Azkar/Resources/en.lproj/Localizable.strings",
                     "Azkar/Resources/en.lproj/Localizable.stringsdict",
+                    "Azkar/Resources/tr.lproj/Localizable.strings",
+                    "Azkar/Resources/tr.lproj/Localizable.stringsdict",
                 ],
                 entitlements: "AzkarWidgets/AzkarWidgets.entitlements",
                 dependencies: [
@@ -232,7 +234,8 @@ enum AzkarTarget: String, CaseIterable {
                 sources: "AzkarUITests/Sources/**",
                 resources: [
                     "Azkar/Resources/en.lproj/Localizable.strings",
-                    "Azkar/Resources/ru.lproj/Localizable.strings"
+                    "Azkar/Resources/ru.lproj/Localizable.strings",
+                    "Azkar/Resources/tr.lproj/Localizable.strings"
                 ],
                 dependencies: [
                     .target(name: AzkarTarget.azkarApp.rawValue),
