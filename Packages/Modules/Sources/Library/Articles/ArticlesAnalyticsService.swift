@@ -27,7 +27,7 @@ final class ArticlesAnalyticsService {
         )
     }
     
-    func getArticleAnalyticsCount(_ articleId: ArticleDTO.ID) async -> ArticleAnalytics? {
+    func getArticleAnalyticsCount(_ articleId: Article.ID) async -> ArticleAnalytics? {
         do {
             return try await supabaseClient
                 .from("article_analytics")

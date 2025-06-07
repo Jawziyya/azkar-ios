@@ -5,7 +5,7 @@ import Library
 
 public struct ArticleScreen: View {
     
-    let viewModel: ArticleViewModel
+    @ObservedObject var viewModel: ArticleViewModel
     var shareOptions: ShareOptions?
     let onShareButtonTap: () -> Void
     @Environment(\.appTheme) var appTheme
@@ -76,7 +76,7 @@ public struct ArticleScreen: View {
             }
         }
         .customScrollContentBackground()
-        .background(.contentBackground, ignoreSafeArea: .all)
+        .background(.background, ignoreSafeArea: .all)
     }
     
     var sharedWithAzkarView: some View {
@@ -135,15 +135,13 @@ public struct ArticleScreen: View {
 }
 
 private func getDemoVM(
-    _ coverImageFormat: ArticleDTO.CoverImageFormat,
+    _ coverImageFormat: Article.CoverImageFormat,
     _ imageLink: URL
 ) -> ArticleViewModel {
     return ArticleViewModel(
         article: .placeholder(
-            coverImage: .init(
-                imageType: .link(imageLink),
-                imageFormat: coverImageFormat
-            )
+            imageLink: imageLink.absoluteString,
+            coverImageFormat: coverImageFormat
         ),
         analyticsStream: { AsyncStream { _ in } },
         updateAnalytics: { _ in },

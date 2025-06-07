@@ -5,7 +5,7 @@ enum SupabaseContructorError: Error {
     case noAPIKeyProvided
 }
 
-func getSupabaseClient() throws -> SupabaseClient {
+public let defaultSupabaseDecoder: JSONDecoder = {
     let decoder = JSONDecoder()
     decoder.keyDecodingStrategy = .convertFromSnakeCase
     
@@ -34,7 +34,17 @@ func getSupabaseClient() throws -> SupabaseClient {
             throw DecodingError.dataCorruptedError(in: container, debugDescription: "Cannot decode date string: \(dateString)")
         }
     }
-    
+    return decoder
+}()
+
+public let defaultSupabaseEncoder: JSONEncoder = {
+    let encoder = JSONEncoder()
+    encoder.keyEncodingStrategy = .convertToSnakeCase
+    encoder.dateEncodingStrategy = .iso8601
+    return encoder
+}()
+
+func getSupabaseClient() throws -> SupabaseClient {
     guard
         let rawURL = readSecret(AzkarSecretKey.AZKAR_SUPABASE_API_URL),
         let url = URL(string: rawURL),
@@ -44,16 +54,13 @@ func getSupabaseClient() throws -> SupabaseClient {
         throw SupabaseContructorError.noAPIKeyProvided
     }
     
-    let encoder = JSONEncoder()
-    encoder.keyEncodingStrategy = .convertToSnakeCase
-    
     let client = SupabaseClient(
         supabaseURL: url,
         supabaseKey: key,
         options: SupabaseClientOptions(
             db: .init(
-                encoder: encoder,
-                decoder: decoder
+                encoder: defaultSupabaseEncoder,
+                decoder: defaultSupabaseDecoder
             )
         )
     )

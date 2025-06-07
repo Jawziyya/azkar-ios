@@ -33,17 +33,20 @@ public final class ArticlesSQLiteDatabaseService: ArticlesRepository {
         migrator.registerMigration("Create articles") { db in
             try db.create(table: "articles") { t in
                 t.autoIncrementedPrimaryKey("id")
+                t.column("category_id", .integer)
                 t.column("language", .text).notNull()
                 t.column("created_at", .datetime).notNull()
                 t.column("updated_at", .datetime).notNull()
                 t.column("title", .text).notNull()
                 t.column("text", .text).notNull()
-                t.column("text_format", .blob).notNull()
-                t.column("cover_image", .blob)
+                t.column("text_format", .text).notNull()
+                t.column("cover_image_format", .text)
                 t.column("cover_image_alt_text", .text)
-                t.column("views", .integer)
-                t.column("shares", .integer)
-                t.column("tags", .blob)
+                t.column("image_link", .text)
+                t.column("image_resource_name", .text)
+                t.column("views", .integer).notNull().defaults(to: 0)
+                t.column("shares", .integer).notNull().defaults(to: 0)
+                t.column("tags", .text)                        
             }
         }
         migrator.eraseDatabaseOnSchemaChange = true
@@ -84,15 +87,11 @@ public final class ArticlesSQLiteDatabaseService: ArticlesRepository {
             }
     }
     
-    public func getArticle(_ id: ArticleDTO.ID, updatedAfter: Date?) async throws -> Article? {
+    public func getArticle(_ id: Article.ID, updatedAfter: Date?) async throws -> Article? {
         return try await databasePool
             .read { db in
                 try Article.fetchOne(db, id: id)
             }
-    }
-    
-    public func getSpotlightArticles(limit: Int) async throws -> [Entities.Article.ID] {
-        return []
     }
     
     public func removeArticles(ids: [Entities.Article.ID]) async throws {

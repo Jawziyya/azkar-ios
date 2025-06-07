@@ -194,7 +194,7 @@ final class MainMenuViewModel: ObservableObject {
                 }
             }
         } catch {
-            print(error.localizedDescription)
+            print(error)
         }
     }
     

@@ -59,20 +59,18 @@ public final class ArticleViewModel: ObservableObject {
     }
     
     private func updateNumbers() {
-        if let views = article.views {
-            setViews(views)
-        }
-        if let shares = article.shares {
-            setShares(shares)
-        }
+        setViews(article.views)
+        setShares(article.shares)
     }
     
     private func setViews(_ number: Int) {
+        guard number > 0 else { return }
         views = number
         viewsAbbreviated = number.toAbbreviatedString()
     }
     
     private func setShares(_ number: Int) {
+        guard number > 0 else { return }
         shares = number
         sharesAbbreviated = number.toAbbreviatedString()
     }
