@@ -30,6 +30,7 @@ private func getDefaultSettings(
 let baseSettingsDictionary = SettingsDictionary()
     .bitcodeEnabled(false)
     .merging([kDevelopmentTeam: SettingValue(stringLiteral: teamId)])
+    .merging(["SWIFT_STRICT_CONCURRENCY": "complete"])
 
     // A workaround due https://bugs.swift.org/browse/SR-11564
     // Should be removed when the bug is resolved.
