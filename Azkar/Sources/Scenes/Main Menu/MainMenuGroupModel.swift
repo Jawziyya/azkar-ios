@@ -5,7 +5,7 @@ import SwiftUI
 
 enum IconType: Hashable {
     case system
-    case bundled
+    case bundled(Bundle)
     case emoji
 }
 
@@ -39,8 +39,8 @@ struct AzkarMenuItem: Identifiable, AzkarMenuType, Hashable {
 
     var image: Image? {
         switch iconType {
-        case .bundled:
-            return Image(imageName).renderingMode(.original)
+        case .bundled(let bundle):
+            return Image(imageName, bundle: bundle).renderingMode(.original)
         case .system:
             return Image(systemName: imageName).renderingMode(.template)
         case .emoji:

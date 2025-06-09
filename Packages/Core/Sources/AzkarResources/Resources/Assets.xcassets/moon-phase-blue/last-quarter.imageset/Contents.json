@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "last-quarter.png",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

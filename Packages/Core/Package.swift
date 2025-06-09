@@ -8,6 +8,7 @@ let package = Package(
         .iOS(.v15),
     ],
     products: [
+        .library(name: "AzkarResources", targets: ["AzkarResources"]),
         .library(name: "Entities", targets: ["Entities"]),
         .library(name: "Extensions", targets: ["Extensions"]),
         .library(name: "AzkarServices", targets: ["AzkarServices"]),
@@ -16,6 +17,10 @@ let package = Package(
         .package(url: "https://github.com/vadymmarkov/Fakery", from: "5.1.0"),
     ],
     targets: [
+        .target(
+            name: "AzkarResources",
+            dependencies: []
+        ),
         .target(
             name: "Entities",
             dependencies: [

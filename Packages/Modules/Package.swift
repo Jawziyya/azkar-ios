@@ -2,6 +2,7 @@
 
 import PackageDescription
 
+let resources: Target.Dependency = .product(name: "AzkarResources", package: "Core")
 let entities: Target.Dependency = .product(name: "Entities", package: "Core")
 let extensions: Target.Dependency = .product(name: "Extensions", package: "Core")
 let azkarServices: Target.Dependency = .product(name: "AzkarServices", package: "Core")
@@ -32,6 +33,7 @@ let package = Package(
         .package(url: "https://github.com/vadymmarkov/Fakery", from: "5.1.0"),
         .package(url: "https://github.com/kean/Nuke", from: "12.0.0"),
         .package(url: "https://github.com/onmyway133/RoughSwift", from: "2.0.0"),
+        .package(url: "https://github.com/mannylopez/TinyMoon", from: "3.0.0"),
         
         // MARK: UI.
         .package(url: "https://github.com/aheze/Popovers", from: "1.3.2"),
@@ -48,17 +50,23 @@ let package = Package(
         .target(
             name: "Library",
             dependencies: [
+                resources,
                 entities,
                 extensions,
                 azkarServices,
                 databaseInteractors,
                 .product(name: "Supabase", package: "supabase-swift"),
                 .product(name: "NukeUI", package: "Nuke"),
+                "TinyMoon",
+            ],
+            resources: [
+                .process("Resources/Assets.xcassets"),
             ]
         ),
         .target(
             name: "Components",
             dependencies: [
+                .product(name: "Lottie", package: "lottie-spm"),
             ]
         ),
         .target(name: "ArticleReader", dependencies: [

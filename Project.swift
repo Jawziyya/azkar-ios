@@ -89,6 +89,7 @@ enum AzkarTarget: String, CaseIterable {
                 dependencies: [
                     .target(name: "AzkarWidgets"),
                     
+                    .external(name: "AzkarResources"),
                     .external(name: "Entities"),
                     .external(name: "Extensions"),
                     .external(name: "AzkarServices"),

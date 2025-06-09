@@ -334,6 +334,15 @@
       }
     },
     {
+      "identity" : "tinymoon",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/mannylopez/TinyMoon.git",
+      "state" : {
+        "revision" : "521310a2ff995dd724bbc6e66a094e60f6dc1724",
+        "version" : "3.0.1"
+      }
+    },
+    {
       "identity" : "whatsnewkit",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/SvenTiigi/WhatsNewKit",

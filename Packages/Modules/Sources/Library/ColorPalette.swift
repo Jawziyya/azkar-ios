@@ -1,4 +1,5 @@
 import SwiftUI
+import AzkarResources
 
 struct ThemeAwareColorModifier: ViewModifier {
     @Environment(\.colorTheme) var theme
@@ -71,13 +72,13 @@ public enum ColorType: String {
 
 public extension Color {
     
-    public static func getColor(_ type: ColorType, theme: ColorTheme? = nil) -> Color {
+    static func getColor(_ type: ColorType, theme: ColorTheme? = nil) -> Color {
         return getColor(type.rawValue, theme: theme)
     }
     
-    public static func getColor(_ name: String = #function, theme: ColorTheme? = nil) -> Color {
+    static func getColor(_ name: String = #function, theme: ColorTheme? = nil) -> Color {
         let colorTheme = theme ?? ColorTheme.current
-        if let color = UIColor(named: colorTheme.assetsNamespace + name, in: Bundle.main, compatibleWith: nil) {
+        if let color = UIColor(named: colorTheme.assetsNamespace + name, in: azkarResourcesBundle, compatibleWith: nil) {
             return Color(color)
         } else {
             return Color(name)
