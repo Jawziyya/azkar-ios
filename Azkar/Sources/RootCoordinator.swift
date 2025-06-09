@@ -126,12 +126,17 @@ final class RootCoordinator: NSObject, RouteTrigger, NavigationCoordinatable {
     
     func azkarForCategory(_ category: ZikrCategory) -> [ZikrViewModel] {
         do {
-            var zikrCollectionSource = preferences.zikrCollectionSource
-            if category != .morning && category != .evening {
-                zikrCollectionSource = .azkarRU
+            let adhkar: [Zikr]
+            
+            switch category {
+            case .morning, .evening:
+                adhkar = try databaseService.getAdhkar(category, collection: preferences.zikrCollectionSource)
+            case .night, .afterSalah, .other:
+                adhkar = try databaseService.getAdhkar(category, collection: .azkarRU)
+            case .hundredDua:
+                adhkar = try databaseService.getAdhkar(in: category)
             }
             
-            let adhkar = try databaseService.getAdhkar(category, collection: zikrCollectionSource)
             let viewModels = try adhkar.enumerated().map { idx, zikr in
                 try ZikrViewModel(
                     zikr: zikr,

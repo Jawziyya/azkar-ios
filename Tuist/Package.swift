@@ -38,6 +38,7 @@ let package = Package(
         .package(url: "https://github.com/bizz84/SwiftyStoreKit", from: "0.16.3"),
         .package(url: "https://github.com/kean/Nuke", from: "12.0.0"),
         .package(url: "https://github.com/onmyway133/RoughSwift", from: "2.0.0"),
+        .package(url: "https://github.com/mannylopez/TinyMoon.git", from: "3.0.1"),
         
         // MARK: UI.
         .package(url: "https://github.com/aheze/Popovers", from: "1.3.2"),

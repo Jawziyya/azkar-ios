@@ -82,6 +82,16 @@ public protocol AdhkarDatabaseService {
     /// Retrieves Adhkar belonging to a specific category.
     ///
     /// - Parameter category: The category of Zikr to retrieve.
+    /// - Parameter language: An optional parameter to specify the language of the Zikr. Defaults to nil.
+    /// - Returns: An array of `Zikr` objects within the given category.
+    func getAdhkar(
+        in category: ZikrCategory,
+        language: Language?
+    ) throws -> [Zikr]
+    
+    /// Retrieves Adhkar belonging to a specific category.
+    ///
+    /// - Parameter category: The category of Zikr to retrieve.
     /// - Throws: An error if the retrieval fails.
     /// - Returns: An array of `Zikr` objects within the given category.
     func getAdhkar(
@@ -126,6 +136,13 @@ public protocol AdhkarDatabaseService {
 public extension AdhkarDatabaseService {
     func getZikr(_ id: Int, language: Language? = nil) throws -> Zikr? {
         try getZikr(id, language: language)
+    }
+    
+    func getAdhkar(
+        in category: ZikrCategory,
+        language: Language? = nil
+    ) throws -> [Zikr] {
+        try getAdhkar(in: category, language: language)
     }
     
     func getAdhkar(

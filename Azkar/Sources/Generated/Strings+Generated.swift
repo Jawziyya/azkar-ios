@@ -92,6 +92,8 @@ internal enum L10n {
     internal static let afterSalah = L10n.tr("Localizable", "category.after-salah", fallback: "Adhkar after salah")
     /// Evening
     internal static let evening = L10n.tr("Localizable", "category.evening", fallback: "Evening")
+    /// 100 Duas from the Quran and Sunnah
+    internal static let hundredDua = L10n.tr("Localizable", "category.hundred-dua", fallback: "100 Duas from the Quran and Sunnah")
     /// Morning
     internal static let morning = L10n.tr("Localizable", "category.morning", fallback: "Morning")
     /// Bedtime

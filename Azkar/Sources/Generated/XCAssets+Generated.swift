@@ -116,6 +116,14 @@ internal enum Asset {
     internal static let paperAndMagnifier = ImageAsset(name: "ZikrCollectionsOnboarding/paper-and-magnifier")
   }
   internal static let azkarGoldLogo = ImageAsset(name: "azkar-gold-logo")
+  internal enum Categories {
+    internal static let afterSalah = ImageAsset(name: "categories/after-salah")
+    internal static let evening = ImageAsset(name: "categories/evening")
+    internal static let hundredDua = ImageAsset(name: "categories/hundred-dua")
+    internal static let importantAdhkar = ImageAsset(name: "categories/important-adhkar")
+    internal static let morning = ImageAsset(name: "categories/morning")
+    internal static let night = ImageAsset(name: "categories/night")
+  }
   internal static let completionEveningBackground = ImageAsset(name: "completion-evening-background")
   internal static let completionEveningBg = ColorAsset(name: "completion-evening-bg")
   internal static let completionEvening = ImageAsset(name: "completion-evening")
@@ -125,6 +133,36 @@ internal enum Asset {
   internal static let mosque = ImageAsset(name: "mosque")
   internal static let inkIcon = ImageAsset(name: "ink-icon")
   internal static let lockDynamicColor = ImageAsset(name: "lock-dynamic-color")
+  internal enum MoonPhase {
+    internal static let firstQuarter = ImageAsset(name: "moon-phase/first-quarter")
+    internal static let fullMoon = ImageAsset(name: "moon-phase/full-moon")
+    internal static let lastQuarter = ImageAsset(name: "moon-phase/last-quarter")
+    internal static let newMoon = ImageAsset(name: "moon-phase/new-moon")
+    internal static let waningCrescent = ImageAsset(name: "moon-phase/waning-crescent")
+    internal static let waningGibbous = ImageAsset(name: "moon-phase/waning-gibbous")
+    internal static let waxingCrescent = ImageAsset(name: "moon-phase/waxing-crescent")
+    internal static let waxingGibbous = ImageAsset(name: "moon-phase/waxing-gibbous")
+  }
+  internal enum MoonPhaseBlue {
+    internal static let firstQuarter = ImageAsset(name: "moon-phase-blue/first-quarter")
+    internal static let fullMoon = ImageAsset(name: "moon-phase-blue/full-moon")
+    internal static let lastQuarter = ImageAsset(name: "moon-phase-blue/last-quarter")
+    internal static let newMoon = ImageAsset(name: "moon-phase-blue/new-moon")
+    internal static let waningCrescent = ImageAsset(name: "moon-phase-blue/waning-crescent")
+    internal static let waningGibbous = ImageAsset(name: "moon-phase-blue/waning-gibbous")
+    internal static let waxingCrescent = ImageAsset(name: "moon-phase-blue/waxing-crescent")
+    internal static let waxingGibbous = ImageAsset(name: "moon-phase-blue/waxing-gibbous")
+  }
+  internal enum MoonPhases {
+    internal static let firstQuarter = ImageAsset(name: "moon-phases/first-quarter")
+    internal static let fullMoon = ImageAsset(name: "moon-phases/full-moon")
+    internal static let lastQuarter = ImageAsset(name: "moon-phases/last-quarter")
+    internal static let newMoon = ImageAsset(name: "moon-phases/new-moon")
+    internal static let waningCrescent = ImageAsset(name: "moon-phases/waning-crescent")
+    internal static let waningGibbous = ImageAsset(name: "moon-phases/waning-gibbous")
+    internal static let waxingCrescent = ImageAsset(name: "moon-phases/waxing-crescent")
+    internal static let waxingGibbous = ImageAsset(name: "moon-phases/waxing-gibbous")
+  }
 }
 // swiftlint:enable identifier_name line_length nesting type_body_length type_name
 
