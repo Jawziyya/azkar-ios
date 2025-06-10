@@ -3,7 +3,7 @@
 <img src=".readme/app-logo.png" height="50">
 
 <p align="left">
-    <img src="https://img.shields.io/badge/Swift-5.4-orange.svg" />
+    <img src="https://img.shields.io/badge/Swift-6-orange.svg" />
     <a href="https://telegram.me/jawziyya">
         <img src="https://img.shields.io/badge/telegram-@jawziyya-blue.svg?style=flat" alt="Telegram: @jawziyya" />
     </a>
