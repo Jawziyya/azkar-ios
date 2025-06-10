@@ -3,10 +3,17 @@ on:
   push:
     branches:
       - 'release/**'
-      - 'main'
+    tags:
+      - 'iOS_v*'
+      - 'macOS_v*'
 
-  # Allows you to run this workflow manually from the Actions tab
+  # Allows manual deployments from the Actions tab
   workflow_dispatch:
+    inputs:
+      lane:
+        description: 'Fastlane lane to run (e.g. closed_beta)'
+        required: false
+        default: 'closed_beta'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
@@ -76,15 +83,21 @@ jobs:
           mise x -- tuist install
           mise x -- tuist generate --no-open
 
-      # iOS Deployments
-      - name: Deploy iOS build to App Store
-        if: github.ref == 'refs/heads/main'
-        uses: maierj/fastlane-action@v3.1.0
-        with:
-          lane: release
+      - name: Determine lane
+        id: lane
+        run: |
+          lane="${{ github.event.inputs.lane }}"
+          if [ -z "$lane" ]; then
+            lane="closed_beta"
+          fi
+          if [[ "$GITHUB_REF" == refs/tags/iOS_v* ]]; then
+            lane="release"
+          elif [[ "$GITHUB_REF" == refs/tags/macOS_v* ]]; then
+            lane="app_store_release"
+          fi
+          echo "lane=$lane" >> "$GITHUB_OUTPUT"
 
-      - name: Deploy iOS Beta to TestFlight
-        if: github.ref != 'refs/heads/main'
+      - name: Deploy using Fastlane
         uses: maierj/fastlane-action@v3.1.0
         with:
-          lane: closed_beta
+          lane: ${{ steps.lane.outputs.lane }}

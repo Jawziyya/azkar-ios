@@ -31,3 +31,11 @@ Azkar app uses [Tuist](https://tuist.io) to generate Xcode project file.
 2. Go to the project directory and run `tuist generate`
 3. Open `Azkar.xcodeproj`
 4. Build and run.
+
+## Continuous Deployment
+
+App Store submissions are handled through GitHub Actions. When a tag matching
+`iOS_v*` or `macOS_v*` is pushed, the CD workflow builds the app and uploads it
+to App Store Connect. Pushes to `release/*` branches automatically create
+TestFlight builds using the `closed_beta` lane. You can also trigger TestFlight
+builds manually from the Actions tab using the `CD` workflow.
