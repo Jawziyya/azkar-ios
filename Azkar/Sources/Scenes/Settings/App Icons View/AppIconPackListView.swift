@@ -119,7 +119,7 @@ struct AppIconPackListView: View {
     
     func iconView(for icon: AppIcon, position: IndexPosition) -> some View {
         HStack(spacing: 16) {
-            if let image = UIImage(named: icon.iconImageName) {
+            if let image = UIImage(named: icon.iconImageName, in: resourcesBunbdle, compatibleWith: nil) {
                 Image(uiImage: image)
                     .resizable()
                     .scaledToFit()

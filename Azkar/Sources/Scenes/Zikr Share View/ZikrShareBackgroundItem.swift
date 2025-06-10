@@ -21,7 +21,7 @@ struct ZikrShareBackgroundItem: Identifiable, Hashable {
         patternImageNames.map {
             ZikrShareBackgroundItem(
                 id: $0,
-                backgroundType: .localImage(UIImage(named: "Patterns/" + $0)!),
+                backgroundType: .localImage(UIImage(named: "Patterns/" + $0, in: resourcesBunbdle, with: nil)!),
                 isProItem: false
             )
         }

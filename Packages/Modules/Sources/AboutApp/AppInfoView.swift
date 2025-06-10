@@ -5,6 +5,7 @@ import SwiftUI
 import SwiftUIIntrospect
 import SwiftUIBackports
 import Library
+import AzkarResources
 
 public struct AppInfoView: View {
 
@@ -92,7 +93,7 @@ public struct AppInfoView: View {
         VStack {
             HStack {
                 Spacer()
-                if let image = UIImage(named: viewModel.iconImageName) {
+                if let image = UIImage(named: viewModel.iconImageName, in: azkarResourcesBundle, compatibleWith: nil) {
                     Image(uiImage: image)
                         .resizable()
                         .scaledToFit()

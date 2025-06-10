@@ -6,7 +6,6 @@ import Fakery
 import ArticleReader
 import Library
 import AzkarServices
-import AzkarResources
 
 typealias SearchToken = ZikrCategory
 
@@ -111,7 +110,7 @@ final class MainMenuViewModel: ObservableObject {
                 title: L10n.Category.night,
                 color: Color.init(uiColor: .systemMint),
                 count: nil,
-                iconType: .bundled(azkarResourcesBundle)
+                iconType: .bundled(resourcesBunbdle)
             ),
             AzkarMenuItem(
                 category: .afterSalah,
@@ -119,7 +118,7 @@ final class MainMenuViewModel: ObservableObject {
                 title: L10n.Category.afterSalah,
                 color: Color.init(.systemBlue),
                 count: nil,
-                iconType: .bundled(azkarResourcesBundle)
+                iconType: .bundled(resourcesBunbdle)
             ),
             AzkarMenuItem(
                 category: .other,
@@ -127,7 +126,7 @@ final class MainMenuViewModel: ObservableObject {
                 title: L10n.Category.other,
                 color: Color.init(.systemTeal),
                 count: nil,
-                iconType: .bundled(azkarResourcesBundle)
+                iconType: .bundled(resourcesBunbdle)
             ),
             AzkarMenuItem(
                 category: .hundredDua,
@@ -135,7 +134,7 @@ final class MainMenuViewModel: ObservableObject {
                 title: L10n.Category.hundredDua,
                 color: Color.init(.systemPink),
                 count: nil,
-                iconType: .bundled(azkarResourcesBundle)
+                iconType: .bundled(resourcesBunbdle)
             ),
         ]
         

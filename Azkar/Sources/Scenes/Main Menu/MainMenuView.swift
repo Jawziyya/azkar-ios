@@ -143,7 +143,7 @@ struct MainMenuView: View {
         default:
             switch category {
             case .evening:
-                return "moon-phase-blue/\(currentMoonPhase.imageName)"
+                return "moon-phase/\(currentMoonPhase.imageName)"
             case .morning:
                 return "categories/morning"
             default:
@@ -157,7 +157,7 @@ struct MainMenuView: View {
             ImageTextCheckmarkView(
                 title: category.title,
                 imageName: getCategoryImageName(category),
-                imageBundle: azkarResourcesBundle,
+                imageBundle: resourcesBunbdle,
                 showChecmark: false
             )
             .frame(maxWidth: .infinity)

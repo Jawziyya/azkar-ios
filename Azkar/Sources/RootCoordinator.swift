@@ -326,7 +326,7 @@ extension RootCoordinator {
                     textFont: UIFont(name: self.preferences.preferredTranslationFont.postscriptName, size: 25)!,
                     pageMargins: UIEdgeInsets(horizontal: 75, vertical: 65),
                     footer: ArticlePDFComposer.Footer(
-                        image: UIImage(named: "ink-icon"),
+                        image: UIImage(named: "ink-icon", in: resourcesBunbdle, compatibleWith: nil),
                         text: L10n.Share.sharedWithAzkar.uppercased(),
                         link: URL(string: "https://apple.co/41O1pzQ")
                     )
@@ -345,7 +345,7 @@ extension RootCoordinator {
                 let view = ArticlePDFCoverView(
                     article: article,
                     maxHeight: 842,
-                    logoImage: UIImage(named: "ink-icon"),
+                    logoImage: UIImage(named: "ink-icon", in: resourcesBunbdle, compatibleWith: nil),
                     logoSubtitle: L10n.Share.sharedWithAzkar
                 )
                 .frame(width: 595, height: 842)

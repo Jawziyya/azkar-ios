@@ -1,4 +1,5 @@
 import SwiftUI
+import AzkarResources
 
 public struct ZikrBenefitsView: View {
     
@@ -10,7 +11,7 @@ public struct ZikrBenefitsView: View {
     
     public var body: some View {
         HStack(alignment: .top, spacing: 8) {
-            Image("gem-stone")
+            Image("categories/hundred-dua", bundle: azkarResourcesBundle)
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .frame(maxWidth: 15, maxHeight: 15)

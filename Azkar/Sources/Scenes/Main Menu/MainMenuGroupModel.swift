@@ -80,11 +80,11 @@ struct AzkarMenuOtherItem: Identifiable, AzkarMenuType {
 
     var image: Image? {
         switch iconType {
-        case .bundled:
-            if let image = UIImage(named: imageName) {
+        case .bundled(let bundle):
+            if let image = UIImage(named: imageName, in: bundle, compatibleWith: nil) {
                 return Image(uiImage: image).renderingMode(.original)
             } else {
-                return Image(imageName).renderingMode(.original)
+                return Image(imageName, bundle: bundle).renderingMode(.original)
             }
         case .system: 
             return Image(systemName: imageName).renderingMode(.template)

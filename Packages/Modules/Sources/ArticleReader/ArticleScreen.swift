@@ -2,6 +2,7 @@ import SwiftUI
 import NukeUI
 import Entities
 import Library
+import AzkarResources
 
 public struct ArticleScreen: View {
     
@@ -81,7 +82,7 @@ public struct ArticleScreen: View {
     
     var sharedWithAzkarView: some View {
         VStack {
-            Image(uiImage: UIImage(named: "ink")!)
+            Image(uiImage: UIImage(named: "ink", in: azkarResourcesBundle, compatibleWith: nil)!)
                 .resizable()
                 .frame(width: 30, height: 30)
                 .cornerRadius(6)
