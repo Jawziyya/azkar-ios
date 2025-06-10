@@ -58,6 +58,16 @@ jobs:
         with:
           fetch-depth: 10
 
+      - name: Cache SwiftPM packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/org.swift.swiftpm
+            ~/Library/Caches/org.swift.swiftpm
+          key: ${{ runner.os }}-spm-${{ hashFiles('**/Package.resolved') }}
+          restore-keys: |
+            ${{ runner.os }}-spm-
+
       - name: Set Xcode IDE Preferences
         run: |
           sudo defaults write /Library/Preferences/com.apple.dt.Xcode IDESkipMacroFingerprintValidation -bool YES
