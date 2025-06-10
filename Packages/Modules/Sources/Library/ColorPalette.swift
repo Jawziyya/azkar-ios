@@ -81,7 +81,7 @@ public extension Color {
         if let color = UIColor(named: colorTheme.assetsNamespace + name, in: azkarResourcesBundle, compatibleWith: nil) {
             return Color(color)
         } else {
-            return Color(name)
+            return Color(name, bundle: azkarResourcesBundle)
         }
     }
     
