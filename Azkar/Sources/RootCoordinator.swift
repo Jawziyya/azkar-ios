@@ -407,7 +407,7 @@ extension RootCoordinator {
     
     func makeCategoryView(_ category: ZikrCategory) -> ZikrPagesView {
         let viewModel = makeZikrPagesViewModel(category)
-        return ZikrPagesView(viewModel: viewModel)
+        return ZikrPagesView(viewModel: viewModel, showPageIndicators: category == .hundredDua)
     }
     
     func makeAzkarListView(_ category: ZikrCategory) -> some View {
