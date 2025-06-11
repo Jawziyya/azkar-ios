@@ -26,6 +26,11 @@ struct PagesPreviewView<Indicator: View>: View {
                                 withAnimation(.easeInOut) {
                                     selectedPage = idx
                                     proxy.scrollTo(idx, anchor: .center)
+                                    #if os(iOS)
+                                    let generator = UIImpactFeedbackGenerator(style: .light)
+                                    generator.prepare()
+                                    generator.impactOccurred()
+                                    #endif
                                 }
                             }
                             .id(idx)
