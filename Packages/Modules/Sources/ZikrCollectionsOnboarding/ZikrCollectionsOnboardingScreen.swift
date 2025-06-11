@@ -1,4 +1,5 @@
 import SwiftUI
+import AzkarResources
 
 struct ZikrCollectionsOnboardingScreen: View {
         
@@ -47,7 +48,7 @@ struct ZikrCollectionsOnboardingScreen: View {
     }
     
     var headerImage: some View {
-        Image("ZikrCollectionsOnboarding/header")
+        Image("ZikrCollectionsOnboarding/header", bundle: azkarResourcesBundle)
     }
     
     var mainActionButton: some View {
@@ -85,7 +86,7 @@ struct ZikrCollectionsOnboardingScreen: View {
         text: LocalizedStringKey
     ) -> some View {
         HStack(alignment: .top, spacing: 20) {
-            Image("ZikrCollectionsOnboarding/" + imageName)
+            Image("ZikrCollectionsOnboarding/" + imageName, bundle: azkarResourcesBundle)
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .frame(width: 30, height: 30)
