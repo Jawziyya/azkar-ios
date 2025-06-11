@@ -12,6 +12,7 @@ struct TextSettingsScreen: View {
     
     @ObservedObject var viewModel: TextSettingsViewModel
     @Environment(\.appTheme) var appTheme
+    @EnvironmentObject var settingsRouter: SettingsCoordinator.Router
 
     var body: some View {
         ScrollView {
@@ -35,7 +36,19 @@ struct TextSettingsScreen: View {
     
     var collectionSection: some View {
         VStack(spacing: 0) {
-            HeaderView(text: L10n.Settings.Text.AdhkarCollectionsSource.header)
+            HStack {
+                HeaderView(text: L10n.Settings.Text.AdhkarCollectionsSource.header)
+                Spacer()
+                Button(
+                    action: {
+                        settingsRouter.route(to: \.zikrCollectionsOnboarding)
+                    },
+                    label: {
+                        Image(systemName: "info.circle")
+                    }
+                )
+                .padding(.trailing)
+            }
             
             PickerMenu(
                 title: L10n.Settings.Text.AdhkarCollectionsSource.title,
