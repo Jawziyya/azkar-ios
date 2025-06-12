@@ -112,7 +112,7 @@ struct ZikrPagesView: View, Equatable {
         let viewModel = self.viewModel.azkar[index]
         ZStack {
             RoundedRectangle(cornerRadius: 10, style: .continuous)
-                .fill(isSelected ? colorTheme.getColor(.accent).opacity(0.5) : colorTheme.getColor(.contentBackground))
+                .fill(isSelected ? colorTheme.getColor(.accent) : colorTheme.getColor(.contentBackground))
                 .shadow(color: .black.opacity(0.08), radius: 3, x: 0, y: 1)
             VStack(spacing: 0) {
                 Text("\(index + 1)")

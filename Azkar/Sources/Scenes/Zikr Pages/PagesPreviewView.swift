@@ -87,7 +87,7 @@ struct DefaultZikrPageIndicator: View {
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
-                .fill(isSelected ? colorTheme.getColor(.accent).opacity(0.5) : colorTheme.getColor(.contentBackground))
+                .fill(isSelected ? colorTheme.getColor(.accent) : colorTheme.getColor(.contentBackground))
                 .shadow(color: .black.opacity(0.08), radius: 3, x: 0, y: 1)
             Text("\(idx + 1)")
                 .font(.caption2)
