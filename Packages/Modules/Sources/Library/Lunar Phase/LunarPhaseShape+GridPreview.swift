@@ -29,11 +29,9 @@ import SwiftUI
                 
                 var phaseInfoText: String {
                     """
-                    \(phaseInfo.phase.rawValue)
-                    emoji: \(phaseInfo.emoji)
+                    \(date.formatted(date: .abbreviated, time: .omitted))
+                    \(phaseInfo.phase.titleRu)
                     \(String(format: "%.2f", phaseInfo.illuminatedFraction))
-                    \(String(format: "%.2f", LunarPhaseShape.normalizeProgress(phaseInfo.illuminatedFraction, isWaxing: phaseInfo.isWaxing)))
-                    \(phaseInfo.isWaxing ? "waxing" : "waning")
                     """
                 }
                 
@@ -42,15 +40,12 @@ import SwiftUI
                         .frame(width: imageSize, height: imageSize)
                                     
                     Text(phaseInfoText)
-                        .font(.caption2)
+                        .font(isToday ? .caption2.bold() : .caption2)
+                        .underline(isToday, color: Color.blue)
                     
                     Spacer()
                 }
-                .background {
-                    if isToday {
-                        Color.blue.opacity(0.25)
-                    }
-                }
+                .foregroundStyle(isToday ? Color.blue : Color.primary)
             }
         }
         .padding()

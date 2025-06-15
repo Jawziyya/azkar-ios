@@ -18,59 +18,34 @@ public struct LunarPhaseView: View {
     public var body: some View {
         let normalizedFraction = LunarPhaseShape.normalizeProgress(info.illuminatedFraction, isWaxing: info.isWaxing)
         ZStack {
-            switch info.phase {
-            case .newMoon:
-                newMoon
-            default:
-                illuminatedMoon(
-                    normalizedFraction: normalizedFraction,
-                    isWaxing: info.isWaxing
-                )
+            if info.illuminatedFraction >= 0.9 {
+                getPhaseImage(.newMoon)
+                    .opacity(0.5)
+                
+                getPhaseImage(.fullMoon)
+                    .clipShape(
+                        LunarPhaseShape(
+                            progress: normalizedFraction,
+                            isWaxing: !info.isWaxing
+                        )
+                    )
+            } else if info.illuminatedFraction <= 0.1 {
+                // Nearly new: use new moon image
+                getPhaseImage(.newMoon)
+            } else {
+                getPhaseImage(.newMoon)
+                    .opacity(0.25)
+                
+                getPhaseImage(info.phase)
             }
         }
     }
     
     /// The new moon visual representation.
-    private var newMoon: some View {
-        Image("moon-phase/new-moon", bundle: azkarResourcesBundle)
+    private func getPhaseImage(_ phase: LunarPhase) -> some View {
+        Image("moon-phase/\(phase.imageName)", bundle: azkarResourcesBundle)
             .resizable()
             .aspectRatio(contentMode: .fit)
-            .shadow(color: .black.opacity(0.25), radius: 6, x: 0, y: 2)
-            .overlay(
-                Circle()
-                    .stroke(Color.white.opacity(0.08), lineWidth: 1)
-            )
     }
     
-    /// The illuminated moon visual representation for all phases except new moon.
-    /// - Parameters:
-    ///   - normalizedFraction: The normalized illuminated fraction (0...1).
-    ///   - isWaxing: Whether the moon is waxing (true) or waning (false).
-    /// - Returns: A view representing the illuminated portion of the moon.
-    private func illuminatedMoon(
-        normalizedFraction: Double,
-        isWaxing: Bool
-    ) -> some View {
-        ZStack {
-            Image("moon-phase/new-moon", bundle: azkarResourcesBundle)
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .shadow(color: .black.opacity(0.18), radius: 5, x: 0, y: 2)
-            
-            Image("moon-phase/full-moon", bundle: azkarResourcesBundle)
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .clipShape(
-                    LunarPhaseShape(
-                        progress: normalizedFraction,
-                        isWaxing: !isWaxing
-                    )
-                )
-                .shadow(color: .yellow.opacity(0.12), radius: 8, x: 0, y: 0)
-                .overlay(
-                    Circle()
-                        .stroke(Color.white.opacity(0.12), lineWidth: 1)
-                )
-        }
-    }
 }
