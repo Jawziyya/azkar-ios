@@ -23,8 +23,6 @@ struct MainMenuView: View {
     @EnvironmentObject var counter: ZikrCounter
     @State private var showAd = true
     
-    let currentMoonPhase: MoonPhase = .current
-    
     private let articleCellHeight: CGFloat = 230
     private let borderWidth: CGFloat = 2
     private var borderColor: Color {
@@ -136,28 +134,10 @@ struct MainMenuView: View {
         .applyMenuPadding()
     }
     
-    private func getCategoryImageName(_ category: ZikrCategory) -> String {
-        switch appTheme {
-        case .reader, .neomorphic, .flat:
-            return appTheme.assetsNamespace + category.rawValue
-        default:
-            switch category {
-            case .evening:
-                return "moon-phase/\(currentMoonPhase.imageName)"
-            case .morning:
-                return "categories/morning"
-            default:
-                return appTheme.assetsNamespace + category.rawValue
-            }
-        }
-    }
-    
     private func getMainMenuSectionView(_ category: ZikrCategory) -> some View {
         getMenuButton {
-            ImageTextCheckmarkView(
-                title: category.title,
-                imageName: getCategoryImageName(category),
-                imageBundle: resourcesBunbdle,
+            MainCategoryView(
+                category: category,
                 showChecmark: false
             )
             .frame(maxWidth: .infinity)
