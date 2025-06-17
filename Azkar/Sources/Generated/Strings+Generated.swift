@@ -406,6 +406,10 @@ internal enum L10n {
       /// Icon
       internal static let title = L10n.tr("Localizable", "settings.icon.title", fallback: "Icon")
       internal enum List {
+        /// Azure
+        internal static let azure = L10n.tr("Localizable", "settings.icon.list.azure", fallback: "Azure")
+        /// Crater Cookie
+        internal static let cookie = L10n.tr("Localizable", "settings.icon.list.cookie", fallback: "Crater Cookie")
         /// Dark night
         internal static let darkNight = L10n.tr("Localizable", "settings.icon.list.dark_night", fallback: "Dark night")
         /// Gold
