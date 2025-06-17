@@ -11,7 +11,7 @@ public struct ZikrBenefitsView: View {
     
     public var body: some View {
         HStack(alignment: .top, spacing: 8) {
-            Image("categories/hundred-dua", bundle: azkarResourcesBundle)
+            Image("gem-stone", bundle: azkarResourcesBundle)
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .frame(maxWidth: 15, maxHeight: 15)
