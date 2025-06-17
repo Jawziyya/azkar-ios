@@ -26,6 +26,14 @@ final class AdsSupabaseRepository: AdsRepository {
             .select()
             .eq("language", value: language.rawValue)
         
+        #if DEBUG
+        if CommandLine.arguments.contains("--ads-test") {
+            adsQuery = adsQuery.eq("is_published", value: false)
+        }
+        #else
+        adsQuery = adsQuery.eq("is_published", value: true)
+        #endif
+        
         if let orUpdatedAfter {
             let updateDate = orUpdatedAfter.addingTimeInterval(1).supabaseFormatted
             if let newerThan {
