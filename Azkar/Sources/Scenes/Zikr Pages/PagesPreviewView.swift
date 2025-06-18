@@ -8,7 +8,6 @@ struct PagesPreviewView<Indicator: View>: View {
 
     let pageCount: Int
     var height: CGFloat = 56
-    var cornerRadius: CGFloat = 10
     var spacing: CGFloat = 10
     var safeAreaBottom: CGFloat = 0
 
@@ -21,7 +20,8 @@ struct PagesPreviewView<Indicator: View>: View {
                     ForEach(0..<pageCount, id: \.self) { idx in
                         indicatorView(idx, idx == selectedPage)
                             .aspectRatio(3/4, contentMode: .fit)
-                            .frame(height: height)
+                            .frame(maxHeight: height - 12)
+                            .padding(.vertical, 6)
                             .onTapGesture {
                                 withAnimation(.easeInOut) {
                                     selectedPage = idx
@@ -36,66 +36,17 @@ struct PagesPreviewView<Indicator: View>: View {
                             .id(idx)
                     }
                 }
-                .padding(.horizontal, 10)
-                .frame(height: height)
+                .padding(.horizontal, 18)
             }
+            .frame(height: height)
             .onChange(of: selectedPage) { newPage in
                 withAnimation(.easeInOut) {
                     proxy.scrollTo(newPage, anchor: .center)
                 }
             }
         }
-        .frame(height: height)
         .padding(.bottom, safeAreaBottom + 4)
         .padding(.horizontal, 0)
-    }
-}
-
-// Default indicator for convenience
-extension PagesPreviewView where Indicator == DefaultZikrPageIndicator {
-    init(
-        selectedPage: Binding<Int>,
-        pageCount: Int,
-        height: CGFloat = 56,
-        cornerRadius: CGFloat = 10,
-        spacing: CGFloat = 10,
-        safeAreaBottom: CGFloat = 0
-    ) {
-        self._selectedPage = selectedPage
-        self.pageCount = pageCount
-        self.height = height
-        self.cornerRadius = cornerRadius
-        self.spacing = spacing
-        self.safeAreaBottom = safeAreaBottom
-        self.indicatorView = { idx, isSelected in
-            DefaultZikrPageIndicator(
-                idx: idx,
-                isSelected: isSelected,
-                cornerRadius: cornerRadius
-            )
-        }
-    }
-}
-
-struct DefaultZikrPageIndicator: View {
-    @Environment(\.colorTheme) var colorTheme
-
-    let idx: Int
-    let isSelected: Bool
-    var cornerRadius: CGFloat
-
-    var body: some View {
-        ZStack {
-            RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
-                .fill(isSelected ? colorTheme.getColor(.accent) : colorTheme.getColor(.contentBackground))
-                .shadow(color: .black.opacity(0.08), radius: 3, x: 0, y: 1)
-            Text("\(idx + 1)")
-                .font(.caption2)
-                .foregroundColor(isSelected ? Color.white : colorTheme.getColor(.tertiaryText))
-                .multilineTextAlignment(.center)
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .minimumScaleFactor(0.15)
-        }
     }
 }
 
@@ -104,7 +55,17 @@ struct DefaultZikrPageIndicator: View {
     @Previewable @State var selectedPage = 1
     PagesPreviewView(
         selectedPage: $selectedPage,
-        pageCount: 5
+        pageCount: 5,
+        indicatorView: { idx, isSelected in
+            ZStack {
+                RoundedRectangle(cornerRadius: 10, style: .continuous)
+                    .fill(isSelected ? Color.accentColor : Color(.secondarySystemBackground))
+                    .shadow(color: .black.opacity(0.08), radius: 3, x: 0, y: 1)
+                Text("Page \(idx + 1)")
+                    .font(.caption)
+                    .foregroundColor(isSelected ? Color.white : Color(.label))
+            }
+        }
     )
     .padding()
     .background(Color(.systemBackground))

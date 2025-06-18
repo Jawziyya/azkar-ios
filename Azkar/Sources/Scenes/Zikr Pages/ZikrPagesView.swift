@@ -21,7 +21,7 @@ struct ZikrPagesView: View, Equatable {
     @Environment(\.appTheme) var appTheme
     @Environment(\.colorTheme) var colorTheme
 
-    private let pageIndicatorHeight: CGFloat = 56
+    private let pageIndicatorHeight: CGFloat = 50
 
     private var selectablePageIndices: Range<Int> {
         viewModel.pages.indices.dropLast()
@@ -93,18 +93,17 @@ struct ZikrPagesView: View, Equatable {
             PagesPreviewView(
                 selectedPage: $viewModel.page,
                 pageCount: viewModel.pages.count - 1,
-                height: 40,
-                cornerRadius: 6,
+                height: pageIndicatorHeight,
                 spacing: 4,
                 safeAreaBottom: geo.safeAreaInsets.bottom,
                 indicatorView: { idx, isSelected in
                     pageIndicator(index: idx, isSelected: isSelected)
                 }
             )
-            .frame(height: min(geo.size.height, pageIndicatorHeight))
             .edgesIgnoringSafeArea(.bottom)
         }
-        .frame(maxHeight: pageIndicatorHeight)
+        .opacity(viewModel.page < viewModel.pages.count - 1 ? 1 : 0)
+        .frame(maxHeight: pageIndicatorHeight + 8)
         .allowsHitTesting(true)
     }
     
@@ -113,7 +112,7 @@ struct ZikrPagesView: View, Equatable {
         ZStack {
             RoundedRectangle(cornerRadius: 10, style: .continuous)
                 .fill(isSelected ? colorTheme.getColor(.accent) : colorTheme.getColor(.contentBackground))
-                .shadow(color: .black.opacity(0.08), radius: 3, x: 0, y: 1)
+                .shadow(color: .black.opacity(0.1), radius: 3, x: 0, y: 1)
             VStack(spacing: 0) {
                 Text("\(index + 1)")
                     .font(.caption)
