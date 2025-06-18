@@ -12,6 +12,12 @@ import Combine
 import FirebaseMessaging
 import Entities
 
+enum NotificationCategory: String, Identifiable, Hashable {
+    case morning, evening, jumua
+    
+    var id: Self { self }
+}
+
 private let notificationCenter = UNUserNotificationCenter.current()
 
 final class NotificationsHandler: NSObject {
@@ -50,7 +56,7 @@ final class NotificationsHandler: NSObject {
 
     static let shared = NotificationsHandler()
 
-    let selectedNotificationCategory = PassthroughSubject<String, Never>()
+    let selectedNotificationCategory = PassthroughSubject<NotificationCategory, Never>()
     
     var notificationsPermissionStatePublisher: AnyPublisher<NotificationsPermissionState, Never> {
         Publishers
@@ -115,7 +121,7 @@ final class NotificationsHandler: NSObject {
         id: String,
         date: Date,
         titleKey: String,
-        categoryId: String,
+        category: NotificationCategory,
         sound: ReminderSound
     ) {
         let dateComponents = Calendar.current.dateComponents([.hour, .minute], from: date)
@@ -123,7 +129,7 @@ final class NotificationsHandler: NSObject {
             id: id,
             titleKey: titleKey,
             dateComponents: dateComponents,
-            categoryId: categoryId,
+            category: category,
             sound: sound
         )
     }
@@ -132,13 +138,13 @@ final class NotificationsHandler: NSObject {
         id: String,
         titleKey: String,
         dateComponents: DateComponents,
-        categoryId: String,
+        category: NotificationCategory,
         sound: ReminderSound
     ) {
         let content = UNMutableNotificationContent()
         content.title = NSString.localizedUserNotificationString(forKey: titleKey, arguments: nil)
         content.sound = sound.notificationSound
-        content.categoryIdentifier = categoryId
+        content.categoryIdentifier = category.rawValue
         let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
         let request = UNNotificationRequest(identifier: id, content: content, trigger: trigger)
         notificationCenter.add(request)
@@ -192,8 +198,13 @@ extension NotificationsHandler: UNUserNotificationCenterDelegate {
         completionHandler: @escaping () -> Void
     ) {
         let category = request.content.categoryIdentifier
-        selectedNotificationCategory.send(category)
-        completionHandler()
+        defer {
+            completionHandler()
+        }
+        guard let notificationCategory = NotificationCategory(rawValue: category) else {
+            return
+        }
+        selectedNotificationCategory.send(notificationCategory)
     }
 
 }

@@ -108,18 +108,23 @@ final class RootCoordinator: NSObject, RouteTrigger, NavigationCoordinatable {
         
         deeplinker
             .$route
+            .handleEvents(receiveOutput: { [unowned self] route in
+                popToRoot()
+            })
+            .receive(on: DispatchQueue.main)
+            .delay(for: 0.5, scheduler: DispatchQueue.main)
             .sink(receiveValue: { [unowned self] route in
                 switch route {
 
                 case .settings(let section):
                     self.trigger(.settings(section))
-
+                    
                 case .azkar(let category):
                     self.trigger(.category(category))
-
+                    
                 default:
                     break
-
+                    
                 }
             })
             .store(in: &cancellables)
