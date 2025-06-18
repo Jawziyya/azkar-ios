@@ -95,10 +95,6 @@
                     "link": "https://github.com/Alamofire/Alamofire"
                 },
                 {
-                    "title": "Coordinator",
-                    "link": "https://github.com/radianttap/Coordinator"
-                },
-                {
                     "title": "Fakery",
                     "link": "https://github.com/vadymmarkov/Fakery"
                 },
@@ -113,6 +109,10 @@
                 {
                     "title": "MarkdownKit",
                     "link": "https://github.com/bmoliveira/MarkdownKit"
+                },
+                {
+                    "title": "Mixpanel",
+                    "link": "https://github.com/mixpanel/mixpanel-swift"
                 },
                 {
                     "title": "Nuke",
@@ -135,6 +135,10 @@
                     "link": "https://github.com/rundfunk47/stinsen"
                 },
                 {
+                    "title": "Superwall",
+                    "link": "https://github.com/superwall-me/Superwall-iOS"
+                },
+                {
                     "title": "Supabase Swift",
                     "link": "https://github.com/supabase-community/supabase-swift"
                 },
@@ -153,6 +157,10 @@
                 {
                     "title": "SwiftyStoreKit",
                     "link": "https://github.com/bizz84/SwiftyStoreKit"
+                },
+                {
+                    "title": "TinyMoon",
+                    "link": "https://github.com/mannylopez/TinyMoon"
                 },
                 {
                     "title": "WhatsNewKit",
