@@ -65,8 +65,8 @@ final class SearchSuggestionsViewModel: ObservableObject {
         }
     }
     
-    func navigateToZikr(_ zikr: Zikr) {
-        router.trigger(.searchResult(result: .init(zikr: zikr, query: ""), searchQuery: ""))
+    func navigateToZikr(_ zikr: Zikr.ID) {
+        router.trigger(.goToZikr(zikr))
     }
     
     func removeRecentQueries(at indexSet: IndexSet) async {

@@ -15,6 +15,7 @@ import DatabaseInteractors
 enum RootSection: Equatable, RouteKind {
     case category(ZikrCategory)
     case zikr(_ zikr: Zikr, index: Int? = nil)
+    case goToZikr(_ id: Zikr.ID)
     case searchResult(result: SearchResultZikr, searchQuery: String)
     case zikrPages(_ vm: ZikrPagesViewModel)
     case goToPage(Int)
@@ -214,6 +215,16 @@ private extension RootCoordinator {
                 preferences: preferences,
                 player: player
             )
+            route(to: \.zikr, viewModel)
+            
+        case .goToZikr(let zikrId):
+            guard let zikr = try? databaseService.getZikr(zikrId, language: preferences.contentLanguage) else {
+                return
+            }
+            let hadith = try? zikr.hadith.flatMap { id in
+                try databaseService.getHadith(id)
+            }
+            let viewModel = ZikrViewModel(zikr: zikr, isNested: true, hadith: hadith, preferences: preferences, player: player)
             route(to: \.zikr, viewModel)
 
         case .zikr(let zikr, let index):
