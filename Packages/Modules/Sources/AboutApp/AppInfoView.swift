@@ -180,11 +180,11 @@ public struct AppInfoView: View {
     private var copyrightView: some View {
         let currentYear: String = String(Date().year)
         return VStack(spacing: 10) {
-            Text("Copyright © 2020-\(currentYear) Al Jawziyya.")
+            Text("Copyright © 2020-\(currentYear)")
                 .font(.caption)
             
             HStack {
-                Text("🥜 Jawziyya")
+                Text("🥜 Al Jawziyya")
                     .font(Font.title3.weight(.bold).monospaced())
             }
         }

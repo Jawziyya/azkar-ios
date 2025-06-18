@@ -3,6 +3,16 @@
     {
       "filename" : "sun.png",
       "idiom" : "universal"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "sun-dark.png",
+      "idiom" : "universal"
     }
   ],
   "info" : {
