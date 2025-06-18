@@ -471,7 +471,7 @@ struct ZikrView: View {
                 repeatsNumber
             }
 
-            viewModel.source.textOrNil.flatMap { text in
+            viewModel.source?.textOrNil.flatMap { text in
                 NavigationLink(destination: hadithView, label: {
                     getInfoStack(
                         label: L10n.Read.source,

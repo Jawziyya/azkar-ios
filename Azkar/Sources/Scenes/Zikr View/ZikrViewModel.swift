@@ -39,7 +39,7 @@ final class ZikrViewModel: ObservableObject, Identifiable, Hashable {
     let textProcessor: TextProcessor
     let transcriptor: Transcriptor?
 
-    let source: String
+    let source: String?
 
     var playerViewModel: PlayerViewModel?
     var hadithViewModel: HadithViewModel?
@@ -142,7 +142,7 @@ final class ZikrViewModel: ObservableObject, Identifiable, Hashable {
         
         translation = zikr.translation?.textOrNil.flatMap(textProcessor.processTranslationText) ?? []
         transliteration = transliterationText?.textOrNil.flatMap(textProcessor.processTransliterationText) ?? []
-        source = zikr.source.firstWord()
+        source = zikr.source?.firstWord()
         
         Task {
             self.remainingRepeatsNumber = await counter.getRemainingRepeats(for: zikr)

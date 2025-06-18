@@ -188,7 +188,7 @@ struct ZikrShareView: View {
                         .frame(maxWidth: .infinity, alignment: otherTextAlignment.frameAlignment)
                 }
 
-                if includeSource, let source = viewModel.source.textOrNil {
+                if includeSource, let source = viewModel.source?.textOrNil {
                     Text(source)
                         .customFont(.caption1)
                         .frame(maxWidth: .infinity, alignment: otherTextAlignment.frameAlignment)
