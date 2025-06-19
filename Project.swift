@@ -89,6 +89,7 @@ enum AzkarTarget: String, CaseIterable {
                 dependencies: [
                     .target(name: "AzkarWidgets"),
                     
+                    .external(name: "AzkarResources"),
                     .external(name: "Entities"),
                     .external(name: "Extensions"),
                     .external(name: "AzkarServices"),
@@ -107,7 +108,6 @@ enum AzkarTarget: String, CaseIterable {
                     .external(name: "SwiftUIX"),
                     .external(name: "SwiftUIBackports"),
                     .external(name: "Popovers"),
-                    .external(name: "WhatsNewKit"),
                     .external(name: "Stinsen"),
                     .external(name: "Supabase"),
                     .external(name: "SwiftUIIntrospect"),

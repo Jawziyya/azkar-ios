@@ -2,6 +2,9 @@
 
 import SwiftUI
 import AzkarServices
+import AzkarResources
 
 typealias Color = SwiftUI.Color
 typealias AnalyticsReporter = AzkarServices.AnalyticsReporter
+
+let resourcesBunbdle = azkarResourcesBundle

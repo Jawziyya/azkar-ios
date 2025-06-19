@@ -106,25 +106,35 @@ final class MainMenuViewModel: ObservableObject {
         otherAzkarModels = [
             AzkarMenuItem(
                 category: .night,
-                imageName: "bed.double.circle.fill",
+                imageName: "categories/night",
                 title: L10n.Category.night,
                 color: Color.init(uiColor: .systemMint),
-                count: nil
+                count: nil,
+                iconType: .bundled(resourcesBunbdle)
             ),
             AzkarMenuItem(
                 category: .afterSalah,
-                imageName: "mosque",
+                imageName: "categories/after-salah",
                 title: L10n.Category.afterSalah,
                 color: Color.init(.systemBlue),
                 count: nil,
-                iconType: .bundled
+                iconType: .bundled(resourcesBunbdle)
             ),
             AzkarMenuItem(
                 category: .other,
-                imageName: "square.stack.3d.down.right.fill",
+                imageName: "categories/important-adhkar",
                 title: L10n.Category.other,
                 color: Color.init(.systemTeal),
-                count: nil
+                count: nil,
+                iconType: .bundled(resourcesBunbdle)
+            ),
+            AzkarMenuItem(
+                category: .hundredDua,
+                imageName: "categories/hundred-dua",
+                title: L10n.Category.hundredDua,
+                color: Color.init(.systemPink),
+                count: nil,
+                iconType: .bundled(resourcesBunbdle)
             ),
         ]
         
@@ -194,7 +204,7 @@ final class MainMenuViewModel: ObservableObject {
                 }
             }
         } catch {
-            print(error.localizedDescription)
+            print(error)
         }
     }
     

@@ -72,7 +72,7 @@ struct SearchSuggestionsView: View {
                     title: text.prefix(50) + "...",
                     applyVerticalPadding: false,
                     action: {
-                        viewModel.navigateToZikr(zikr)
+                        viewModel.navigateToZikr(zikr.id)
                     }
                 )
                 .padding()

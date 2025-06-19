@@ -66,6 +66,10 @@
             "title": "credits.graphics",
             "items": [
                 {
+                    "title": "Moon Icons Pack",
+                    "link": "https://www.flaticon.com/packs/moon-35"
+                },
+                {
                     "title": "Moon",
                     "link": "https://flaticon.com/free-icon/moon_414942?term=moon&page=1&position=17"
                 },
@@ -91,10 +95,6 @@
                     "link": "https://github.com/Alamofire/Alamofire"
                 },
                 {
-                    "title": "Coordinator",
-                    "link": "https://github.com/radianttap/Coordinator"
-                },
-                {
                     "title": "Fakery",
                     "link": "https://github.com/vadymmarkov/Fakery"
                 },
@@ -109,6 +109,10 @@
                 {
                     "title": "MarkdownKit",
                     "link": "https://github.com/bmoliveira/MarkdownKit"
+                },
+                {
+                    "title": "Mixpanel",
+                    "link": "https://github.com/mixpanel/mixpanel-swift"
                 },
                 {
                     "title": "Nuke",
@@ -131,6 +135,10 @@
                     "link": "https://github.com/rundfunk47/stinsen"
                 },
                 {
+                    "title": "Superwall",
+                    "link": "https://github.com/superwall-me/Superwall-iOS"
+                },
+                {
                     "title": "Supabase Swift",
                     "link": "https://github.com/supabase-community/supabase-swift"
                 },
@@ -151,8 +159,8 @@
                     "link": "https://github.com/bizz84/SwiftyStoreKit"
                 },
                 {
-                    "title": "WhatsNewKit",
-                    "link": "https://github.com/SvenTiigi/WhatsNewKit"
+                    "title": "TinyMoon",
+                    "link": "https://github.com/mannylopez/TinyMoon"
                 },
                 {
                     "title": "ZIPFoundation",

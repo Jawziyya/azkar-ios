@@ -106,7 +106,7 @@ struct ZikrShareBackgroundCardView: View {
     
     @ViewBuilder
     private var backgroundContent: some View {
-        switch item.backgroundType {
+        switch item.background {
         case .solidColor(let type):
             colorTheme.getColor(type)
         case .localImage(let image):

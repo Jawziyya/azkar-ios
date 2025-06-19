@@ -3,69 +3,60 @@ import Fakery
 
 public struct Article: Identifiable, Hashable, Codable, Equatable {
     public let id: Int
+    public let categoryId: ArticleCategory.ID?
     public let language: Language
-    public let title: String
+    
     public let tags: [String]?
+    
+    public let title: String
     public let text: String
-    public let textFormat: ArticleDTO.TextFormat
-    public let coverImage: CoverImage?
+    public let textFormat: TextFormat
+    
+    public let imageLink: String?
+    public let imageResourceName: String?
+    public let coverImageFormat: CoverImageFormat?
     public let coverImageAltText: String?
-    public var views: Int?
-    public var shares: Int?
+    
+    public var views: Int
+    public var shares: Int
+    
     public let createdAt: Date
     public let updatedAt: Date
     
-    public struct CoverImage: Hashable, Codable {
+    // Computed property for coverImage from separate fields
+    public var coverImage: CoverImage? {
+        guard let format = coverImageFormat else { return nil }
+        if let link = imageLink, let url = URL(string: link) {
+            return CoverImage(imageType: .link(url), imageFormat: format)
+        }
+        if let resourceName = imageResourceName {
+            return CoverImage(imageType: .resource(resourceName), imageFormat: format)
+        }
+        return nil
+    }
+    
+    public struct CoverImage: Hashable {
         public let imageType: ImageType
-        public let imageFormat: ArticleDTO.CoverImageFormat
+        public let imageFormat: CoverImageFormat
         
-        public init(imageType: ImageType, imageFormat: ArticleDTO.CoverImageFormat) {
+        public init(imageType: ImageType, imageFormat: CoverImageFormat) {
             self.imageType = imageType
             self.imageFormat = imageFormat
         }
     }
     
-    public enum ImageType: Hashable, Codable {
+    public enum ImageType: Hashable {
         case link(URL), resource(String)
     }
     
-}
-
-extension Article {
-    public init(
-        _ article: ArticleDTO,
-        viewsCount: Int?,
-        sharesCount: Int?
-    ) {
-        id = article.id
-        language = article.language
-        title = article.title
-        tags = article.tags?.compactMap { tag in
-            "#" + tag
-        }
-        createdAt = article.createdAt
-        updatedAt = article.updatedAt
-        text = article.text
-        textFormat = article.textFormat
-        self.views = viewsCount
-        self.shares = sharesCount
-        coverImageAltText = article.coverImageAltText
-        
-        if let coverImageFormat = article.coverImageFormat {
-            let imageType: ImageType
-            if let link = article.imageLink, let url = URL(string: link) {
-                imageType = .link(url)
-            } else if let resourceName = article.imageResourceName {
-                imageType = .resource(resourceName)
-            } else {
-                coverImage = nil
-                return
-            }
-            
-            coverImage = .init(imageType: imageType, imageFormat: coverImageFormat)
-        } else {
-            coverImage = nil
-        }
+    public enum TextFormat: String, Codable, Hashable {
+        case plain, markdown
+    }
+    
+    public enum CoverImageFormat: String, Codable, Hashable {
+        case titleBackground = "title_background"
+        case standaloneTop = "standalone_top"
+        case standaloneUnderTitle = "standalone_under_title"
     }
 }
 
@@ -80,23 +71,28 @@ extension Article {
         text: String? = nil,
         createdAt: Date = Date(),
         updatedAt: Date = Date(),
-        textFormat: ArticleDTO.TextFormat = .plain,
-        coverImage: CoverImage? = nil,
+        textFormat: TextFormat = .plain,
+        imageLink: String? = nil,
+        imageResourceName: String? = nil,
+        coverImageFormat: CoverImageFormat? = nil,
         coverImageAltText: String? = nil
     ) -> Article {
         let faker = Faker()
         return Article(
             id: id,
+            categoryId: nil,
             language: language,
-            title: title ?? faker.lorem.words().capitalized,
             tags: tags ?? Array(repeating: {
                 "#" + faker.lorem.word()
             }(), count: Int.random(in: 1...5)),
+            title: title ?? faker.lorem.words().capitalized,
             text: text ?? faker.lorem.paragraphs(amount: 10)
                 .components(separatedBy: "\n")
                 .joined(separator: "\n\n"),
             textFormat: textFormat,
-            coverImage: coverImage,
+            imageLink: imageLink,
+            imageResourceName: imageResourceName,
+            coverImageFormat: coverImageFormat,
             coverImageAltText: coverImageAltText ?? faker.lorem.paragraphs(),
             views: Int.random(in: 0...1000),
             shares: Int.random(in: 0...1000),
@@ -105,3 +101,4 @@ extension Article {
         )
     }
 }
+

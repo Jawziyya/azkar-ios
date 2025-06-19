@@ -103,14 +103,14 @@ final class SettingsViewModel: ObservableObject {
                 id: Keys.morningReminderId,
                 date: preferences.morningNotificationTime,
                 titleKey: "notifications.morning-notification-title",
-                categoryId: ZikrCategory.morning.rawValue,
+                category: .morning,
                 sound: preferences.adhkarReminderSound
             )
             notificationsHandler.scheduleNotification(
                 id: Keys.eveningReminderId,
                 date: preferences.eveningNotificationTime,
                 titleKey: "notifications.evening-notification-title",
-                categoryId: ZikrCategory.evening.rawValue,
+                category: .evening,
                 sound: preferences.adhkarReminderSound
             )
         }
@@ -122,7 +122,7 @@ final class SettingsViewModel: ObservableObject {
                 id: Keys.jumuaReminderId,
                 titleKey: "notifications.jumua.title",
                 dateComponents: components,
-                categoryId: "jumua",
+                category: .jumua,
                 sound: preferences.jumuahDuaReminderSound
             )
         }

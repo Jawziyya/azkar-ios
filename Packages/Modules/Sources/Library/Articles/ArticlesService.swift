@@ -48,7 +48,10 @@ public final class ArticlesService: ArticlesServiceType {
                 do {
                     let articles = try await remoteRepository.getArticles(limit: limit, newerThan: newestArticleDate)
                     try await localRepository.saveArticles(articles)
-                    let allArticles = (articles + cachedArticles).unique(by: \.id)
+                    
+                    let updatedCachedArticles = try await localRepository.getArticles(limit: limit, newerThan: nil)
+                    let allArticles = (articles + updatedCachedArticles).unique(by: \.id)
+                    
                     if allArticles != cachedArticles {
                         continuation.yield(allArticles)
                     }

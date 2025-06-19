@@ -2,10 +2,11 @@ import SwiftUI
 import NukeUI
 import Entities
 import Library
+import AzkarResources
 
 public struct ArticleScreen: View {
     
-    let viewModel: ArticleViewModel
+    @ObservedObject var viewModel: ArticleViewModel
     var shareOptions: ShareOptions?
     let onShareButtonTap: () -> Void
     @Environment(\.appTheme) var appTheme
@@ -76,12 +77,12 @@ public struct ArticleScreen: View {
             }
         }
         .customScrollContentBackground()
-        .background(.contentBackground, ignoreSafeArea: .all)
+        .background(.background, ignoreSafeArea: .all)
     }
     
     var sharedWithAzkarView: some View {
         VStack {
-            Image(uiImage: UIImage(named: "ink")!)
+            Image(uiImage: UIImage(named: "ink", in: azkarResourcesBundle, compatibleWith: nil)!)
                 .resizable()
                 .frame(width: 30, height: 30)
                 .cornerRadius(6)
@@ -135,15 +136,13 @@ public struct ArticleScreen: View {
 }
 
 private func getDemoVM(
-    _ coverImageFormat: ArticleDTO.CoverImageFormat,
+    _ coverImageFormat: Article.CoverImageFormat,
     _ imageLink: URL
 ) -> ArticleViewModel {
     return ArticleViewModel(
         article: .placeholder(
-            coverImage: .init(
-                imageType: .link(imageLink),
-                imageFormat: coverImageFormat
-            )
+            imageLink: imageLink.absoluteString,
+            coverImageFormat: coverImageFormat
         ),
         analyticsStream: { AsyncStream { _ in } },
         updateAnalytics: { _ in },

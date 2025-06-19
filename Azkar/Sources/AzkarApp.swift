@@ -14,6 +14,7 @@ struct AzkarApp: App {
     @UIApplicationDelegateAdaptor var delegate: AppDelegate
     
     let preferences = Preferences.shared
+    let deepLinker = Deeplinker()
     
     init() {
         setNavigationBarFont(theme: preferences.appTheme, colorTheme: preferences.colorTheme)
@@ -24,7 +25,7 @@ struct AzkarApp: App {
             NavigationViewCoordinator(
                 RootCoordinator(
                     preferences: Preferences.shared,
-                    deeplinker: Deeplinker(),
+                    deeplinker: deepLinker,
                     player: Player(player: AudioPlayer())
                 )
             )
@@ -45,6 +46,15 @@ struct AzkarApp: App {
                 let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene
                 let window = scene?.keyWindow
                 window?.overrideUserInterfaceStyle = theme.userInterfaceStyle
+            }
+            .onReceive(delegate.notificationsHandler.selectedNotificationCategory) { notificationCategory in
+                let category: ZikrCategory
+                switch notificationCategory {
+                case .morning: category = .morning
+                case .evening: category = .evening
+                case .jumua: category = .hundredDua
+                }
+                self.deepLinker.route = .azkar(category)
             }
             .environmentObject(ShareBackgroundService())
         }

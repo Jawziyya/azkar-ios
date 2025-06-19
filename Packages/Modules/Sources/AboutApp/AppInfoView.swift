@@ -5,6 +5,7 @@ import SwiftUI
 import SwiftUIIntrospect
 import SwiftUIBackports
 import Library
+import AzkarResources
 
 public struct AppInfoView: View {
 
@@ -92,7 +93,7 @@ public struct AppInfoView: View {
         VStack {
             HStack {
                 Spacer()
-                if let image = UIImage(named: viewModel.iconImageName) {
+                if let image = UIImage(named: viewModel.iconImageName, in: azkarResourcesBundle, compatibleWith: nil) {
                     Image(uiImage: image)
                         .resizable()
                         .scaledToFit()
@@ -179,11 +180,11 @@ public struct AppInfoView: View {
     private var copyrightView: some View {
         let currentYear: String = String(Date().year)
         return VStack(spacing: 10) {
-            Text("Copyright © 2020-\(currentYear) Al Jawziyya.")
+            Text("Copyright © 2020-\(currentYear)")
                 .font(.caption)
             
             HStack {
-                Text("🥜 Jawziyya")
+                Text("🥜 Al Jawziyya")
                     .font(Font.title3.weight(.bold).monospaced())
             }
         }

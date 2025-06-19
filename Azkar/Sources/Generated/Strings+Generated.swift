@@ -92,6 +92,8 @@ internal enum L10n {
     internal static let afterSalah = L10n.tr("Localizable", "category.after-salah", fallback: "Adhkar after salah")
     /// Evening
     internal static let evening = L10n.tr("Localizable", "category.evening", fallback: "Evening")
+    /// 100 Duas from the Quran and Sunnah
+    internal static let hundredDua = L10n.tr("Localizable", "category.hundred-dua", fallback: "100 Duas from the Quran and Sunnah")
     /// Morning
     internal static let morning = L10n.tr("Localizable", "category.morning", fallback: "Morning")
     /// Bedtime
@@ -404,6 +406,10 @@ internal enum L10n {
       /// Icon
       internal static let title = L10n.tr("Localizable", "settings.icon.title", fallback: "Icon")
       internal enum List {
+        /// Azure
+        internal static let azure = L10n.tr("Localizable", "settings.icon.list.azure", fallback: "Azure")
+        /// Crater Cookie
+        internal static let cookie = L10n.tr("Localizable", "settings.icon.list.cookie", fallback: "Crater Cookie")
         /// Dark night
         internal static let darkNight = L10n.tr("Localizable", "settings.icon.list.dark_night", fallback: "Dark night")
         /// Gold
@@ -565,6 +571,16 @@ internal enum L10n {
     internal static let textAlignment = L10n.tr("Localizable", "share.text-alignment", fallback: "Text alignment")
     /// Text copied
     internal static let textCopied = L10n.tr("Localizable", "share.text_copied", fallback: "Text copied")
+    internal enum BackgroundType {
+      /// All
+      internal static let all = L10n.tr("Localizable", "share.background-type.all", fallback: "All")
+      /// Colour
+      internal static let color = L10n.tr("Localizable", "share.background-type.color", fallback: "Colour")
+      /// Image
+      internal static let image = L10n.tr("Localizable", "share.background-type.image", fallback: "Image")
+      /// Pattern
+      internal static let pattern = L10n.tr("Localizable", "share.background-type.pattern", fallback: "Pattern")
+    }
   }
   internal enum Subscribe {
     /// Cancel subscription

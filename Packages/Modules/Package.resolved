@@ -125,6 +125,15 @@
         "revision" : "f5f23b016eeda6642a0fe1020241af19c9c05556",
         "version" : "2.8.1"
       }
+    },
+    {
+      "identity" : "tinymoon",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/mannylopez/TinyMoon",
+      "state" : {
+        "revision" : "521310a2ff995dd724bbc6e66a094e60f6dc1724",
+        "version" : "3.0.1"
+      }
     }
   ],
   "version" : 2

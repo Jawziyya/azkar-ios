@@ -45,11 +45,12 @@ enum AppIcon: String, Codable, CaseIterable, Identifiable, Hashable {
 
     case gold, ink
     case midjourney001
+    case azure, cookie
     
     case light, crescent, spring, vibrantMoon = "vibrantMoon", serpentine, adhkar
 
     static var standardIcons: [AppIcon] {
-        [gold, ink, midjourney001]
+        [gold, ink, midjourney001, azure, cookie]
     }
     
     static var proIcons: [AppIcon] {

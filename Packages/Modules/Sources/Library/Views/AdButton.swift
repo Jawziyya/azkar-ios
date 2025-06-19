@@ -39,7 +39,7 @@ public struct AdButton: View {
     }
     
     private var size: AdSize { item.size }
-    private var backgroundColor: Color { item.backgroundColor ?? colorTheme.getColor(.background) }
+    private var backgroundColor: Color { item.backgroundColor ?? colorTheme.getColor(.contentBackground) }
     private var accentColor: Color { item.accentColor }
 
     public var body: some View {

@@ -337,7 +337,7 @@ public extension AdhkarSQLiteDatabaseService {
         
         return azkar
     }
-
+    
     func getAdhkarCount(_ category: ZikrCategory) throws -> Int {
         return try getDatabaseQueue().read { db in
             guard let row = try Row
@@ -365,6 +365,64 @@ public extension AdhkarSQLiteDatabaseService {
     func getAudioTimings(audioId: Int) async throws -> [AudioTiming] {
         return try await getDatabaseQueue().read { db in
             try self.getAudioTimings(audioId, database: db)
+        }
+    }
+
+    /// Returns all adhkar in a given category for a specified language.
+    func getAdhkar(
+        in category: ZikrCategory,
+        language: Language? = nil
+    ) throws -> [Zikr] {
+        let lang = language ?? self.language
+        return try getDatabaseQueue().read { db in
+            // Fetch azkar IDs from azkar+azkar_group where group = category.rawValue
+            let azkarIdRows = try Row.fetchAll(
+                db,
+                sql: """
+                SELECT azkar_id FROM "azkar+azkar_group"
+                WHERE "group" = ?
+                """,
+                arguments: [category.rawValue]
+            )
+            let azkarIds = azkarIdRows.compactMap { $0["azkar_id"] as Int? }
+            if azkarIds.isEmpty { return [] }
+            let azkarIdsString = azkarIds.map { "\($0)" }.joined(separator: ", ")
+
+            // Fetch origins
+            let origins = try ZikrOrigin.fetchAll(
+                db,
+                sql: "SELECT * FROM azkar WHERE id IN (\(azkarIdsString))"
+            )
+            let originDict = Dictionary(uniqueKeysWithValues: origins.map { ($0.id, $0) })
+            let orderedOrigins = azkarIds.compactMap { originDict[$0] }
+
+            // Fetch translations
+            let translationTable = lang.databaseTableName
+            let translations = try ZikrTranslation.fetchAll(
+                db,
+                sql: "SELECT * FROM \(translationTable) WHERE id IN (\(azkarIdsString))"
+            )
+            let translationDict = Dictionary(uniqueKeysWithValues: translations.map { ($0.id, $0) })
+
+            // Fetch audios and timings
+            let audios = try Audio.fetchAll(db)
+            let audioTimings = try AudioTiming.fetchAll(db)
+
+            // Build Zikr objects
+            return orderedOrigins.compactMap { origin in
+                let translation = translationDict[origin.id]
+                let audio = audios.first(where: { $0.id == origin.audioId })
+                let transliteration = lang == .arabic ? nil : translation?.transliteration
+                return Zikr(
+                    origin: origin,
+                    language: lang,
+                    category: category,
+                    translation: lang == .arabic ? nil : translation,
+                    transliteration: transliteration,
+                    audio: audio,
+                    audioTimings: audioTimings.filter { $0.audioId == audio?.id }
+                )
+            }
         }
     }
 

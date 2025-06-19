@@ -3,6 +3,7 @@ import SwiftUI
 import Stinsen
 import AboutApp
 import Library
+import ZikrCollectionsOnboarding
 
 struct SoundPickerInfo: Hashable {
     let sound: ReminderSound
@@ -27,6 +28,7 @@ final class SettingsCoordinator: RouteTrigger, Identifiable, NavigationCoordinat
     @Route(.push) var reminders = makeRemindersView
     @Route(.push) var soundPicker = makeSoundPickerView
     @Route(.push) var aboutApp = makeAboutAppView
+    @Route(.modal) var zikrCollectionsOnboarding = makeZikrCollectionsOnboardingCoordinator
         
     private let databaseService: AzkarDatabase
     private let preferences: Preferences
@@ -137,6 +139,17 @@ extension SettingsCoordinator {
             }(),
             isProUser: subscriptionManager.isProUser()
         ))
+    }
+    
+    func makeZikrCollectionsOnboardingCoordinator() -> NavigationViewCoordinator<ZikrCollectionsOnboardingCoordinator> {
+        NavigationViewCoordinator(
+            ZikrCollectionsOnboardingCoordinator(
+                preselectedCollection: .azkarRU,
+                onZikrCollectionSelect: { [weak self] newSource in
+                    self?.preferences.zikrCollectionSource = newSource
+                }
+            )
+        )
     }
     
 }

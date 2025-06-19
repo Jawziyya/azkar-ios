@@ -9,6 +9,11 @@ final class ArticlesSupabaseRepository: ArticlesRepository {
     private let language: Language
     private let analyticsService: ArticlesAnalyticsService
     
+    // Cache for spotlight articles to ensure we only fetch once
+    private var cachedSpotlightArticles: [Article.ID]?
+    // Task for fetching spotlight articles to prevent concurrent fetches
+    private var spotlightFetchTask: Task<[Article.ID], Error>?
+    
     init(
         supabaseClient: SupabaseClient,
         language: Language,
@@ -20,57 +25,25 @@ final class ArticlesSupabaseRepository: ArticlesRepository {
     }
     
     func getArticles(limit: Int, newerThan: Date?) async throws -> [Article] {
-        struct SpotlightArticle: Decodable {
-            let article: ArticleDTO.ID
-            let createdAt: Date
+        struct Params: Encodable {
+            let p_limit: Int
+            let p_language: Language
+            let p_newer_than: Date?
         }
         
-        let spotlightArticlesQuery = supabaseClient
-            .from("articles_spotlight")
-            .select()
-        
-        let spotlightArticles: [SpotlightArticle] = try await spotlightArticlesQuery
-            .order("created_at", ascending: false)
-            .limit(limit)
+        let params = Params(p_limit: limit, p_language: language, p_newer_than: newerThan?.addingTimeInterval(1))
+
+        struct Response: Decodable {
+            let totalCount: Int
+            let articles: [Article]
+        }
+
+        let articlesResponse: Response = try await supabaseClient
+            .rpc("fetch_articles", params: params)
             .execute()
             .value
-        
-        var articlesQuery = supabaseClient
-            .from("articles")
-            .select()
-            .eq("language", value: language.id)
-        
-        if CommandLine.arguments.contains("LOAD_ALL_ARTICLES") == false {
-            articlesQuery = articlesQuery.eq("is_published", value: true)
-            
-            if let newerThan {
-                let date = newerThan.addingTimeInterval(1).supabaseFormatted
-                articlesQuery = articlesQuery
-                    .greaterThan("created_at", value: date)
-            }
-        }
-        
-        let articleObjects: [ArticleDTO] = try await articlesQuery
-            .in("id", values: spotlightArticles.map(\.article))
-            .execute()
-            .value
-        
-        var articles: [Article] = []
-        
-        let sortedArticles = articleObjects
-            .sorted(by: { $0.createdAt > $1.createdAt })
-        
-        for articleObject in sortedArticles {
-            let analytics = await analyticsService.getArticleAnalyticsCount(articleObject.id)
-            
-            let article = Article(
-                articleObject,
-                viewsCount: analytics?.viewsCount,
-                sharesCount: analytics?.sharesCount
-            )
-            articles.append(article)
-        }
-        return articles
+
+        return articlesResponse.articles
     }
     
     func saveArticles(_ articles: [Article]) async throws {
@@ -81,26 +54,18 @@ final class ArticlesSupabaseRepository: ArticlesRepository {
         // No effect in remote repository.
     }
     
-    func getArticle(_ id: ArticleDTO.ID, updatedAfter: Date?) async throws -> Article? {
-        var query = supabaseClient
-            .from("articles")
-            .select()
-        
-        if let updatedAfter {
-            query = query
-                .greaterThanOrEquals("updated_at", value: updatedAfter.supabaseFormatted)
+    func getArticle(_ id: Article.ID, updatedAfter: Date?) async throws -> Article? {
+        struct Params: Encodable {
+            let p_article_id: Article.ID
+            let p_updated_after: Date?
         }
         
-        let article: ArticleDTO = try await query
-            .single()
+        return try await supabaseClient
+            .rpc("fetch_article", params: Params(p_article_id: id, p_updated_after: updatedAfter?.addingTimeInterval(1)))
             .execute()
             .value
-        let analytics = await analyticsService.getArticleAnalyticsCount(id)
-        return Article(
-            article,
-            viewsCount: analytics?.viewsCount,
-            sharesCount: analytics?.sharesCount
-        )
     }
+    
+    func removeArticles(ids: [Article.ID]) async throws {}
     
 }

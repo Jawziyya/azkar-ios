@@ -13,7 +13,7 @@ public struct ZikrOrigin: Identifiable, Hashable, Codable {
     public let hadith: Int?
     public let repeats: Int
     public let audioId: Int?
-    public let source: String
+    public let source: String?
     public let type: OriginType
 }
 
@@ -44,7 +44,7 @@ public struct Zikr: Identifiable, Hashable {
     public let repeats: Int
     public let title: String?
     public let translation: String?
-    public let source: String
+    public let source: String?
     public let transliteration: String?
     public let notes: String?
     public let benefits: String?
@@ -93,7 +93,7 @@ extension Zikr {
         text = origin.text
         self.category = category
         repeats = origin.repeats
-        source = origin.source
+        source = origin.source?.textOrNil?
             .components(separatedBy: ", ").map {
                 NSLocalizedString("text.source." + $0.lowercased(), comment: "")
             }

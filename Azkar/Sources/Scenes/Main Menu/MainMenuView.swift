@@ -4,6 +4,7 @@ import UserNotifications
 import Entities
 import ArticleReader
 import Library
+import AzkarResources
 
 private extension View {
     func applyMenuPadding() -> some View {
@@ -19,6 +20,7 @@ struct MainMenuView: View {
     @Environment(\.colorTheme) var colorTheme
     @Environment(\.isSearching) var isSearching
     @Environment(\.dismissSearch) var dismissSearch
+    @EnvironmentObject var counter: ZikrCounter
     @State private var showAd = true
     
     private let articleCellHeight: CGFloat = 230
@@ -134,12 +136,15 @@ struct MainMenuView: View {
     
     private func getMainMenuSectionView(_ category: ZikrCategory) -> some View {
         getMenuButton {
-            MainMenuLargeGroup(category: category)
-                .frame(maxWidth: .infinity)
-                .removeSaturationIfNeeded()
-                .background(.contentBackground)
-                .applyTheme()
-                .environmentObject(ZikrCounter.shared)
+            MainCategoryView(
+                category: category,
+                showChecmark: false
+            )
+            .frame(maxWidth: .infinity)
+            .removeSaturationIfNeeded()
+            .background(.contentBackground)
+            .applyTheme()
+            .environmentObject(ZikrCounter.shared)
         } action: {
             self.viewModel.navigateToCategory(category)
         }

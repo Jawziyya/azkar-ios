@@ -40,10 +40,10 @@ struct ZikrShareView: View {
 
     // New computed property to check if background is an image
     private var isBackgroundImage: Bool {
-        switch selectedBackground.backgroundType {
-        case .solidColor:
+        switch selectedBackground.type {
+        case .color:
             return false
-        case .localImage, .remoteImage:
+        case .pattern, .image:
             return true
         }
     }
@@ -78,7 +78,7 @@ struct ZikrShareView: View {
     
     var backgroundForContent: some View {
         Group {
-            switch selectedBackground.backgroundType {
+            switch selectedBackground.background {
             case .solidColor(let colorType):
                 colorTheme.getColor(colorType)
             case .localImage(let image):
@@ -188,7 +188,7 @@ struct ZikrShareView: View {
                         .frame(maxWidth: .infinity, alignment: otherTextAlignment.frameAlignment)
                 }
 
-                if includeSource, let source = viewModel.source.textOrNil {
+                if includeSource, let source = viewModel.source?.textOrNil {
                     Text(source)
                         .customFont(.caption1)
                         .frame(maxWidth: .infinity, alignment: otherTextAlignment.frameAlignment)
@@ -210,7 +210,7 @@ struct ZikrShareView: View {
 
             if includeLogo {
                 VStack {
-                    if let image = UIImage(named: "ink-icon") {
+                    if let image = UIImage(named: "ink-icon", in: resourcesBunbdle, compatibleWith: nil) {
                         Image(uiImage: image)
                             .renderingMode(.template)
                             .resizable()

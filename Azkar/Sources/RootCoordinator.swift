@@ -2,7 +2,6 @@ import UIKit
 import SwiftUI
 import Combine
 import Stinsen
-import WhatsNewKit
 import MessageUI
 import Library
 import ArticleReader
@@ -15,11 +14,11 @@ import DatabaseInteractors
 enum RootSection: Equatable, RouteKind {
     case category(ZikrCategory)
     case zikr(_ zikr: Zikr, index: Int? = nil)
+    case goToZikr(_ id: Zikr.ID)
     case searchResult(result: SearchResultZikr, searchQuery: String)
     case zikrPages(_ vm: ZikrPagesViewModel)
     case goToPage(Int)
     case settings(_ intitialRoute: SettingsRoute? = nil, presentModally: Bool = false)
-    case whatsNew
     case shareOptions(Zikr)
     case article(Article)
     case zikrCollectionsOnboarding
@@ -36,7 +35,6 @@ final class RootCoordinator: NSObject, RouteTrigger, NavigationCoordinatable {
     @Route(.push) var azkarList = makeAzkarListView
     @Route(.push) var settings = makeSettingsView
     @Route(.modal) var modalSettings = makeModalSettingsView
-    @Route(.modal) var whatsNew = makeWhatsNewView
     @Route(.modal) var shareOptions = makeShareOptionsView
     @Route(.push) var articleView = makeArticleView
     @Route(.modal) var zikrCollectionsOnboarding = makeZikrCollectionsOnboardingCoordinator
@@ -107,18 +105,23 @@ final class RootCoordinator: NSObject, RouteTrigger, NavigationCoordinatable {
         
         deeplinker
             .$route
+            .handleEvents(receiveOutput: { [unowned self] route in
+                popToRoot()
+            })
+            .receive(on: DispatchQueue.main)
+            .delay(for: 0.5, scheduler: DispatchQueue.main)
             .sink(receiveValue: { [unowned self] route in
                 switch route {
 
                 case .settings(let section):
                     self.trigger(.settings(section))
-
+                    
                 case .azkar(let category):
                     self.trigger(.category(category))
-
+                    
                 default:
                     break
-
+                    
                 }
             })
             .store(in: &cancellables)
@@ -126,12 +129,17 @@ final class RootCoordinator: NSObject, RouteTrigger, NavigationCoordinatable {
     
     func azkarForCategory(_ category: ZikrCategory) -> [ZikrViewModel] {
         do {
-            var zikrCollectionSource = preferences.zikrCollectionSource
-            if category != .morning && category != .evening {
-                zikrCollectionSource = .azkarRU
+            let adhkar: [Zikr]
+            
+            switch category {
+            case .morning, .evening:
+                adhkar = try databaseService.getAdhkar(category, collection: preferences.zikrCollectionSource)
+            case .night, .afterSalah, .other:
+                adhkar = try databaseService.getAdhkar(category, collection: .azkarRU)
+            case .hundredDua:
+                adhkar = try databaseService.getAdhkar(in: category)
             }
             
-            let adhkar = try databaseService.getAdhkar(category, collection: zikrCollectionSource)
             let viewModels = try adhkar.enumerated().map { idx, zikr in
                 try ZikrViewModel(
                     zikr: zikr,
@@ -210,6 +218,16 @@ private extension RootCoordinator {
                 player: player
             )
             route(to: \.zikr, viewModel)
+            
+        case .goToZikr(let zikrId):
+            guard let zikr = try? databaseService.getZikr(zikrId, language: preferences.contentLanguage) else {
+                return
+            }
+            let hadith = try? zikr.hadith.flatMap { id in
+                try databaseService.getHadith(id)
+            }
+            let viewModel = ZikrViewModel(zikr: zikr, isNested: true, hadith: hadith, preferences: preferences, player: player)
+            route(to: \.zikr, viewModel)
 
         case .zikr(let zikr, let index):
             assert(Thread.isMainThread)
@@ -243,12 +261,6 @@ private extension RootCoordinator {
             } else {
                 route(to: \.settings, initialRoute)
             }
-            
-        case .whatsNew:
-            guard let whatsNew = getWhatsNew() else {
-                return
-            }
-            route(to: \.whatsNew, whatsNew)
             
         case .shareOptions(let zikr):
             route(to: \.shareOptions, zikr)
@@ -321,7 +333,7 @@ extension RootCoordinator {
                     textFont: UIFont(name: self.preferences.preferredTranslationFont.postscriptName, size: 25)!,
                     pageMargins: UIEdgeInsets(horizontal: 75, vertical: 65),
                     footer: ArticlePDFComposer.Footer(
-                        image: UIImage(named: "ink-icon"),
+                        image: UIImage(named: "ink-icon", in: resourcesBunbdle, compatibleWith: nil),
                         text: L10n.Share.sharedWithAzkar.uppercased(),
                         link: URL(string: "https://apple.co/41O1pzQ")
                     )
@@ -340,7 +352,7 @@ extension RootCoordinator {
                 let view = ArticlePDFCoverView(
                     article: article,
                     maxHeight: 842,
-                    logoImage: UIImage(named: "ink-icon"),
+                    logoImage: UIImage(named: "ink-icon", in: resourcesBunbdle, compatibleWith: nil),
                     logoSubtitle: L10n.Share.sharedWithAzkar
                 )
                 .frame(width: 595, height: 842)
@@ -402,7 +414,7 @@ extension RootCoordinator {
     
     func makeCategoryView(_ category: ZikrCategory) -> ZikrPagesView {
         let viewModel = makeZikrPagesViewModel(category)
-        return ZikrPagesView(viewModel: viewModel)
+        return ZikrPagesView(viewModel: viewModel, showPageIndicators: category == .hundredDua)
     }
     
     func makeAzkarListView(_ category: ZikrCategory) -> some View {
@@ -444,10 +456,6 @@ extension RootCoordinator {
                 initialRoute: initialRoute
             )
         )
-    }
-    
-    func makeWhatsNewView(_ whatsNew: WhatsNew) -> some View {
-        getWhatsNewView(whatsNew)
     }
     
     func makeShareOptionsView(zikr: Zikr) -> NavigationViewCoordinator<ZikrShareCoordinator> {

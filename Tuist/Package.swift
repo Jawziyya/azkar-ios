@@ -26,7 +26,7 @@ let package = Package(
         .package(url: "https://github.com/firebase/firebase-ios-sdk", from: "11.3.0"),
         .package(url: "https://github.com/supabase-community/supabase-swift", from: "2.0.0"),
         .package(url: "https://github.com/RevenueCat/purchases-ios.git", from: "4.19.0"),
-        .package(url: "https://github.com/superwall-me/Superwall-iOS", from: "4.0.0"),
+        .package(url: "https://github.com/superwall-me/Superwall-iOS", from: "4.5.1"),
         .package(url: "https://github.com/mixpanel/mixpanel-swift", from: "2.8.0"),
         
         // MARK: Network.
@@ -38,6 +38,7 @@ let package = Package(
         .package(url: "https://github.com/bizz84/SwiftyStoreKit", from: "0.16.3"),
         .package(url: "https://github.com/kean/Nuke", from: "12.0.0"),
         .package(url: "https://github.com/onmyway133/RoughSwift", from: "2.0.0"),
+        .package(url: "https://github.com/mannylopez/TinyMoon.git", from: "3.0.1"),
         
         // MARK: UI.
         .package(url: "https://github.com/aheze/Popovers", from: "1.3.2"),
@@ -45,7 +46,6 @@ let package = Package(
         .package(url: "https://github.com/SwiftUIX/SwiftUIX", from: "0.2.2"),
         .package(url: "https://github.com/siteline/swiftui-introspect", from: "1.1.2"),
         .package(url: "https://github.com/shaps80/SwiftUIBackports", from: "2.8.1"),
-        .package(url: "https://github.com/SvenTiigi/WhatsNewKit", from: "2.0.0"),
         .package(url: "https://github.com/bmoliveira/MarkdownKit", from: "1.7.1"),
     ],
     targets: [
