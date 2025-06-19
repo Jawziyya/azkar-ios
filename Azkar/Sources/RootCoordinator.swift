@@ -2,7 +2,6 @@ import UIKit
 import SwiftUI
 import Combine
 import Stinsen
-import WhatsNewKit
 import MessageUI
 import Library
 import ArticleReader
@@ -20,7 +19,6 @@ enum RootSection: Equatable, RouteKind {
     case zikrPages(_ vm: ZikrPagesViewModel)
     case goToPage(Int)
     case settings(_ intitialRoute: SettingsRoute? = nil, presentModally: Bool = false)
-    case whatsNew
     case shareOptions(Zikr)
     case article(Article)
     case zikrCollectionsOnboarding
@@ -37,7 +35,6 @@ final class RootCoordinator: NSObject, RouteTrigger, NavigationCoordinatable {
     @Route(.push) var azkarList = makeAzkarListView
     @Route(.push) var settings = makeSettingsView
     @Route(.modal) var modalSettings = makeModalSettingsView
-    @Route(.modal) var whatsNew = makeWhatsNewView
     @Route(.modal) var shareOptions = makeShareOptionsView
     @Route(.push) var articleView = makeArticleView
     @Route(.modal) var zikrCollectionsOnboarding = makeZikrCollectionsOnboardingCoordinator
@@ -265,12 +262,6 @@ private extension RootCoordinator {
                 route(to: \.settings, initialRoute)
             }
             
-        case .whatsNew:
-            guard let whatsNew = getWhatsNew() else {
-                return
-            }
-            route(to: \.whatsNew, whatsNew)
-            
         case .shareOptions(let zikr):
             route(to: \.shareOptions, zikr)
             
@@ -465,10 +456,6 @@ extension RootCoordinator {
                 initialRoute: initialRoute
             )
         )
-    }
-    
-    func makeWhatsNewView(_ whatsNew: WhatsNew) -> some View {
-        getWhatsNewView(whatsNew)
     }
     
     func makeShareOptionsView(zikr: Zikr) -> NavigationViewCoordinator<ZikrShareCoordinator> {
