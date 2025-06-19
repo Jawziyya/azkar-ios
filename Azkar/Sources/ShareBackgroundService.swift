@@ -3,10 +3,19 @@ import Alamofire
 
 let BACKGROUNDS_BASE_URL = URL(string: "https://azkar.ams3.digitaloceanspaces.com/media/share-backgrounds")!
 
-enum ShareBackgroundType: String, Codable, Hashable {
+enum ShareBackgroundType: String, Codable, Hashable, CaseIterable, Identifiable {
     case color
     case pattern
     case image
+    
+    var id: Self { self }
+    var title: String {
+        switch self {
+        case .color: L10n.Share.BackgroundType.color
+        case .image: L10n.Share.BackgroundType.image
+        case .pattern: L10n.Share.BackgroundType.pattern
+        }
+    }
 }
 
 struct ShareBackground: Codable, Hashable {
@@ -52,9 +61,7 @@ final class ShareBackgroundService: ObservableObject {
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
         
-        var request = try URLRequest(url: jsonURL, method: .get, headers: ["Cache-Control": "max-age=3600"])
-        // Set the cachePolicy to return cached data if available and not expired
-        request.cachePolicy = .returnCacheDataElseLoad
+        let request = try URLRequest(url: jsonURL, method: .get)
         
         let backgroundImages = try await session.request(request)
             .validate()
@@ -64,7 +71,8 @@ final class ShareBackgroundService: ObservableObject {
         return backgroundImages.map {
             ZikrShareBackgroundItem(
                 id: $0.name,
-                backgroundType: .remoteImage($0),
+                background: .remoteImage($0),
+                type: $0.type,
                 isProItem: true
             )
         }

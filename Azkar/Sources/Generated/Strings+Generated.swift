@@ -571,6 +571,16 @@ internal enum L10n {
     internal static let textAlignment = L10n.tr("Localizable", "share.text-alignment", fallback: "Text alignment")
     /// Text copied
     internal static let textCopied = L10n.tr("Localizable", "share.text_copied", fallback: "Text copied")
+    internal enum BackgroundType {
+      /// All
+      internal static let all = L10n.tr("Localizable", "share.background-type.all", fallback: "All")
+      /// Colour
+      internal static let color = L10n.tr("Localizable", "share.background-type.color", fallback: "Colour")
+      /// Image
+      internal static let image = L10n.tr("Localizable", "share.background-type.image", fallback: "Image")
+      /// Pattern
+      internal static let pattern = L10n.tr("Localizable", "share.background-type.pattern", fallback: "Pattern")
+    }
   }
   internal enum Subscribe {
     /// Cancel subscription

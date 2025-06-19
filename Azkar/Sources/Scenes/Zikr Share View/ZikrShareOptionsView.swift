@@ -1,9 +1,27 @@
-// Copyright © 2022 Al Jawziyya. All rights reserved. 
+// Copyright © 2022 Al Jawziyya. All rights reserved.
 
 import SwiftUI
 import AudioPlayer
 import Library
 import Popovers
+
+enum ShareBackgroundTypes: Hashable, Identifiable, CaseIterable {
+    static var allCases: [ShareBackgroundTypes] {
+        [.any] + ShareBackgroundType.allCases.map { .type($0) }
+    }
+    
+    var id: Self { self }
+    
+    case any
+    case type(ShareBackgroundType)
+    
+    var title: String {
+        switch self {
+        case .any: return L10n.Share.BackgroundType.all
+        case .type(let type): return type.title
+        }
+    }
+}
 
 struct ZikrShareOptionsView: View {
     
@@ -91,6 +109,15 @@ struct ZikrShareOptionsView: View {
     
     @State var backgrounds = ZikrShareBackgroundItem.preset
     
+    var visibleBackgrounds: [ZikrShareBackgroundItem] {
+        switch selectedBackgroundType {
+        case .any:
+            return backgrounds
+        case .type(let shareBackgroundType):
+            return backgrounds.filter { $0.type == shareBackgroundType }
+        }
+    }
+    
     @AppStorage("kShareBackground")
     private var selectedBackgroundId: String?
 
@@ -103,6 +130,8 @@ struct ZikrShareOptionsView: View {
     
     // Add states for action tracking
     @State private var processingQuickShareAction: ShareOptions.ShareActionType?
+    
+    @State private var selectedBackgroundType: ShareBackgroundTypes = .any
     
     private let alignments: [ZikrShareTextAlignment] = [.center, .start]
             
@@ -280,19 +309,51 @@ struct ZikrShareOptionsView: View {
         .allowsHitTesting(false)
     }
     
+    var backgroundTypePickerMenu: some View {
+        Menu {
+            ForEach(ShareBackgroundTypes.allCases) { item in
+                Button {
+                    selectedBackgroundType = item
+                } label: {
+                    Text(item.title)
+                        .systemFont(.callout)
+                    if selectedBackgroundType == item {
+                        Image(systemName: "checkmark")
+                            .foregroundStyle(.accent)
+                    }
+                }
+            }
+        } label: {
+            HStack {
+                Text(selectedBackgroundType.title)
+                    .foregroundStyle(.secondaryText)
+                    .multilineTextAlignment(.trailing)
+                Image(systemName: "chevron.down")
+                    .foregroundStyle(.secondaryText)
+            }
+            .systemFont(.caption2, modification: .smallCaps)
+        }
+    }
+    
     var backgroundPickerSection: some View {
         Section {
             VStack(alignment: .leading, spacing: 8) {
-                Text(L10n.Share.backgroundHeader)
-                    .foregroundStyle(.secondaryText)
-                    .systemFont(.subheadline, modification: .smallCaps)
-                    .padding(.horizontal, 16)
-                
+                HStack {
+                    Text(L10n.Share.backgroundHeader)
+                        .foregroundStyle(.secondaryText)
+                        .systemFont(.subheadline, modification: .smallCaps)
+
+                    Spacer()
+
+                    backgroundTypePickerMenu
+                }
+                .padding(.horizontal, 16)
+                 
                 ZikrShareBackgroundPickerView(
-                    backgrounds: backgrounds,
+                    backgrounds: visibleBackgrounds,
                     selectedBackground: Binding(
                         get: { self.selectedBackground },
-                        set: { newValue in 
+                        set: { newValue in
                             self.selectedBackground = newValue
                             if !newValue.isProItem || subscriptionManager.isProUser() {
                                 self.selectedBackgroundId = newValue.id

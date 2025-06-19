@@ -40,10 +40,10 @@ struct ZikrShareView: View {
 
     // New computed property to check if background is an image
     private var isBackgroundImage: Bool {
-        switch selectedBackground.backgroundType {
-        case .solidColor:
+        switch selectedBackground.type {
+        case .color:
             return false
-        case .localImage, .remoteImage:
+        case .pattern, .image:
             return true
         }
     }
@@ -78,7 +78,7 @@ struct ZikrShareView: View {
     
     var backgroundForContent: some View {
         Group {
-            switch selectedBackground.backgroundType {
+            switch selectedBackground.background {
             case .solidColor(let colorType):
                 colorTheme.getColor(colorType)
             case .localImage(let image):
