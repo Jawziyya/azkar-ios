@@ -28,9 +28,9 @@ final class ZikrPagesViewModel: ObservableObject, Equatable {
     let azkar: [ZikrViewModel]
     let pages: [PageType]
     let preferences: Preferences
+    let zikrCounter: ZikrCounterType
     let selectedPage: AnyPublisher<Int, Never>
     let initialPage: Int
-    let zikrCounter: ZikrCounterType = ZikrCounter.shared
     
     @Published var page = 0
     @Published var hasRemainingRepeats = true
@@ -46,6 +46,7 @@ final class ZikrPagesViewModel: ObservableObject, Equatable {
         title: String,
         azkar: [ZikrViewModel],
         preferences: Preferences,
+        zikrCounter: ZikrCounterType = ZikrCounter.shared,
         selectedPagePublisher: AnyPublisher<Int, Never>,
         initialPage: Int
     ) {
@@ -53,6 +54,7 @@ final class ZikrPagesViewModel: ObservableObject, Equatable {
         self.category = category
         self.title = title
         self.preferences = preferences
+        self.zikrCounter = zikrCounter
         self.azkar = azkar
         self.selectedPage = selectedPagePublisher
         self.initialPage = initialPage
@@ -95,7 +97,7 @@ final class ZikrPagesViewModel: ObservableObject, Equatable {
         }
         
         // Check if category is already marked as completed
-        let isCategoryCompleted = await zikrCounter.isCategoryMarkedAsCompleted(category)
+        let isCategoryCompleted = await zikrCounter.isCategoryCompleted(category)
         await MainActor.run {
             setHasRemainingRepeats(!isCategoryCompleted)
         }
@@ -108,8 +110,14 @@ final class ZikrPagesViewModel: ObservableObject, Equatable {
         let totalCount = azkar.reduce(0) { $0 + $1.zikr.repeats }
         zikrCounter.observeCompletedRepeats(in: category)
             .receive(on: DispatchQueue.main)
-            .sink { count in
-                setHasRemainingRepeats(count < totalCount)
+            .sink { [unowned self] count in
+                let hasRemainingRepeats = count < totalCount
+                setHasRemainingRepeats(hasRemainingRepeats)
+                if !hasRemainingRepeats {
+                    Task {
+                        try await zikrCounter.markCategoryAsCompleted(category)
+                    }
+                }
             }
             .store(in: &cancellables)
     }
@@ -163,7 +171,11 @@ final class ZikrPagesViewModel: ObservableObject, Equatable {
     }
         
     @MainActor func markCurrentCategoryAsCompleted() async {
-        try? await zikrCounter.markCategoryAsCompleted(category)
+        do {
+            try await zikrCounter.markCategoryAsCompleted(category)
+        } catch {
+            print("Error marking category as completed: \(error)")
+        }
         hasRemainingRepeats = false
     }
 

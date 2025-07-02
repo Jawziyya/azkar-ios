@@ -75,7 +75,7 @@ public actor InMemoryZikrCounter: ZikrCounterType {
             .eraseToAnyPublisher()
     }
     
-    public func isCategoryMarkedAsCompleted(_ category: ZikrCategory) async -> Bool {
+    public func isCategoryCompleted(_ category: ZikrCategory) async -> Bool {
         return false
     }
     

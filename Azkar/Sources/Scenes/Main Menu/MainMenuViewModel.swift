@@ -61,10 +61,6 @@ final class MainMenuViewModel: ObservableObject {
 
     private var cancellables = Set<AnyCancellable>()
 
-    private var isIpad: Bool {
-        UIDevice.current.isIpad
-    }
-
     init(
         databaseService: AzkarDatabase,
         preferencesDatabase: PreferencesDatabase,

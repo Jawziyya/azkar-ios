@@ -102,8 +102,8 @@ internal enum L10n {
     internal static let other = L10n.tr("Localizable", "category.other", fallback: "Important adhkar")
   }
   internal enum Common {
-    /// Tamamla
-    internal static let complete = L10n.tr("Localizable", "common.complete", fallback: "Tamamla")
+    /// Complete
+    internal static let complete = L10n.tr("Localizable", "common.complete", fallback: "Complete")
     /// Continue
     internal static let `continue` = L10n.tr("Localizable", "common.continue", fallback: "Continue")
     /// Default

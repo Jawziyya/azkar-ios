@@ -44,7 +44,7 @@ final class ZikrCounter: ObservableObject, ZikrCounterType {
         switch category {
         case .afterSalah:
             try await inMemoryZikrCounter.markCategoryAsCompleted(category)
-        case .morning, .evening, .night:
+        case .morning, .evening, .night, .hundredDua:
             try await databaseZikrCounter.markCategoryAsCompleted(category)
         default:
             break
@@ -69,11 +69,11 @@ final class ZikrCounter: ObservableObject, ZikrCounterType {
         }
     }
     
-    func isCategoryMarkedAsCompleted(_ category: ZikrCategory) async -> Bool {
+    func isCategoryCompleted(_ category: ZikrCategory) async -> Bool {
         if category == .afterSalah {
-            return await inMemoryZikrCounter.isCategoryMarkedAsCompleted(category)
+            return await inMemoryZikrCounter.isCategoryCompleted(category)
         } else {
-            return await databaseZikrCounter.isCategoryMarkedAsCompleted(category)
+            return await databaseZikrCounter.isCategoryCompleted(category)
         }
     }
     

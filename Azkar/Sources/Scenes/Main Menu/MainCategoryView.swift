@@ -6,16 +6,10 @@ import AzkarResources
 struct MainCategoryView: View {
     
     let category: ZikrCategory
-    var showCheckmark = false
     
-    init(
-        category: ZikrCategory,
-        showChecmark: Bool = false
-    ) {
-        self.category = category
-        self.showCheckmark = showChecmark
-    }
-
+    @State private var isCompleted = false
+    @EnvironmentObject var counter: ZikrCounter
+    
     var body: some View {
         VStack(alignment: .center, spacing: 8) {
             imageView
@@ -28,7 +22,7 @@ struct MainCategoryView: View {
                     .foregroundStyle(.text)
                     .layoutPriority(1)
                 
-                if showCheckmark {
+                if isCompleted {
                     Image(systemName: "checkmark")
                         .foregroundStyle(.secondaryText)
                         .font(.caption)
@@ -36,6 +30,9 @@ struct MainCategoryView: View {
             }
         }
         .padding(15)
+        .task {
+            isCompleted = await counter.isCategoryCompleted(category)
+        }
     }
     
     @ViewBuilder private var imageView: some View {
