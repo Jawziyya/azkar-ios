@@ -85,7 +85,7 @@ public final class DatabaseZikrCounter: ZikrCounterType {
         }
     }
     
-    public func isCategoryMarkedAsCompleted(_ category: ZikrCategory) async -> Bool {
+    public func isCategoryCompleted(_ category: ZikrCategory) async -> Bool {
         let key = getKey()
         do {
             return try await getDatabaseQueue().read { db in

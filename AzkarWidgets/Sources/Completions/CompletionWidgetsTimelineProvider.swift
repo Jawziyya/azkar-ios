@@ -17,9 +17,9 @@ struct CompletionWidgetsTimelineProvider: TimelineProvider {
     }
 
     private func getCompletionState() async -> CompletionState {
-        let isMorningCompleted = await zikrCounterService.isCategoryMarkedAsCompleted(.morning)
-        let isEveningCompleted = await zikrCounterService.isCategoryMarkedAsCompleted(.evening)
-        let isNightCompleted = await zikrCounterService.isCategoryMarkedAsCompleted(.night)
+        let isMorningCompleted = await zikrCounterService.isCategoryCompleted(.morning)
+        let isEveningCompleted = await zikrCounterService.isCategoryCompleted(.evening)
+        let isNightCompleted = await zikrCounterService.isCategoryCompleted(.night)
         
         var completionState: CompletionState = []
         if (isMorningCompleted) { completionState.insert(.morning) }

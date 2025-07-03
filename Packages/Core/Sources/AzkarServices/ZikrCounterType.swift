@@ -11,7 +11,7 @@ public protocol ZikrCounterType: AnyObject {
     func incrementCounter(for zikr: Zikr) async throws
     func incrementCounter(for zikr: Zikr, by count: Int) async throws
     func observeCompletedRepeats(in category: ZikrCategory) -> AnyPublisher<Int, Never>
-    func isCategoryMarkedAsCompleted(_ category: ZikrCategory) async -> Bool
+    func isCategoryCompleted(_ category: ZikrCategory) async -> Bool
     func resetCounterForCategory(_ category: ZikrCategory) async
     func resetCategoryCompletionMark(_ category: ZikrCategory) async
 }

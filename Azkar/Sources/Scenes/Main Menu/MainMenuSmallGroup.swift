@@ -18,7 +18,7 @@ struct MainMenuSmallGroup: View {
         .environment(\.layoutDirection, flip ? .rightToLeft : .leftToRight)
         .task {
             guard let category = (item as? AzkarMenuItem)?.category else { return }
-            isCompleted = await counter.isCategoryMarkedAsCompleted(category)
+            isCompleted = await counter.isCategoryCompleted(category)
         }
 	}
     

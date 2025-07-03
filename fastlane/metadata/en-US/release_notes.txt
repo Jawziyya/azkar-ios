@@ -1,3 +1,2 @@
-- "100 Duas from the Quran and Sunnah" as a separate category
-- Updated default color scheme
-- New icons
+- Fixed the display of the checkmark indicating completion of reading a category
+- Corrected typos in the section "100 Duas from the Quran and Sunnah"

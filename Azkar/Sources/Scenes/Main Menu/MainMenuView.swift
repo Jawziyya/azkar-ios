@@ -137,14 +137,12 @@ struct MainMenuView: View {
     private func getMainMenuSectionView(_ category: ZikrCategory) -> some View {
         getMenuButton {
             MainCategoryView(
-                category: category,
-                showChecmark: false
+                category: category
             )
             .frame(maxWidth: .infinity)
             .removeSaturationIfNeeded()
             .background(.contentBackground)
             .applyTheme()
-            .environmentObject(ZikrCounter.shared)
         } action: {
             self.viewModel.navigateToCategory(category)
         }
@@ -161,7 +159,6 @@ struct MainMenuView: View {
                         viewModel.navigateToCategory(item.category)
                     }
                 )
-                .environmentObject(ZikrCounter.shared)
                 
                 if position != .last {
                     Divider()

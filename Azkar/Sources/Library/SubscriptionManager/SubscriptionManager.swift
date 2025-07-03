@@ -99,7 +99,13 @@ final class SubscriptionManager: SubscriptionManagerType {
             }
             completion?()
         }
-        Superwall.shared.register(placement: entitlement.rawValue, handler: presentationHandler)
+        
+        switch presentationType {
+        case .appLaunch:
+            Superwall.shared.register(placement: "azkar_ultra_universal_launch", handler: presentationHandler)
+        case .screen:
+            Superwall.shared.register(placement: "azkar_ultra_universal", handler: presentationHandler)
+        }
     }
     
     func isProUser() -> Bool {
@@ -139,7 +145,7 @@ extension SubscriptionManager: PurchaseController {
                     AzkarEntitlement(rawValue: entitlement.id)
                 }
                 
-                for entitlement in azkarEntitlements {
+                for _ in azkarEntitlements {
                     self?.setProFeaturesActivated(true)
                 }            
             case .inactive:
