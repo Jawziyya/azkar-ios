@@ -56,7 +56,7 @@ final class NotificationsHandler: NSObject {
 
     static let shared = NotificationsHandler()
 
-    let selectedNotificationCategory = PassthroughSubject<NotificationCategory, Never>()
+    let selectedNotificationCategory = CurrentValueSubject<NotificationCategory?, Never>(nil)
     
     var notificationsPermissionStatePublisher: AnyPublisher<NotificationsPermissionState, Never> {
         Publishers
@@ -175,6 +175,18 @@ final class NotificationsHandler: NSObject {
 }
 
 extension NotificationsHandler: UNUserNotificationCenterDelegate {
+    
+    func handleLaunchNotification(_ userInfo: [AnyHashable: Any]) {
+        guard
+            let aps = userInfo["aps"] as? [String: Any],
+            let category = aps["category"] as? String,
+            let notificationCategory = NotificationCategory(rawValue: category)
+        else {
+            return
+        }
+        
+        selectedNotificationCategory.send(notificationCategory)
+    }
     
     func userNotificationCenter(
         _ center: UNUserNotificationCenter,

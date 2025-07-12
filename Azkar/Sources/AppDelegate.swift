@@ -26,11 +26,14 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(
         _ application: UIApplication,
-        didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil
+        didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
     ) -> Bool {
         application.beginReceivingRemoteControlEvents()
         application.registerForRemoteNotifications()
         initialize(launchOptions: launchOptions)
+        if let launchOptions, let userInfo = launchOptions[.remoteNotification] as? [AnyHashable: Any] {
+            notificationsHandler.handleLaunchNotification(userInfo)
+        }
         return true
     }
     

@@ -48,6 +48,7 @@ struct AzkarApp: App {
                 window?.overrideUserInterfaceStyle = theme.userInterfaceStyle
             }
             .onReceive(delegate.notificationsHandler.selectedNotificationCategory) { notificationCategory in
+                guard let notificationCategory else { return }
                 let category: ZikrCategory
                 switch notificationCategory {
                 case .morning: category = .morning
