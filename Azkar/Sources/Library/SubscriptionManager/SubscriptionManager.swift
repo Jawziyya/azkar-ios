@@ -128,7 +128,7 @@ final class SubscriptionManager: SubscriptionManagerType {
 
 extension SubscriptionManager: PurchaseController {
     
-    func observerSubsriptionStateWithingSuperwall() {
+    func observerSubsriptionStateWithinSuperwall() {
         subscribedCancellable = Superwall.shared.$subscriptionStatus
           .receive(on: DispatchQueue.main)
           .sink { [weak self] status in
@@ -159,7 +159,7 @@ extension SubscriptionManager: PurchaseController {
     /// changing `Superwall.shared.subscriptionStatus`
     func syncSubscriptionStatus() {
         assert(Purchases.isConfigured, "You must configure RevenueCat before calling this method.")
-        observerSubsriptionStateWithingSuperwall()
+        observerSubsriptionStateWithinSuperwall()
         Task {
             if let customerInfo = try? await Purchases.shared.syncPurchases() {
                 await handleCustomerInfo(customerInfo)
