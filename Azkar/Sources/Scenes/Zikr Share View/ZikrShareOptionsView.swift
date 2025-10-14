@@ -229,7 +229,6 @@ struct ZikrShareOptionsView: View {
                     Divider()
                     
                     Toggle(L10n.Share.includeAzkarLogo, isOn: $includeLogo.animation(.smooth))
-                        .applyThemedToggleStyle(showProBadge: !subscriptionManager.isProUser())
                         .padding(.horizontal, 16)
                     
                     Divider()

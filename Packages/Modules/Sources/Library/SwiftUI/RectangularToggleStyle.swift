@@ -52,7 +52,7 @@ private struct ApplyRectangularToggleStyle: ViewModifier {
         if appTheme.cornerRadius == 0 {
             content.toggleStyle(.rectangular(showProBadge: showProBadge))
         } else {
-            content.toggleStyle(.standard(showProBadge: showProBadge))
+            content.toggleStyle(.switch)
         }
     }
 }
