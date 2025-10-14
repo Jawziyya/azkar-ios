@@ -116,11 +116,23 @@ struct ZikrView: View {
     }
     
     func counterButton(_ repeats: String) -> some View {
-        Button(action: {
-            Task {
-                await viewModel.incrementZikrCount()
-            }
-        }, label: {
+        Menu {
+            Button(action: {
+                Task {
+                    await viewModel.resetCounter()
+                }
+            }, label: {
+                Label(L10n.Common.resetCounter, systemImage: "arrow.counterclockwise")
+            })
+            
+            Button(action: {
+                Task {
+                    await viewModel.completeCounter()
+                }
+            }, label: {
+                Label(L10n.Common.complete, systemImage: "checkmark")
+            })
+        } label: {
             counterText(repeats)
                 .font(Font.system(
                     size: viewModel.preferences.counterSize.value / 3,
@@ -136,25 +148,14 @@ struct ZikrView: View {
                 .foregroundStyle(Color.white)
                 .background(.accent)
                 .clipShape(Circle())
-                .contextMenu {
-                    Button(action: {
-                        Task {
-                            await viewModel.resetCounter()
-                        }
-                    }, label: {
-                        Label(L10n.Common.resetCounter, systemImage: "arrow.counterclockwise")
-                    })
-                    
-                    Button(action: {
-                        Task {
-                            await viewModel.completeCounter()
-                        }
-                    }, label: {
-                        Label(L10n.Common.complete, systemImage: "checkmark")
-                    })
-                }
+                .glassEffectCompat(.regular.interactive(), in: Circle())
+                .clipShape(Circle())
                 .padding(.horizontal)
-        })
+        } primaryAction: {
+            Task {
+                await viewModel.incrementZikrCount()
+            }
+        }
         .frame(
             width: viewModel.preferences.counterSize.value,
             height: viewModel.preferences.counterSize.value

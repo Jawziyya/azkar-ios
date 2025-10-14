@@ -127,6 +127,7 @@ struct ZikrPagesView: View, Equatable {
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .minimumScaleFactor(0.15)
         }
+        .glassEffectCompat(.clear, in: RoundedRectangle(cornerRadius: 10))
     }
 
 }

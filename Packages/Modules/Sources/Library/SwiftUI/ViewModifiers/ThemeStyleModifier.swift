@@ -12,10 +12,12 @@ public struct ThemeStyleModifier: ViewModifier {
         switch appTheme {
         case .flat:
             applyFlatStyle(content)
+                .glassEffectCompat(.regular.interactive(), in: Rectangle())
         case .neomorphic:
             applyNeomorphicStyle(content)
         default:
             content.roundedBorder(roundingCorners)
+                .glassEffectCompat(.regular.interactive(), in: RoundedRectangle(cornerRadius: appTheme.cornerRadius))
         }
     }
     
