@@ -134,7 +134,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     private func setupMixpanel(launchOptions: [UIApplication.LaunchOptionsKey: Any]?) {
         Mixpanel.initialize(
             token: readSecret(AzkarSecretKey.MIXPANEL_TOKEN)!,
-            launchOptions: launchOptions
+            trackAutomaticEvents: false
         )
         Mixpanel.mainInstance().loggingEnabled = true
     }
