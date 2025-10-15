@@ -92,6 +92,7 @@ final class ZikrShareCoordinator: NavigationCoordinatable {
         let view = ZikrShareView(
             viewModel: viewModel,
             includeTitle: options.includeTitle,
+            includeOriginalText: options.includeOriginalText,
             includeTranslation: options.includeTranslation,
             includeTransliteration: options.includeTransliteration,
             includeBenefits: options.includeBenefits,

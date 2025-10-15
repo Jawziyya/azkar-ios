@@ -25,19 +25,21 @@ struct ZikrShareBackgroundPickerView: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 LazyHStack(spacing: 0) {
                     ForEach(backgrounds) { item in
-                        ZikrShareBackgroundCardView(
-                            item: item, 
-                            isSelected: selectedBackground == item
-                        )
-                        .onTapGesture {
+                        Button(action: {
                             selectedBackground = item
                             HapticGenerator.performFeedback(.impact(flexibility: .soft))
                             withAnimation {
                                 scrollProxy.scrollTo(item.id, anchor: .center)
                             }
-                        }
+                        }, label: {
+                            ZikrShareBackgroundCardView(
+                                item: item, 
+                                isSelected: selectedBackground == item
+                            )
+                        })
                         .padding(5)
                         .id(item.id)
+                        .buttonStyle(.plain)
                     }
                 }
                 .padding(.horizontal)

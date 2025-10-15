@@ -59,6 +59,7 @@ struct ZikrShareOptionsView: View {
         let includeBenefits: Bool
         let includeLogo: Bool
         let includeTranslation: Bool
+        let includeOriginalText: Bool
         let includeTransliteration: Bool
         var textAlignment: ZikrShareTextAlignment = .start
         let shareType: ZikrShareType
@@ -97,6 +98,9 @@ struct ZikrShareOptionsView: View {
     
     @AppStorage("kShareIncludeTranslation")
     private var includeTranslation = true
+    
+    @AppStorage("kShareIncludeOriginalText")
+    private var includeOriginalText = true
     
     @AppStorage("kShareIncludeTransliteration")
     private var includeTransliteration = true
@@ -262,6 +266,7 @@ struct ZikrShareOptionsView: View {
         }
         .systemFont(.body)
         .animation(.smooth, value: showExtraOptions)
+        .animation(.smooth, value: selectedBackground)
     }
 
     var shareViewPreviewContainer: some View {
@@ -282,6 +287,8 @@ struct ZikrShareOptionsView: View {
                         }
                     }
                 }
+                .animation(.smooth, value: selectedBackground.isProItem)
+                .animation(.smooth, value: subscriptionManager.isProUser())
 
             shareViewPreview
                 .opacity(0)
@@ -289,6 +296,7 @@ struct ZikrShareOptionsView: View {
                     shareViewSize = proxy.size
                 }
         }
+        .transition(.opacity)
     }
 
     var shareViewPreview: some View {
@@ -301,6 +309,7 @@ struct ZikrShareOptionsView: View {
                 player: .test
             ),
             includeTitle: includeTitle,
+            includeOriginalText: includeOriginalText,
             includeTranslation: includeTranslation,
             includeTransliteration: includeTransliteration,
             includeBenefits: includeBenefits,
@@ -402,8 +411,17 @@ struct ZikrShareOptionsView: View {
             if zikr.title != nil {
                 Toggle(L10n.Share.includeTitle, isOn: $includeTitle)
             }
+            Toggle(L10n.Share.includeOriginalText, isOn: $includeOriginalText.onChange { newValue in
+                if !newValue && !includeTranslation {
+                    includeTranslation = true
+                }
+            })
             if zikr.translation != nil {
-                Toggle(L10n.Share.includeTranslation, isOn: $includeTranslation)
+                Toggle(L10n.Share.includeTranslation, isOn: $includeTranslation.onChange { newValue in
+                    if !newValue && !includeOriginalText {
+                        includeOriginalText = true
+                    }
+                })
             }
             if zikr.transliteration != nil {
                 Toggle(L10n.Share.includeTransliteration, isOn: $includeTransliteration)
@@ -436,6 +454,7 @@ struct ZikrShareOptionsView: View {
             includeBenefits: includeBenefits,
             includeLogo: includeLogo,
             includeTranslation: includeTranslation,
+            includeOriginalText: includeOriginalText,
             includeTransliteration: includeTransliteration,
             textAlignment: textAlignment,
             shareType: selectedShareType,

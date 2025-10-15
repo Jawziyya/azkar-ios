@@ -22,6 +22,7 @@ struct ZikrShareView: View {
 
     let viewModel: ZikrViewModel
     let includeTitle: Bool
+    let includeOriginalText: Bool
     let includeTranslation: Bool
     let includeTransliteration: Bool
     let includeBenefits: Bool
@@ -154,11 +155,13 @@ struct ZikrShareView: View {
             }
 
             VStack(spacing: 0) {
-                Text(.init(viewModel.text.joined(separator: "\n")))
-                    .customFont(.title1, isArabic: true)
-                    .frame(maxWidth: .infinity, alignment: arabicTextAlignment.frameAlignment)
-                    .multilineTextAlignment(arabicTextAlignment)
-                    .padding()
+                if includeOriginalText {
+                    Text(.init(viewModel.text.joined(separator: "\n")))
+                        .customFont(.title1, isArabic: true)
+                        .frame(maxWidth: .infinity, alignment: arabicTextAlignment.frameAlignment)
+                        .multilineTextAlignment(arabicTextAlignment)
+                        .padding()
+                }
 
                 if includeTranslation {
                     Divider()
@@ -246,6 +249,7 @@ struct ZikrShareView_Previews: PreviewProvider {
                 player: Player.test
             ),
             includeTitle: true,
+            includeOriginalText: true,
             includeTranslation: true,
             includeTransliteration: true,
             includeBenefits: true,

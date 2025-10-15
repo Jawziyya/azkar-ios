@@ -553,6 +553,8 @@ internal enum L10n {
     internal static let includeAzkarLogo = L10n.tr("Localizable", "share.include-azkar-logo", fallback: "Include Azkar logo")
     /// Include text of benefit
     internal static let includeBenefit = L10n.tr("Localizable", "share.include-benefit", fallback: "Include text of benefit")
+    /// Include Original Text
+    internal static let includeOriginalText = L10n.tr("Localizable", "share.include-original-text", fallback: "Include Original Text")
     /// Include title
     internal static let includeTitle = L10n.tr("Localizable", "share.include-title", fallback: "Include title")
     /// Translation Text
