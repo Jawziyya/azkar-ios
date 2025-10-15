@@ -57,7 +57,6 @@ struct AzkarApp: App {
                 }
                 self.deepLinker.route = .azkar(category)
             }
-            .environmentObject(ShareBackgroundService())
         }
     }
     

@@ -84,10 +84,10 @@ struct ZikrShareView: View {
             case .localImage(let image):
                 renderImage(image)
             case .remoteImage(let item):
-                if useFullScreen, let cachedImage = getCachedImage(for: item.originalURL) {
+                if useFullScreen, let cachedImage = getCachedImage(for: item.url) {
                     renderImage(cachedImage)
                 } else {
-                    LazyImage(url: item.originalURL) { state in
+                    LazyImage(url: item.url) { state in
                         if let image = state.image {
                             image
                                 .resizable()

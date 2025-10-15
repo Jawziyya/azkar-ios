@@ -5,6 +5,7 @@ import Stinsen
 import UIKit
 import Nuke
 import MessageUI
+import Library
 
 final class ZikrShareCoordinator: NavigationCoordinatable {
     var stack: Stinsen.NavigationStack<ZikrShareCoordinator> = .init(initial: \.options)
@@ -14,11 +15,13 @@ final class ZikrShareCoordinator: NavigationCoordinatable {
     let zikr: Zikr
     let preferences: Preferences
     let player: Player
-    
+    let backgroundsService: ShareBackgroundService
+
     init(zikr: Zikr, preferences: Preferences, player: Player) {
         self.zikr = zikr
         self.preferences = preferences
         self.player = player
+        self.backgroundsService = ShareBackgroundServiceProvider.createShareBackgroundService()
     }
     
     func makeOptionsView() -> some View {
@@ -26,6 +29,7 @@ final class ZikrShareCoordinator: NavigationCoordinatable {
             guard let self = self else { return }
             self.share(using: options)
         }
+        .environmentObject(backgroundsService)
     }
     
     private func share(using options: ZikrShareOptionsView.ShareOptions) {

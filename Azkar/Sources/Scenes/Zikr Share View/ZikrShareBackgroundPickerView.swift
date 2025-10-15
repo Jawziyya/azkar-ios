@@ -114,7 +114,7 @@ struct ZikrShareBackgroundCardView: View {
                 .resizable()
                 .scaledToFill()
         case .remoteImage(let item):
-            LazyImage(url: item.previewURL) { state in
+            LazyImage(url: item.previewUrl ?? item.url) { state in
                 if let image = state.image {
                     image
                         .resizable()

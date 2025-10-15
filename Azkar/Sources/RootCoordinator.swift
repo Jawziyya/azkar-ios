@@ -72,7 +72,7 @@ final class RootCoordinator: NSObject, RouteTrigger, NavigationCoordinatable {
         self.preferences = preferences
         self.deeplinker = deeplinker
         self.player = player
-        
+
         let appGroupFolder = FileManager.default
             .appGroupContainerURL
         
@@ -90,7 +90,7 @@ final class RootCoordinator: NSObject, RouteTrigger, NavigationCoordinatable {
                     .absoluteString,
                 language: language
             )
-            
+
             let preferencesDatabasePath = appGroupFolder
                 .appendingPathComponent("preferences.db")
                 .absoluteString

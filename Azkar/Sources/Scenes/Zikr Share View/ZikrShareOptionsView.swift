@@ -140,11 +140,12 @@ struct ZikrShareOptionsView: View {
             toolbar
                 .padding()
                     
-            content
+            scrollView
                 .customScrollContentBackground()
         }
         .applyThemedToggleStyle()
         .background(.background, ignoreSafeArea: .all)
+        .ignoresSafeArea(edges: selectedShareType == .image ? .bottom : [])
         .task {
             do {
                 let remoteImageBackgrounds = try await backgroundsService.loadBackgrounds()
@@ -207,68 +208,9 @@ struct ZikrShareOptionsView: View {
         .animation(.smooth, value: processingQuickShareAction)
     }
 
-    var content: some View {
+    var scrollView: some View {
         ScrollView {
-            VStack {
-                Color.clear.frame(height: 10)
-                
-                shareAsSection
-                
-                Divider()
-                
-                Toggle(L10n.Share.showExtraOptions, isOn: $showExtraOptions)
-                    .padding(.horizontal, 16)
-                
-                if showExtraOptions {
-                    shareOptions
-                        .padding(.horizontal, 16)
-                        .transition(.opacity.combined(with: .move(edge: .top)))
-                }
-                
-                if selectedShareType != .text {
-                    Divider()
-                    
-                    Toggle(L10n.Share.includeAzkarLogo, isOn: $includeLogo.animation(.smooth))
-                        .padding(.horizontal, 16)
-                    
-                    Divider()
-                    
-                    backgroundPickerSection
-                        .padding(.vertical)
-                    
-                    ZStack {
-                        shareViewPreview
-                            .frame(width: shareViewSize.width, height: shareViewSize.height)
-                            .screenshotProtected(isProtected: selectedBackground.isProItem && !subscriptionManager.isProUser())
-                            .background {
-                                if selectedBackground.isProItem && !subscriptionManager.isProUser() {
-                                    VStack(alignment: .center) {
-                                        Spacer()
-                                        Image(systemName: "lock.fill")
-                                            .resizable()
-                                            .aspectRatio(contentMode: .fit)
-                                            .frame(width: 100, height: 100)
-                                            .foregroundStyle(.accent)
-                                        Spacer()
-                                    }
-                                }
-                            }
-                        
-                        shareViewPreview
-                            .opacity(0)
-                            .getViewBoundsGeometry { proxy in
-                                shareViewSize = proxy.size
-                            }
-                    }
-                } else {
-                    Color.clear.frame(height: 10)
-                }
-            }
-            .systemFont(.body)
-            .background(.contentBackground)
-            .applyTheme()
-            .animation(.smooth, value: showExtraOptions)
-            .padding()
+            content
         }
         .showToast(
             message: processingQuickShareAction?.message ?? "",
@@ -277,7 +219,78 @@ struct ZikrShareOptionsView: View {
             isPresented: processingQuickShareAction != nil
         )
     }
-    
+
+    var content: some View {
+        VStack {
+            VStack {
+                Color.clear.frame(height: 10)
+
+                shareAsSection
+
+                Divider()
+
+                Toggle(L10n.Share.showExtraOptions, isOn: $showExtraOptions)
+                    .padding(.horizontal, 16)
+
+                if showExtraOptions {
+                    shareOptions
+                        .padding(.horizontal, 16)
+                        .transition(.move(edge: .top).combined(with: .opacity))
+                }
+
+                if selectedShareType != .text {
+                    Divider()
+
+                    Toggle(L10n.Share.includeAzkarLogo, isOn: $includeLogo.animation(.smooth))
+                        .padding(.horizontal, 16)
+
+                    Divider()
+                } else {
+                    Color.clear.frame(height: 10)
+                }
+            }
+            .background(.contentBackground)
+            .applyTheme()
+            .padding()
+
+            if selectedShareType != .text {
+                backgroundPickerSection
+                    .padding(.vertical)
+
+                shareViewPreviewContainer
+            }
+        }
+        .systemFont(.body)
+        .animation(.smooth, value: showExtraOptions)
+    }
+
+    var shareViewPreviewContainer: some View {
+        ZStack {
+            shareViewPreview
+                .frame(width: shareViewSize.width, height: shareViewSize.height)
+                .screenshotProtected(isProtected: selectedBackground.isProItem && !subscriptionManager.isProUser())
+                .background {
+                    if selectedBackground.isProItem && !subscriptionManager.isProUser() {
+                        VStack(alignment: .center) {
+                            Spacer()
+                            Image(systemName: "lock.fill")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: 100, height: 100)
+                                .foregroundStyle(.accent)
+                            Spacer()
+                        }
+                    }
+                }
+
+            shareViewPreview
+                .opacity(0)
+                .getViewBoundsGeometry { proxy in
+                    shareViewSize = proxy.size
+                }
+        }
+    }
+
     var shareViewPreview: some View {
         ZikrShareView(
             viewModel: ZikrViewModel(
@@ -457,4 +470,5 @@ struct ZikrShareOptionsView: View {
 #Preview("Share Options") {
     ZikrShareOptionsView(zikr: .placeholder(), callback: { _ in })
         .tint(Color.accentColor)
+        .environmentObject(MockShareBackgroundsService())
 }

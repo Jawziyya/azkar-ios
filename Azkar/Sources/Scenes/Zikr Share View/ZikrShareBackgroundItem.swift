@@ -4,13 +4,8 @@ import Foundation
 import SwiftUI
 import Library
 
-struct ZikrShareBackgroundItem: Identifiable, Hashable {
-    
-    let id: String
-    let background: Background
-    let type: ShareBackgroundType
-    var isProItem = true
-    
+extension ZikrShareBackgroundItem {
+
     static let defaultBackground = ZikrShareBackgroundItem(
         id: ColorType.background.rawValue,
         background: .solidColor(.background),
@@ -53,12 +48,6 @@ struct ZikrShareBackgroundItem: Identifiable, Hashable {
     
     static var preset: [ZikrShareBackgroundItem] {
         [defaultBackground] + colors + patternImages
-    }
-    
-    enum Background: Hashable {
-        case solidColor(ColorType)
-        case localImage(UIImage)
-        case remoteImage(ShareBackground)
     }
     
 }
