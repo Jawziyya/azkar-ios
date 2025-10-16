@@ -15,13 +15,13 @@ final class ZikrShareCoordinator: NavigationCoordinatable {
     let zikr: Zikr
     let preferences: Preferences
     let player: Player
-    let backgroundsService: ShareBackgroundService
+    let backgroundsService: ShareBackgroundsServiceType
 
     init(zikr: Zikr, preferences: Preferences, player: Player) {
         self.zikr = zikr
         self.preferences = preferences
         self.player = player
-        self.backgroundsService = ShareBackgroundServiceProvider.createShareBackgroundService()
+        self.backgroundsService = ShareBackgroundsServiceProvider.createShareBackgroundsService()
     }
     
     func makeOptionsView() -> some View {

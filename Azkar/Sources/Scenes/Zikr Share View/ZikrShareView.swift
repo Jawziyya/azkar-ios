@@ -4,6 +4,7 @@ import SwiftUI
 import NukeUI
 import Nuke
 import Library
+import Entities
 
 extension TextAlignment {
     var frameAlignment: Alignment {

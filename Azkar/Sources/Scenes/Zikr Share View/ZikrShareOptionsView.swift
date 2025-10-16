@@ -4,6 +4,7 @@ import SwiftUI
 import AudioPlayer
 import Library
 import Popovers
+import Entities
 
 enum ShareBackgroundTypes: Hashable, Identifiable, CaseIterable {
     static var allCases: [ShareBackgroundTypes] {
@@ -77,7 +78,7 @@ struct ZikrShareOptionsView: View {
 
     var callback: (ShareOptions) -> Void
 
-    @EnvironmentObject var backgroundsService: ShareBackgroundService
+    @EnvironmentObject var backgroundsService: ShareBackgroundsServiceType
     @Environment(\.presentationMode) var presentation
     @Environment(\.appTheme) var appTheme
     @Environment(\.colorTheme) var colorTheme
@@ -160,18 +161,19 @@ struct ZikrShareOptionsView: View {
         .ignoresSafeArea(edges: selectedShareType == .image ? .bottom : [])
         .task {
             do {
-                let remoteImageBackgrounds = try await backgroundsService.loadBackgrounds()
-                backgrounds = ZikrShareBackgroundItem.preset + remoteImageBackgrounds
-                
-                // Set selectedBackground based on selectedBackgroundId after backgrounds are loaded
-                if let selectedBackgroundId = selectedBackgroundId,
-                   let foundBackground = backgrounds.first(where: { $0.id == selectedBackgroundId }) {
-                    selectedBackground = foundBackground
-                }
-                
-                // Trigger scroll to selected background after backgrounds are loaded
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                    scrollToSelectedBackground = true
+                for try await remoteImageBackgrounds in backgroundsService.loadBackgrounds() {
+                    backgrounds = ZikrShareBackgroundItem.preset + remoteImageBackgrounds
+                    
+                    // Set selectedBackground based on selectedBackgroundId after backgrounds are loaded
+                    if let selectedBackgroundId = selectedBackgroundId,
+                       let foundBackground = backgrounds.first(where: { $0.id == selectedBackgroundId }) {
+                        selectedBackground = foundBackground
+                    }
+                    
+                    // Trigger scroll to selected background after backgrounds are loaded
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                        scrollToSelectedBackground = true
+                    }
                 }
             } catch {
                 print(error)

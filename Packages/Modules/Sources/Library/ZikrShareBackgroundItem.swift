@@ -1,4 +1,5 @@
 import SwiftUI
+import Entities
 
 public struct ZikrShareBackgroundItem: Identifiable, Hashable {
     public let id: String
