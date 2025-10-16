@@ -545,6 +545,8 @@ internal enum L10n {
   internal enum Share {
     /// Background
     internal static let backgroundHeader = L10n.tr("Localizable", "share.background-header", fallback: "Background")
+    /// Font size
+    internal static let fontSize = L10n.tr("Localizable", "share.font-size", fallback: "Font size")
     /// Image
     internal static let image = L10n.tr("Localizable", "share.image", fallback: "Image")
     /// Image saved

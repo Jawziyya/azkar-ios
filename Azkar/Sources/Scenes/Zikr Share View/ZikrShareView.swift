@@ -21,20 +21,22 @@ extension TextAlignment {
 struct ZikrShareView: View {
 
     let viewModel: ZikrViewModel
-    let includeTitle: Bool
-    let includeOriginalText: Bool
-    let includeTranslation: Bool
-    let includeTransliteration: Bool
-    let includeBenefits: Bool
-    let includeLogo: Bool
-    let includeSource: Bool
+    var includeTitle = true
+    var includeOriginalText = true
+    var includeTranslation = true
+    var includeTransliteration = false
+    var includeBenefits = true
+    var includeLogo = true
+    var includeSource = false
     var arabicTextAlignment = TextAlignment.trailing
     var otherTextAlignment = TextAlignment.leading
-    var nestIntoScrollView: Bool
-    var useFullScreen: Bool
+    var nestIntoScrollView = true
+    var useFullScreen = true
     var selectedBackground: ZikrShareBackgroundItem
+    var enableLineBreaks = true
 
     @Environment(\.colorScheme) var colorScheme
+    @Environment(\.dynamicTypeSize) var dynamicTypeSize
     @Environment(\.appTheme) var appTheme
     @Environment(\.colorTheme) var colorTheme
     @State private var dynamicColorScheme: ColorScheme?
@@ -52,7 +54,6 @@ struct ZikrShareView: View {
     var body: some View {
         container
             .edgesIgnoringSafeArea(.all)
-            .environment(\.dynamicTypeSize, .large)
             .environment(\.colorScheme, customColorScheme)
             .onAppear {
                 AnalyticsReporter.reportScreen("Zikr Share", className: viewName)
@@ -150,13 +151,53 @@ struct ZikrShareView: View {
 
     var content: some View {
         VStack(spacing: 16) {
+            if #available(iOS 26, *) {
+                textContainer
+                    .padding(4)
+                    .glassEffect(.regular, in: RoundedRectangle(cornerRadius: appTheme.cornerRadius))
+            } else {
+                textContainer
+            }
+
+            if includeLogo {
+                VStack {
+                    if let image = UIImage(named: "ink-icon", in: resourcesBunbdle, compatibleWith: nil) {
+                        Image(uiImage: image)
+                            .renderingMode(.template)
+                            .resizable()
+                            .frame(width: 25, height: 25)
+                            .cornerRadius(6)
+                    }
+                    Text(L10n.Share.sharedWithAzkar)
+                        .font(Font.system(size: 8, weight: .regular, design: .rounded).smallCaps())
+                }
+                .foregroundStyle(.text)
+                .opacity(0.5)
+                .padding(8)
+                .glassEffectCompat(.regular, in: RoundedRectangle(cornerRadius: 10))
+            }
+        }
+        .padding(.horizontal, 25)
+        .padding(.vertical, 30)
+        .frame(
+            maxWidth: .infinity,
+            minHeight: useFullScreen ? UIScreen.main.bounds.height : 100
+        )
+        .background(backgroundForContent)
+    }
+
+    var textContainer: some View {
+        VStack(spacing: 16) {
             if includeTitle, let title = viewModel.title {
                 Text(title)
             }
 
             VStack(spacing: 0) {
                 if includeOriginalText {
-                    Text(.init(viewModel.text.joined(separator: "\n")))
+                    let processedText = enableLineBreaks
+                        ? viewModel.zikr.text
+                        : viewModel.zikr.text.replacingOccurrences(of: "\n", with: " ")
+                    Text(.init(processedText))
                         .customFont(.title1, isArabic: true)
                         .frame(maxWidth: .infinity, alignment: arabicTextAlignment.frameAlignment)
                         .multilineTextAlignment(arabicTextAlignment)
@@ -164,19 +205,29 @@ struct ZikrShareView: View {
                 }
 
                 if includeTranslation {
-                    Divider()
+                    if includeOriginalText {
+                        Divider()
+                    }
 
-                    Text(viewModel.translation.joined(separator: "\n"))
-                        .customFont(.body)
-                        .multilineTextAlignment(otherTextAlignment)
-                        .padding()
-                        .frame(maxWidth: .infinity, alignment: otherTextAlignment.frameAlignment)
+                    if let translationText = viewModel.zikr.translation {
+                        let processedTranslation = enableLineBreaks
+                            ? translationText
+                            : translationText.replacingOccurrences(of: "\n", with: " ")
+                        Text(processedTranslation)
+                            .customFont(.body)
+                            .multilineTextAlignment(otherTextAlignment)
+                            .padding()
+                            .frame(maxWidth: .infinity, alignment: otherTextAlignment.frameAlignment)
+                    }
                 }
 
-                if includeTransliteration, !viewModel.transliteration.isEmpty {
+                if includeTransliteration, let transliterationText = viewModel.zikr.transliteration {
                     Divider()
 
-                    Text(viewModel.transliteration.joined(separator: "\n"))
+                    let processedTransliteration = enableLineBreaks
+                        ? transliterationText
+                        : transliterationText.replacingOccurrences(of: "\n", with: " ")
+                    Text(processedTransliteration)
                         .customFont(.body)
                         .multilineTextAlignment(.leading)
                         .padding()
@@ -185,7 +236,7 @@ struct ZikrShareView: View {
 
                 if includeBenefits, let text = viewModel.zikr.benefits?.textOrNil {
                     Divider()
-                    
+
                     ZikrBenefitsView(text: text)
                         .customFont(.footnote)
                         .frame(maxWidth: .infinity, alignment: otherTextAlignment.frameAlignment)
@@ -202,65 +253,49 @@ struct ZikrShareView: View {
             }
             .background {
                 if isBackgroundImage {
-                    Rectangle()
-                        .fill(.ultraThinMaterial)
+                    if #available(iOS 26, *) { } else {
+                        Rectangle()
+                            .fill(.ultraThinMaterial)
+                    }
                 } else {
                     colorTheme.getColor(.contentBackground)
                 }
             }
             .cornerRadius(appTheme.cornerRadius)
             .shadow(color: colorScheme == .dark ? Color.clear : Color.black.opacity(0.1), radius: 5, x: 0, y: 1)
-
-            if includeLogo {
-                VStack {
-                    if let image = UIImage(named: "ink-icon", in: resourcesBunbdle, compatibleWith: nil) {
-                        Image(uiImage: image)
-                            .renderingMode(.template)
-                            .resizable()
-                            .frame(width: 30, height: 30)
-                            .cornerRadius(6)
-                    }
-                    Text(L10n.Share.sharedWithAzkar)
-                        .font(Font.system(size: 12, weight: .regular, design: .rounded).smallCaps())
-                }
-                .foregroundStyle(.text)
-                .opacity(0.5)
-            }
         }
-        .padding(.horizontal, 25)
-        .padding(.vertical, 30)
-        .frame(
-            maxWidth: .infinity,
-            minHeight: useFullScreen ? UIScreen.main.bounds.height : 100
-        )
-        .background(backgroundForContent)
     }
 
 }
 
-struct ZikrShareView_Previews: PreviewProvider {
-    static var previews: some View {
-        ZikrShareView(
-            viewModel: ZikrViewModel(
-                zikr: Zikr.placeholder(),
-                isNested: true,
-                hadith: Hadith.placeholder,
-                preferences: Preferences.shared,
-                player: Player.test
-            ),
-            includeTitle: true,
-            includeOriginalText: true,
-            includeTranslation: true,
-            includeTransliteration: true,
-            includeBenefits: true,
-            includeLogo: true,
-            includeSource: true,
-            nestIntoScrollView: false,
-            useFullScreen: true,
-            selectedBackground: .defaultBackground
+@available(iOS 17, *)
+#Preview("Default background") {
+    ZikrShareView(
+        viewModel: ZikrViewModel(
+            zikr: Zikr.placeholder(),
+            isNested: true,
+            hadith: Hadith.placeholder,
+            preferences: Preferences.shared,
+            player: Player.test
+        ),
+        selectedBackground: .defaultBackground
+    )
+}
+
+@available(iOS 17, *)
+#Preview("Remote image") {
+    ZikrShareView(
+        viewModel: ZikrViewModel(
+            zikr: Zikr.placeholder(),
+            isNested: true,
+            hadith: Hadith.placeholder,
+            preferences: Preferences.shared,
+            player: Player.test
+        ),
+        selectedBackground: .init(
+            id: "1",
+            background: .remoteImage(ShareBackground(id: 1, type: .image, url: URL(string: "https://images.unsplash.com/photo-1760570317577-fa68f4738373?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1370")!, previewUrl: nil)),
+            type: .image
         )
-        .previewLayout(.fixed(width: 380, height: 1200))
-        .environment(\.locale, Locale(identifier: "ru_RU"))
-        .environment(\.colorScheme, .dark)
-    }
+    )
 }

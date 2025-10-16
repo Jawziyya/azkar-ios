@@ -64,6 +64,7 @@ struct ZikrShareOptionsView: View {
         var textAlignment: ZikrShareTextAlignment = .start
         let shareType: ZikrShareType
         var selectedBackground: ZikrShareBackgroundItem
+        let enableLineBreaks: Bool
         
         var containsProItem: Bool {
             if shareType == .image {
@@ -110,6 +111,11 @@ struct ZikrShareOptionsView: View {
 
     @AppStorage("kShareTextAlignment")
     private var textAlignment = ZikrShareTextAlignment.start
+
+    @AppStorage("kShareSmartLineBreaks")
+    private var enableLineBreaks = true
+    
+    @Environment(\.dynamicTypeSize) var dynamicTypeSize
     
     @State var backgrounds = ZikrShareBackgroundItem.preset
     
@@ -136,6 +142,8 @@ struct ZikrShareOptionsView: View {
     @State private var processingQuickShareAction: ShareOptions.ShareActionType?
     
     @State private var selectedBackgroundType: ShareBackgroundTypes = .any
+    
+    @State private var selectedDynamicTypeSize: DynamicTypeSize = .large
     
     private let alignments: [ZikrShareTextAlignment] = [.center, .start]
             
@@ -319,8 +327,10 @@ struct ZikrShareOptionsView: View {
             otherTextAlignment: textAlignment.isCentered ? .center : .leading,
             nestIntoScrollView: false,
             useFullScreen: false,
-            selectedBackground: selectedBackground
+            selectedBackground: selectedBackground,
+            enableLineBreaks: enableLineBreaks
         )
+        .environment(\.dynamicTypeSize, selectedDynamicTypeSize)
         .environment(\.arabicFont, preferences.preferredArabicFont)
         .environment(\.translationFont, preferences.preferredTranslationFont)
         .clipShape(RoundedRectangle(cornerRadius: appTheme.cornerRadius))
@@ -390,18 +400,14 @@ struct ZikrShareOptionsView: View {
     
     var shareAsSection: some View {
         Section {
-            HStack(spacing: 16) {
-                Text(L10n.Share.shareAs)
-                Spacer()
-                Picker(L10n.Share.shareAs, selection: $selectedShareType.animation(.smooth)) {
-                    ForEach(ZikrShareType.allCases) { type in
-                        Label(type.title, systemImage: type.imageName)
-                            .tag(type)
-                    }
+            Picker(L10n.Share.shareAs, selection: $selectedShareType.animation(.smooth)) {
+                ForEach(ZikrShareType.allCases) { type in
+                    Label(type.title, systemImage: type.imageName)
+                        .tag(type)
                 }
-                .pickerStyle(.segmented)
-                .labelsHidden()
             }
+            .pickerStyle(.segmented)
+            .labelsHidden()
             .padding(.horizontal, 16)
         }
     }
@@ -429,6 +435,8 @@ struct ZikrShareOptionsView: View {
             if zikr.benefits != nil {
                 Toggle(L10n.Share.includeBenefit, isOn: $includeBenefits)
             }
+            
+            Toggle(L10n.Settings.Breaks.title, isOn: $enableLineBreaks)
 
             if selectedShareType != .text {
                 HStack(spacing: 16) {
@@ -441,9 +449,47 @@ struct ZikrShareOptionsView: View {
                         }
                     }
                 }
+                
+                HStack(spacing: 12) {
+                    Text(L10n.Share.fontSize)
+                    Spacer()
+                    fontSizeButton(false, isDisabled: selectedDynamicTypeSize == DynamicTypeSize.allCases.first)
+                    fontSizeButton(true, isDisabled: selectedDynamicTypeSize == DynamicTypeSize.allCases.last)
+                }
             }
         }
         .pickerStyle(.segmented)
+    }
+
+    @ViewBuilder
+    func fontSizeButton(_ increasing: Bool, isDisabled: Bool) -> some View {
+        Button(action: {
+            let direction = increasing ? 1 : -1
+            if let current = DynamicTypeSize.allCases.firstIndex(of: selectedDynamicTypeSize) {
+                let newIndex = current + direction
+                if newIndex >= 0 && newIndex < DynamicTypeSize.allCases.count {
+                    selectedDynamicTypeSize = DynamicTypeSize.allCases[newIndex]
+                }
+            }
+        }) {
+            ZStack {
+                // Placeholder for sizing.
+                Image(systemName: "plus")
+                    .padding(.horizontal)
+                    .padding(.vertical, 4)
+                    .opacity(0)
+
+                Image(systemName: increasing ? "plus" : "minus")
+            }
+            .font(.title3)
+            .foregroundStyle(.white)
+            .background(.accent)
+            .clipShape(Capsule())
+            .grayscale(isDisabled ? 1 : 0)
+            .glassEffectCompat(.regular.interactive(), in: Capsule())
+        }
+        .buttonStyle(.plain)
+        .disabled(isDisabled)
     }
 
     @MainActor
@@ -458,8 +504,9 @@ struct ZikrShareOptionsView: View {
             includeTransliteration: includeTransliteration,
             textAlignment: textAlignment,
             shareType: selectedShareType,
-            selectedBackground: selectedBackground)
-        )
+            selectedBackground: selectedBackground,
+            enableLineBreaks: enableLineBreaks
+        ))
     }
     
     @MainActor

@@ -59,7 +59,8 @@ final class ZikrShareCoordinator: NavigationCoordinatable {
             includeTitle: options.includeTitle,
             includeTranslation: options.includeTranslation,
             includeTransliteration: options.includeTransliteration,
-            includeBenefits: options.includeBenefits
+            includeBenefits: options.includeBenefits,
+            enableLineBreaks: options.enableLineBreaks
         )
         
         if options.actionType == .copyText {
@@ -102,7 +103,8 @@ final class ZikrShareCoordinator: NavigationCoordinatable {
             otherTextAlignment: options.textAlignment.isCentered ? .center : .leading,
             nestIntoScrollView: false, 
             useFullScreen: options.shareType != .text,
-            selectedBackground: options.selectedBackground
+            selectedBackground: options.selectedBackground,
+            enableLineBreaks: options.enableLineBreaks
         )
         .environment(\.arabicFont, preferences.preferredArabicFont)
         .environment(\.translationFont, preferences.preferredTranslationFont)
