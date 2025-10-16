@@ -5,6 +5,7 @@ import AudioPlayer
 import Library
 import Popovers
 import Entities
+import AzkarResources
 
 enum ShareBackgroundTypes: Hashable, Identifiable, CaseIterable {
     static var allCases: [ShareBackgroundTypes] {
@@ -149,50 +150,68 @@ struct ZikrShareOptionsView: View {
     private let alignments: [ZikrShareTextAlignment] = [.center, .start]
             
     var body: some View {
+        if #available(iOS 26, *) {
+            contentWithNavigationToolbar
+        } else {
+            contentWithCustomToolbar
+        }
+    }
+    
+    @available(iOS 26, *)
+    private var contentWithNavigationToolbar: some View {
+        mainContent
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button(L10n.Common.done) {
+                        presentation.dismiss()
+                    }
+                }
+                
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    toolbarButtons
+                }
+            }
+    }
+    
+    private var contentWithCustomToolbar: some View {
         VStack(spacing: 0) {
             toolbar
                 .padding()
                     
-            scrollView
-                .customScrollContentBackground()
+            mainContent
         }
-        .applyThemedToggleStyle()
-        .background(.background, ignoreSafeArea: .all)
-        .ignoresSafeArea(edges: selectedShareType == .image ? .bottom : [])
-        .task {
-            do {
-                for try await remoteImageBackgrounds in backgroundsService.loadBackgrounds() {
-                    backgrounds = ZikrShareBackgroundItem.preset + remoteImageBackgrounds
-                    
-                    // Set selectedBackground based on selectedBackgroundId after backgrounds are loaded
-                    if let selectedBackgroundId = selectedBackgroundId,
-                       let foundBackground = backgrounds.first(where: { $0.id == selectedBackgroundId }) {
-                        selectedBackground = foundBackground
+    }
+    
+    private var mainContent: some View {
+        scrollView
+            .customScrollContentBackground()
+            .applyThemedToggleStyle()
+            .background(.background, ignoreSafeArea: .all)
+            .ignoresSafeArea(edges: selectedShareType == .image ? .bottom : [])
+            .task {
+                do {
+                    for try await remoteImageBackgrounds in backgroundsService.loadBackgrounds() {
+                        backgrounds = ZikrShareBackgroundItem.preset + remoteImageBackgrounds
+                        
+                        // Set selectedBackground based on selectedBackgroundId after backgrounds are loaded
+                        if let selectedBackgroundId = selectedBackgroundId,
+                           let foundBackground = backgrounds.first(where: { $0.id == selectedBackgroundId }) {
+                            selectedBackground = foundBackground
+                        }
+                        
+                        // Trigger scroll to selected background after backgrounds are loaded
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                            scrollToSelectedBackground = true
+                        }
                     }
-                    
-                    // Trigger scroll to selected background after backgrounds are loaded
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                        scrollToSelectedBackground = true
-                    }
+                } catch {
+                    print(error)
                 }
-            } catch {
-                print(error)
             }
-        }
     }
     
-    private var isProShareOptionsSelected: Bool {
-        guard selectedShareType == .image else { return false }
-        return selectedBackground.isProItem || !includeLogo
-    }
-    
-    var toolbar: some View {
+    private var toolbarButtons: some View {
         HStack(spacing: 16) {
-            Button(L10n.Common.done) {
-                presentation.dismiss()
-            }
-            Spacer()
-            
             Button(action: {
                 Task {
                     await performAction(actionType: selectedShareType == .image ? .saveImage : .copyText)
@@ -208,13 +227,28 @@ struct ZikrShareOptionsView: View {
                     share(actionType: .sheet)
                 }
             }, label: {
-                if subscriptionManager.isProUser() == false && isProShareOptionsSelected {
-                    Label(L10n.Common.share, systemImage: "lock.fill")
-                } else {
-                    Text(L10n.Common.share)
-                }
+                Text(L10n.Common.share)
             })
-            .buttonStyle(.borderedProminent)
+        }
+    }
+
+    private var isUnavailableOptionSelected: Bool {
+        isProShareOptionsSelected && !subscriptionManager.isProUser()
+    }
+
+    private var isProShareOptionsSelected: Bool {
+        guard selectedShareType == .image else { return false }
+        return selectedBackground.isProItem || !includeLogo
+    }
+    
+    var toolbar: some View {
+        HStack(spacing: 16) {
+            Button(L10n.Common.done) {
+                presentation.dismiss()
+            }
+            Spacer()
+            
+            toolbarButtons
         }
         .systemFont(.title3)
         .background(.background)
@@ -255,8 +289,21 @@ struct ZikrShareOptionsView: View {
                 if selectedShareType != .text {
                     Divider()
 
-                    Toggle(L10n.Share.includeAzkarLogo, isOn: $includeLogo.animation(.smooth))
-                        .padding(.horizontal, 16)
+                    HStack {
+                        let isLogoOptionLocked = !includeLogo && !subscriptionManager.isProUser()
+
+                        Text(L10n.Share.includeAzkarLogo)
+                        Spacer()
+                        Image(systemName: "lock.fill")
+                            .foregroundStyle(.accent)
+                            .scaleEffect(isLogoOptionLocked ? 1 : 0)
+                            .opacity(isLogoOptionLocked ? 1 : 0)
+                            .animation(.smooth, value: isLogoOptionLocked)
+                        Toggle(L10n.Share.includeAzkarLogo, isOn: $includeLogo.animation(.smooth))
+                            .labelsHidden()
+                    }
+                    .padding(.horizontal, 16)
+
 
                     Divider()
                 } else {
