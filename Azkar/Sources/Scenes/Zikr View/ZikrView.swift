@@ -99,7 +99,7 @@ struct ZikrView: View {
                 if viewModel.preferences.enableCounterHapticFeedback {
                     HapticGenerator.performFeedback(.success)
                 }
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                     counterFinishedCallback?()
                     counterFeedbackCompleted.toggle()
                 }
@@ -208,8 +208,8 @@ struct ZikrView: View {
                         loopMode: .playOnce,
                         contentMode: .scaleAspectFit,
                         fillColor: colorTheme.getColor(.accent),
-                        speed: 1.5,
-                        progress: viewModel.remainingRepeatsNumber == 0 ? 1 : 0
+                        speed: 2,
+                        progress: viewModel.remainingRepeatsNumber == 0 ? 0 : 1
                     )
                 }
             }
