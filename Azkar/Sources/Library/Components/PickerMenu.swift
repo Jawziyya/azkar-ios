@@ -22,36 +22,39 @@ public struct PickerMenu<T: Identifiable & Hashable>: View {
     }
     
     public var body: some View {
-        Menu {
-            ForEach(items, id: \.self) { item in
-                Button {
-                    selection = item
-                } label: {
-                    Text(itemTitle(item))
-                        .systemFont(.callout)
-                    if selection == item {
-                        Image(systemName: "checkmark")
-                            .foregroundStyle(.accent)
+        HStack {
+            Text(title)
+                .systemFont(.body)
+                .foregroundStyle(.text)
+                .multilineTextAlignment(.leading)
+                .layoutPriority(1)
+            Spacer()
+
+            Menu {
+                ForEach(items, id: \.self) { item in
+                    Button {
+                        selection = item
+                    } label: {
+                        Text(itemTitle(item))
+                            .systemFont(.callout)
+                        if selection == item {
+                            Image(systemName: "checkmark")
+                                .foregroundStyle(.accent)
+                        }
                     }
                 }
+            } label: {
+                HStack {
+                    Text(itemTitle(selection))
+                        .systemFont(.callout)
+                        .foregroundStyle(.secondaryText)
+                        .multilineTextAlignment(.trailing)
+                    Image(systemName: "chevron.down")
+                        .foregroundStyle(.secondaryText)
+                }
             }
-        } label: {
-            HStack {
-                Text(title)
-                    .systemFont(.body)
-                    .foregroundStyle(.text)
-                    .multilineTextAlignment(.leading)
-                    .layoutPriority(1)
-                Spacer()
-                Text(itemTitle(selection))
-                    .systemFont(.callout)
-                    .foregroundStyle(.secondaryText)
-                    .multilineTextAlignment(.trailing)
-                Image(systemName: "chevron.down")
-                    .foregroundStyle(.secondaryText)
-            }
-            .padding(.vertical, 8)
         }
+        .padding(.vertical, 8)
     }
 }
 
