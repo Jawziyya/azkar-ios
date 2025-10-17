@@ -68,14 +68,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-spm-
 
-      - name: Cache Xcode Derived Data
-        uses: actions/cache@v4
-        with:
-          path: ~/Library/Developer/Xcode/DerivedData
-          key: ${{ runner.os }}-deriveddata-${{ hashFiles('**/Package.resolved') }}
-          restore-keys: |
-            ${{ runner.os }}-deriveddata-
-
       - name: Set Xcode IDE Preferences
         run: |
           sudo defaults write /Library/Preferences/com.apple.dt.Xcode IDESkipMacroFingerprintValidation -bool YES
