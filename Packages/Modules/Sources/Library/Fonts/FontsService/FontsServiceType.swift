@@ -8,9 +8,9 @@ public enum FontsType {
     public var url: String {
         switch self {
         case .arabic:
-            return "https://azkar.ams3.digitaloceanspaces.com/media/fonts/arabic_fonts.json"
+            return "https://storage.yandexcloud.net/azkar/fonts/arabic_fonts.json"
         case .translation:
-            return "https://azkar.ams3.digitaloceanspaces.com/media/fonts/translation_fonts.json"
+            return "https://storage.yandexcloud.net/azkar/fonts/translation_fonts.json"
         }
     }
 }

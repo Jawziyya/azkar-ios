@@ -150,7 +150,7 @@ private func getDemoVM(
     )
 }
 
-let demoImageURL = URL(string: "https://azkar.ams3.digitaloceanspaces.com/media/post-covers/2_zikru_llahi")!
+let demoImageURL = URL(string: "https://storage.yandexcloud.net/azkar/post-covers/2_zikru_llahi")!
 
 private struct ArticleScreenPreview: View {
     let viewModel: ArticleViewModel

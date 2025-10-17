@@ -15,7 +15,7 @@ struct AppFontViewModel: Identifiable, Equatable, Hashable {
         lhs.id == rhs.id
     }
     
-    private static let baseURL = URL(string: "https://azkar.ams3.digitaloceanspaces.com/media/fonts/files")!
+    private static let baseURL = URL(string: "https://storage.yandexcloud.net/azkar/fonts/files/")!
     
     let id = UUID()
     let font: AppFont
