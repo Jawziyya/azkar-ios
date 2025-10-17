@@ -234,7 +234,7 @@ struct MainMenuView: View {
                     .applyTheme()
                     .padding(.horizontal, 20)
                 })
-                .buttonStyle(.plain)
+                .buttonStyle(.borderless)
             }
         }
         .frame(height: articleCellHeight + 3)
