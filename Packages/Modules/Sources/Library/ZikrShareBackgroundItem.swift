@@ -8,7 +8,7 @@ public struct ZikrShareBackgroundItem: Identifiable, Hashable {
     public var isProItem = true
 
     public enum Background: Hashable {
-        case solidColor(ColorType)
+        case solidColor(UIColor)
         case localImage(UIImage)
         case remoteImage(ShareBackground)
     }

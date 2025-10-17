@@ -109,8 +109,8 @@ struct ZikrShareBackgroundCardView: View {
     @ViewBuilder
     private var backgroundContent: some View {
         switch item.background {
-        case .solidColor(let type):
-            colorTheme.getColor(type)
+        case .solidColor(let color):
+            Color(color)
         case .localImage(let image):
             Image(uiImage: image)
                 .resizable()

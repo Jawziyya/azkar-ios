@@ -50,8 +50,7 @@ func getSupabaseClient() throws -> SupabaseClient {
         let url = URL(string: rawURL),
         let key = readSecret(AzkarSecretKey.AZKAR_SUPABASE_API_KEY)
     else {
-        print("You must provide Supabase API key & url address.")
-        throw SupabaseContructorError.noAPIKeyProvided
+        fatalError("Supabase key or URL not provided in secrets")
     }
     
     let client = SupabaseClient(

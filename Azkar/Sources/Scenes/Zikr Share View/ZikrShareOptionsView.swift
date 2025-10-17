@@ -389,45 +389,29 @@ struct ZikrShareOptionsView: View {
         .allowsHitTesting(false)
     }
     
-    var backgroundTypePickerMenu: some View {
-        Menu {
+    var backgroundTypePicker: some View {
+        Picker(selection: $selectedBackgroundType.animation(.smooth)) {
             ForEach(ShareBackgroundTypes.allCases) { item in
-                Button {
-                    selectedBackgroundType = item
-                } label: {
-                    Text(item.title)
-                        .systemFont(.callout)
-                    if selectedBackgroundType == item {
-                        Image(systemName: "checkmark")
-                            .foregroundStyle(.accent)
-                    }
-                }
+                Text(item.title)
+                    .tag(item)
             }
         } label: {
-            HStack {
-                Text(selectedBackgroundType.title)
-                    .foregroundStyle(.secondaryText)
-                    .multilineTextAlignment(.trailing)
-                Image(systemName: "chevron.down")
-                    .foregroundStyle(.secondaryText)
-            }
-            .systemFont(.caption2, modification: .smallCaps)
+            EmptyView()
         }
+        .pickerStyle(.segmented)
+        .labelsHidden()
     }
     
     var backgroundPickerSection: some View {
         Section {
             VStack(alignment: .leading, spacing: 8) {
-                HStack {
-                    Text(L10n.Share.backgroundHeader)
-                        .foregroundStyle(.secondaryText)
-                        .systemFont(.subheadline, modification: .smallCaps)
+                Text(L10n.Share.backgroundHeader)
+                    .foregroundStyle(.secondaryText)
+                    .systemFont(.subheadline, modification: .smallCaps)
+                    .padding(.horizontal, 16)
 
-                    Spacer()
-
-                    backgroundTypePickerMenu
-                }
-                .padding(.horizontal, 16)
+                backgroundTypePicker
+                    .padding(.horizontal, 16)
                  
                 ZikrShareBackgroundPickerView(
                     backgrounds: visibleBackgrounds,

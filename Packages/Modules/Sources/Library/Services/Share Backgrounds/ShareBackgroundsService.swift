@@ -29,7 +29,7 @@ public final class ShareBackgroundsService: ShareBackgroundsServiceType {
                             ZikrShareBackgroundItem(
                                 id: item.id.description,
                                 background: .remoteImage(item),
-                                type: .image
+                                type: item.type
                             )
                         })
                     }
@@ -51,7 +51,7 @@ public final class ShareBackgroundsService: ShareBackgroundsServiceType {
                             ZikrShareBackgroundItem(
                                 id: item.id.description,
                                 background: .remoteImage(item),
-                                type: .image
+                                type: item.type
                             )
                         })
                     }

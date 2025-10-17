@@ -82,8 +82,8 @@ struct ZikrShareView: View {
     var backgroundForContent: some View {
         Group {
             switch selectedBackground.background {
-            case .solidColor(let colorType):
-                colorTheme.getColor(colorType)
+            case .solidColor(let color):
+                Color(color)
             case .localImage(let image):
                 renderImage(image)
             case .remoteImage(let item):
