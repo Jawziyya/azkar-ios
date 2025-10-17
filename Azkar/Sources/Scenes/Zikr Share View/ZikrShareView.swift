@@ -40,6 +40,7 @@ struct ZikrShareView: View {
     @Environment(\.dynamicTypeSize) var dynamicTypeSize
     @Environment(\.appTheme) var appTheme
     @Environment(\.colorTheme) var colorTheme
+    @Environment(\.arabicFont) var arabicFont
     @State private var dynamicColorScheme: ColorScheme?
 
     // New computed property to check if background is an image
@@ -195,9 +196,13 @@ struct ZikrShareView: View {
 
             VStack(spacing: 0) {
                 if includeOriginalText {
-                    let processedText = enableLineBreaks
+                    let baseText = enableLineBreaks
                         ? viewModel.zikr.text
                         : viewModel.zikr.text.replacingOccurrences(of: "\n", with: " ")
+                    
+                    // Trim tashkeel if the font doesn't support it
+                    let processedText = arabicFont.hasTashkeelSupport ? baseText : baseText.trimmingArabicVowels
+                    
                     Text(.init(processedText))
                         .customFont(.title1, isArabic: true)
                         .frame(maxWidth: .infinity, alignment: arabicTextAlignment.frameAlignment)
