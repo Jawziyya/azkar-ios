@@ -38,7 +38,7 @@ struct SearchResultsView: View {
                     contentMode: .scaleAspectFit,
                     speed: 1.0
                 )
-                .frame(height: 100)
+                .frame(height: 150)
                 Text(L10n.Common.noSearchResults)
                     .systemFont(.title3)
                     .multilineTextAlignment(.center)

@@ -12,20 +12,29 @@ struct SettingsView: View {
     
     @ObservedObject var viewModel: SettingsViewModel
     @Environment(\.appTheme) var appTheme
+
+    private let animationViewHeight: CGFloat = 200
         
     var body: some View {
-        ScrollView {
-            VStack {
+        GeometryReader { proxy in
+            ScrollView {
                 VStack {
-                    content
+                    VStack {
+                        VStack {
+                            content
+                        }
+                        .applyContainerStyle()
+
+                        Spacer()
+                    }
+                    .frame(maxWidth: .infinity, minHeight: proxy.size.height)
+                    .overlay(alignment: .bottom) {
+                        animationView
+                            .offset(y: animationViewHeight + 50)
+                    }
                 }
-                .applyContainerStyle()
-
-                // Placeholder for animation view.
-                Color.clear.frame(height: 200)
-
-                animationView
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
@@ -143,7 +152,7 @@ struct SettingsView: View {
             contentMode: .scaleAspectFit,
             speed: 0.75
         )
-        .frame(height: 200)
+        .frame(height: animationViewHeight)
     }
 
 }
