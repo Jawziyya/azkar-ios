@@ -1,5 +1,22 @@
 import SwiftUI
 
+private struct NoDimmingButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+    }
+}
+
+private struct ButtonStyleApplier: ViewModifier {
+    func body(content: Content) -> some View {
+        if #available(iOS 26, *) {
+            content.buttonStyle(NoDimmingButtonStyle())
+        } else {
+            content
+        }
+    }
+}
+
+
 public struct ThemeStyleModifier: ViewModifier {
     
     @Environment(\.appTheme) private var appTheme
@@ -7,17 +24,20 @@ public struct ThemeStyleModifier: ViewModifier {
     
     var indexPosition: IndexPosition?
     let roundingCorners: UIRectCorner
-    
+    let isInteractive: Bool
+
     public func body(content: Content) -> some View {
         switch appTheme {
         case .flat:
             applyFlatStyle(content)
-                .glassEffectCompat(.regular.interactive(), in: Rectangle())
+                .glassEffectCompat(.regular.interactive(isInteractive), in: Rectangle())
+                .modifier(ButtonStyleApplier())
         case .neomorphic:
             applyNeomorphicStyle(content)
         default:
             content.roundedBorder(roundingCorners)
-                .glassEffectCompat(.regular.interactive(), in: RoundedRectangle(cornerRadius: appTheme.cornerRadius))
+                .glassEffectCompat(.regular.interactive(isInteractive), in: RoundedRectangle(cornerRadius: appTheme.cornerRadius))
+                .modifier(ButtonStyleApplier())
         }
     }
     
@@ -70,11 +90,13 @@ public extension View {
     /// Applies a rounded border based on the current color theme.
     func applyTheme(
         indexPosition: IndexPosition? = nil,
-        roundingCorners: UIRectCorner = .allCorners
+        roundingCorners: UIRectCorner = .allCorners,
+        isInteractive: Bool = true
     ) -> some View {
         self.modifier(ThemeStyleModifier(
             indexPosition: indexPosition,
-            roundingCorners: roundingCorners
+            roundingCorners: roundingCorners,
+            isInteractive: isInteractive
         ))
     }
     

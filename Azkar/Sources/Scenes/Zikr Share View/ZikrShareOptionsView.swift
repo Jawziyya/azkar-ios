@@ -303,7 +303,6 @@ struct ZikrShareOptionsView: View {
             toolbarButtons
         }
         .systemFont(.title3)
-        .background(.background)
         .animation(.smooth, value: includeLogo.hashValue ^ selectedBackground.hashValue)
         .animation(.smooth, value: processingQuickShareAction)
     }

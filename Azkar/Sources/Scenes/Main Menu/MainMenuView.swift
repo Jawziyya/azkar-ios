@@ -231,10 +231,9 @@ struct MainMenuView: View {
                         article: article,
                         imageMaxHeight: articleCellHeight
                     )
-                    .applyTheme()
-                    .padding(.horizontal, 20)
                 })
-                .buttonStyle(.borderless)
+                .applyTheme()
+                .padding(.horizontal, 20)
             }
         }
         .frame(height: articleCellHeight + 3)
