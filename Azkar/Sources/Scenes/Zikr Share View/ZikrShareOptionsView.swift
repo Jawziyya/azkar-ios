@@ -883,27 +883,25 @@ struct ZikrShareOptionsView: View {
     
     // MARK: - Font Persistence
     private func loadSavedFonts() {
-        if !selectedArabicFontId.isEmpty {
-            if let savedFont = availableArabicFonts.first(where: { $0.referenceName == selectedArabicFontId }) {
-                selectedArabicFont = savedFont
-                appliedArabicFont = savedFont
-            }
+        if let identifier = StoredFontIdentifier(rawValue: selectedArabicFontId),
+           let savedFont: ArabicFont = font(matching: identifier, in: availableArabicFonts) {
+            selectedArabicFont = savedFont
+            appliedArabicFont = savedFont
         }
         
-        if !selectedTranslationFontId.isEmpty {
-            if let savedFont = availableTranslationFonts.first(where: { $0.referenceName == selectedTranslationFontId }) {
-                selectedTranslationFont = savedFont
-                appliedTranslationFont = savedFont
-            }
+        if let identifier = StoredFontIdentifier(rawValue: selectedTranslationFontId),
+           let savedFont: TranslationFont = font(matching: identifier, in: availableTranslationFonts) {
+            selectedTranslationFont = savedFont
+            appliedTranslationFont = savedFont
         }
     }
     
     private func saveArabicFont(_ font: ArabicFont) {
-        selectedArabicFontId = font.referenceName
+        selectedArabicFontId = StoredFontIdentifier(font: font).rawValue
     }
     
     private func saveTranslationFont(_ font: TranslationFont) {
-        selectedTranslationFontId = font.referenceName
+        selectedTranslationFontId = StoredFontIdentifier(font: font).rawValue
     }
     
     @MainActor
@@ -975,6 +973,55 @@ struct ZikrShareOptionsView: View {
 
     private enum FontsLoadingState {
         case idle, loading, loaded, failed
+    }
+    
+    private func font<T: AppFont>(matching identifier: StoredFontIdentifier, in fonts: [T]) -> T? {
+        if identifier.referenceName != STANDARD_FONT_REFERENCE_NAME,
+           let exactReferenceMatch = fonts.first(where: { $0.referenceName == identifier.referenceName }) {
+            return exactReferenceMatch
+        }
+        
+        if !identifier.postscriptName.isEmpty,
+           let postscriptMatch = fonts.first(where: { $0.postscriptName == identifier.postscriptName }) {
+            return postscriptMatch
+        }
+        
+        if identifier.isLegacy,
+           let legacyMatch = fonts.first(where: { $0.referenceName == identifier.referenceName && $0.postscriptName.isEmpty }) {
+            return legacyMatch
+        }
+        
+        return fonts.first(where: { $0.referenceName == identifier.referenceName })
+    }
+    
+    private struct StoredFontIdentifier: Equatable {
+        let referenceName: String
+        let postscriptName: String
+        let isLegacy: Bool
+        
+        init<T: AppFont>(font: T) {
+            referenceName = font.referenceName
+            postscriptName = font.postscriptName
+            isLegacy = false
+        }
+        
+        init?(rawValue: String) {
+            guard rawValue.isEmpty == false else { return nil }
+            let components = rawValue.split(separator: "|", omittingEmptySubsequences: false)
+            if components.count == 2 {
+                referenceName = String(components[0])
+                postscriptName = String(components[1])
+                isLegacy = false
+            } else {
+                referenceName = rawValue
+                postscriptName = ""
+                isLegacy = true
+            }
+        }
+        
+        var rawValue: String {
+            "\(referenceName)|\(postscriptName)"
+        }
     }
     
     private static let defaultArabicFonts: [ArabicFont] = ArabicFont.standardFonts.compactMap { $0 as? ArabicFont }
