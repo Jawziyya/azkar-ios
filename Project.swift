@@ -116,7 +116,7 @@ enum AzkarTarget: String, CaseIterable {
                     
                     // Firebase
                     .external(name: "FirebaseCore"),
-                    .external(name: "FirebaseAnalyticsWithoutAdIdSupport"),
+                    .external(name: "FirebaseAnalytics"),
                     .external(name: "FirebaseMessaging"),
 
                     .external(name: "Mixpanel"),

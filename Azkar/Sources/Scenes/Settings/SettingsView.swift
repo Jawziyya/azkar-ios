@@ -4,6 +4,7 @@ import SwiftUI
 import Popovers
 import Entities
 import Library
+import Components
 
 extension Language: PickableItem {}
 
@@ -11,13 +12,29 @@ struct SettingsView: View {
     
     @ObservedObject var viewModel: SettingsViewModel
     @Environment(\.appTheme) var appTheme
+
+    private let animationViewHeight: CGFloat = 200
         
     var body: some View {
-        ScrollView {
-            VStack {
-                content
+        GeometryReader { proxy in
+            ScrollView {
+                VStack {
+                    VStack {
+                        VStack {
+                            content
+                        }
+                        .applyContainerStyle()
+
+                        Spacer()
+                    }
+                    .frame(maxWidth: .infinity, minHeight: proxy.size.height)
+                    .overlay(alignment: .bottom) {
+                        animationView
+                            .offset(y: animationViewHeight + 50)
+                    }
+                }
             }
-            .applyContainerStyle()
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
@@ -127,7 +144,17 @@ struct SettingsView: View {
             action: viewModel.navigateToRemindersSettings
         )
     }
-    
+
+    var animationView: some View {
+        LottieView(
+            name: "preferences-animation",
+            loopMode: .loop,
+            contentMode: .scaleAspectFit,
+            speed: 0.75
+        )
+        .frame(height: animationViewHeight)
+    }
+
 }
 
 struct SettingsView_Previews: PreviewProvider {

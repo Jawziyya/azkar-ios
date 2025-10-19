@@ -9,6 +9,7 @@ public struct ShareTextProvider {
     let includeTranslation: Bool
     let includeTransliteration: Bool
     let includeBenefits: Bool
+    let enableLineBreaks: Bool
     
     func getShareText() -> String {
         var text = ""
@@ -17,16 +18,24 @@ public struct ShareTextProvider {
             text += title + "\n\n"
         }
         
-        text += zikr.text
-            .components(separatedBy: "\n")
-            .joined(separator: " ")
+        text += enableLineBreaks
+            ? zikr.text
+            : zikr.text
+                .components(separatedBy: "\n")
+                .joined(separator: " ")
         
         if includeTranslation, !translation.isEmpty {
-            text += "\n\n\(translation.joined(separator: " "))"
+            let translationText = enableLineBreaks
+                ? translation.joined(separator: "\n")
+                : translation.joined(separator: " ")
+            text += "\n\n\(translationText)"
         }
         
         if includeTransliteration, !transliteration.isEmpty {
-            text += "\n\n\(transliteration.joined(separator: " "))"
+            let transliterationText = enableLineBreaks
+                ? transliteration.joined(separator: "\n")
+                : transliteration.joined(separator: " ")
+            text += "\n\n\(transliterationText)"
         }
         
         text += "\n\n\(zikr.source)"

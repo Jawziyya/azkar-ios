@@ -67,19 +67,11 @@ extension Hadith {
 }
 
 extension Fadl {
-    init?(row: Row, language: Language) {
-        let sourceRaw: String = row["source"]
-        var source = NSLocalizedString("text.source." + sourceRaw.lowercased(), comment: "")
-        if let ext = row["source_ext"] as? String {
-            source += ", " + ext
-        }
-        
-        let text: String? = row["text_\(language.id)"]
-        
+    init?(row: Row) {
         self.init(
             id: row["id"],
-            text: text,
-            source: source
+            text: row["text"],
+            source: row["source"]
         )
     }
 }

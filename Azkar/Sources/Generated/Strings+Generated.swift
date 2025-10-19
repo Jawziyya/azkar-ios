@@ -28,6 +28,8 @@ internal enum L10n {
   internal static let repeatsNumberPlural4 = L10n.tr("Localizable", "repeats_number-plural-4", fallback: "")
   /// 
   internal static let repeatsNumberPlural5 = L10n.tr("Localizable", "repeats_number-plural-5", fallback: "")
+  /// Photo library access denied. You can allow access in Settings.
+  internal static let sharePhotoLibraryAccessDenied = L10n.tr("Localizable", "share_photo_library_access_denied", fallback: "Photo library access denied. You can allow access in Settings.")
   internal enum About {
     /// About
     internal static let title = L10n.tr("Localizable", "about.title", fallback: "About")
@@ -102,6 +104,8 @@ internal enum L10n {
     internal static let other = L10n.tr("Localizable", "category.other", fallback: "Important adhkar")
   }
   internal enum Common {
+    /// Cancel
+    internal static let cancel = L10n.tr("Localizable", "common.cancel", fallback: "Cancel")
     /// Complete
     internal static let complete = L10n.tr("Localizable", "common.complete", fallback: "Complete")
     /// Continue
@@ -116,8 +120,12 @@ internal enum L10n {
     internal static let done = L10n.tr("Localizable", "common.done", fallback: "Done")
     /// Enable
     internal static let enable = L10n.tr("Localizable", "common.enable", fallback: "Enable")
+    /// Error
+    internal static let error = L10n.tr("Localizable", "common.error", fallback: "Error")
     /// No search results
     internal static let noSearchResults = L10n.tr("Localizable", "common.no-search-results", fallback: "No search results")
+    /// OK
+    internal static let ok = L10n.tr("Localizable", "common.ok", fallback: "OK")
     /// Report a problem
     internal static let reportProblem = L10n.tr("Localizable", "common.report-problem", fallback: "Report a problem")
     /// Reset counter
@@ -126,6 +134,8 @@ internal enum L10n {
     internal static let restore = L10n.tr("Localizable", "common.restore", fallback: "Restore")
     /// Send
     internal static let send = L10n.tr("Localizable", "common.send", fallback: "Send")
+    /// Settings
+    internal static let settings = L10n.tr("Localizable", "common.settings", fallback: "Settings")
     /// Share
     internal static let share = L10n.tr("Localizable", "common.share", fallback: "Share")
     /// Share Azkar App
@@ -545,6 +555,8 @@ internal enum L10n {
   internal enum Share {
     /// Background
     internal static let backgroundHeader = L10n.tr("Localizable", "share.background-header", fallback: "Background")
+    /// Font size
+    internal static let fontSize = L10n.tr("Localizable", "share.font-size", fallback: "Font size")
     /// Image
     internal static let image = L10n.tr("Localizable", "share.image", fallback: "Image")
     /// Image saved
@@ -553,6 +565,8 @@ internal enum L10n {
     internal static let includeAzkarLogo = L10n.tr("Localizable", "share.include-azkar-logo", fallback: "Include Azkar logo")
     /// Include text of benefit
     internal static let includeBenefit = L10n.tr("Localizable", "share.include-benefit", fallback: "Include text of benefit")
+    /// Include Original Text
+    internal static let includeOriginalText = L10n.tr("Localizable", "share.include-original-text", fallback: "Include Original Text")
     /// Include title
     internal static let includeTitle = L10n.tr("Localizable", "share.include-title", fallback: "Include title")
     /// Translation Text
@@ -576,10 +590,10 @@ internal enum L10n {
       internal static let all = L10n.tr("Localizable", "share.background-type.all", fallback: "All")
       /// Colour
       internal static let color = L10n.tr("Localizable", "share.background-type.color", fallback: "Colour")
-      /// Image
-      internal static let image = L10n.tr("Localizable", "share.background-type.image", fallback: "Image")
-      /// Pattern
-      internal static let pattern = L10n.tr("Localizable", "share.background-type.pattern", fallback: "Pattern")
+      /// Images
+      internal static let image = L10n.tr("Localizable", "share.background-type.image", fallback: "Images")
+      /// Patterns
+      internal static let pattern = L10n.tr("Localizable", "share.background-type.pattern", fallback: "Patterns")
     }
   }
   internal enum Subscribe {

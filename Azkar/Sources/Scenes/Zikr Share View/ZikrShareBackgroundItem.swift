@@ -3,62 +3,55 @@
 import Foundation
 import SwiftUI
 import Library
+import Entities
 
-struct ZikrShareBackgroundItem: Identifiable, Hashable {
-    
-    let id: String
-    let background: Background
-    let type: ShareBackgroundType
-    var isProItem = true
-    
+extension ZikrShareBackgroundItem {
+
     static let defaultBackground = ZikrShareBackgroundItem(
         id: ColorType.background.rawValue,
-        background: .solidColor(.background),
+        background: .solidColor(UIColor(Color.getColor(.contentBackground))),
         type: .color,
         isProItem: false
     )
     
-    private static let colorTypes: [ColorType] = [
-        .contentBackground,
-        .accent,
+    private static let colorTypes: [(id: String, color: UIColor)] = [
+        (UUID().uuidString, UIColor(hex: 0xCBDCEB)),
+        (UUID().uuidString, UIColor(hex: 0x99BC85)),
+        (UUID().uuidString, UIColor(hex: 0x6D94C5)),
     ]
     
     static var colors: [ZikrShareBackgroundItem] {
         colorTypes.map {
             ZikrShareBackgroundItem(
-                id: $0.rawValue,
-                background: .solidColor($0),
+                id: $0.id,
+                background: .solidColor($0.color),
                 type: .color,
                 isProItem: false
             )
         }
     }
-    
-    private static let patternImageNames: [String] = [
-        "blue-gradient",
-        "paper",
-        "paper2",
+
+    private static let imageNames: [(imageName: String, type: ShareBackgroundType)] = [
+        ("gradient-blur-pink-blue-abstract-background", .color),
+        ("rippednotes", .pattern),
+        ("paper", .pattern),
+        ("paper2", .pattern),
+        ("paper3", .pattern),
     ]
     
-    static var patternImages: [ZikrShareBackgroundItem] {
-        patternImageNames.map {
+    static var images: [ZikrShareBackgroundItem] {
+        imageNames.map {
             ZikrShareBackgroundItem(
-                id: $0,
-                background: .localImage(UIImage(named: "Patterns/" + $0, in: resourcesBunbdle, with: nil)!),
-                type: .pattern,
+                id: $0.imageName,
+                background: .localImage(UIImage(named: "Patterns/" + $0.imageName, in: resourcesBunbdle, with: nil)!),
+                type: $0.type,
                 isProItem: false
             )
         }
     }
     
     static var preset: [ZikrShareBackgroundItem] {
-        [defaultBackground] + colors + patternImages
-    }
-    
-    enum Background: Hashable {
-        case solidColor(ColorType)
-        case localImage(UIImage)
-        case remoteImage(ShareBackground)
+        [defaultBackground] + colors + images
     }
     
 }

@@ -5,6 +5,7 @@ import Stinsen
 import UIKit
 import Nuke
 import MessageUI
+import Library
 
 final class ZikrShareCoordinator: NavigationCoordinatable {
     var stack: Stinsen.NavigationStack<ZikrShareCoordinator> = .init(initial: \.options)
@@ -14,11 +15,13 @@ final class ZikrShareCoordinator: NavigationCoordinatable {
     let zikr: Zikr
     let preferences: Preferences
     let player: Player
-    
+    let backgroundsService: ShareBackgroundsServiceType
+
     init(zikr: Zikr, preferences: Preferences, player: Player) {
         self.zikr = zikr
         self.preferences = preferences
         self.player = player
+        self.backgroundsService = ShareBackgroundsServiceProvider.createShareBackgroundsService()
     }
     
     func makeOptionsView() -> some View {
@@ -26,6 +29,7 @@ final class ZikrShareCoordinator: NavigationCoordinatable {
             guard let self = self else { return }
             self.share(using: options)
         }
+        .environmentObject(backgroundsService)
     }
     
     private func share(using options: ZikrShareOptionsView.ShareOptions) {
@@ -55,7 +59,8 @@ final class ZikrShareCoordinator: NavigationCoordinatable {
             includeTitle: options.includeTitle,
             includeTranslation: options.includeTranslation,
             includeTransliteration: options.includeTransliteration,
-            includeBenefits: options.includeBenefits
+            includeBenefits: options.includeBenefits,
+            enableLineBreaks: options.enableLineBreaks
         )
         
         if options.actionType == .copyText {
@@ -88,6 +93,7 @@ final class ZikrShareCoordinator: NavigationCoordinatable {
         let view = ZikrShareView(
             viewModel: viewModel,
             includeTitle: options.includeTitle,
+            includeOriginalText: options.includeOriginalText,
             includeTranslation: options.includeTranslation,
             includeTransliteration: options.includeTransliteration,
             includeBenefits: options.includeBenefits,
@@ -97,10 +103,11 @@ final class ZikrShareCoordinator: NavigationCoordinatable {
             otherTextAlignment: options.textAlignment.isCentered ? .center : .leading,
             nestIntoScrollView: false, 
             useFullScreen: options.shareType != .text,
-            selectedBackground: options.selectedBackground
+            selectedBackground: options.selectedBackground,
+            enableLineBreaks: options.enableLineBreaks
         )
-        .environment(\.arabicFont, preferences.preferredArabicFont)
-        .environment(\.translationFont, preferences.preferredTranslationFont)
+        .environment(\.arabicFont, options.arabicFont)
+        .environment(\.translationFont, options.translationFont)
         .frame(width: min(440, UIScreen.main.bounds.width))
         
         let image = view.snapshot()

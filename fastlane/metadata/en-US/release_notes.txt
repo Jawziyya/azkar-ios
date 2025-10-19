@@ -1,2 +1,4 @@
-- Fixed the display of the checkmark indicating completion of reading a category
-- Corrected typos in the section "100 Duas from the Quran and Sunnah"
+- Corrected typos in various adhkar texts.
+- Enhanced file storage for faster and more stable loading of articles, fonts, and background images.
+- Updated the Share Dhikr section: choose from new fonts and backgrounds.
+- Improved support for iOS 26

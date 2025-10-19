@@ -57,7 +57,6 @@ struct AzkarApp: App {
                 }
                 self.deepLinker.route = .azkar(category)
             }
-            .environmentObject(ShareBackgroundService())
         }
     }
     
@@ -80,12 +79,12 @@ struct AzkarApp: App {
         default: fontDesign = .default
         }
         
-        let largeTitleTextAttributes = [
-            NSAttributedString.Key.font: getFont(customName: theme.font, style: .largeTitle, design: fontDesign),
+        let largeTitleTextAttributes: [NSAttributedString.Key: Any] = [
+            .font: getFont(customName: theme.font, style: .largeTitle, design: fontDesign),
             .foregroundColor: UIColor(getColor(.text, theme: colorTheme))
         ]
-        let titleTextAttributes = [
-            NSAttributedString.Key.font: getFont(customName: theme.font, style: .title3, design: fontDesign),
+        let titleTextAttributes: [NSAttributedString.Key: Any] = [
+            .font: getFont(customName: theme.font, style: .title3, design: fontDesign),
             .foregroundColor: UIColor(getColor(.text, theme: colorTheme))
         ]
         
@@ -95,8 +94,10 @@ struct AzkarApp: App {
         
         scrollEdgeAppearance.titleTextAttributes = titleTextAttributes
         scrollEdgeAppearance.largeTitleTextAttributes = largeTitleTextAttributes
-        scrollEdgeAppearance.backgroundColor = UIColor(getColor(.background, theme: colorTheme))
-        
+        if #available(iOS 26, *) {} else {
+            scrollEdgeAppearance.backgroundColor = UIColor(getColor(.background, theme: colorTheme))
+        }
+
         UINavigationBar.appearance().standardAppearance = standardAppearance
         UINavigationBar.appearance().scrollEdgeAppearance = scrollEdgeAppearance
         UINavigationBar.appearance().tintColor = UIColor(getColor(.text, theme: colorTheme))

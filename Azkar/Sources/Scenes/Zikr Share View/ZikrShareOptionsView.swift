@@ -4,6 +4,9 @@ import SwiftUI
 import AudioPlayer
 import Library
 import Popovers
+import Entities
+import AzkarResources
+import Extensions
 
 enum ShareBackgroundTypes: Hashable, Identifiable, CaseIterable {
     static var allCases: [ShareBackgroundTypes] {
@@ -59,23 +62,32 @@ struct ZikrShareOptionsView: View {
         let includeBenefits: Bool
         let includeLogo: Bool
         let includeTranslation: Bool
+        let includeOriginalText: Bool
         let includeTransliteration: Bool
         var textAlignment: ZikrShareTextAlignment = .start
         let shareType: ZikrShareType
         var selectedBackground: ZikrShareBackgroundItem
+        let enableLineBreaks: Bool
+        let arabicFont: ArabicFont
+        let translationFont: TranslationFont
         
         var containsProItem: Bool {
             if shareType == .image {
-                includeLogo == false || selectedBackground.isProItem == true
+                let usesArabicFont = includeOriginalText
+                let usesTranslationFont = includeTranslation || includeTransliteration || includeBenefits
+                return includeLogo == false
+                || selectedBackground.isProItem
+                || (usesArabicFont && arabicFont.isStandartPackFont != true)
+                || (usesTranslationFont && translationFont.isStandartPackFont != true)
             } else {
-                false
+                return false
             }
         }
     }
 
     var callback: (ShareOptions) -> Void
 
-    @EnvironmentObject var backgroundsService: ShareBackgroundService
+    @EnvironmentObject var backgroundsService: ShareBackgroundsServiceType
     @Environment(\.presentationMode) var presentation
     @Environment(\.appTheme) var appTheme
     @Environment(\.colorTheme) var colorTheme
@@ -98,6 +110,9 @@ struct ZikrShareOptionsView: View {
     @AppStorage("kShareIncludeTranslation")
     private var includeTranslation = true
     
+    @AppStorage("kShareIncludeOriginalText")
+    private var includeOriginalText = true
+    
     @AppStorage("kShareIncludeTransliteration")
     private var includeTransliteration = true
     
@@ -106,6 +121,11 @@ struct ZikrShareOptionsView: View {
 
     @AppStorage("kShareTextAlignment")
     private var textAlignment = ZikrShareTextAlignment.start
+
+    @AppStorage("kShareSmartLineBreaks")
+    private var enableLineBreaks = true
+    
+    @Environment(\.dynamicTypeSize) var dynamicTypeSize
     
     @State var backgrounds = ZikrShareBackgroundItem.preset
     
@@ -124,60 +144,117 @@ struct ZikrShareOptionsView: View {
     @State private var selectedBackground: ZikrShareBackgroundItem = .defaultBackground
     
     @State private var shareViewSize: CGSize = .zero
-    
-    // Add state for scrolling trigger
+
     @State private var scrollToSelectedBackground = false
-    
-    // Add states for action tracking
+
     @State private var processingQuickShareAction: ShareOptions.ShareActionType?
     
     @State private var selectedBackgroundType: ShareBackgroundTypes = .any
+
+    @AppStorage("kShareSelectedDynamicTypeSizeIndex")
+    private var selectedDynamicTypeSizeIndex: Int = DynamicTypeSize.allCases.firstIndex(of: .large) ?? 0
+
+    @State private var selectedDynamicTypeSize: DynamicTypeSize = .large
     
+    private func loadSelectedDynamicTypeSize() {
+        let index = max(0, min(selectedDynamicTypeSizeIndex, DynamicTypeSize.allCases.count - 1))
+        selectedDynamicTypeSize = DynamicTypeSize.allCases[index]
+    }
+    
+    private func saveSelectedDynamicTypeSize(_ newSize: DynamicTypeSize) {
+        if let index = DynamicTypeSize.allCases.firstIndex(of: newSize) {
+            selectedDynamicTypeSizeIndex = index
+            selectedDynamicTypeSize = newSize
+        }
+    }
     private let alignments: [ZikrShareTextAlignment] = [.center, .start]
+    private let fontsService = FontsService()
+    
+    @AppStorage("kShareArabicFont")
+    private var selectedArabicFontId: String = ""
+    
+    @AppStorage("kShareTranslationFont")
+    private var selectedTranslationFontId: String = ""
+    
+    @State private var selectedArabicFont: ArabicFont = Preferences.shared.preferredArabicFont
+    @State private var selectedTranslationFont: TranslationFont = Preferences.shared.preferredTranslationFont
+    
+    @State private var appliedArabicFont: ArabicFont = Preferences.shared.preferredArabicFont
+    @State private var appliedTranslationFont: TranslationFont = Preferences.shared.preferredTranslationFont
+    
+    @State private var availableArabicFonts: [ArabicFont] = ZikrShareOptionsView.defaultArabicFonts
+    @State private var availableTranslationFonts: [TranslationFont] = ZikrShareOptionsView.defaultTranslationFonts
+    
+    @State private var fontsLoadingState: FontsLoadingState = .idle
+    @State private var downloadingFonts: Set<String> = []
+    @State private var fontRefreshToken = UUID()
             
     var body: some View {
+        if #available(iOS 26, *) {
+            contentWithNavigationToolbar
+        } else {
+            contentWithCustomToolbar
+        }
+    }
+    
+    @available(iOS 26, *)
+    private var contentWithNavigationToolbar: some View {
+        mainContent
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button(L10n.Common.done) {
+                        presentation.dismiss()
+                    }
+                }
+                
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    toolbarButtons
+                }
+            }
+    }
+    
+    private var contentWithCustomToolbar: some View {
         VStack(spacing: 0) {
             toolbar
                 .padding()
                     
-            content
-                .customScrollContentBackground()
+            mainContent
         }
-        .applyThemedToggleStyle()
-        .background(.background, ignoreSafeArea: .all)
-        .task {
-            do {
-                let remoteImageBackgrounds = try await backgroundsService.loadBackgrounds()
-                backgrounds = ZikrShareBackgroundItem.preset + remoteImageBackgrounds
-                
-                // Set selectedBackground based on selectedBackgroundId after backgrounds are loaded
-                if let selectedBackgroundId = selectedBackgroundId,
-                   let foundBackground = backgrounds.first(where: { $0.id == selectedBackgroundId }) {
-                    selectedBackground = foundBackground
+    }
+    
+    private var mainContent: some View {
+        scrollView
+            .customScrollContentBackground()
+            .applyThemedToggleStyle()
+            .background(.background, ignoreSafeArea: .all)
+            .ignoresSafeArea(edges: selectedShareType == .image ? .bottom : [])
+            .task {
+                if zikr.translation == nil {
+                    includeOriginalText = true
                 }
-                
-                // Trigger scroll to selected background after backgrounds are loaded
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                    scrollToSelectedBackground = true
+                await loadAvailableFontsIfNeeded()
+                loadSelectedDynamicTypeSize()
+                do {
+                    for try await remoteImageBackgrounds in backgroundsService.loadBackgrounds() {
+                        backgrounds = ZikrShareBackgroundItem.preset + remoteImageBackgrounds
+                        
+                        if let selectedBackgroundId = selectedBackgroundId,
+                           let foundBackground = backgrounds.first(where: { $0.id == selectedBackgroundId }) {
+                            selectedBackground = foundBackground
+                        }
+                        
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                            scrollToSelectedBackground = true
+                        }
+                    }
+                } catch {
+                    print(error)
                 }
-            } catch {
-                print(error)
             }
-        }
     }
     
-    private var isProShareOptionsSelected: Bool {
-        guard selectedShareType == .image else { return false }
-        return selectedBackground.isProItem || !includeLogo
-    }
-    
-    var toolbar: some View {
+    private var toolbarButtons: some View {
         HStack(spacing: 16) {
-            Button(L10n.Common.done) {
-                presentation.dismiss()
-            }
-            Spacer()
-            
             Button(action: {
                 Task {
                     await performAction(actionType: selectedShareType == .image ? .saveImage : .copyText)
@@ -193,83 +270,46 @@ struct ZikrShareOptionsView: View {
                     share(actionType: .sheet)
                 }
             }, label: {
-                if subscriptionManager.isProUser() == false && isProShareOptionsSelected {
-                    Label(L10n.Common.share, systemImage: "lock.fill")
-                } else {
-                    Text(L10n.Common.share)
-                }
+                Text(L10n.Common.share)
             })
-            .buttonStyle(.borderedProminent)
+        }
+    }
+
+    private var isUnavailableOptionSelected: Bool {
+        isProShareOptionsSelected && !subscriptionManager.isProUser()
+    }
+    
+    private var usesTranslationFont: Bool {
+        (includeTranslation && zikr.translation != nil)
+        || (includeTransliteration && zikr.transliteration != nil)
+        || (includeBenefits && zikr.benefits != nil)
+    }
+    
+    private var isProShareOptionsSelected: Bool {
+        guard selectedShareType == .image else { return false }
+        return selectedBackground.isProItem
+        || !includeLogo
+        || (includeOriginalText && isFontPro(selectedArabicFont))
+        || (usesTranslationFont && isFontPro(selectedTranslationFont))
+    }
+    
+    var toolbar: some View {
+        HStack(spacing: 16) {
+            Button(L10n.Common.done) {
+                presentation.dismiss()
+            }
+            Spacer()
+            
+            toolbarButtons
         }
         .systemFont(.title3)
-        .background(.background)
         .animation(.smooth, value: includeLogo.hashValue ^ selectedBackground.hashValue)
         .animation(.smooth, value: processingQuickShareAction)
     }
 
-    var content: some View {
+    var scrollView: some View {
         ScrollView {
-            VStack {
-                Color.clear.frame(height: 10)
-                
-                shareAsSection
-                
-                Divider()
-                
-                Toggle(L10n.Share.showExtraOptions, isOn: $showExtraOptions)
-                    .padding(.horizontal, 16)
-                
-                if showExtraOptions {
-                    shareOptions
-                        .padding(.horizontal, 16)
-                        .transition(.opacity.combined(with: .move(edge: .top)))
-                }
-                
-                if selectedShareType != .text {
-                    Divider()
-                    
-                    Toggle(L10n.Share.includeAzkarLogo, isOn: $includeLogo.animation(.smooth))
-                        .applyThemedToggleStyle(showProBadge: !subscriptionManager.isProUser())
-                        .padding(.horizontal, 16)
-                    
-                    Divider()
-                    
-                    backgroundPickerSection
-                        .padding(.vertical)
-                    
-                    ZStack {
-                        shareViewPreview
-                            .frame(width: shareViewSize.width, height: shareViewSize.height)
-                            .screenshotProtected(isProtected: selectedBackground.isProItem && !subscriptionManager.isProUser())
-                            .background {
-                                if selectedBackground.isProItem && !subscriptionManager.isProUser() {
-                                    VStack(alignment: .center) {
-                                        Spacer()
-                                        Image(systemName: "lock.fill")
-                                            .resizable()
-                                            .aspectRatio(contentMode: .fit)
-                                            .frame(width: 100, height: 100)
-                                            .foregroundStyle(.accent)
-                                        Spacer()
-                                    }
-                                }
-                            }
-                        
-                        shareViewPreview
-                            .opacity(0)
-                            .getViewBoundsGeometry { proxy in
-                                shareViewSize = proxy.size
-                            }
-                    }
-                } else {
-                    Color.clear.frame(height: 10)
-                }
-            }
-            .systemFont(.body)
-            .background(.contentBackground)
-            .applyTheme()
-            .animation(.smooth, value: showExtraOptions)
-            .padding()
+            content
         }
         .showToast(
             message: processingQuickShareAction?.message ?? "",
@@ -278,7 +318,95 @@ struct ZikrShareOptionsView: View {
             isPresented: processingQuickShareAction != nil
         )
     }
-    
+
+    var content: some View {
+        VStack {
+            VStack {
+                Color.clear.frame(height: 10)
+
+                shareAsSection
+
+                Divider()
+
+                Toggle(L10n.Share.showExtraOptions, isOn: $showExtraOptions)
+                    .padding(.horizontal, 16)
+
+                if showExtraOptions {
+                    shareOptions
+                        .padding(.horizontal, 16)
+                        .transition(.move(edge: .top).combined(with: .opacity))
+                }
+
+                if selectedShareType != .text {
+                    Divider()
+
+                    HStack {
+                        let isLogoOptionLocked = !includeLogo && !subscriptionManager.isProUser()
+
+                        Text(L10n.Share.includeAzkarLogo)
+                        Spacer()
+                        Image(systemName: "lock.fill")
+                            .foregroundStyle(.accent)
+                            .scaleEffect(isLogoOptionLocked ? 1 : 0)
+                            .opacity(isLogoOptionLocked ? 1 : 0)
+                            .animation(.smooth, value: isLogoOptionLocked)
+                        Toggle(L10n.Share.includeAzkarLogo, isOn: $includeLogo.animation(.smooth))
+                            .labelsHidden()
+                    }
+                    .padding(.horizontal, 16)
+
+
+                    Divider()
+                } else {
+                    Color.clear.frame(height: 10)
+                }
+            }
+            .background(.contentBackground)
+            .applyTheme()
+            .padding()
+
+            if selectedShareType != .text {
+                backgroundPickerSection
+                    .padding(.vertical)
+
+                shareViewPreviewContainer
+            }
+        }
+        .systemFont(.body)
+        .animation(.smooth, value: showExtraOptions)
+        .animation(.smooth, value: selectedBackground)
+    }
+
+    var shareViewPreviewContainer: some View {
+        ZStack {
+            shareViewPreview
+                .frame(width: shareViewSize.width, height: shareViewSize.height)
+                .screenshotProtected(isProtected: selectedBackground.isProItem && !subscriptionManager.isProUser())
+                .background {
+                    if selectedBackground.isProItem && !subscriptionManager.isProUser() {
+                        VStack(alignment: .center) {
+                            Spacer()
+                            Image(systemName: "lock.fill")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: 100, height: 100)
+                                .foregroundStyle(.accent)
+                            Spacer()
+                        }
+                    }
+                }
+                .animation(.smooth, value: selectedBackground.isProItem)
+                .animation(.smooth, value: subscriptionManager.isProUser())
+
+            shareViewPreview
+                .opacity(0)
+                .getViewBoundsGeometry { proxy in
+                    shareViewSize = proxy.size
+                }
+        }
+        .transition(.opacity)
+    }
+
     var shareViewPreview: some View {
         ZikrShareView(
             viewModel: ZikrViewModel(
@@ -289,6 +417,7 @@ struct ZikrShareOptionsView: View {
                 player: .test
             ),
             includeTitle: includeTitle,
+            includeOriginalText: includeOriginalText,
             includeTranslation: includeTranslation,
             includeTransliteration: includeTransliteration,
             includeBenefits: includeBenefits,
@@ -298,10 +427,12 @@ struct ZikrShareOptionsView: View {
             otherTextAlignment: textAlignment.isCentered ? .center : .leading,
             nestIntoScrollView: false,
             useFullScreen: false,
-            selectedBackground: selectedBackground
+            selectedBackground: selectedBackground,
+            enableLineBreaks: enableLineBreaks
         )
-        .environment(\.arabicFont, preferences.preferredArabicFont)
-        .environment(\.translationFont, preferences.preferredTranslationFont)
+        .environment(\.dynamicTypeSize, selectedDynamicTypeSize)
+        .environment(\.arabicFont, appliedArabicFont)
+        .environment(\.translationFont, appliedTranslationFont)
         .clipShape(RoundedRectangle(cornerRadius: appTheme.cornerRadius))
         .overlay(
             RoundedRectangle(cornerRadius: appTheme.cornerRadius).stroke(Color.accentColor.opacity(0.5), lineWidth: 1)
@@ -309,45 +440,29 @@ struct ZikrShareOptionsView: View {
         .allowsHitTesting(false)
     }
     
-    var backgroundTypePickerMenu: some View {
-        Menu {
+    var backgroundTypePicker: some View {
+        Picker(selection: $selectedBackgroundType.animation(.smooth)) {
             ForEach(ShareBackgroundTypes.allCases) { item in
-                Button {
-                    selectedBackgroundType = item
-                } label: {
-                    Text(item.title)
-                        .systemFont(.callout)
-                    if selectedBackgroundType == item {
-                        Image(systemName: "checkmark")
-                            .foregroundStyle(.accent)
-                    }
-                }
+                Text(item.title)
+                    .tag(item)
             }
         } label: {
-            HStack {
-                Text(selectedBackgroundType.title)
-                    .foregroundStyle(.secondaryText)
-                    .multilineTextAlignment(.trailing)
-                Image(systemName: "chevron.down")
-                    .foregroundStyle(.secondaryText)
-            }
-            .systemFont(.caption2, modification: .smallCaps)
+            EmptyView()
         }
+        .pickerStyle(.segmented)
+        .labelsHidden()
     }
     
     var backgroundPickerSection: some View {
         Section {
             VStack(alignment: .leading, spacing: 8) {
-                HStack {
-                    Text(L10n.Share.backgroundHeader)
-                        .foregroundStyle(.secondaryText)
-                        .systemFont(.subheadline, modification: .smallCaps)
+                Text(L10n.Share.backgroundHeader)
+                    .foregroundStyle(.secondaryText)
+                    .systemFont(.subheadline, modification: .smallCaps)
+                    .padding(.horizontal, 16)
 
-                    Spacer()
-
-                    backgroundTypePickerMenu
-                }
-                .padding(.horizontal, 16)
+                backgroundTypePicker
+                    .padding(.horizontal, 16)
                  
                 ZikrShareBackgroundPickerView(
                     backgrounds: visibleBackgrounds,
@@ -369,18 +484,14 @@ struct ZikrShareOptionsView: View {
     
     var shareAsSection: some View {
         Section {
-            HStack(spacing: 16) {
-                Text(L10n.Share.shareAs)
-                Spacer()
-                Picker(L10n.Share.shareAs, selection: $selectedShareType.animation(.smooth)) {
-                    ForEach(ZikrShareType.allCases) { type in
-                        Label(type.title, systemImage: type.imageName)
-                            .tag(type)
-                    }
+            Picker(L10n.Share.shareAs, selection: $selectedShareType.animation(.smooth)) {
+                ForEach(ZikrShareType.allCases) { type in
+                    Label(type.title, systemImage: type.imageName)
+                        .tag(type)
                 }
-                .pickerStyle(.segmented)
-                .labelsHidden()
             }
+            .pickerStyle(.segmented)
+            .labelsHidden()
             .padding(.horizontal, 16)
         }
     }
@@ -391,7 +502,18 @@ struct ZikrShareOptionsView: View {
                 Toggle(L10n.Share.includeTitle, isOn: $includeTitle)
             }
             if zikr.translation != nil {
-                Toggle(L10n.Share.includeTranslation, isOn: $includeTranslation)
+                Toggle(L10n.Share.includeOriginalText, isOn: $includeOriginalText.onChange { newValue in
+                    if !newValue && !includeTranslation {
+                        includeTranslation = true
+                    }
+                })
+            }
+            if zikr.translation != nil {
+                Toggle(L10n.Share.includeTranslation, isOn: $includeTranslation.onChange { newValue in
+                    if !newValue && !includeOriginalText {
+                        includeOriginalText = true
+                    }
+                })
             }
             if zikr.transliteration != nil {
                 Toggle(L10n.Share.includeTransliteration, isOn: $includeTransliteration)
@@ -400,7 +522,11 @@ struct ZikrShareOptionsView: View {
                 Toggle(L10n.Share.includeBenefit, isOn: $includeBenefits)
             }
 
+            Toggle(L10n.Settings.Breaks.title, isOn: $enableLineBreaks)
+
             if selectedShareType != .text {
+                Divider()
+
                 HStack(spacing: 16) {
                     Text(L10n.Share.textAlignment)
                     Spacer()
@@ -411,9 +537,51 @@ struct ZikrShareOptionsView: View {
                         }
                     }
                 }
+
+                Divider()
+
+                HStack(spacing: 12) {
+                    Text(L10n.Share.fontSize)
+                    Spacer()
+                    fontSizeButton(false, isDisabled: selectedDynamicTypeSize == DynamicTypeSize.allCases.first)
+                    fontSizeButton(true, isDisabled: selectedDynamicTypeSize == DynamicTypeSize.allCases.last)
+                }
+                
+                fontPickers
             }
         }
         .pickerStyle(.segmented)
+    }
+
+    @ViewBuilder
+    func fontSizeButton(_ increasing: Bool, isDisabled: Bool) -> some View {
+        Button(action: {
+            let direction = increasing ? 1 : -1
+            if let current = DynamicTypeSize.allCases.firstIndex(of: selectedDynamicTypeSize) {
+                let newIndex = current + direction
+                if newIndex >= 0 && newIndex < DynamicTypeSize.allCases.count {
+                    saveSelectedDynamicTypeSize(DynamicTypeSize.allCases[newIndex])
+                }
+            }
+        }) {
+            ZStack {
+                // Placeholder for sizing.
+                Image(systemName: "plus")
+                    .padding(.horizontal)
+                    .padding(.vertical, 4)
+                    .opacity(0)
+
+                Image(systemName: increasing ? "plus" : "minus")
+            }
+            .font(.title3)
+            .foregroundStyle(.white)
+            .background(.accent)
+            .clipShape(Capsule())
+            .grayscale(isDisabled ? 1 : 0)
+            .glassEffectCompat(.regular.interactive(), in: Capsule())
+        }
+        .buttonStyle(.plain)
+        .disabled(isDisabled)
     }
 
     @MainActor
@@ -424,11 +592,15 @@ struct ZikrShareOptionsView: View {
             includeBenefits: includeBenefits,
             includeLogo: includeLogo,
             includeTranslation: includeTranslation,
+            includeOriginalText: includeOriginalText,
             includeTransliteration: includeTransliteration,
             textAlignment: textAlignment,
             shareType: selectedShareType,
-            selectedBackground: selectedBackground)
-        )
+            selectedBackground: selectedBackground,
+            enableLineBreaks: enableLineBreaks,
+            arabicFont: appliedArabicFont,
+            translationFont: appliedTranslationFont
+        ))
     }
     
     @MainActor
@@ -453,9 +625,413 @@ struct ZikrShareOptionsView: View {
         }
     }
 
+    @ViewBuilder
+    private var fontPickers: some View {
+        Group {
+            if includeOriginalText {
+                fontMenu(
+                    title: L10n.Settings.Text.arabicTextFont,
+                    selection: $selectedArabicFont,
+                    availableFonts: availableArabicFonts,
+                    onSelect: handleArabicFontSelection
+                )
+            }
+            if zikr.translation != nil || zikr.transliteration != nil || zikr.benefits != nil {
+                fontMenu(
+                    title: L10n.Settings.Text.translationTextFont,
+                    selection: $selectedTranslationFont,
+                    availableFonts: availableTranslationFonts,
+                    onSelect: handleTranslationFontSelection
+                )
+            }
+        }
+    }
+    
+    private func fontMenu<T: AppFont & Identifiable & Hashable>(
+        title: String,
+        selection: Binding<T>,
+        availableFonts: [T],
+        onSelect: @escaping (T, T) -> Void
+    ) -> some View {
+        let proxiedSelection = Binding(
+            get: { selection.wrappedValue },
+            set: { newValue in
+                let previousValue = selection.wrappedValue
+                guard !isFontDownloading(newValue) else {
+                    return
+                }
+                selection.wrappedValue = newValue
+                onSelect(newValue, previousValue)
+            }
+        )
+
+        let labelPrefixAccessory: PickerMenuAccessory? = selection.wrappedValue.isStandartPackFont != true && !subscriptionManager.isProUser() ? .image(systemName: "lock.fill", tint: Color.getColor(.accent)) : nil
+
+        return PickerMenu(
+            title: title,
+            selection: proxiedSelection,
+            items: availableFonts,
+            itemTitle: { $0.name },
+            isItemEnabled: { font in
+                return !isFontDownloading(font)
+            },
+            labelPrefixAccessory: labelPrefixAccessory,
+            labelAccessory: isFontDownloading(selection.wrappedValue) ? .progress() : nil
+        )
+        .disabled(isFontDownloading(selection.wrappedValue))
+    }
+    
+    private func handleArabicFontSelection(_ newFont: ArabicFont, previousFont: ArabicFont) {
+        guard newFont != previousFont else { return }
+        Task {
+            let success = await ensureFontAvailable(newFont)
+            await MainActor.run {
+                guard selectedArabicFont == newFont else { return }
+                if !success {
+                    selectedArabicFont = previousFont
+                } else {
+                    saveArabicFont(newFont)
+                }
+                normalizeSelectedFonts()
+            }
+        }
+    }
+    
+    private func handleTranslationFontSelection(_ newFont: TranslationFont, previousFont: TranslationFont) {
+        guard newFont != previousFont else { return }
+        Task {
+            let success = await ensureFontAvailable(newFont)
+            await MainActor.run {
+                guard selectedTranslationFont == newFont else { return }
+                if !success {
+                    selectedTranslationFont = previousFont
+                } else {
+                    saveTranslationFont(newFont)
+                }
+                normalizeSelectedFonts()
+            }
+        }
+    }
+    
+    private func needsDownload<T: AppFont>(_ font: T) -> Bool {
+        guard fontDownloadURL(for: font) != nil else { return false }
+        return !isFontInstalled(font)
+    }
+
+    @MainActor
+    private func synchronizeAppliedFonts() {
+        let resolvedArabic = resolveAppliedFont(
+            currentSelection: selectedArabicFont,
+            currentApplied: appliedArabicFont,
+            availableFonts: availableArabicFonts,
+            defaultFont: ZikrShareOptionsView.defaultArabicFonts.first ?? appliedArabicFont
+        )
+        let resolvedTranslation = resolveAppliedFont(
+            currentSelection: selectedTranslationFont,
+            currentApplied: appliedTranslationFont,
+            availableFonts: availableTranslationFonts,
+            defaultFont: ZikrShareOptionsView.defaultTranslationFonts.first ?? appliedTranslationFont
+        )
+        if resolvedArabic != appliedArabicFont || resolvedTranslation != appliedTranslationFont {
+            appliedArabicFont = resolvedArabic
+            appliedTranslationFont = resolvedTranslation
+        }
+    }
+    
+    private func resolveAppliedFont<T: AppFont & Equatable>(
+        currentSelection: T,
+        currentApplied: T,
+        availableFonts: [T],
+        defaultFont: T
+    ) -> T {
+        if isFontDownloading(currentSelection) {
+            return currentApplied
+        }
+        if !needsDownload(currentSelection) {
+            return currentSelection
+        }
+        if !needsDownload(currentApplied) {
+            return currentApplied
+        }
+        if let installed = availableFonts.first(where: { !needsDownload($0) }) {
+            return installed
+        }
+        return defaultFont
+    }
+    
+    private func mergeFonts<T: Hashable>(
+        _ base: [T],
+        extras: [T],
+        ensuring additional: [T]
+    ) -> [T] {
+        var seen = Set<T>()
+        var result: [T] = []
+        
+        for font in base {
+            if seen.insert(font).inserted {
+                result.append(font)
+            }
+        }
+        
+        for font in extras {
+            if seen.insert(font).inserted {
+                result.append(font)
+            }
+        }
+        
+        for font in additional {
+            if seen.insert(font).inserted {
+                result.append(font)
+            }
+        }
+        
+        return result
+    }
+    
+    @MainActor
+    private func normalizeSelectedFonts() {
+        availableArabicFonts = mergeFonts(
+            availableArabicFonts,
+            extras: [],
+            ensuring: [selectedArabicFont]
+        )
+        
+        availableTranslationFonts = mergeFonts(
+            availableTranslationFonts,
+            extras: [],
+            ensuring: [selectedTranslationFont]
+        )
+
+        synchronizeAppliedFonts()
+    }
+    
+    private func isFontPro<T: AppFont>(_ font: T) -> Bool {
+        font.isStandartPackFont != true
+    }
+    
+    private func isFontLocked<T: AppFont>(_ font: T) -> Bool {
+        guard subscriptionManager.isProUser() == false else { return false }
+        return isFontPro(font)
+    }
+    
+    private func firstUnlockedFont<T: AppFont & Equatable>(from fonts: [T], excluding target: T? = nil) -> T? {
+        fonts.first { font in
+            if let target = target, font == target {
+                return false
+            }
+            return !needsDownload(font)
+        }
+    }
+    
+    private func isFontDownloading<T: AppFont>(_ font: T) -> Bool {
+        downloadingFonts.contains(font.referenceName)
+    }
+    
+    private func isFontInstalled<T: AppFont>(_ font: T) -> Bool {
+        guard font.referenceName != STANDARD_FONT_REFERENCE_NAME else {
+            return true
+        }
+        let folderURL = FileManager.default.fontsDirectoryURL.appendingPathComponent(font.referenceName)
+        return FileManager.default.fileExists(atPath: folderURL.path)
+    }
+    
+    private func fontDownloadURL<T: AppFont>(for font: T) -> URL? {
+        guard font.referenceName != STANDARD_FONT_REFERENCE_NAME else {
+            return nil
+        }
+        return ZikrShareOptionsView.fontDownloadBaseURL
+            .appendingPathComponent(font.referenceName)
+            .appendingPathComponent("\(font.referenceName).zip")
+    }
+    
+    private func ensureFontAvailable<T: AppFont>(_ font: T) async -> Bool {
+        if isFontInstalled(font) {
+            return true
+        }
+        
+        guard let downloadURL = fontDownloadURL(for: font) else {
+            return true
+        }
+        
+        let downloadKey = font.referenceName
+        
+        if await MainActor.run(body: { downloadingFonts.contains(downloadKey) }) {
+            while await MainActor.run(body: { downloadingFonts.contains(downloadKey) }) {
+                try? await Task.sleep(nanoseconds: 200_000_000)
+            }
+            return isFontInstalled(font)
+        }
+
+        downloadingFonts.insert(downloadKey)
+        defer {
+            Task { @MainActor in
+                downloadingFonts.remove(downloadKey)
+            }
+        }
+        
+        do {
+            let fileURLs = try await fontsService.loadFont(url: downloadURL)
+            await MainActor.run {
+                FontsHelper.registerFonts(fileURLs)
+            }
+            return true
+        } catch {
+            print("Failed to download font \(font.name): \(error.localizedDescription)")
+            return false
+        }
+    }
+    
+    // MARK: - Font Persistence
+    private func loadSavedFonts() {
+        if let identifier = StoredFontIdentifier(rawValue: selectedArabicFontId),
+           let savedFont: ArabicFont = font(matching: identifier, in: availableArabicFonts) {
+            selectedArabicFont = savedFont
+            appliedArabicFont = savedFont
+        }
+        
+        if let identifier = StoredFontIdentifier(rawValue: selectedTranslationFontId),
+           let savedFont: TranslationFont = font(matching: identifier, in: availableTranslationFonts) {
+            selectedTranslationFont = savedFont
+            appliedTranslationFont = savedFont
+        }
+    }
+    
+    private func saveArabicFont(_ font: ArabicFont) {
+        selectedArabicFontId = StoredFontIdentifier(font: font).rawValue
+    }
+    
+    private func saveTranslationFont(_ font: TranslationFont) {
+        selectedTranslationFontId = StoredFontIdentifier(font: font).rawValue
+    }
+    
+    @MainActor
+    private func loadAvailableFontsIfNeeded() async {
+        normalizeSelectedFonts()
+        
+        guard fontsLoadingState == .idle else {
+            normalizeSelectedFonts()
+            return
+        }
+        
+        fontsLoadingState = .loading
+        
+        do {
+            async let remoteArabicFonts: [ArabicFont] = fontsService.loadFonts(of: .arabic)
+            async let remoteTranslationFonts: [TranslationFont] = fontsService.loadFonts(of: .translation)
+            
+            let (arabicFonts, translationFonts) = try await (remoteArabicFonts, remoteTranslationFonts)
+            
+            availableArabicFonts = mergeFonts(
+                ZikrShareOptionsView.defaultArabicFonts,
+                extras: arabicFonts.sorted { $0.name < $1.name },
+                ensuring: [selectedArabicFont]
+            )
+            
+            availableTranslationFonts = mergeFonts(
+                ZikrShareOptionsView.defaultTranslationFonts,
+                extras: translationFonts.sorted { $0.name < $1.name },
+                ensuring: [selectedTranslationFont]
+            )
+            
+            normalizeSelectedFonts()
+            loadSavedFonts()
+            if needsDownload(selectedArabicFont) {
+                let font = selectedArabicFont
+                Task {
+                    let success = await ensureFontAvailable(font)
+                    await MainActor.run {
+                        guard selectedArabicFont == font else { return }
+                        if !success,
+                           let fallback: ArabicFont = firstUnlockedFont(from: availableArabicFonts, excluding: font) {
+                            selectedArabicFont = fallback
+                        }
+                        normalizeSelectedFonts()
+                    }
+                }
+            }
+            if needsDownload(selectedTranslationFont) {
+                let font = selectedTranslationFont
+                Task {
+                    let success = await ensureFontAvailable(font)
+                    await MainActor.run {
+                        guard selectedTranslationFont == font else { return }
+                        if !success,
+                           let fallback: TranslationFont = firstUnlockedFont(from: availableTranslationFonts, excluding: font) {
+                            selectedTranslationFont = fallback
+                        }
+                        normalizeSelectedFonts()
+                    }
+                }
+            }
+            
+            fontsLoadingState = .loaded
+        } catch {
+            fontsLoadingState = .failed
+            normalizeSelectedFonts()
+        }
+    }
+
+    private enum FontsLoadingState {
+        case idle, loading, loaded, failed
+    }
+    
+    private func font<T: AppFont>(matching identifier: StoredFontIdentifier, in fonts: [T]) -> T? {
+        if identifier.referenceName != STANDARD_FONT_REFERENCE_NAME,
+           let exactReferenceMatch = fonts.first(where: { $0.referenceName == identifier.referenceName }) {
+            return exactReferenceMatch
+        }
+        
+        if !identifier.postscriptName.isEmpty,
+           let postscriptMatch = fonts.first(where: { $0.postscriptName == identifier.postscriptName }) {
+            return postscriptMatch
+        }
+        
+        if identifier.isLegacy,
+           let legacyMatch = fonts.first(where: { $0.referenceName == identifier.referenceName && $0.postscriptName.isEmpty }) {
+            return legacyMatch
+        }
+        
+        return fonts.first(where: { $0.referenceName == identifier.referenceName })
+    }
+    
+    private struct StoredFontIdentifier: Equatable {
+        let referenceName: String
+        let postscriptName: String
+        let isLegacy: Bool
+        
+        init<T: AppFont>(font: T) {
+            referenceName = font.referenceName
+            postscriptName = font.postscriptName
+            isLegacy = false
+        }
+        
+        init?(rawValue: String) {
+            guard rawValue.isEmpty == false else { return nil }
+            let components = rawValue.split(separator: "|", omittingEmptySubsequences: false)
+            if components.count == 2 {
+                referenceName = String(components[0])
+                postscriptName = String(components[1])
+                isLegacy = false
+            } else {
+                referenceName = rawValue
+                postscriptName = ""
+                isLegacy = true
+            }
+        }
+        
+        var rawValue: String {
+            "\(referenceName)|\(postscriptName)"
+        }
+    }
+    
+    private static let defaultArabicFonts: [ArabicFont] = ArabicFont.standardFonts.compactMap { $0 as? ArabicFont }
+    private static let defaultTranslationFonts: [TranslationFont] = TranslationFont.standardFonts
+    private static let fontDownloadBaseURL = URL(string: "https://storage.yandexcloud.net/azkar/fonts/files/")!
+
 }
 
 #Preview("Share Options") {
     ZikrShareOptionsView(zikr: .placeholder(), callback: { _ in })
         .tint(Color.accentColor)
+        .environmentObject(MockShareBackgroundsService())
 }

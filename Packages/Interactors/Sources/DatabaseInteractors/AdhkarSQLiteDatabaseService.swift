@@ -14,6 +14,14 @@ extension Language {
     }
 }
 
+private func getFadailTableName(for language: Language) -> String {
+    var base = "fadail"
+    if language != .arabic {
+        base += "_\(language.fallbackLanguage.id)"
+    }
+    return base
+}
+
 public final class AdhkarSQLiteDatabaseService: AdhkarDatabaseService {
     
     public let language: Language
@@ -64,8 +72,9 @@ public final class AdhkarSQLiteDatabaseService: AdhkarDatabaseService {
     }
 
     public func getFadailCount() throws -> Int {
+        let tableName = getFadailTableName(for: language ?? self.language)
         return try getDatabaseQueue().read { db in
-            if let row = try Row.fetchOne(db, sql: "SELECT COUNT(*) as count FROM fadail") {
+            if let row = try Row.fetchOne(db, sql: "SELECT COUNT(*) as count FROM \(tableName)") {
                 return row["count"]
             }
             return 0
@@ -73,9 +82,10 @@ public final class AdhkarSQLiteDatabaseService: AdhkarDatabaseService {
     }
 
     public func getFadl(_ id: Int, language: Language? = nil) throws -> Fadl? {
+        let tableName = getFadailTableName(for: language ?? self.language)
         return try getDatabaseQueue().read { db in
-            if let fadl = try Row.fetchOne(db, sql: "SELECT * FROM fadail WHERE id = ?", arguments: [id]) {
-                return Fadl(row: fadl, language: language ?? self.language)
+            if let fadl = try Row.fetchOne(db, sql: "SELECT * FROM \(tableName) WHERE id = ?", arguments: [id]) {
+                return Fadl(row: fadl)
             }
             return nil
         }
@@ -88,10 +98,11 @@ public final class AdhkarSQLiteDatabaseService: AdhkarDatabaseService {
     }
 
     public func getFadail(language: Language? = nil) throws -> [Fadl] {
+        let tableName = getFadailTableName(for: language ?? self.language)
         return try getDatabaseQueue().read { db in
-            let fadail = try Row.fetchAll(db, sql: "SELECT * FROM fadail")
+            let fadail = try Row.fetchAll(db, sql: "SELECT * FROM \(tableName)")
             return fadail.compactMap { row in
-                Fadl(row: row, language: language ?? self.language)
+                Fadl(row: row)
             }
         }
     }

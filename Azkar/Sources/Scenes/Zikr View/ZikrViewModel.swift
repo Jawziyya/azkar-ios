@@ -222,7 +222,8 @@ final class ZikrViewModel: ObservableObject, Identifiable, Hashable {
         includeTitle: Bool,
         includeTranslation: Bool,
         includeTransliteration: Bool,
-        includeBenefits: Bool
+        includeBenefits: Bool,
+        enableLineBreaks: Bool
     ) -> String {
         ShareTextProvider(
             zikr: zikr,
@@ -231,7 +232,8 @@ final class ZikrViewModel: ObservableObject, Identifiable, Hashable {
             includeTitle: includeTitle,
             includeTranslation: includeTranslation,
             includeTransliteration: includeTransliteration,
-            includeBenefits: includeBenefits
+            includeBenefits: includeBenefits,
+            enableLineBreaks: enableLineBreaks
         )
         .getShareText()
     }

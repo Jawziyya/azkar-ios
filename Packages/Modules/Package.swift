@@ -26,21 +26,21 @@ let package = Package(
         .package(path: "../Interactors"),
 
         // MARK: Services.
-        .package(url: "https://github.com/supabase-community/supabase-swift", from: "2.0.0"),
+        .package(url: "https://github.com/supabase-community/supabase-swift", from: "2.35.0"),
                 
         // MARK: Utilities.
-        .package(url: "https://github.com/rundfunk47/stinsen", from: "2.0.0"),
+        .package(url: "https://github.com/rundfunk47/stinsen", from: "2.0.13"),
         .package(url: "https://github.com/vadymmarkov/Fakery", from: "5.1.0"),
-        .package(url: "https://github.com/kean/Nuke", from: "12.0.0"),
+        .package(url: "https://github.com/kean/Nuke", from: "12.8.0"),
         .package(url: "https://github.com/onmyway133/RoughSwift", from: "2.0.0"),
-        .package(url: "https://github.com/mannylopez/TinyMoon", from: "3.0.0"),
+        .package(url: "https://github.com/mannylopez/TinyMoon", from: "3.0.1"),
         
         // MARK: UI.
         .package(url: "https://github.com/aheze/Popovers", from: "1.3.2"),
-        .package(url: "https://github.com/airbnb/lottie-spm", from: "4.5.0"),
-        .package(url: "https://github.com/siteline/swiftui-introspect", from: "1.1.2"),
+        .package(url: "https://github.com/airbnb/lottie-spm", from: "4.5.2"),
+        .package(url: "https://github.com/siteline/swiftui-introspect", from: "26.0.0"),
         .package(url: "https://github.com/shaps80/SwiftUIBackports", from: "2.8.1"),
-        .package(url: "https://github.com/bmoliveira/MarkdownKit", from: "1.7.1"),
+        .package(url: "https://github.com/bmoliveira/MarkdownKit", from: "1.7.3"),
     ],
     targets: [
         .target(

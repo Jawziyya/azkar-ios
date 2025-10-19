@@ -1,5 +1,6 @@
 import SwiftUI
 import Extensions
+import Components
 
 struct SearchResultsView: View {
     
@@ -19,16 +20,32 @@ struct SearchResultsView: View {
     @ViewBuilder
     var content: some View {
         if viewModel.isPerformingSearch {
-            ProgressView()
-                .scaleEffect(x: 1.5, y: 1.5, anchor: .center)
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            VStack {
+                LottieView(
+                    name: "search",
+                    loopMode: .loop,
+                    contentMode: .scaleAspectFit,
+                    speed: 1.0
+                )
+                .frame(height: 100)
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
         } else if viewModel.haveSearchResults == false {
-            Text(L10n.Common.noSearchResults)
-                .systemFont(.title3)
-                .multilineTextAlignment(.center)
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .foregroundStyle(.secondaryText)
-                .padding()
+            VStack {
+                LottieView(
+                    name: "no-search-results",
+                    loopMode: .playOnce,
+                    contentMode: .scaleAspectFit,
+                    speed: 1.0
+                )
+                .frame(height: 150)
+                Text(L10n.Common.noSearchResults)
+                    .systemFont(.title3)
+                    .multilineTextAlignment(.center)
+                    .foregroundStyle(.secondaryText)
+            }
+            .padding()
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
         } else {
             searchResultsList
         }

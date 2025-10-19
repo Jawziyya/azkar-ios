@@ -133,7 +133,15 @@ final class MainMenuViewModel: ObservableObject {
                 iconType: .bundled(resourcesBunbdle)
             ),
         ]
-        
+
+        do {
+            if let fadl = try databaseService.getRandomFadl() {
+                print(fadl)
+            }
+        } catch {
+            print(error)
+        }
+
         var year = "\(Date().hijriYear) г.х."
         switch Calendar.current.identifier {
         case .islamic, .islamicCivil, .islamicTabular, .islamicUmmAlQura:
