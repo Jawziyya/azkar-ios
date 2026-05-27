@@ -41,21 +41,37 @@ struct SearchSuggestionsView: View {
     var suggestedSearchQueriesSection: some View {
         Section {
             ForEachIndexed(viewModel.suggestedQueries) { _, position, query in
-                Button {
-                    onSearchSuggestionSelection(query)
-                } label: {
-                    HStack {
-                        Image(systemName: .magnifyingglass)
-                            .foregroundStyle(Color.secondary)
-                        Text(query)
+                HStack(spacing: 0) {
+                    Button {
+                        onSearchSuggestionSelection(query)
+                    } label: {
+                        HStack {
+                            Image(systemName: .magnifyingglass)
+                                .foregroundStyle(Color.secondary)
+                            Text(query)
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .contentShape(Rectangle())
                     }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .contentShape(Rectangle())
+                    .buttonStyle(.plain)
+                    .accessibilityLabel(query)
+                    .accessibilityHint(Text("accessibility.search.search-hint"))
+
+                    Button {
+                        viewModel.removeRecentQuery(query)
+                    } label: {
+                        Image(systemName: "xmark")
+                            .systemFont(.footnote)
+                            .foregroundStyle(.secondaryText)
+                            .frame(width: 44, height: 44)
+                            .contentShape(Rectangle())
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityLabel(Text("common.delete"))
                 }
-                .buttonStyle(.plain)
-                .accessibilityLabel(query)
-                .accessibilityHint(Text("accessibility.search.search-hint"))
-                .padding()
+                .padding(.leading)
+                .padding(.trailing, 4)
+                .padding(.vertical, 4)
                 .foregroundStyle(.text)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .background(.contentBackground)

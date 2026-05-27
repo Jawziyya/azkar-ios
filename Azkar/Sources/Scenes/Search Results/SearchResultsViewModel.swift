@@ -90,7 +90,6 @@ final class SearchResultsViewModel: ObservableObject {
         self.azkarDatabase = azkarDatabase
         self.analytics = analytics
         searchTokens.assign(to: &$selectedTokens)
-        searchQuery.map { _ in [] }.assign(to: &$searchResults)
         configureSearch(
             query: searchQuery.eraseToAnyPublisher(),
             tokens: searchTokens,
@@ -98,7 +97,7 @@ final class SearchResultsViewModel: ObservableObject {
             preferencesDatabase: preferencesDatabase
         )
     }
-    
+
     private func configureSearch(
         query: AnyPublisher<String, Never>,
         tokens: AnyPublisher<[SearchToken], Never>,
@@ -112,11 +111,11 @@ final class SearchResultsViewModel: ObservableObject {
                 azkarDatabase: azkarDatabase
             )
         }
-        
-        let searchResults = query
+
+        let computedResults = query
             .combineLatest(tokens)
             .debounce(
-                for: .seconds(1),
+                for: .seconds(0.3),
                 scheduler: DispatchQueue.main
             )
             .receive(on: DispatchQueue.global(qos: .userInitiated))
@@ -124,7 +123,7 @@ final class SearchResultsViewModel: ObservableObject {
                 guard let query = query.textOrNil, query.count >= 3 else {
                     return Just([]).eraseToAnyPublisher()
                 }
-                
+
                 let searchTokens = tokens.isEmpty ? SearchToken.allCases : tokens
                 searchManagers.forEach { manager in
                     if searchTokens.contains(where: { $0 == manager.category }) {
@@ -140,18 +139,23 @@ final class SearchResultsViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .share()
             .eraseToAnyPublisher()
-        
-        searchResults.combineLatest(query)
-            .debounce(for: .seconds(1), scheduler: DispatchQueue.main)
-            .sink(receiveValue: { results, query in
-                if query.count >= 3, results.contains(where: { !$0.results.isEmpty }) {
+
+        // Clear results immediately when the query changes, then replace with
+        // real results once the search pipeline emits.
+        Publishers.Merge(
+            query.map { _ -> [SearchResultsSection] in [] },
+            computedResults
+        )
+        .assign(to: &$searchResults)
+
+        computedResults.combineLatest(query)
+            .sink(receiveValue: { [weak self] results, query in
+                guard let self, query.count >= 3 else { return }
+
+                if results.contains(where: { !$0.results.isEmpty }) {
                     Task {
                         await preferencesDatabase.storeSearchQuery(query)
                     }
-                }
-
-                guard query.count >= 3 else {
-                    return
                 }
 
                 let resultCount = results.reduce(0) { $0 + $1.results.count }
@@ -163,12 +167,10 @@ final class SearchResultsViewModel: ObservableObject {
                 )
             })
             .store(in: &cancellables)
-        
-        searchResults.assign(to: &$searchResults)
-        
+
         Publishers.Merge(
-            query.map { _ in true },
-            searchResults.map { _ in false }
+            query.map { $0.count >= 3 },
+            computedResults.map { _ in false }
         )
         .assign(to: &$isPerformingSearch)
     }

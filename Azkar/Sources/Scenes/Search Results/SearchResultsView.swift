@@ -53,7 +53,7 @@ struct SearchResultsView: View {
     
     var searchResultsList: some View {
         ScrollView {
-            LazyVStack(spacing: 0) {
+            LazyVStack(spacing: 8) {
                 ForEach(viewModel.searchResults) { section in
                     searchResultSectionView(section)
                 }

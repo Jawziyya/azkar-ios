@@ -173,7 +173,6 @@ final class MainMenuViewModel: ObservableObject {
         
         $searchQuery
             .removeDuplicates()
-            .subscribe(on: DispatchQueue.global(qos: .userInteractive))
             .subscribe(searchQueryPublisher)
             .store(in: &cancellables)
         
@@ -218,7 +217,12 @@ final class MainMenuViewModel: ObservableObject {
             queryLength: query.count,
             source: .recentQuery
         )
-        searchQuery = query
+        // Defer to the next runloop so UIKit's search controller picks up the
+        // programmatic text change. Assigning synchronously during the tap
+        // handler is dropped on the floor by `.searchable`.
+        DispatchQueue.main.async { [weak self] in
+            self?.searchQuery = query
+        }
     }
     
     func navigateToSearchResult(_ searchResult: SearchResultZikr) {

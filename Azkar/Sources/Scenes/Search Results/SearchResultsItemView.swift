@@ -43,30 +43,36 @@ struct SearchResultsItemView: View {
         VStack(spacing: 10) {
             if let title = result.title {
                 Text(getText(title))
+                    .lineLimit(3)
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
             if let text = result.text {
                 Text(getText(text))
+                    .lineLimit(3)
                     .multilineTextAlignment(.trailing)
                     .frame(maxWidth: .infinity, alignment: .trailing)
             }
             if let translation = result.translation {
                 Text(getText(translation))
+                    .lineLimit(3)
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
             if let caption = result.caption {
                 Text(getText(caption))
                     .systemFont(.caption)
+                    .lineLimit(3)
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
             if let caption2 = result.caption2 {
                 Text(getText(caption2))
                     .systemFont(.caption2)
+                    .lineLimit(3)
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
             if let footnote = result.footnote {
                 Text(getText(footnote))
                     .systemFont(.footnote)
+                    .lineLimit(3)
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
         }
