@@ -65,12 +65,20 @@ struct SearchResultsView: View {
     
     func searchResultSectionView(_ section: SearchResultsSection) -> some View {
         Section {
-            ForEach(section.results, content: searchResultView)
-                .padding()
-                .foregroundStyle(.text)
-                .background(.contentBackground)
-                .applyTheme()
-                .padding(.horizontal)
+            VStack(spacing: 0) {
+                ForEach(Array(section.results.enumerated()), id: \.element.id) { index, result in
+                    searchResultView(for: result)
+                        .padding()
+                    if index != section.results.count - 1 {
+                        Divider()
+                    }
+                }
+            }
+            .foregroundStyle(.text)
+            .background(.contentBackground)
+            .applyTheme()
+            .padding(.horizontal)
+            .padding(.bottom, 8)
         } header: {
             HStack {
                 if let image = section.image {
@@ -85,10 +93,10 @@ struct SearchResultsView: View {
             .accessibilityElement(children: .combine)
             .accessibilityAddTraits(.isHeader)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .padding()
+            .padding(.horizontal)
+            .padding(.top, 12)
+            .padding(.bottom, 4)
             .foregroundStyle(.secondaryText)
-            .background(.background)
-            .padding(.top, 6)
         }
     }
  
