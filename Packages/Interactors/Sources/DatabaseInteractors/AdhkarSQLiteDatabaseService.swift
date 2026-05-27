@@ -300,22 +300,30 @@ public extension AdhkarSQLiteDatabaseService {
                 tableName = currentLanguage.databaseTableName
             }
             
-            let translations = try ZikrTranslation.fetchAll(
-                db,
-                sql: """
-                SELECT \(tableName).*
-                FROM \(tableName)
-                JOIN "azkar+azkar_group" ON \(tableName).id = "azkar+azkar_group"."azkar_id"
-                WHERE "azkar+azkar_group"."group" = ?
-                AND \(tableName).id IN (
-                    SELECT rowid FROM azkar_search
-                    WHERE text_\(language.id) MATCH ?
-                    ORDER BY rank
-                    LIMIT ?
+            let translations: [ZikrTranslation]
+            do {
+                translations = try ZikrTranslation.fetchAll(
+                    db,
+                    sql: """
+                    SELECT \(tableName).*
+                    FROM \(tableName)
+                    JOIN "azkar+azkar_group" ON \(tableName).id = "azkar+azkar_group"."azkar_id"
+                    WHERE "azkar+azkar_group"."group" = ?
+                    AND \(tableName).id IN (
+                        SELECT rowid FROM azkar_search
+                        WHERE text_\(language.id) MATCH ?
+                        ORDER BY rank
+                        LIMIT ?
+                    )
+                    """,
+                    arguments: [category.rawValue, normalizedQuery, resultsLimit]
                 )
-                """,
-                arguments: [category.rawValue, normalizedQuery, resultsLimit]
-            )
+            } catch {
+                // The azkar_search FTS table may not have a column for this language
+                // (e.g. tatar has a translations table but no FTS column). Skip it
+                // instead of failing the whole search.
+                continue
+            }
             
             for translation in translations {
                 let zikrId = translation.id
