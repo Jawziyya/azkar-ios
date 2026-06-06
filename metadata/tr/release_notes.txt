@@ -1,1 +1,2 @@
-Sayaç performansı düzeltildi.
+Zikir araması iyileştirildi; Arapça aramada harekeli ve harekesiz arama destekleniyor.
+Paylaşılan görsellerde seçilen arka planın eksik olmasına neden olan sorun giderildi.
