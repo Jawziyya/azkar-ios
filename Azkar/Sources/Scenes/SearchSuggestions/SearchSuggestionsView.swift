@@ -52,6 +52,8 @@ struct SearchSuggestionsView: View {
                                 Text(query)
                             }
                             .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(.leading)
+                            .padding(.vertical, 4)
                             .contentShape(Rectangle())
                         }
                         .buttonStyle(.plain)
@@ -69,10 +71,8 @@ struct SearchSuggestionsView: View {
                         }
                         .buttonStyle(.plain)
                         .accessibilityLabel(Text("common.delete"))
+                        .padding(.trailing, 4)
                     }
-                    .padding(.leading)
-                    .padding(.trailing, 4)
-                    .padding(.vertical, 4)
                     .frame(maxWidth: .infinity, alignment: .leading)
 
                     if position != .last {
@@ -82,7 +82,7 @@ struct SearchSuggestionsView: View {
             }
             .foregroundStyle(.text)
             .background(.contentBackground)
-            .applyTheme()
+            .applyTheme(isInteractive: false)
             .padding(.horizontal)
             .padding(.bottom, 8)
         } header: {
@@ -95,18 +95,21 @@ struct SearchSuggestionsView: View {
             VStack(spacing: 0) {
                 ForEachIndexed(viewModel.suggestedAzkar) { _, position, zikr in
                     let text = zikr.title ?? zikr.translation ?? zikr.text
-                    NavigationButton(
-                        title: LocalizedStringKey(text.prefix(50) + "..."),
-                        applyVerticalPadding: false,
-                        action: {
-                            viewModel.navigateToZikr(zikr.id)
-                        }
-                    )
+                    Button {
+                        viewModel.navigateToZikr(zikr.id)
+                    } label: {
+                        NavigationLabel(
+                            title: LocalizedStringKey(text.prefix(50) + "..."),
+                            applyVerticalPadding: false
+                        )
+                        .padding()
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .contentShape(Rectangle())
+                    }
+                    .buttonStyle(.plain)
                     .accessibilityLabel(text)
                     .accessibilityHint(Text("accessibility.common.open-dhikr"))
                     .applyAccessibilityLanguage(zikr.language.id)
-                    .padding()
-                    .frame(maxWidth: .infinity, alignment: .leading)
 
                     if position != .last {
                         Divider()
@@ -115,7 +118,7 @@ struct SearchSuggestionsView: View {
             }
             .foregroundStyle(.text)
             .background(.contentBackground)
-            .applyTheme()
+            .applyTheme(isInteractive: false)
             .padding(.horizontal)
             .padding(.bottom, 8)
         } header: {
