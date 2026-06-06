@@ -68,7 +68,6 @@ struct SearchResultsView: View {
             VStack(spacing: 0) {
                 ForEach(Array(section.results.enumerated()), id: \.element.id) { index, result in
                     searchResultView(for: result)
-                        .padding()
                     if index != section.results.count - 1 {
                         Divider()
                     }
@@ -105,6 +104,9 @@ struct SearchResultsView: View {
             onSelect(result)
         } label: {
             SearchResultsItemView(result: result)
+                .padding()
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
         .accessibilityHint(Text("accessibility.common.open-dhikr"))
