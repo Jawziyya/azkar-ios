@@ -173,7 +173,17 @@ final class MainMenuViewModel: ObservableObject {
         
         $searchQuery
             .removeDuplicates()
+            .handleEvents(receiveOutput: { query in
+                SearchLog.log("Input: searchQuery changed -> \(query.debugDescription) (chars=\(query.count))")
+            })
             .subscribe(searchQueryPublisher)
+            .store(in: &cancellables)
+
+        $searchTokens
+            .removeDuplicates()
+            .sink { tokens in
+                SearchLog.log("Selection: searchTokens changed -> \(tokens.map(\.rawValue))")
+            }
             .store(in: &cancellables)
         
         Task {
@@ -213,6 +223,7 @@ final class MainMenuViewModel: ObservableObject {
     }
 
     func selectSearchSuggestion(_ query: String) {
+        SearchLog.log("Selection: search suggestion tapped query=\(query.debugDescription)")
         analytics.search.selectedSuggestion(
             queryLength: query.count,
             source: .recentQuery
@@ -226,6 +237,7 @@ final class MainMenuViewModel: ObservableObject {
     }
     
     func navigateToSearchResult(_ searchResult: SearchResultZikr) {
+        SearchLog.log("Selection: search result tapped zikrId=\(searchResult.zikrId) language=\(searchResult.language.id) query=\(searchQuery.debugDescription)")
         navigator.showSearchResult(searchResult, query: searchQuery)
     }
 

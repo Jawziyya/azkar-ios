@@ -12,6 +12,10 @@ struct SearchResultZikr: Identifiable, Hashable {
     var caption2: String?
     var footnote: String?
     let highlightText: String
+    /// Exact (vowelled) substrings to underline in the Arabic `text` field.
+    /// When non-empty these take precedence over `highlightText`, which can't
+    /// match the original text once vowels/alef-variants differ from the query.
+    var textHighlights: [String] = []
     let zikrId: Zikr.ID
     let language: Language
 }
@@ -31,7 +35,10 @@ extension SearchResultZikr {
     init(zikr: Zikr, query: String) {
         var title: String?
         let titleMatches = SearchResultZikr.extractContextFrom(zikr.title, query: query)
-        let textMatches = SearchResultZikr.extractContextFrom(zikr.text.trimmingArabicVowels, query: query.trimmingArabicVowels)
+        // Match against the normalized (vowel/alef-insensitive) text but display
+        // the original text with its tashkeel, highlighting the matched spans.
+        let arabicTextMatch = zikr.text.extractArabicHighlightContexts(query: query)
+        let textMatches = arabicTextMatch?.snippet
         let translationMatches = SearchResultZikr.extractContextFrom(zikr.translation, query: query)
         let sourceMatches = SearchResultZikr.extractContextFrom(zikr.source, query: query)
         let benefitsMatches = SearchResultZikr.extractContextFrom(zikr.benefits, query: query)
@@ -53,6 +60,7 @@ extension SearchResultZikr {
             caption2: benefitsMatches,
             footnote: notesMatches,
             highlightText: query,
+            textHighlights: arabicTextMatch?.matches ?? [],
             zikrId: zikr.id,
             language: zikr.language
         )
@@ -121,10 +129,12 @@ final class SearchResultsViewModel: ObservableObject {
             .receive(on: DispatchQueue.global(qos: .userInitiated))
             .flatMap(maxPublishers: .max(1)) { query, tokens -> AnyPublisher<[SearchResultsSection], Never> in
                 guard let query = query.textOrNil, query.count >= 3 else {
+                    SearchLog.log("ViewModel: query too short or empty (query=\(query.debugDescription)) — clearing results")
                     return Just([]).eraseToAnyPublisher()
                 }
 
                 let searchTokens = tokens.isEmpty ? SearchToken.allCases : tokens
+                SearchLog.log("ViewModel: dispatching search query=\(query.debugDescription) activeTokens=\(searchTokens.map(\.rawValue))")
                 searchManagers.forEach { manager in
                     if searchTokens.contains(where: { $0 == manager.category }) {
                         manager.performSearch(query: query)
@@ -134,7 +144,9 @@ final class SearchResultsViewModel: ObservableObject {
                     .eraseToAnyPublisher()
             }
             .map { sections in
-                sections.filter { $0.results.isEmpty == false }
+                let nonEmpty = sections.filter { $0.results.isEmpty == false }
+                SearchLog.log("ViewModel: aggregated \(sections.count) section(s), \(nonEmpty.count) non-empty — \(nonEmpty.map { "\($0.title ?? "?"):\($0.results.count)" })")
+                return nonEmpty
             }
             .receive(on: DispatchQueue.main)
             .share()

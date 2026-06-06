@@ -47,7 +47,7 @@ struct SearchResultsItemView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
             if let text = result.text {
-                Text(getText(text))
+                Text(getText(text, highlights: textHighlights))
                     .lineLimit(3)
                     .multilineTextAlignment(.trailing)
                     .frame(maxWidth: .infinity, alignment: .trailing)
@@ -82,21 +82,31 @@ struct SearchResultsItemView: View {
         .multilineTextAlignment(.leading)
     }
     
+    /// Highlight tokens for the Arabic `text` field: the exact vowelled spans
+    /// that matched, falling back to the raw query for non-Arabic content.
+    private var textHighlights: [String] {
+        result.textHighlights.isEmpty ? [result.highlightText] : result.textHighlights
+    }
+
     private func getText(
-        _ text: String
+        _ text: String,
+        highlights: [String]? = nil
     ) -> AttributedString {
         var attributedString = AttributedString(text)
-        var currentSearchRange = attributedString.startIndex..<attributedString.endIndex
 
-        while let range = attributedString[currentSearchRange].range(of: result.highlightText, options: [.caseInsensitive, .diacriticInsensitive]) {
-            let globalRange = range.lowerBound..<range.upperBound
-            attributedString[globalRange].underlineStyle = .single
-            attributedString[globalRange].underlineColor = UIColor(colorTheme.getColor(.accent))
-            
-            if globalRange.upperBound < attributedString.endIndex {
-                currentSearchRange = globalRange.upperBound..<attributedString.endIndex
-            } else {
-                break
+        for token in (highlights ?? [result.highlightText]) where token.isEmpty == false {
+            var currentSearchRange = attributedString.startIndex..<attributedString.endIndex
+
+            while let range = attributedString[currentSearchRange].range(of: token, options: [.caseInsensitive, .diacriticInsensitive]) {
+                let globalRange = range.lowerBound..<range.upperBound
+                attributedString[globalRange].underlineStyle = .single
+                attributedString[globalRange].underlineColor = UIColor(colorTheme.getColor(.accent))
+
+                if globalRange.upperBound < attributedString.endIndex {
+                    currentSearchRange = globalRange.upperBound..<attributedString.endIndex
+                } else {
+                    break
+                }
             }
         }
 
