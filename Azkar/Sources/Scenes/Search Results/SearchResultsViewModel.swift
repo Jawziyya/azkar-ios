@@ -90,7 +90,6 @@ final class SearchResultsViewModel: ObservableObject {
     
     init(
         azkarDatabase: AzkarDatabase,
-        preferencesDatabase: PreferencesDatabase,
         searchTokens: AnyPublisher<[SearchToken], Never>,
         searchQuery: AnyPublisher<String, Never>,
         analytics: AppAnalyticsTracking
@@ -101,16 +100,14 @@ final class SearchResultsViewModel: ObservableObject {
         configureSearch(
             query: searchQuery.eraseToAnyPublisher(),
             tokens: searchTokens,
-            azkarDatabase: azkarDatabase,
-            preferencesDatabase: preferencesDatabase
+            azkarDatabase: azkarDatabase
         )
     }
 
     private func configureSearch(
         query: AnyPublisher<String, Never>,
         tokens: AnyPublisher<[SearchToken], Never>,
-        azkarDatabase: AzkarDatabase,
-        preferencesDatabase: PreferencesDatabase
+        azkarDatabase: AzkarDatabase
     ) {
         let searchManagers = ZikrCategory.allCases.map { category in
             return SearchManager(
@@ -164,12 +161,6 @@ final class SearchResultsViewModel: ObservableObject {
             .sink(receiveValue: { [weak self] results, query in
                 guard let self, query.count >= 3 else { return }
 
-                if results.contains(where: { !$0.results.isEmpty }) {
-                    Task {
-                        await preferencesDatabase.storeSearchQuery(query)
-                    }
-                }
-
                 let resultCount = results.reduce(0) { $0 + $1.results.count }
                 self.analytics.search.performed(
                     queryLength: query.count,
@@ -193,7 +184,6 @@ extension SearchResultsViewModel {
     static var placeholder: SearchResultsViewModel {
         let vm = SearchResultsViewModel(
             azkarDatabase: .init(language: Language.english),
-            preferencesDatabase: MockPreferencesDatabase(),
             searchTokens: Empty().eraseToAnyPublisher(),
             searchQuery: Empty().eraseToAnyPublisher(),
             analytics: NoopAppAnalytics()

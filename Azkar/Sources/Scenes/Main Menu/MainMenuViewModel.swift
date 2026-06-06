@@ -24,7 +24,6 @@ final class MainMenuViewModel: ObservableObject {
     
     private(set) lazy var searchViewModel = SearchResultsViewModel(
         azkarDatabase: azkarDatabase,
-        preferencesDatabase: preferencesDatabase,
         searchTokens: $searchTokens.eraseToAnyPublisher(),
         searchQuery: searchQueryPublisher.removeDuplicates().eraseToAnyPublisher(),
         analytics: analytics
@@ -238,7 +237,13 @@ final class MainMenuViewModel: ObservableObject {
     
     func navigateToSearchResult(_ searchResult: SearchResultZikr) {
         SearchLog.log("Selection: search result tapped zikrId=\(searchResult.zikrId) language=\(searchResult.language.id) query=\(searchQuery.debugDescription)")
-        navigator.showSearchResult(searchResult, query: searchQuery)
+        let query = searchQuery
+        if query.count >= 3 {
+            Task {
+                await preferencesDatabase.storeSearchQuery(query)
+            }
+        }
+        navigator.showSearchResult(searchResult, query: query)
     }
 
     func navigateToZikr(_ zikr: Zikr) {
