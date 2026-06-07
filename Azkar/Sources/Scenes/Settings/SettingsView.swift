@@ -53,6 +53,8 @@ struct SettingsView: View {
         
     var content: some View {
         Group {
+            premiumSection
+            Divider()
             appearanceSection
             Divider()
             counterSection
@@ -104,6 +106,61 @@ struct SettingsView: View {
         }
         .accessibilityElement(children: .combine)
         .accessibilityHint(Text("common.open"))
+    }
+
+    var premiumSection: some View {
+        Button(action: viewModel.navigateToSubscription) {
+            HStack(spacing: 16) {
+                Image(systemName: viewModel.isProUser ? "checkmark.seal.fill" : "sparkles")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 21, height: 21)
+                    .font(.body)
+                    .padding(7)
+                    .foregroundStyle(Color.white)
+                    .background(Color(.systemPurple))
+                    .cornerRadius(appTheme.cornerRadius > 0 ? 8 : 0)
+                    .removeSaturationIfNeeded()
+
+                VStack(alignment: .leading, spacing: 4) {
+                    HStack(spacing: 8) {
+                        Text(verbatim: "Azkar Pro")
+                            .foregroundStyle(.text)
+                            .systemFont(.body)
+
+                        if viewModel.isProUser {
+                            Image(systemName: "checkmark.circle.fill")
+                                .foregroundStyle(Color(.systemGreen))
+                                .accessibilityHidden(true)
+                        } else {
+                            ProBadgeView()
+                                .accessibilityHidden(true)
+                        }
+                    }
+
+                    if viewModel.isProUser {
+                        Text("subscribe.finish.thanks")
+                            .foregroundStyle(.secondaryText)
+                            .systemFont(.caption)
+                    } else {
+                        Text("subscribe.title")
+                            .foregroundStyle(.secondaryText)
+                            .systemFont(.caption)
+                    }
+                }
+
+                Spacer()
+
+                if viewModel.isProUser == false {
+                    Image(systemName: "chevron.right")
+                }
+            }
+            .contentShape(Rectangle())
+            .padding(4)
+            .multilineTextAlignment(.leading)
+        }
+        .accessibilityElement(children: .combine)
+        .accessibilityHint(viewModel.isProUser ? Text("subscribe.finish.thanks") : Text("common.open"))
     }
     
     // MARK: - Appearance

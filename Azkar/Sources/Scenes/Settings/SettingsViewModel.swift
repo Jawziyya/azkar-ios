@@ -19,8 +19,10 @@ final class SettingsViewModel: ObservableObject {
 
     @Injected(\.notificationsHandler) private var notificationsHandler: NotificationsHandler
     @Injected(\.preferences) var preferences: Preferences
+    @Injected(\.subscriptionManager) private var subscriptionManager: SubscriptionManagerType
 
     private let formatter: DateFormatter
+    @Published private(set) var isProUser = false
     
     var themeTitle: String {
         "\(preferences.theme.title), \(preferences.colorTheme.title)"
@@ -37,6 +39,7 @@ final class SettingsViewModel: ObservableObject {
         formatter.timeStyle = .short
 
         self.formatter = formatter
+        self.isProUser = subscriptionManager.isProUser()
         
         preferences
             .storageChangesPublisher()
@@ -67,6 +70,23 @@ final class SettingsViewModel: ObservableObject {
     
     func navigateToAboutAppScreen() {
         navigator.show(.aboutApp)
+    }
+
+    func refreshSubscriptionState() {
+        isProUser = subscriptionManager.isProUser()
+    }
+
+    func navigateToSubscription() {
+        guard isProUser == false else {
+            refreshSubscriptionState()
+            return
+        }
+
+        navigator.presentSubscription(sourceScreen: SettingsView.viewName) { [weak self] in
+            Task { @MainActor in
+                self?.refreshSubscriptionState()
+            }
+        }
     }
 
     /// Observes some preferences to reschedule notifications if needed.
