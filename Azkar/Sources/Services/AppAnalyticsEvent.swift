@@ -72,6 +72,7 @@ enum AppAnalyticsSettingsDestination: String {
     case counter
     case reminders
     case soundPicker = "sound_picker"
+    case reminderTitlePicker = "reminder_title_picker"
     case aboutApp = "about_app"
 }
 

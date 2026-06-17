@@ -130,7 +130,22 @@ public protocol AdhkarDatabaseService {
     /// - Throws: An error if the retrieval fails.
     /// - Returns: An array of `AudioTiming` objects.
     func getAudioTimings(audioId: Int) async throws -> [AudioTiming]
-    
+
+    /// Retrieves all notification quotes for a given category, with translations
+    /// resolved for the requested language (falling back through the language
+    /// chain: requested → fallbackLanguage → english → arabic).
+    func getNotificationQuotes(
+        category: NotificationQuoteCategory,
+        language: Language?
+    ) throws -> [NotificationQuote]
+
+    /// Retrieves a single notification quote by id, with translation resolved
+    /// for the requested language.
+    func getNotificationQuote(
+        id: Int,
+        language: Language?
+    ) throws -> NotificationQuote?
+
 }
 
 public extension AdhkarDatabaseService {
@@ -155,5 +170,19 @@ public extension AdhkarDatabaseService {
     
     func getFadail(language: Language? = nil) throws -> [Fadl] {
         try getFadail(language: language)
+    }
+
+    func getNotificationQuotes(
+        category: NotificationQuoteCategory,
+        language: Language? = nil
+    ) throws -> [NotificationQuote] {
+        try getNotificationQuotes(category: category, language: language)
+    }
+
+    func getNotificationQuote(
+        id: Int,
+        language: Language? = nil
+    ) throws -> NotificationQuote? {
+        try getNotificationQuote(id: id, language: language)
     }
 }

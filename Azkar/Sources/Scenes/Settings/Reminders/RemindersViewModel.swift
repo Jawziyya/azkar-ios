@@ -2,6 +2,8 @@ import SwiftUI
 import Combine
 import FactoryKit
 import Library
+import Entities
+import DatabaseInteractors
 
 @MainActor
 final class RemindersViewModel: ObservableObject {
@@ -33,11 +35,16 @@ final class RemindersViewModel: ObservableObject {
         eveningTime = formatter.string(from: preferences.eveningNotificationTime)
         jumuaReminderTime = formatter.string(from: preferences.jumuaReminderTime)
         
-        Publishers.Merge4(
-            preferences.$enableAdhkarReminder.toVoid(),
+        Publishers.MergeMany(
+            preferences.$enableMorningReminder.toVoid(),
+            preferences.$enableEveningReminder.toVoid(),
             preferences.$enableJumuaReminder.toVoid(),
-            preferences.$adhkarReminderSound.toVoid(),
-            preferences.$jumuahDuaReminderSound.toVoid()
+            preferences.$morningReminderSound.toVoid(),
+            preferences.$eveningReminderSound.toVoid(),
+            preferences.$jumuahDuaReminderSound.toVoid(),
+            preferences.$morningReminderTitle.toVoid(),
+            preferences.$eveningReminderTitle.toVoid(),
+            preferences.$jumuaReminderTitle.toVoid()
         )
         .eraseToAnyPublisher()
         .receive(on: RunLoop.main)
@@ -57,8 +64,20 @@ final class RemindersViewModel: ObservableObject {
     
     // MARK: - Adhkar Reminders methods
     
-    func presentAdhkarSoundPicker() {
-        navigator.show(.soundPicker(.init(sound: preferences.adhkarReminderSound, type: .adhkar)))
+    func presentMorningSoundPicker() {
+        navigator.show(.soundPicker(.init(sound: preferences.morningReminderSound, type: .morning)))
+    }
+
+    func presentEveningSoundPicker() {
+        navigator.show(.soundPicker(.init(sound: preferences.eveningReminderSound, type: .evening)))
+    }
+
+    func presentMorningTitlePicker() {
+        navigator.show(.reminderTitlePicker(.init(selection: preferences.morningReminderTitle, type: .morning)))
+    }
+
+    func presentEveningTitlePicker() {
+        navigator.show(.reminderTitlePicker(.init(selection: preferences.eveningReminderTitle, type: .evening)))
     }
     
     var morningNotificationDateRange: ClosedRange<Date> {
@@ -113,6 +132,35 @@ final class RemindersViewModel: ObservableObject {
     
     func presentJumuaSoundPicker() {
         navigator.show(.soundPicker(.init(sound: preferences.jumuahDuaReminderSound, type: .jumua)))
+    }
+
+    func presentJumuaTitlePicker() {
+        navigator.show(.reminderTitlePicker(.init(selection: preferences.jumuaReminderTitle, type: .jumua)))
+    }
+    
+    private func titleSelectionLabel(for selection: ReminderTitleSelection) -> String {
+        switch selection {
+        case .default:
+            return String(localized: "common.default")
+        case .random:
+            return String(localized: "common.random")
+        case .quote:
+            // A picked quote is too long to display inline; the chevron lets the
+            // user open the picker to see the chosen quote.
+            return ""
+        }
+    }
+
+    func morningTitleLabel() -> String {
+        titleSelectionLabel(for: preferences.morningReminderTitle)
+    }
+
+    func eveningTitleLabel() -> String {
+        titleSelectionLabel(for: preferences.eveningReminderTitle)
+    }
+
+    func jumuaTitleLabel() -> String {
+        titleSelectionLabel(for: preferences.jumuaReminderTitle)
     }
     
     var jumuaNotificationDateRange: ClosedRange<Date> {

@@ -5,7 +5,7 @@ struct RemindersScreen: View {
     
     @ObservedObject var viewModel: RemindersViewModel
     
-    var showDebugNotifications = false
+    var showDebugNotifications = true
     
     var body: some View {
         ScrollView {
@@ -18,6 +18,12 @@ struct RemindersScreen: View {
         .customScrollContentBackground()
         .background(.background, ignoreSafeArea: .all)
         .navigationTitle("settings.reminders.title")
+        .modifier(
+            ScheduledNotificationsToolbarModifier(
+                isVisible: showDebugNotifications && UIApplication.shared.inDebugMode,
+                action: viewModel.navigateToNotificationsList
+            )
+        )
         .onAppear {
             AnalyticsReporter.reportScreen("Settings", className: viewName)
         }
@@ -26,47 +32,49 @@ struct RemindersScreen: View {
     var content: some View {
         Group {
             if viewModel.notificationsDisabledViewModel.isAccessGranted {
-                adhkarReminderSection
+                morningReminderSection
+                
+                eveningReminderSection
                 
                 jumuaReminderSection
             } else {
                 notificationsDisabledView
             }
-            
-            if showDebugNotifications && UIApplication.shared.inDebugMode {
-                Divider()
-                Button(action: viewModel.navigateToNotificationsList) {
-                    Text("[DEBUG] Scheduled notifications")
-                        .padding(.vertical, 8)
-                }
-            }
         }
     }
     
-    // MARK: - Adhkar Reminders Section
+    // MARK: - Morning Reminders Section
     
-    var adhkarReminderSection: some View {
+    var morningReminderSection: some View {
         VStack(spacing: 0) {
-            HeaderView(text: "settings.reminders.morning-evening.label")
+            HeaderView(text: "settings.reminders.morning-evening.morning-label")
             
             VStack {
                 Toggle(
-                    "settings.reminders.morning-evening.switch-label",
-                    isOn: $viewModel.preferences.enableAdhkarReminder
+                    "settings.reminders.morning.switch-label",
+                    isOn: $viewModel.preferences.enableMorningReminder
                 )
                 
-                if viewModel.preferences.enableAdhkarReminder {
+                if viewModel.preferences.enableMorningReminder {
                     Divider()
                     
-                    adhkarTimePicker
+                    morningTimeRow
+                    
+                    Divider()
+                    
+                    NavigationButton(
+                        title: "settings.reminders.title.section",
+                        label: viewModel.morningTitleLabel(),
+                        action: viewModel.presentMorningTitlePicker
+                    )
                     
                     Divider()
                     
                     if viewModel.notificationsDisabledViewModel.isAccessGranted {
                         NavigationButton(
                             title: "settings.reminders.sounds.sound",
-                            label: viewModel.preferences.adhkarReminderSound.title,
-                            action: viewModel.presentAdhkarSoundPicker
+                            label: viewModel.preferences.morningReminderSound.title,
+                            action: viewModel.presentMorningSoundPicker
                         )
                     }
                 }
@@ -76,18 +84,12 @@ struct RemindersScreen: View {
     }
     
     @ViewBuilder
-    var adhkarTimePicker: some View {
+    var morningTimeRow: some View {
         if UIDevice.current.isMac {
-            adhkarMacTimePicker
+            PickerView(label: "settings.reminders.time", titleDisplayMode: .inline, subtitle: viewModel.morningTime, destination: adhkarMacMorningTimePicker)
         } else {
-            adhkarIosTimePicker
-        }
-    }
-    
-    var adhkarIosTimePicker: some View {
-        Group {
             HStack {
-                Text("settings.reminders.morning-evening.morning-label")
+                Text("settings.reminders.time")
                     .fixedSize(horizontal: false, vertical: true)
                     .systemFont(.body)
                     .foregroundStyle(.text)
@@ -95,18 +97,63 @@ struct RemindersScreen: View {
                 Spacer()
                 
                 DatePicker(
-                    "settings.reminders.morning-evening.morning-label",
+                    "settings.reminders.time",
                     selection: $viewModel.preferences.morningNotificationTime,
                     in: viewModel.morningNotificationDateRange,
                     displayedComponents: [.hourAndMinute]
                 )
                 .labelsHidden()
             }
+        }
+    }
+    
+    // MARK: - Evening Reminders Section
+    
+    var eveningReminderSection: some View {
+        VStack(spacing: 0) {
+            HeaderView(text: "settings.reminders.morning-evening.evening-label")
             
-            Divider()
-            
+            VStack {
+                Toggle(
+                    "settings.reminders.evening.switch-label",
+                    isOn: $viewModel.preferences.enableEveningReminder
+                )
+                
+                if viewModel.preferences.enableEveningReminder {
+                    Divider()
+                    
+                    eveningTimeRow
+                    
+                    Divider()
+                    
+                    NavigationButton(
+                        title: "settings.reminders.title.section",
+                        label: viewModel.eveningTitleLabel(),
+                        action: viewModel.presentEveningTitlePicker
+                    )
+                    
+                    Divider()
+                    
+                    if viewModel.notificationsDisabledViewModel.isAccessGranted {
+                        NavigationButton(
+                            title: "settings.reminders.sounds.sound",
+                            label: viewModel.preferences.eveningReminderSound.title,
+                            action: viewModel.presentEveningSoundPicker
+                        )
+                    }
+                }
+            }
+            .applyContainerStyle()
+        }
+    }
+    
+    @ViewBuilder
+    var eveningTimeRow: some View {
+        if UIDevice.current.isMac {
+            PickerView(label: "settings.reminders.time", titleDisplayMode: .inline, subtitle: viewModel.eveningTime, destination: adhkarMacEveningTimePicker)
+        } else {
             HStack {
-                Text("settings.reminders.morning-evening.evening-label")
+                Text("settings.reminders.time")
                     .fixedSize(horizontal: false, vertical: true)
                     .systemFont(.body)
                     .foregroundStyle(.text)
@@ -114,21 +161,13 @@ struct RemindersScreen: View {
                 Spacer()
                 
                 DatePicker(
-                    "settings.reminders.morning-evening.evening-label",
+                    "settings.reminders.time",
                     selection: $viewModel.preferences.eveningNotificationTime,
                     in: viewModel.eveningNotificationDateRange,
                     displayedComponents: [.hourAndMinute]
                 )
                 .labelsHidden()
             }
-        }
-    }
-    
-    var adhkarMacTimePicker: some View {
-        Group {
-            PickerView(label: "settings.reminders.morning-evening.morning-label", titleDisplayMode: .inline, subtitle: viewModel.morningTime, destination: adhkarMacMorningTimePicker)
-            
-            PickerView(label: "settings.reminders.morning-evening.evening-label", titleDisplayMode: .inline, subtitle: viewModel.eveningTime, destination: adhkarMacEveningTimePicker)
         }
     }
         
@@ -168,6 +207,14 @@ struct RemindersScreen: View {
                     
                     jumuaTimePicker
                     
+                    Divider()
+
+                    NavigationButton(
+                        title: "settings.reminders.title.section",
+                        label: viewModel.jumuaTitleLabel(),
+                        action: viewModel.presentJumuaTitlePicker
+                    )
+
                     Divider()
                     
                     if viewModel.notificationsDisabledViewModel.isAccessGranted {
@@ -232,6 +279,28 @@ struct RemindersScreen: View {
     
     var notificationsDisabledView: some View {
         NotificationsDisabledView(viewModel: viewModel.notificationsDisabledViewModel)
+    }
+}
+
+/// Adds the debug "scheduled notifications" toolbar button only when visible, so
+/// no empty toolbar item (or empty Liquid Glass pill) is rendered otherwise.
+private struct ScheduledNotificationsToolbarModifier: ViewModifier {
+    let isVisible: Bool
+    let action: () -> Void
+
+    func body(content: Content) -> some View {
+        if isVisible {
+            content.toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(action: action) {
+                        Image(systemName: "bell.badge")
+                    }
+                    .accessibilityLabel(Text(verbatim: "Scheduled notifications"))
+                }
+            }
+        } else {
+            content
+        }
     }
 }
 

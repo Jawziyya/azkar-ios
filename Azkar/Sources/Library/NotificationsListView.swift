@@ -2,88 +2,156 @@ import SwiftUI
 
 protocol UserNotification {
     var title: String { get }
+    var subtitle: String? { get }
     var body: String? { get }
     var date: Date { get }
     var details: String { get }
+    var category: String? { get }
+    var identifier: String { get }
 }
 
 extension UNNotificationRequest: UserNotification {
-    
+
     var title: String {
         return content.title
     }
-    
+
+    var subtitle: String? {
+        return content.subtitle.isEmpty ? nil : content.subtitle
+    }
+
     var body: String? {
         return content.body.isEmpty ? nil : content.body
     }
-    
+
     var date: Date {
         return (trigger as? UNCalendarNotificationTrigger)?.nextTriggerDate()
             ?? Date()
     }
-    
+
     var soundInfo: String? {
-        return content.sound?.description
+        if let raw = content.userInfo[NotificationUserInfoKey.sound] as? String {
+            return ReminderSound(rawValue: raw)?.title ?? raw
+        }
+        return content.sound == nil ? nil : "Default"
     }
-    
+
+    var category: String? {
+        content.categoryIdentifier.isEmpty ? nil : content.categoryIdentifier
+    }
+
     var details: String {
-        return """
-        Body: \(body ?? "n/a")
-        Sound: \(soundInfo ?? "n/a")
-        """
+        var lines = ["ID: \(identifier)", "Sound: \(soundInfo ?? "n/a")"]
+        if let body {
+            lines.insert("Body: \(body)", at: 1)
+        }
+        return lines.joined(separator: "\n")
     }
-    
+
 }
 
 struct DummyUserNotification: UserNotification {
     var title: String
+    var subtitle: String? = "Quran 13:28"
     var body: String?
     var date: Date
     var details: String = UUID().uuidString
+    var category: String? = ["morning", "evening", "jumua"].randomElement()
+    var identifier: String = UUID().uuidString
+}
+
+struct NotificationDaySection: Identifiable {
+    let id: String
+    let title: String
+    let rows: [NotificationsRowViewModel]
 }
 
 final class NotificationsListViewModel: ObservableObject {
-    @Published var notifications: [NotificationsRowViewModel] = []
-    
-    var numberOfNotifications: String {
-        "Total scheduled notifications: \(notifications.count)"
+    @Published var sections: [NotificationDaySection] = []
+
+    var totalCount: Int {
+        sections.reduce(0) { $0 + $1.rows.count }
     }
-    
+
+    var isEmpty: Bool {
+        sections.isEmpty
+    }
+
+    var numberOfNotifications: String {
+        "Total scheduled notifications: \(totalCount)"
+    }
+
     init(notifications: @escaping (() async -> [UserNotification])) {
         Task(priority: .userInitiated) {
             let notifications = await notifications()
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateStyle = .short
-            dateFormatter.timeStyle = .medium
-            let notificationViewModels = notifications.enumerated().map { index, notification in
-                let time = dateFormatter.string(from: notification.date)
-                return NotificationsRowViewModel(
-                    row: index,
-                    title: notification.title,
-                    body: notification.body,
-                    date: time,
-                    details: notification.details
+            let calendar = Calendar.current
+
+            let dayFormatter = DateFormatter()
+            dayFormatter.dateFormat = "EEEE, d MMMM yyyy"
+
+            let timeFormatter = DateFormatter()
+            timeFormatter.dateStyle = .none
+            timeFormatter.timeStyle = .short
+
+            let sorted = notifications.sorted { $0.date < $1.date }
+            let grouped = Dictionary(grouping: sorted) { calendar.startOfDay(for: $0.date) }
+
+            var globalIndex = 0
+            let sections = grouped.keys.sorted().map { day -> NotificationDaySection in
+                let rows = (grouped[day] ?? []).map { notification -> NotificationsRowViewModel in
+                    let row = NotificationsRowViewModel(
+                        row: globalIndex,
+                        title: notification.title,
+                        subtitle: notification.subtitle,
+                        body: notification.body,
+                        date: timeFormatter.string(from: notification.date),
+                        category: notification.category,
+                        details: notification.details
+                    )
+                    globalIndex += 1
+                    return row
+                }
+                return NotificationDaySection(
+                    id: dayFormatter.string(from: day),
+                    title: dayFormatter.string(from: day),
+                    rows: rows
                 )
             }
+
             await MainActor.run {
-                self.notifications = notificationViewModels
+                self.sections = sections
             }
         }
     }
-    
+
     func removeScheduledNotifications() {
-        notifications = []
+        sections = []
         UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
     }
-    
+
 }
 
 struct NotificationsRowViewModel {
     let row: Int
     let title: String
+    let subtitle: String?
     let body: String?
     let date: String
+    let category: String?
     let details: String
+
+    var categoryLabel: String? {
+        category?.capitalized
+    }
+
+    var categoryColor: Color {
+        switch category {
+        case "morning": return .orange
+        case "evening": return .indigo
+        case "jumua": return .green
+        default: return .gray
+        }
+    }
 
     var accessibilitySummary: String {
         [
@@ -92,7 +160,9 @@ struct NotificationsRowViewModel {
                 locale: Locale.current,
                 row + 1
             ),
+            categoryLabel,
             title,
+            subtitle,
             body,
             date,
             details
@@ -110,9 +180,18 @@ private struct NotificationsRowView: View {
                 Text("Notification #\(vm.row + 1)")
                     .foregroundStyle(.secondary)
                     .font(.callout.smallCaps())
-                
+
+                if let categoryLabel = vm.categoryLabel {
+                    Text(categoryLabel)
+                        .font(.caption2.bold())
+                        .foregroundStyle(.white)
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 3)
+                        .background(vm.categoryColor, in: Capsule())
+                }
+
                 Spacer()
-                
+
                 Text(vm.date)
                     .foregroundStyle(Color.primary)
                     .font(.footnote)
@@ -120,16 +199,25 @@ private struct NotificationsRowView: View {
             
             VStack(alignment: .leading, spacing: 8) {
                 HStack {
-                    Text(vm.title)
-                        .foregroundStyle(.primary)
-                        .font(.callout)
-                        .multilineTextAlignment(.leading)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(vm.title)
+                            .foregroundStyle(.primary)
+                            .font(.callout)
+                            .multilineTextAlignment(.leading)
+
+                        if let subtitle = vm.subtitle {
+                            Text(subtitle)
+                                .foregroundStyle(.secondary)
+                                .font(.footnote)
+                                .multilineTextAlignment(.leading)
+                        }
+                    }
                     Spacer()
                 }
-                
+
                 Text(vm.details)
-                    .foregroundStyle(.primary)
-                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .font(.caption2)
                     .multilineTextAlignment(.leading)
             }
         }
@@ -168,18 +256,35 @@ struct NotificationsListView: View {
                                 Image(systemName: "trash")
                             })
                             .accessibilityLabel(Text("accessibility.notifications.remove-scheduled"))
-                            .disabled(viewModel.notifications.isEmpty)
+                            .disabled(viewModel.isEmpty)
                         }
                         .padding()
-                        
-                        if viewModel.notifications.isEmpty {
+
+                        if viewModel.isEmpty {
                             Text("No scheduled notifications")
                                 .font(.callout)
                                 .foregroundStyle(.secondary)
                         } else {
-                            ForEach(viewModel.notifications, id: \.row) { vm in
-                                NotificationsRowView(vm: vm)
-                                    .background(.contentBackground)
+                            ForEach(viewModel.sections) { section in
+                                VStack(alignment: .leading, spacing: 0) {
+                                    HStack {
+                                        Text(section.title)
+                                            .font(.headline)
+                                            .foregroundStyle(.primary)
+                                        Spacer()
+                                        Text("\(section.rows.count)")
+                                            .font(.subheadline)
+                                            .foregroundStyle(.secondary)
+                                    }
+                                    .padding(.horizontal, 16)
+                                    .padding(.top, 12)
+                                    .padding(.bottom, 4)
+
+                                    ForEach(section.rows, id: \.row) { vm in
+                                        NotificationsRowView(vm: vm)
+                                            .background(.contentBackground)
+                                    }
+                                }
                             }
                         }
                     }

@@ -19,6 +19,64 @@ let defaultJumuaReminderTime: Date = {
     return components.date ?? Date()
 }()
 
+// Phase 2 wires scheduling/UI to ReminderTitleSelection.
+enum ReminderTitleSelection: Codable, Hashable {
+    case `default`
+    case random
+    case quote(id: Int)
+
+    private enum CodingKeys: String, CodingKey {
+        case type
+        case id
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let type = try container.decode(String.self, forKey: .type)
+        switch type {
+        case "default":
+            self = .default
+        case "random":
+            self = .random
+        case "quote":
+            let id = try container.decode(Int.self, forKey: .id)
+            self = .quote(id: id)
+        default:
+            throw DecodingError.dataCorruptedError(
+                forKey: .type,
+                in: container,
+                debugDescription: "Unknown ReminderTitleSelection type: \(type)"
+            )
+        }
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        switch self {
+        case .default:
+            try container.encode("default", forKey: .type)
+        case .random:
+            try container.encode("random", forKey: .type)
+        case .quote(let id):
+            try container.encode("quote", forKey: .type)
+            try container.encode(id, forKey: .id)
+        }
+    }
+}
+
+extension NotificationCategory {
+    var defaultNotificationTitle: String {
+        switch self {
+        case .morning:
+            return String(localized: "notifications.morning-notification-title")
+        case .evening:
+            return String(localized: "notifications.evening-notification-title")
+        case .jumua:
+            return String(localized: "notifications.jumua.title")
+        }
+    }
+}
+
 final class Preferences: ObservableObject, TextProcessingPreferences {
     
     private let defaults: UserDefaults
@@ -88,6 +146,12 @@ final class Preferences: ObservableObject, TextProcessingPreferences {
     @Preference(Keys.enableAdhkarReminder, defaultValue: true)
     var enableAdhkarReminder: Bool
     
+    @Preference(Keys.enableMorningReminder, defaultValue: true)
+    var enableMorningReminder: Bool
+    
+    @Preference(Keys.enableEveningReminder, defaultValue: true)
+    var enableEveningReminder: Bool
+    
     @Preference(Keys.enableJumuaReminder, defaultValue: true)
     var enableJumuaReminder: Bool
     
@@ -121,8 +185,23 @@ final class Preferences: ObservableObject, TextProcessingPreferences {
     @Preference(Keys.preferredAdhkarReminderSound, defaultValue: ReminderSound.standard)
     var adhkarReminderSound: ReminderSound
     
+    @Preference(Keys.preferredMorningReminderSound, defaultValue: ReminderSound.standard)
+    var morningReminderSound: ReminderSound
+    
+    @Preference(Keys.preferredEveningReminderSound, defaultValue: ReminderSound.standard)
+    var eveningReminderSound: ReminderSound
+    
     @Preference(Keys.preferredJumuahReminderSound, defaultValue: ReminderSound.standard)
     var jumuahDuaReminderSound: ReminderSound
+
+    @Preference(Keys.preferredMorningReminderTitle, defaultValue: ReminderTitleSelection.default)
+    var morningReminderTitle: ReminderTitleSelection
+
+    @Preference(Keys.preferredEveningReminderTitle, defaultValue: ReminderTitleSelection.default)
+    var eveningReminderTitle: ReminderTitleSelection
+
+    @Preference(Keys.preferredJumuaReminderTitle, defaultValue: ReminderTitleSelection.default)
+    var jumuaReminderTitle: ReminderTitleSelection
     
     // MARK: - Counter
     @Preference(Keys.enableCounter, defaultValue: true)

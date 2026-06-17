@@ -22,6 +22,7 @@ struct AzkarApp: App {
     @Injected(\.quickActionDispatcher) private var quickActionDispatcher: QuickActionDispatcher
     @Injected(\.subscriptionManager) private var subscriptionManager: SubscriptionManagerType
     @Injected(\.localAnalytics) private var localAnalytics: AppAnalyticsTracking
+    @Injected(\.notificationsScheduler) private var notificationsScheduler: NotificationsScheduler
 
     init() {
         setNavigationBarFont(theme: preferences.appTheme, colorTheme: preferences.colorTheme)
@@ -81,6 +82,7 @@ struct AzkarApp: App {
             .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
                 handlePendingQuickAction()
                 handleControlCenterDeepLink()
+                notificationsScheduler.rescheduleAll()
             }
             .onContinueUserActivity(CSSearchableItemActionType) { userActivity in
                 handleSearchActivity(userActivity)

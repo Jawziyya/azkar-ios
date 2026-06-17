@@ -103,7 +103,7 @@ extension ReminderSound {
 final class ReminderSoundPickerViewModel: ObservableObject {
     
     enum ReminderType {
-        case adhkar, jumua
+        case morning, evening, jumua
     }
     
     enum Section: String, Equatable, Identifiable, CaseIterable {
@@ -149,7 +149,7 @@ final class ReminderSoundPickerViewModel: ObservableObject {
     
     static var placeholder: ReminderSoundPickerViewModel {
         let viewModel = ReminderSoundPickerViewModel(
-            type: .adhkar,
+            type: .morning,
             preferredSound: ReminderSound.standard,
             subscribeScreenTrigger: {}
         )
@@ -174,8 +174,10 @@ final class ReminderSoundPickerViewModel: ObservableObject {
     func setPreferredSound(_ sound: ReminderSound) {
         if !sound.isProSound || subscriptionManager.isProUser() {
             switch type {
-            case .adhkar:
-                preferences.adhkarReminderSound = sound
+            case .morning:
+                preferences.morningReminderSound = sound
+            case .evening:
+                preferences.eveningReminderSound = sound
             case .jumua:
                 preferences.jumuahDuaReminderSound = sound
             }

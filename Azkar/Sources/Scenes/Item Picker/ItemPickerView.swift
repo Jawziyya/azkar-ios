@@ -60,14 +60,18 @@ struct ItemPickerView<SelectionValue>: View where SelectionValue: Hashable & Ide
                             .accessibilityHidden(true)
                     }
 
-                    Text(item.title)
-                        .systemFont(.body)
-                    Spacer()
-                    item.subtitle.flatMap { text in
-                        Text(text)
-                            .systemFont(.footnote)
-                            .foregroundStyle(Color.secondary)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(item.title)
+                            .systemFont(.subheadline)
+
+                        item.subtitle.flatMap { text in
+                            Text(text)
+                                .systemFont(.caption)
+                                .foregroundStyle(Color.secondary)
+                        }
                     }
+
+                    Spacer()
                     
                     if isProtected {
                         ProBadgeView()

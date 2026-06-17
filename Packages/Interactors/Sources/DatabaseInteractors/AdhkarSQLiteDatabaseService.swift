@@ -23,7 +23,7 @@ private func getFadailTableName(for language: Language) -> String {
 }
 
 public final class AdhkarSQLiteDatabaseService: AdhkarDatabaseService {
-    
+
     public let language: Language
 
     public init(
@@ -434,6 +434,109 @@ public extension AdhkarSQLiteDatabaseService {
                     audioTimings: audioTimings.filter { $0.audioId == audio?.id }
                 )
             }
+        }
+    }
+
+    // MARK: - Notification Quotes
+
+    public func getNotificationQuotes(category: NotificationQuoteCategory, language: Language? = nil) throws -> [NotificationQuote] {
+        let requestedLanguage = language ?? self.language
+        let dbQueue = try getDatabaseQueue()
+
+        guard DatabaseHelper.tableExists("notification_quote_categories", databaseQueue: dbQueue) else {
+            return []
+        }
+
+        let orderedLanguages = orderedFallbackLanguageIDs(for: requestedLanguage)
+
+        return try dbQueue.read { db in
+            let rows = try Row.fetchAll(
+                db,
+                sql: """
+                SELECT c.quote_id AS quote_id, t.language AS language, t.text AS text, t.source AS source
+                FROM notification_quote_categories AS c
+                JOIN notification_quote_translations AS t ON t.quote_id = c.quote_id
+                WHERE c.category = ?
+                ORDER BY c.quote_id
+                """,
+                arguments: [category.rawValue]
+            )
+
+            var translationsByQuote: [Int: [String: (text: String, source: String?)]] = [:]
+            var orderedQuoteIds: [Int] = []
+            for row in rows {
+                let quoteId: Int = row["quote_id"]
+                let language: String = row["language"]
+                if translationsByQuote[quoteId] == nil {
+                    translationsByQuote[quoteId] = [:]
+                    orderedQuoteIds.append(quoteId)
+                }
+                translationsByQuote[quoteId]?[language] = (row["text"], row["source"])
+            }
+
+            return orderedQuoteIds.compactMap { quoteId in
+                guard let translations = translationsByQuote[quoteId] else { return nil }
+                for language in orderedLanguages {
+                    if let translation = translations[language] {
+                        return NotificationQuote(
+                            id: quoteId,
+                            text: translation.text,
+                            source: translation.source
+                        )
+                    }
+                }
+                return nil
+            }
+        }
+    }
+
+    /// Ordered, de-duplicated language ids to try for a quote translation:
+    /// requested language, its fallback, then English and Arabic.
+    private func orderedFallbackLanguageIDs(for language: Language) -> [String] {
+        var seen = Set<String>()
+        return [language, language.fallbackLanguage, .english, .arabic]
+            .map(\.id)
+            .filter { seen.insert($0).inserted }
+    }
+
+    public func getNotificationQuote(id: Int, language: Language? = nil) throws -> NotificationQuote? {
+        let requestedLanguage = language ?? self.language
+        let dbQueue = try getDatabaseQueue()
+
+        guard DatabaseHelper.tableExists("notification_quote_translations", databaseQueue: dbQueue) else {
+            return nil
+        }
+
+        let orderedLanguages = orderedFallbackLanguageIDs(for: requestedLanguage)
+
+        return try dbQueue.read { db in
+            let rows = try Row.fetchAll(
+                db,
+                sql: """
+                SELECT language, text, source
+                FROM notification_quote_translations
+                WHERE quote_id = ?
+                """,
+                arguments: [id]
+            )
+
+            var translationsByLanguage: [String: (text: String, source: String?)] = [:]
+            for row in rows {
+                let language: String = row["language"]
+                translationsByLanguage[language] = (row["text"], row["source"])
+            }
+
+            for language in orderedLanguages {
+                if let translation = translationsByLanguage[language] {
+                    return NotificationQuote(
+                        id: id,
+                        text: translation.text,
+                        source: translation.source
+                    )
+                }
+            }
+
+            return nil
         }
     }
 

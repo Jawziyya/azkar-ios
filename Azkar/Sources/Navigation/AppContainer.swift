@@ -35,6 +35,11 @@ extension Container {
             .singleton
     }
 
+    var notificationsScheduler: Factory<NotificationsScheduler> {
+        self { NotificationsScheduler() }
+            .singleton
+    }
+
     var player: Factory<Player> {
         self { Player(player: AudioPlayer()) }
             .singleton

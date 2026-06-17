@@ -20,6 +20,7 @@ final class SettingsViewModel: ObservableObject {
     @Injected(\.notificationsHandler) private var notificationsHandler: NotificationsHandler
     @Injected(\.preferences) var preferences: Preferences
     @Injected(\.subscriptionManager) private var subscriptionManager: SubscriptionManagerType
+    @Injected(\.notificationsScheduler) private var notificationsScheduler: NotificationsScheduler
 
     private let formatter: DateFormatter
     @Published private(set) var isProUser = false
@@ -92,52 +93,25 @@ final class SettingsViewModel: ObservableObject {
     /// Observes some preferences to reschedule notifications if needed.
     private func setupNotificationsRescheduler() {
         Publishers.MergeMany(
-                preferences.$enableAdhkarReminder.toVoid().dropFirst(),
+                preferences.$enableMorningReminder.toVoid().dropFirst(),
+                preferences.$enableEveningReminder.toVoid().dropFirst(),
                 preferences.$morningNotificationTime.toVoid().dropFirst(),
                 preferences.$eveningNotificationTime.toVoid().dropFirst(),
-                preferences.$adhkarReminderSound.toVoid().dropFirst(),
+                preferences.$morningReminderSound.toVoid().dropFirst(),
+                preferences.$eveningReminderSound.toVoid().dropFirst(),
+                preferences.$morningReminderTitle.toVoid().dropFirst(),
+                preferences.$eveningReminderTitle.toVoid().dropFirst(),
                 preferences.$enableJumuaReminder.toVoid().dropFirst(),
                 preferences.$jumuaReminderTime.toVoid().dropFirst(),
-                preferences.$jumuahDuaReminderSound.toVoid().dropFirst()
+                preferences.$jumuahDuaReminderSound.toVoid().dropFirst(),
+                preferences.$jumuaReminderTitle.toVoid().dropFirst()
             )
             .receive(on: DispatchQueue.main)
             .throttle(for: 2, scheduler: DispatchQueue.main, latest: true)
             .sink(receiveValue: { [unowned self] in
-                self.notificationsHandler.removeScheduledNotifications()
-                self.scheduleNotifications()
+                self.notificationsScheduler.rescheduleAll()
             })
             .store(in: &cancellables)
-    }
-
-    private func scheduleNotifications() {
-        if preferences.enableAdhkarReminder {
-            notificationsHandler.scheduleNotification(
-                id: Keys.morningReminderId,
-                date: preferences.morningNotificationTime,
-                titleKey: "notifications.morning-notification-title",
-                category: .morning,
-                sound: preferences.adhkarReminderSound
-            )
-            notificationsHandler.scheduleNotification(
-                id: Keys.eveningReminderId,
-                date: preferences.eveningNotificationTime,
-                titleKey: "notifications.evening-notification-title",
-                category: .evening,
-                sound: preferences.adhkarReminderSound
-            )
-        }
-        
-        if preferences.enableJumuaReminder {
-            var components = Calendar.current.dateComponents([.hour, .minute, .weekday], from: preferences.jumuaReminderTime)
-            components.weekday = 6 // Jumua (friday).
-            notificationsHandler.scheduleNotification(
-                id: Keys.jumuaReminderId,
-                titleKey: "notifications.jumua.title",
-                dateComponents: components,
-                category: .jumua,
-                sound: preferences.jumuahDuaReminderSound
-            )
-        }
     }
     
 }

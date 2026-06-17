@@ -39,6 +39,8 @@ enum Keys {
     // MARK: Reminders
     static let enableReminders = "kEnableNotifications"
     static let enableAdhkarReminder = "kEnableAdhkarReminder"
+    static let enableMorningReminder = "kEnableMorningReminder"
+    static let enableEveningReminder = "kEnableEveningReminder"
     static let enableJumuaReminder = "kEnableJumuaReminder"
     
     static let morningNotificationsTime = "kMorningNotificationsTime"
@@ -46,7 +48,14 @@ enum Keys {
     static let jumuaReminderTime = "kJumuaReminderTime"
     
     static let preferredAdhkarReminderSound = "kAdhkarReminderSound"
+    static let preferredMorningReminderSound = "kMorningReminderSound"
+    static let preferredEveningReminderSound = "kEveningReminderSound"
     static let preferredJumuahReminderSound = "kJumuahReminderSound"
+    static let preferredMorningReminderTitle = "kMorningReminderTitle"
+    static let preferredEveningReminderTitle = "kEveningReminderTitle"
+    static let preferredJumuaReminderTitle = "kJumuaReminderTitle"
+    
+    static let hasMigratedSeparateAdhkarReminders = "kHasMigratedSeparateAdhkarReminders"
 
     // MARK: Counter
     static let enableCounter = "kEnableCounter"

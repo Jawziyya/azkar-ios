@@ -3,6 +3,8 @@ import UserNotifications
 import AboutApp
 import FactoryKit
 import Library
+import Entities
+import DatabaseInteractors
 import ZikrCollectionsOnboarding
 import ChangelogKit
 
@@ -78,6 +80,9 @@ struct SettingsFlowView: View {
 
         case .soundPicker(let info):
             ReminderSoundPickerDestinationView(info: info, navigator: navigator)
+
+        case .reminderTitlePicker(let info):
+            ReminderTitlePickerScreen(info: info)
 
         case .aboutApp:
             AboutAppDestinationView()

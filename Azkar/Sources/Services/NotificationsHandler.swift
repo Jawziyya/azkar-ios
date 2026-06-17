@@ -14,8 +14,12 @@ import Entities
 
 enum NotificationCategory: String, Identifiable, Hashable {
     case morning, evening, jumua
-    
+
     var id: Self { self }
+}
+
+enum NotificationUserInfoKey {
+    static let sound = "sound"
 }
 
 private let notificationCenter = UNUserNotificationCenter.current()
@@ -120,14 +124,16 @@ final class NotificationsHandler: NSObject {
     func scheduleNotification(
         id: String,
         date: Date,
-        titleKey: String,
+        title: String,
+        subtitle: String? = nil,
         category: NotificationCategory,
         sound: ReminderSound
     ) {
         let dateComponents = Calendar.current.dateComponents([.hour, .minute], from: date)
         scheduleNotification(
             id: id,
-            titleKey: titleKey,
+            title: title,
+            subtitle: subtitle,
             dateComponents: dateComponents,
             category: category,
             sound: sound
@@ -136,16 +142,43 @@ final class NotificationsHandler: NSObject {
     
     func scheduleNotification(
         id: String,
-        titleKey: String,
+        title: String,
+        subtitle: String? = nil,
         dateComponents: DateComponents,
         category: NotificationCategory,
         sound: ReminderSound
     ) {
         let content = UNMutableNotificationContent()
-        content.title = NSString.localizedUserNotificationString(forKey: titleKey, arguments: nil)
+        content.title = title
+        if let subtitle {
+            content.subtitle = subtitle
+        }
         content.sound = sound.notificationSound
         content.categoryIdentifier = category.rawValue
+        content.userInfo[NotificationUserInfoKey.sound] = sound.rawValue
         let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
+        let request = UNNotificationRequest(identifier: id, content: content, trigger: trigger)
+        notificationCenter.add(request)
+    }
+
+    func scheduleNotification(
+        id: String,
+        title: String,
+        subtitle: String? = nil,
+        fireDate: Date,
+        category: NotificationCategory,
+        sound: ReminderSound
+    ) {
+        let dateComponents = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: fireDate)
+        let content = UNMutableNotificationContent()
+        content.title = title
+        if let subtitle {
+            content.subtitle = subtitle
+        }
+        content.sound = sound.notificationSound
+        content.categoryIdentifier = category.rawValue
+        content.userInfo[NotificationUserInfoKey.sound] = sound.rawValue
+        let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
         let request = UNNotificationRequest(identifier: id, content: content, trigger: trigger)
         notificationCenter.add(request)
     }

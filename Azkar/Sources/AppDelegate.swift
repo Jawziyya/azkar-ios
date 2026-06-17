@@ -16,6 +16,7 @@ import Entities
 import Library
 import FirebaseCore
 import FirebaseMessaging
+import BackgroundTasks
 
 import Mixpanel
 import CoreSpotlight
@@ -38,6 +39,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 
     let player = AudioPlayer()
     @Injected(\.notificationsHandler) var notificationsHandler: NotificationsHandler
+    @Injected(\.notificationsScheduler) var notificationsScheduler: NotificationsScheduler
     private let spotlightIndexer = SpotlightIndexer.shared
 
     private func buildShortcutItems() -> [UIApplicationShortcutItem] {
@@ -76,6 +78,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         if let launchOptions, let userInfo = launchOptions[.remoteNotification] as? [AnyHashable: Any] {
             notificationsHandler.handleLaunchNotification(userInfo)
         }
+        registerBackgroundRefreshTask()
         return true
     }
 
@@ -132,6 +135,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 
         registerUserDefaults()
         migrateSharedPreferencesIfNeeded()
+        migrateReminderSettingsIfNeeded()
         ensureValidTransliterationPreference()
         setupRevenueCat()
         SubscriptionManager.shared.observeSubscriptionStatus()
@@ -196,6 +200,19 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         UserDefaults.appGroup.set(value, forKey: key)
     }
     
+    private func migrateReminderSettingsIfNeeded() {
+        let defaults = UserDefaults.standard
+        guard defaults.bool(forKey: Keys.hasMigratedSeparateAdhkarReminders) == false else { return }
+        let preferences = Container.shared.preferences()
+        let wasEnabled = preferences.enableAdhkarReminder
+        preferences.enableMorningReminder = wasEnabled
+        preferences.enableEveningReminder = wasEnabled
+        let sound = preferences.adhkarReminderSound
+        preferences.morningReminderSound = sound
+        preferences.eveningReminderSound = sound
+        defaults.set(true, forKey: Keys.hasMigratedSeparateAdhkarReminders)
+    }
+    
     private func setupRevenueCat() {
         Purchases.logLevel = .debug
         Purchases.configure(withAPIKey: readSecret(AzkarSecretKey.REVENUE_CAT_API_KEY)!)
@@ -232,7 +249,25 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
             preferences.transliterationType = availableTypes.first ?? .community
         }
     }
-    
+
+    private func registerBackgroundRefreshTask() {
+        #if !targetEnvironment(macCatalyst)
+        if #available(iOS 13.0, *) {
+            BGTaskScheduler.shared.register(
+                forTaskWithIdentifier: NotificationsScheduler.backgroundRefreshTaskIdentifier,
+                using: nil
+            ) { task in
+                task.expirationHandler = {
+                    task.setTaskCompleted(success: false)
+                }
+                self.notificationsScheduler.rescheduleAll()
+                self.notificationsScheduler.scheduleBackgroundRefresh()
+                task.setTaskCompleted(success: true)
+            }
+        }
+        #endif
+    }
+
 }
 
 @MainActor

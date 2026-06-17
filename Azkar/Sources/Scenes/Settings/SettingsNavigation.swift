@@ -8,6 +8,17 @@ struct SoundPickerInfo: Hashable {
     let type: ReminderSoundPickerViewModel.ReminderType
 }
 
+struct ReminderTitlePickerInfo: Hashable {
+    let selection: ReminderTitleSelection
+    let type: ReminderTitlePickerType
+}
+
+enum ReminderTitlePickerType: Hashable {
+    case morning
+    case evening
+    case jumua
+}
+
 enum SettingsDestination: Hashable {
     case notificationsList
     case appearance
@@ -15,6 +26,7 @@ enum SettingsDestination: Hashable {
     case counter
     case reminders
     case soundPicker(SoundPickerInfo)
+    case reminderTitlePicker(ReminderTitlePickerInfo)
     case aboutApp
 }
 
@@ -98,6 +110,8 @@ extension SettingsDestination {
             return .reminders
         case .soundPicker:
             return .soundPicker
+        case .reminderTitlePicker:
+            return .reminderTitlePicker
         case .aboutApp:
             return .aboutApp
         }
