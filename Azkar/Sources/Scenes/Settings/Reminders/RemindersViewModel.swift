@@ -39,6 +39,8 @@ final class RemindersViewModel: ObservableObject {
             preferences.$enableMorningReminder.toVoid(),
             preferences.$enableEveningReminder.toVoid(),
             preferences.$enableJumuaReminder.toVoid(),
+            preferences.$morningNotificationTime.toVoid(),
+            preferences.$eveningNotificationTime.toVoid(),
             preferences.$morningReminderSound.toVoid(),
             preferences.$eveningReminderSound.toVoid(),
             preferences.$jumuahDuaReminderSound.toVoid(),
@@ -80,16 +82,25 @@ final class RemindersViewModel: ObservableObject {
         navigator.show(.reminderTitlePicker(.init(selection: preferences.eveningReminderTitle, type: .evening)))
     }
     
-    var morningNotificationDateRange: ClosedRange<Date> {
-        let minDate = DateComponents(calendar: Calendar.current, hour: 2, minute: 0).date ?? Date()
-        let maxDate = DateComponents(calendar: Calendar.current, hour: 12, minute: 0).date ?? Date()
-        return minDate ... maxDate
+    private func referenceTime(hour: Int, minute: Int = 0) -> Date {
+        DateComponents(calendar: Calendar.current, hour: hour, minute: minute).date ?? Date()
     }
-    
+
+    // The only constraint is that the morning reminder may not be later than the
+    // evening one. Morning is allowed anywhere from the start of the day up to the
+    // currently selected evening time.
+    var morningNotificationDateRange: ClosedRange<Date> {
+        let minDate = referenceTime(hour: 0, minute: 0)
+        let maxDate = preferences.eveningNotificationTime
+        return minDate ... max(minDate, maxDate)
+    }
+
+    // Evening is allowed anywhere from the currently selected morning time up to
+    // the end of the day.
     var eveningNotificationDateRange: ClosedRange<Date> {
-        let minDate = DateComponents(calendar: Calendar.current, hour: 13, minute: 0).date ?? Date()
-        let maxDate = DateComponents(calendar: Calendar.current, hour: 18, minute: 0).date ?? Date()
-        return minDate ... maxDate
+        let minDate = preferences.morningNotificationTime
+        let maxDate = referenceTime(hour: 23, minute: 59)
+        return min(minDate, maxDate) ... maxDate
     }
 
     func getDatesRange(fromHour hour: Int, hours: Int) -> [Date] {
@@ -101,12 +112,22 @@ final class RemindersViewModel: ObservableObject {
         }
     }
 
+    /// All half-hour slots of the day that fall within the given range. Used by the
+    /// Mac time pickers, which present a list instead of an inline `DatePicker`.
+    private func halfHourSlots(in range: ClosedRange<Date>) -> [Date] {
+        let dayStart = referenceTime(hour: 0, minute: 0)
+        return (0...47).compactMap { index -> Date? in
+            let date = Calendar.current.date(byAdding: .minute, value: index * 30, to: dayStart) ?? dayStart
+            return range.contains(date) ? date : nil
+        }
+    }
+
     var morningDateItems: [String] {
-        return getDatesRange(fromHour: 2, hours: 11).compactMap(formatter.string)
+        return halfHourSlots(in: morningNotificationDateRange).compactMap(formatter.string)
     }
 
     var eveningDateItems: [String] {
-        return getDatesRange(fromHour: 12, hours: 16).compactMap(formatter.string)
+        return halfHourSlots(in: eveningNotificationDateRange).compactMap(formatter.string)
     }
     
     func setMorningTime(_ time: String) {
