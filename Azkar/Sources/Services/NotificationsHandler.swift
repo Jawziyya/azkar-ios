@@ -124,8 +124,9 @@ final class NotificationsHandler: NSObject {
     func scheduleNotification(
         id: String,
         date: Date,
-        title: String,
+        title: String? = nil,
         subtitle: String? = nil,
+        body: String? = nil,
         category: NotificationCategory,
         sound: ReminderSound
     ) {
@@ -134,6 +135,7 @@ final class NotificationsHandler: NSObject {
             id: id,
             title: title,
             subtitle: subtitle,
+            body: body,
             dateComponents: dateComponents,
             category: category,
             sound: sound
@@ -142,16 +144,22 @@ final class NotificationsHandler: NSObject {
     
     func scheduleNotification(
         id: String,
-        title: String,
+        title: String? = nil,
         subtitle: String? = nil,
+        body: String? = nil,
         dateComponents: DateComponents,
         category: NotificationCategory,
         sound: ReminderSound
     ) {
         let content = UNMutableNotificationContent()
-        content.title = title
+        if let title {
+            content.title = title
+        }
         if let subtitle {
             content.subtitle = subtitle
+        }
+        if let body {
+            content.body = body
         }
         content.sound = sound.notificationSound
         content.categoryIdentifier = category.rawValue
@@ -163,17 +171,23 @@ final class NotificationsHandler: NSObject {
 
     func scheduleNotification(
         id: String,
-        title: String,
+        title: String? = nil,
         subtitle: String? = nil,
+        body: String? = nil,
         fireDate: Date,
         category: NotificationCategory,
         sound: ReminderSound
     ) {
         let dateComponents = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: fireDate)
         let content = UNMutableNotificationContent()
-        content.title = title
+        if let title {
+            content.title = title
+        }
         if let subtitle {
             content.subtitle = subtitle
+        }
+        if let body {
+            content.body = body
         }
         content.sound = sound.notificationSound
         content.categoryIdentifier = category.rawValue

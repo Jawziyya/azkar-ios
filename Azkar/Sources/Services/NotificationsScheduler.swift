@@ -123,6 +123,13 @@ final class NotificationsScheduler {
         }
     }
 
+    private func quoteBody(text: String, source: String?) -> String {
+        if let source, !source.isEmpty {
+            return "\(text) (\(source))"
+        }
+        return text
+    }
+
     private func scheduleDefault(_ reminder: (id: String, category: NotificationCategory, fireTime: Date, quoteCategory: NotificationQuoteCategory, selection: ReminderTitleSelection, sound: ReminderSound, isDaily: Bool)) {
         if reminder.isDaily {
             notificationsHandler.scheduleNotification(
@@ -156,8 +163,7 @@ final class NotificationsScheduler {
             notificationsHandler.scheduleNotification(
                 id: reminder.id,
                 date: reminder.fireTime,
-                title: quote.text,
-                subtitle: quote.source,
+                body: quoteBody(text: quote.text, source: quote.source),
                 category: reminder.category,
                 sound: reminder.sound
             )
@@ -166,8 +172,7 @@ final class NotificationsScheduler {
             components.weekday = 6
             notificationsHandler.scheduleNotification(
                 id: reminder.id,
-                title: quote.text,
-                subtitle: quote.source,
+                body: quoteBody(text: quote.text, source: quote.source),
                 dateComponents: components,
                 category: reminder.category,
                 sound: reminder.sound
@@ -218,8 +223,7 @@ final class NotificationsScheduler {
 
             notificationsHandler.scheduleNotification(
                 id: notificationId,
-                title: quote.text,
-                subtitle: quote.source,
+                body: quoteBody(text: quote.text, source: quote.source),
                 fireDate: fireDate,
                 category: reminder.category,
                 sound: reminder.sound
@@ -259,8 +263,7 @@ final class NotificationsScheduler {
 
             notificationsHandler.scheduleNotification(
                 id: notificationId,
-                title: quote.text,
-                subtitle: quote.source,
+                body: quoteBody(text: quote.text, source: quote.source),
                 fireDate: baseDate,
                 category: reminder.category,
                 sound: reminder.sound
