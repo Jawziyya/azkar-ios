@@ -292,7 +292,7 @@ struct ReminderTitlePickerScreen: View {
 
             ReminderNotificationPreview(
                 title: previewTitle,
-                body: previewBody,
+                bodyText: previewBody,
                 appIcon: preferences.appIcon
             )
         }
@@ -340,7 +340,7 @@ private extension View {
 private struct ReminderNotificationPreview: View {
 
     let title: String
-    let body: String?
+    let bodyText: String?
     let appIcon: AppIcon
 
     var body: some View {
@@ -352,8 +352,8 @@ private struct ReminderNotificationPreview: View {
                     .font(.system(size: 15, weight: .semibold))
                     .lineLimit(1)
 
-                if let body {
-                    Text(body)
+                if let bodyText {
+                    Text(bodyText)
                         .font(.system(size: 15, weight: .regular))
                         .foregroundStyle(.primary)
                         .fixedSize(horizontal: false, vertical: true)
