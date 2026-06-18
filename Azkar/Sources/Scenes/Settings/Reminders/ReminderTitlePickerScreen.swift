@@ -59,6 +59,13 @@ struct ReminderTitlePickerScreen: View {
         return quotes.first(where: { $0.id == id })
     }
 
+    private func quoteBody(_ quote: NotificationQuote) -> String {
+        if let source = quote.source, !source.isEmpty {
+            return "\(quote.text) (\(source))"
+        }
+        return quote.text
+    }
+
     // MARK: - Top menu
 
     private let modes: [Mode] = [.default, .random, .pickQuote]
@@ -257,28 +264,26 @@ struct ReminderTitlePickerScreen: View {
         switch selection {
         case .default:
             return Self.notificationCategory(for: info.type).defaultNotificationTitle
-        case .random:
-            return randomPreviewQuote?.text ?? Self.notificationCategory(for: info.type).defaultNotificationTitle
-        case .quote:
-            return selectedQuote?.text ?? Self.notificationCategory(for: info.type).defaultNotificationTitle
+        case .random, .quote:
+            return String(localized: "app-name")
         }
     }
 
-    private var previewSource: String? {
+    private var previewBody: String? {
         switch selection {
         case .default:
             return nil
         case .random:
-            return randomPreviewQuote?.source
+            return randomPreviewQuote.map(quoteBody)
         case .quote:
-            return selectedQuote?.source
+            return selectedQuote.map(quoteBody)
         }
     }
 
     /// Identity of the currently displayed preview content, so the transition
     /// also runs when the random quote re-rolls (selection stays `.random`).
     private var previewIdentity: String {
-        "\(previewTitle)|\(previewSource ?? "")"
+        "\(previewTitle)|\(previewBody ?? "")"
     }
 
     var preview: some View {
@@ -287,7 +292,7 @@ struct ReminderTitlePickerScreen: View {
 
             ReminderNotificationPreview(
                 title: previewTitle,
-                source: previewSource,
+                body: previewBody,
                 appIcon: preferences.appIcon
             )
         }
@@ -335,7 +340,7 @@ private extension View {
 private struct ReminderNotificationPreview: View {
 
     let title: String
-    let source: String?
+    let body: String?
     let appIcon: AppIcon
 
     var body: some View {
@@ -345,13 +350,14 @@ private struct ReminderNotificationPreview: View {
             VStack(alignment: .leading, spacing: 2) {
                 Text(title)
                     .font(.system(size: 15, weight: .semibold))
-                    .fixedSize(horizontal: false, vertical: true)
-                    .lineLimit(4)
+                    .lineLimit(1)
 
-                if let source {
-                    Text(source)
-                        .font(.system(size: 13, weight: .regular))
-                        .foregroundStyle(.secondary)
+                if let body {
+                    Text(body)
+                        .font(.system(size: 15, weight: .regular))
+                        .foregroundStyle(.primary)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .lineLimit(4)
                 }
             }
 
