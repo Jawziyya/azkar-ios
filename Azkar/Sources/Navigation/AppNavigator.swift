@@ -13,6 +13,7 @@ final class AppNavigator: ObservableObject, AppNavigationRouting {
     }
 
     @Published var sheet: AppSheet?
+    @Published var resetToken = UUID()
 
     private let dependencies: AppDependencies
     private let deeplinker: Deeplinker
@@ -263,6 +264,7 @@ private extension AppNavigator {
         selectedZikrPageIndex.send(0)
         currentCategoryContext = nil
         stack = []
+        resetToken = UUID()
     }
 
     func replaceStackForDeepLink(with destination: AppDestination) {

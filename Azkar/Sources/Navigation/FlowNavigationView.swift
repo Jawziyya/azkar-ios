@@ -1,6 +1,12 @@
 import SwiftUI
 
-struct FlowNavigationContainer<Screen, Root: View>: View {
+private final class FlowRenderTrigger: ObservableObject {
+    func notify() {
+        objectWillChange.send()
+    }
+}
+
+struct FlowNavigationContainer<Screen: Equatable, Root: View>: View {
 
     @Binding private var stack: [Screen]
     @Binding private var resetToken: UUID
@@ -34,12 +40,14 @@ struct FlowNavigationContainer<Screen, Root: View>: View {
     }
 }
 
-struct FlowNavigationStack<Screen, Root: View>: View {
+struct FlowNavigationStack<Screen: Equatable, Root: View>: View {
 
     @Binding private var stack: [Screen]
     @Binding private var resetToken: UUID
     private let root: () -> Root
     private let destination: (Screen) -> AnyView
+
+    @StateObject private var trigger = FlowRenderTrigger()
 
     init(
         stack: Binding<[Screen]>,
@@ -59,18 +67,23 @@ struct FlowNavigationStack<Screen, Root: View>: View {
             currentResetToken: $resetToken,
             nodeResetToken: resetToken,
             rootView: AnyView(root()),
-            destination: destination
+            destination: destination,
+            trigger: trigger
         )
+        .onChange(of: stack) { _ in
+            trigger.notify()
+        }
     }
 }
 
-private struct FlowNavigationNode<Screen>: View {
+private struct FlowNavigationNode<Screen: Equatable>: View {
 
     @Binding var stack: [Screen]
     @Binding var currentResetToken: UUID
     let nodeResetToken: UUID
     let rootView: AnyView
     let destination: (Screen) -> AnyView
+    @ObservedObject var trigger: FlowRenderTrigger
 
     var body: some View {
         rootView.background(hiddenNavigationLink)
@@ -110,7 +123,8 @@ private struct FlowNavigationNode<Screen>: View {
                 currentResetToken: $currentResetToken,
                 nodeResetToken: nodeResetToken,
                 rootView: destination(current),
-                destination: destination
+                destination: destination,
+                trigger: trigger
             )
         } else {
             EmptyView()

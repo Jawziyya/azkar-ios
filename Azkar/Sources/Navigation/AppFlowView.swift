@@ -27,10 +27,14 @@ struct AppFlowView: View {
                 .getColor(.background)
                 .ignoresSafeArea()
 
-            NavigationControllerHost(
+            FlowNavigationContainer(
                 stack: Binding(
                     get: { navigator.stack },
                     set: { navigator.stack = $0 }
+                ),
+                resetToken: Binding(
+                    get: { navigator.resetToken },
+                    set: { navigator.resetToken = $0 }
                 ),
                 root: {
                     RootView(viewModel: rootViewModel)
