@@ -5,6 +5,24 @@
       "imageName": "v3",
       "items": [
         {
+          "version": "3.1.0",
+          "notes": [
+            {
+              "icon": "bell.badge",
+              "title": "Kişisel Hatırlatıcılar",
+              "body": "Sabah, akşam ve Cuma zikirleri için her biri kendi saatine ve bildirim sesine sahip ayrı hatırlatıcılar ayarlayın.",
+              "iconBackground": "#FF3B30"
+            },
+            {
+              "icon": "text.quote",
+              "title": "İlham Veren Başlıklar",
+              "body": "Hatırlatma bildirimleri artık dönüşümlü olarak Kur'an ve hadis alıntıları gösterebilir.",
+              "iconBackground": "#5856D6"
+            }
+          ],
+          "date": "2026-06-21T00:00:00Z"
+        },
+        {
           "version": "3.0.0",
           "notes": [
             {
