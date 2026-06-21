@@ -11,6 +11,16 @@ public struct AppInfoView: View {
     @Environment(\.openURL) private var openURL
     @Environment(\.appTheme) var appTheme
     @Environment(\.colorTheme) var colorTheme
+
+    @State private var iconAppeared = false
+    @State private var iconBreathing = false
+    @State private var iconDragOffset: CGSize = .zero
+
+    private var iconDragScale: CGFloat {
+        let distance = hypot(iconDragOffset.width, iconDragOffset.height)
+        return min(1.5, 1 + distance / 300)
+    }
+
     public init(viewModel: AppInfoViewModel) {
         self.viewModel = viewModel
     }
@@ -57,6 +67,7 @@ public struct AppInfoView: View {
                 colorTheme.getColor(.background).padding(-20)
             )
             .padding()
+            .zIndex(1)
             
             links
                 .applyContainerStyle()
@@ -73,21 +84,21 @@ public struct AppInfoView: View {
                 image: "paperplane",
                 color: Color.blue
             )
-            
+
             outboundLinkButton(
                 "credits.studio.instagram-page",
                 url: URL(string: "https://instagram.com/jawziyya.studio")!,
                 image: "photo.stack",
                 color: Color.orange
             )
-            
+
             outboundLinkButton(
                 "credits.studio.jawziyya-apps",
                 url: URL(string: "https://apps.apple.com/developer/al-jawziyya/id1165327318")!,
                 image: "apps.iphone",
                 color: Color.indigo
             )
-            
+
             NavigationLink {
                 CreditsScreen(viewModel: CreditsViewModel())
             } label: {
@@ -107,17 +118,36 @@ public struct AppInfoView: View {
             HStack {
                 Spacer()
                 if let image = UIImage(named: viewModel.iconImageName, in: azkarResourcesBundle, compatibleWith: nil) {
-                    Image(uiImage: image)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 100, height: 100)
-                        .clipShape(RoundedRectangle(cornerRadius: 15))
-                        .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 1)
-                        .id(viewModel.iconImageName)
-                        .transition(.opacity)
+                    appIconImage(image)
+                        .scaleEffect(iconDragScale)
+                        .scaleEffect(iconBreathing ? 1.03 : 1.0)
+                        .scaleEffect(iconAppeared ? 1 : 0.85)
+                        .opacity(iconAppeared ? 1 : 0)
+                        .animation(.easeInOut(duration: 2.6).repeatForever(autoreverses: true), value: iconBreathing)
+                        .offset(iconDragOffset)
+                        .contentShape(RoundedRectangle(cornerRadius: 23, style: .continuous))
+                        .gesture(
+                            DragGesture()
+                                .onChanged { value in
+                                    iconDragOffset = value.translation
+                                }
+                                .onEnded { _ in
+                                    withAnimation(.spring(response: 0.5, dampingFraction: 0.5)) {
+                                        iconDragOffset = .zero
+                                    }
+                                }
+                        )
+                        .onAppear {
+                            guard !iconAppeared else { return }
+                            withAnimation(.spring(response: 0.6, dampingFraction: 0.68)) {
+                                iconAppeared = true
+                            }
+                            iconBreathing = true
+                        }
                 }
                 Spacer()
             }
+            .zIndex(1)
 
             HStack {
                 Spacer()
@@ -158,9 +188,24 @@ public struct AppInfoView: View {
                 
                 Spacer()
             }
+            .zIndex(0.5)
         }
     }
     
+    private func appIconImage(_ image: UIImage) -> some View {
+        Image(uiImage: image)
+            .resizable()
+            .scaledToFit()
+            .frame(width: 100, height: 100)
+            .clipShape(RoundedRectangle(cornerRadius: 23, style: .continuous))
+            .overlay {
+                RoundedRectangle(cornerRadius: 23, style: .continuous)
+                    .strokeBorder(Color.primary.opacity(0.08), lineWidth: 0.5)
+            }
+            .shadow(color: Color.black.opacity(0.12), radius: 12, x: 0, y: 6)
+            .shadow(color: Color.black.opacity(0.06), radius: 2, x: 0, y: 1)
+    }
+
     private func outboundLinkButton(
         _ title: LocalizedStringKey,
         url: URL,
