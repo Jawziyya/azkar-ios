@@ -7,9 +7,7 @@ struct FooterView: View {
             .systemFont(.caption)
             .frame(maxWidth: .infinity, alignment: .leading)
             .foregroundStyle(.secondaryText)
-            .padding(.horizontal)
-            .background(.background)
-            .padding(.horizontal)
+            .padding(.horizontal, 30)
             .padding(.bottom)
     }
 }
