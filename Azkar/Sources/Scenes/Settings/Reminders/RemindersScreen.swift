@@ -98,7 +98,7 @@ struct RemindersScreen: View {
                 
                 DatePicker(
                     "settings.reminders.time",
-                    selection: $viewModel.preferences.morningNotificationTime,
+                    selection: viewModel.morningTimeSelection,
                     in: viewModel.morningNotificationDateRange,
                     displayedComponents: [.hourAndMinute]
                 )
@@ -162,7 +162,7 @@ struct RemindersScreen: View {
                 
                 DatePicker(
                     "settings.reminders.time",
-                    selection: $viewModel.preferences.eveningNotificationTime,
+                    selection: viewModel.eveningTimeSelection,
                     in: viewModel.eveningNotificationDateRange,
                     displayedComponents: [.hourAndMinute]
                 )
@@ -269,7 +269,7 @@ struct RemindersScreen: View {
             
             DatePicker(
                 "Time",
-                selection: $viewModel.preferences.jumuaReminderTime,
+                selection: viewModel.jumuaTimeSelection,
                 in: viewModel.jumuaNotificationDateRange,
                 displayedComponents: [.hourAndMinute]
             )

@@ -261,7 +261,6 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
                     task.setTaskCompleted(success: false)
                 }
                 self.notificationsScheduler.rescheduleAll()
-                self.notificationsScheduler.scheduleBackgroundRefresh()
                 task.setTaskCompleted(success: true)
             }
         }

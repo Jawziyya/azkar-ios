@@ -66,39 +66,8 @@ final class NotificationsScheduler {
             ))
         }
 
-        // iOS only keeps up to 64 pending local notifications; anything beyond
-        // that is silently dropped. Fixed reminders (.default / .quote) use one
-        // repeating request each. The remaining budget is distributed across the
-        // random reminders weighted by how often each fires, so every category
-        // covers roughly the same span of days — otherwise a weekly reminder
-        // (Jumua) would stretch far past the daily ones and dominate the tail.
-        let maxPendingNotifications = 64
-        let randomReminders = reminders.filter { $0.selection == .random }
-        let fixedSlotCount = reminders.count - randomReminders.count
-        let remaining = max(0, maxPendingNotifications - fixedSlotCount)
-
-        var slotsByReminderId: [String: Int] = [:]
-        if !randomReminders.isEmpty, remaining > 0 {
-            // Days between occurrences: daily reminders fire every day, Jumua weekly.
-            let cadenceInDays: (Bool) -> Double = { isDaily in isDaily ? 1 : 7 }
-            // Notifications-per-day weight; the common horizon = budget / total weight.
-            let totalWeight = randomReminders.reduce(0.0) { $0 + 1.0 / cadenceInDays($1.isDaily) }
-            let horizonDays = Double(remaining) / totalWeight
-
-            for reminder in randomReminders {
-                let slots = Int((horizonDays / cadenceInDays(reminder.isDaily)).rounded())
-                slotsByReminderId[reminder.id] = max(1, slots)
-            }
-
-            // Never exceed the budget; trim the largest allocation if rounding overshot.
-            var scheduled = slotsByReminderId.values.reduce(0, +)
-            while scheduled > remaining,
-                  let key = slotsByReminderId.max(by: { $0.value < $1.value })?.key {
-                slotsByReminderId[key]? -= 1
-                scheduled -= 1
-            }
-        }
-
+        // At most 15 repeating requests: seven weekdays per daily reminder
+        // and one Friday request. Delivery does not depend on background refresh.
         var hasRandom = false
 
         for reminder in reminders {
@@ -109,12 +78,7 @@ final class NotificationsScheduler {
                 scheduleQuote(reminder, quoteId: id)
             case .random:
                 hasRandom = true
-                let slots = slotsByReminderId[reminder.id] ?? 0
-                if reminder.category == .jumua {
-                    scheduleJumuaRandom(reminder, slots: slots)
-                } else {
-                    scheduleAdhkarRandom(reminder, windowDays: slots)
-                }
+                scheduleRandom(reminder)
             }
         }
 
@@ -180,91 +144,30 @@ final class NotificationsScheduler {
         }
     }
 
-    private func scheduleJumuaRandom(_ reminder: (id: String, category: NotificationCategory, fireTime: Date, quoteCategory: NotificationQuoteCategory, selection: ReminderTitleSelection, sound: ReminderSound, isDaily: Bool), slots: Int) {
-        guard let quotes = try? database.getNotificationQuotes(category: .jumua), !quotes.isEmpty else {
+    private func scheduleRandom(_ reminder: (id: String, category: NotificationCategory, fireTime: Date, quoteCategory: NotificationQuoteCategory, selection: ReminderTitleSelection, sound: ReminderSound, isDaily: Bool)) {
+        guard let quotes = try? database.getNotificationQuotes(category: reminder.quoteCategory), !quotes.isEmpty else {
             scheduleDefault(reminder)
             return
         }
 
         let pool = quotes.shuffled()
-        let calendar = Calendar.current
-        let fireComponents = calendar.dateComponents([.hour, .minute], from: reminder.fireTime)
-        let now = Date()
+        let time = Calendar.current.dateComponents([.hour, .minute], from: reminder.fireTime)
+        let slotCount = reminder.isDaily ? 7 : 1
 
-        for i in 0..<slots {
-            guard let nextFriday = calendar.nextDate(
-                after: now,
-                matching: DateComponents(weekday: 6),
-                matchingPolicy: .nextTime,
-                repeatedTimePolicy: .first,
-                direction: .forward
-            ) else {
-                continue
-            }
-
-            let targetDate: Date
-            if i == 0 {
-                targetDate = nextFriday
+        for slot in 1...slotCount {
+            var components = time
+            if reminder.isDaily {
+                components.weekday = slot
             } else {
-                let daysToAdd = i * 7
-                targetDate = calendar.date(byAdding: .day, value: daysToAdd, to: nextFriday) ?? nextFriday
+                // Keep delivering this quote weekly if the app cannot refresh.
+                // Foreground/background refresh selects a new random quote.
+                components.weekday = 6
             }
-
-            var dateComponents = calendar.dateComponents([.year, .month, .day], from: targetDate)
-            dateComponents.hour = fireComponents.hour
-            dateComponents.minute = fireComponents.minute
-
-            guard let fireDate = calendar.date(from: dateComponents), fireDate > now else {
-                continue
-            }
-
-            let quote = pool[i % pool.count]
-            let notificationId = "\(reminder.id).random.\(i)"
-
+            let quote = pool[(slot - 1) % pool.count]
             notificationsHandler.scheduleNotification(
-                id: notificationId,
+                id: "\(reminder.id).random.\(slot)",
                 body: quoteBody(text: quote.text, source: quote.source),
-                fireDate: fireDate,
-                category: reminder.category,
-                sound: reminder.sound
-            )
-        }
-    }
-
-    private func scheduleAdhkarRandom(_ reminder: (id: String, category: NotificationCategory, fireTime: Date, quoteCategory: NotificationQuoteCategory, selection: ReminderTitleSelection, sound: ReminderSound, isDaily: Bool), windowDays: Int) {
-        guard let quotes = try? database.getNotificationQuotes(category: .adhkar), !quotes.isEmpty else {
-            scheduleDefault(reminder)
-            return
-        }
-
-        let pool = quotes.shuffled()
-        let calendar = Calendar.current
-        let fireComponents = calendar.dateComponents([.hour, .minute], from: reminder.fireTime)
-        let now = Date()
-
-        for i in 0..<windowDays {
-            var dateComponents = calendar.dateComponents([.year, .month, .day], from: now)
-            dateComponents.hour = fireComponents.hour
-            dateComponents.minute = fireComponents.minute
-
-            guard var baseDate = calendar.date(from: dateComponents) else {
-                continue
-            }
-            if i > 0 {
-                baseDate = calendar.date(byAdding: .day, value: i, to: baseDate) ?? baseDate
-            }
-
-            guard baseDate > now else {
-                continue
-            }
-
-            let quote = pool[i % pool.count]
-            let notificationId = "\(reminder.id).random.\(i)"
-
-            notificationsHandler.scheduleNotification(
-                id: notificationId,
-                body: quoteBody(text: quote.text, source: quote.source),
-                fireDate: baseDate,
+                dateComponents: components,
                 category: reminder.category,
                 sound: reminder.sound
             )

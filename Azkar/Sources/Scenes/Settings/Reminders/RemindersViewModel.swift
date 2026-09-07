@@ -41,6 +41,7 @@ final class RemindersViewModel: ObservableObject {
             preferences.$enableJumuaReminder.toVoid(),
             preferences.$morningNotificationTime.toVoid(),
             preferences.$eveningNotificationTime.toVoid(),
+            preferences.$jumuaReminderTime.toVoid(),
             preferences.$morningReminderSound.toVoid(),
             preferences.$eveningReminderSound.toVoid(),
             preferences.$jumuahDuaReminderSound.toVoid(),
@@ -51,6 +52,9 @@ final class RemindersViewModel: ObservableObject {
         .eraseToAnyPublisher()
         .receive(on: RunLoop.main)
         .sink(receiveValue: { [unowned self] _ in
+            morningTime = formatter.string(from: preferences.morningNotificationTime)
+            eveningTime = formatter.string(from: preferences.eveningNotificationTime)
+            jumuaReminderTime = formatter.string(from: preferences.jumuaReminderTime)
             withAnimation(.smooth) {
                 objectWillChange.send()
             }
@@ -83,22 +87,39 @@ final class RemindersViewModel: ObservableObject {
     }
     
     private func referenceTime(hour: Int, minute: Int = 0) -> Date {
-        DateComponents(calendar: Calendar.current, hour: hour, minute: minute).date ?? Date()
+        let referenceDay = Date(timeIntervalSinceReferenceDate: 14 * 86400)
+        return Calendar.current.date(bySettingHour: hour, minute: minute, second: 0, of: referenceDay) ?? referenceDay
     }
+
+    private func normalizedTime(_ date: Date) -> Date {
+        let components = Calendar.current.dateComponents([.hour, .minute], from: date)
+        return referenceTime(hour: components.hour ?? 0, minute: components.minute ?? 0)
+    }
+
+    private func timeBinding(_ keyPath: ReferenceWritableKeyPath<Preferences, Date>) -> Binding<Date> {
+        Binding(
+            get: { self.normalizedTime(self.preferences[keyPath: keyPath]) },
+            set: { self.preferences[keyPath: keyPath] = self.normalizedTime($0) }
+        )
+    }
+
+    var morningTimeSelection: Binding<Date> { timeBinding(\.morningNotificationTime) }
+    var eveningTimeSelection: Binding<Date> { timeBinding(\.eveningNotificationTime) }
+    var jumuaTimeSelection: Binding<Date> { timeBinding(\.jumuaReminderTime) }
 
     // The only constraint is that the morning reminder may not be later than the
     // evening one. Morning is allowed anywhere from the start of the day up to the
     // currently selected evening time.
     var morningNotificationDateRange: ClosedRange<Date> {
         let minDate = referenceTime(hour: 0, minute: 0)
-        let maxDate = preferences.eveningNotificationTime
+        let maxDate = normalizedTime(preferences.eveningNotificationTime)
         return minDate ... max(minDate, maxDate)
     }
 
     // Evening is allowed anywhere from the currently selected morning time up to
     // the end of the day.
     var eveningNotificationDateRange: ClosedRange<Date> {
-        let minDate = preferences.morningNotificationTime
+        let minDate = normalizedTime(preferences.morningNotificationTime)
         let maxDate = referenceTime(hour: 23, minute: 59)
         return min(minDate, maxDate) ... maxDate
     }
@@ -131,23 +152,23 @@ final class RemindersViewModel: ObservableObject {
     }
     
     func setMorningTime(_ time: String) {
-        preferences.morningNotificationTime = formatter.date(from: morningTime) ?? defaultMorningNotificationTime
+        preferences.morningNotificationTime = normalizedTime(formatter.date(from: time) ?? defaultMorningNotificationTime)
         morningTime = formatter.string(from: preferences.morningNotificationTime)
     }
 
     func setEveningTime(_ time: String) {
-        preferences.eveningNotificationTime = formatter.date(from: eveningTime) ?? defaultEveningNotificationTime
+        preferences.eveningNotificationTime = normalizedTime(formatter.date(from: time) ?? defaultEveningNotificationTime)
         eveningTime = formatter.string(from: preferences.eveningNotificationTime)
     }
     
     // MARK: - Jumua Reminders methods
     
     var jumuaDateItems: [String] {
-        return getDatesRange(fromHour: 12, hours: 18).compactMap(formatter.string)
+        return halfHourSlots(in: jumuaNotificationDateRange).compactMap(formatter.string)
     }
     
     func setJumuaReminderTime(_ time: String) {
-        preferences.jumuaReminderTime = formatter.date(from: jumuaReminderTime) ?? defaultJumuaReminderTime
+        preferences.jumuaReminderTime = normalizedTime(formatter.date(from: time) ?? defaultJumuaReminderTime)
         jumuaReminderTime = formatter.string(from: preferences.jumuaReminderTime)
     }
     
@@ -185,8 +206,8 @@ final class RemindersViewModel: ObservableObject {
     }
     
     var jumuaNotificationDateRange: ClosedRange<Date> {
-        let minDate = DateComponents(calendar: Calendar.current, hour: 10, minute: 0).date ?? Date()
-        let maxDate = DateComponents(calendar: Calendar.current, hour: 18, minute: 0).date ?? Date()
+        let minDate = referenceTime(hour: 10)
+        let maxDate = referenceTime(hour: 18)
         return minDate ... maxDate
     }
     
