@@ -48,6 +48,8 @@ jobs:
 
     steps:
       - uses: jdx/mise-action@v2
+        with:
+          version: '2026.9.1'
 
       - uses: maxim-lobanov/setup-xcode@v1
         with:
